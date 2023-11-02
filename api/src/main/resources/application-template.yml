@@ -1,0 +1,98 @@
+server:
+  port: 8201
+
+spring:
+  application:
+    name: imputation-service
+  main:
+    banner-mode: off
+    allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/ipms_test?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: <your-mysql-user>
+    password: <your-mysql-password>
+    # thes 2 lines are used for productin
+    #tomcat:
+    #test-while-idle: true
+    #validation-query: SELECT 1
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: 'update'
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      format_sql: true
+  thymeleaf:
+    enabled: true
+  mail:
+    host: smtp.gmail.com #smtp.office365.com
+    port: 587
+    username: <you-mail@gmail.com>
+    password: <password-app>
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    #test-connection: true
+
+#Core Pool Size for Async
+#config.threadpool.corepool.size=100
+#Max Pool Size for Async
+#config.threadpool.maxpool.size=400
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+    shutdown:
+      enabled: true
+
+info:
+  app:
+    name: imputation-service
+    description: Service de gestion des imputations de l'IPMS de l'Universit� Cheikh Anta DIOP
+    version: 1.0-Beta
+    author: mldieye
+
+## Hibernate Logging
+logging:
+  level:
+    #root: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+    #eureka:
+    #instance:
+    #instance-id: ${spring.application.name}:${random.uuid}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  use-management-port: false
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter=method:
+    enabled: true
+    try-it-out-enabled: false
+    filter: false
+    syntax-highlight:
+      activated: true
+
+jwtexpirationtime: 300000
+##  JKS password
+jksfilepassword: Start@p1
+imputationsservice:
+  auth:
+    username: <api-imputation-username>
+    password: <api-imputation-password>
+  api:
+    url: https://entpersonnel.ucad.sn/api/list/demandes/imputations
+    listeByEtat: ${imputationsservice.api.url}/etat_traitement
+    detailsOne: ${imputationsservice.api.url}/show/code_imputation

@@ -1,0 +1,102 @@
+server:
+  port: 9201
+
+spring:
+  application:
+    name: office
+  main:
+    banner-mode: off
+    allow-circular-references: true
+  datasource:
+    url: jdbc:mysql://localhost:3306/office?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: Mysql8Pwd
+      # thes 2 lines are used for productin
+    #tomcat:
+    #test-while-idle: true
+    #validation-query: SELECT 1
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
+      format_sql: true
+  thymeleaf:
+    enabled: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: cheikhtidianethioune98@gmail.com #noreply@gmail.com
+    password: yyiwkprpktsbsybv #6zd4WoS6 #qsuhivbkeyhxaivp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    #test-connection: true
+
+# image file
+imagesdir: "/home/oem/Documents/wspace/projets-dev/disi/ipms/api/demande-service/src/main/resourcesimagesdir"
+
+#Core Pool Size for Async
+#config.threadpool.corepool.size=100
+#Max Pool Size for Async
+#config.threadpool.maxpool.size=400
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,metrics
+    shutdown:
+      enabled: true
+
+info:
+  app:
+    name: office
+    description: Service de gestion PPJOBAC de l'Office ...
+    version: 1.0-Beta
+    author: office
+
+## Hibernate Logging
+logging:
+  level:
+    #root: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+    #eureka:
+    #instance:
+    #instance-id: ${spring.application.name}:${random.uuid}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  show-actuator: true
+  use-management-port: false
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter=method:
+    enabled: true
+    try-it-out-enabled: false
+    filter: false
+    syntax-highlight:
+      activated: true
+
+jwtexpirationtime: 604800000
+##  JKS password
+jksfilepassword: Start@p1
+
+imputationsservice:
+  auth:
+    username:
+    password:
+  api:
+    url: https://entpersonnel.ucad.sn/api/list/demandes/imputations
+    listeByEtat: ${imputationsservice.api.url}/etat_traitement
+    detailsOne: ${imputationsservice.api.url}/show/code_imputation
