@@ -1,0 +1,86 @@
+{
+    "greeting": "Bonjour i18n !!",
+    "welcome": "Bienvenue",
+    "goodbye": "Au revoir",
+    "allrightreserved": "Tous droits réservés",
+    "close": "Fermer",
+    "added": "Ajout effectué avec succés!",
+    "updated": "Modification effectué!",
+    "deleted": "Supression effectué!",
+    "apple": "pas de pommes | une pomme | {count} pommes",
+    "public": {
+        "nav": {
+            "top": {
+                "monespace": "Mon espace",
+                "profile": "Mon profil",
+                "inscription": "S'inscrire",
+                "connexion": "Se déconnecter",
+                "deconnexion": "S'authentifier",
+                "aide": "Aide"
+            }
+        },
+        "hero": {
+            "titre": "Plateforme de candidature des présidents de jury",
+            "soustitre": "Suivez votre dossier en ligne et soyez informé à temps",
+            "pasdecompte": "Vous n'avez pas de compte?"
+        },
+        "side": {},
+        "forms":{},
+        "footer":{}
+    },
+    "auth": {
+        "nav": {
+            "top": {}
+        },
+        "side": {},
+        "forms":{
+            "authentification": {
+                "titre": "Auhentifciation",
+                "username": "Nom d'utilisateur",
+                "mdp": "Mot de passe",
+                "mdpoublie": "Mot de passe oublié?",
+                "btnconn": "Se connecter",
+                "pasdecompte": "Vous n'avez pas de compte?"
+            }
+        },
+        "footer":{}
+    },
+    "apps": {
+        "nav": {
+            "top": {
+                "public": "Public",
+                "profile": "Mon profil",
+                "signout": "Se déconnecter"
+            }
+        },
+        "side": {
+            "dashboard": "Tableau de bord",
+            "profile": "Mon profil",
+            "signout": "Déconnexion",
+            "academie": "Académies",
+            "ville": "Ville"
+        },
+        "forms":{
+            "nouveau": "Nouveau",
+            "nouvelle": "Nouvelle",
+            "ajouter": "Ajouter",
+            "enregistrer": "Enregister",
+            "delteTitle": "Supression",
+            "delteMessage": "Voulez-vous vraiment supprimer l'enregistremnet?",
+            "addTitle": "Ajout",
+            "modifTitle": "Modification",
+            "oui": "Oui",
+            "non": "Non",
+            "annuler": "Annuler",
+            "academie": {
+                "academie": "Académies",
+                "nom": "Nom de l'académie"
+            },
+            "ville": {
+                "ville": "Villes",
+                "nom": "Nom de la ville"
+            }
+        },
+        "footer":{}
+    }
+}

@@ -1,0 +1,144 @@
+/*************************************************
+**************************************************
+
+Website Name: Vuetify template
+Website URL: 
+Website Author: mldieye
+Author URL: mldieye15
+Copyright 2023. Tous droits réservés
+
+Color Guide
+***************
+
+
+*************************************************
+
+Type Guide
+***************
+
+
+Debugging Tools
+***************
+border: 1px solid #fff;
+
+*************************************************/
+
+/************************************************
+*************************************************
+0. CSS Reset ------------------------ 
+1. Universal Styles -----------------
+2. Header & Nav Styles -------------- 
+3. Main Body Styles ----------------- 
+4. Sidebar Styles ------------------- 
+5. Widget Styles --------------------
+6. Footer Styles -------------------- 
+7. Comments & Form Styles ----------- 
+8. Generic Styles ----------- 
+*************************************************
+************************************************/
+
+/*----------------------------------------------
+0. CSS Reset
+----------------------------------------------*/
+
+/*----------------------------------------------
+1. Universal Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+2. Header & Nav Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+3. Main Body Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+4. Sidebar Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+5. Widget Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+6. Footer Styles
+----------------------------------------------*/
+
+/*----------------------------------------------
+7. Comments & Form Styles
+------------------------------------------------
+----------------------------------------------*/
+
+/*----------------------------------------------
+8. Generic Styles
+----------------------------------------------*/
+/* #666,  #252525, #343a40*/
+.bg-black {
+  background-color: #343a40 !important;  
+}
+
+.bg-black-navbar, .bg-black-footer{
+  background-color: #343a40 !important;
+}
+
+.bg-blue {
+  background-color: #3490dc !important;
+}
+
+.bg-blue-navbar, .bg-blue-footer {
+  background-color: #3490dc !important;
+}
+
+
+.logo{
+  border-style: none;
+  max-width: 100%;
+  border-radius: 50% !important;
+}
+
+.text-white{
+  color: #e1d8d7;
+}
+
+.text-black{
+  color: #252525 !important;
+}
+.mi-white-texte {
+  color: #BDBDBD;
+}
+
+.text-white-50 {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.v-btn,router-link, a{
+  text-decoration: none !important;
+}
+
+.btn-white {
+  border-radius: 8px !important;
+  border-color: rgb(128, 125, 125) !important;
+  color: white !important;
+  background-color: #3490dc !important;
+  text-decoration: none !important;
+  max-width: auto;
+  font-size-adjust: auto;
+  margin: 1px;
+}
+
+.btn-white:hover {
+background-color: 343a40 !important;
+color: white !important;
+text-decoration-color: blue !important;
+border-color: rgb(128, 125, 125) !important;
+margin: 1px;
+}
+
+.btn-white:hover span {
+color: white !important;
+}
+
+.space-header-to-footer{
+  min-height: 80vh; 
+}

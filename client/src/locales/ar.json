@@ -1,0 +1,86 @@
+{
+    "greeting": "مرحبا i18n !!",
+    "welcome": "أهلا بك",
+    "goodbye": "إلى اللقاء",
+    "allrightreserved": "كل الحقوق محفوظة",
+    "close": "غلق",
+    "added": "اضيف بنجاح!",
+    "updated": "تحديث الانتهاء!",
+    "deleted": "تم الحذف!",
+    "apple": "لا تفاح | تفاحة واحدة | {count} تفاحات",
+    "public": {
+        "nav": {
+            "top": {
+                "monespace": "مساحتي",
+                "profile": "ملفي",
+                "inscription": "نقش",
+                "connexion": "تسجيل الدخول",
+                "deconnexion": "خروج",
+                "aide": "مساعد"
+            }
+        },
+        "hero": {
+            "titre": "منصة التطبيق لرؤساء لجنة التحكيم",
+            "soustitre": "اتبع ملفك على الإنترنت وكن على علم في الوقت المناسب",
+            "pasdecompte": "لا يوجد لديك حساب؟"
+        },
+        "side": {},
+        "forms":{},
+        "footer":{}
+    },
+    "auth": {
+        "nav": {
+            "top": {}
+        },
+        "side": {},
+        "forms":{
+            "authentification": {
+                "titre": "المصادقة",
+                "username": "سم المستخدم",
+                "mdp": "كلمة السر",
+                "mdpoublie": "نسيت كلمة السر؟",
+                "btnconn": "تسجيل الدخول",
+                "pasdecompte": "لا يوجد لديك حساب؟"
+            }
+        },
+        "footer":{}
+    },
+    "apps": {
+        "nav": {
+            "top": {
+                "public": "عام",
+                "profile": "ملفي",
+                "deconnexion": "خروج"
+            }
+        },
+        "side": {
+            "dashboard": "لوحة القيادة",
+            "profile": "ملفي",
+            "signout": "تسجيل خروج",
+            "academie": "الأكاديمية",
+            "ville": "مدينة"
+        },
+        "forms":{
+            "nouveau": "جديد",
+            "nouvelle": "جديد",
+            "ajouter": "يضيف",
+            "enregistrer": "يسجل",
+            "delteTitle": "حذف",
+            "delteMessage": "هل أنت متأكد أنك تريد حذف التسجيل؟",
+            "addTitle": "إضافة",
+            "modifTitle": "تعديل",
+            "oui": "نعم",
+            "non": "لا",
+            "annuler": "يلغي",
+            "academie": {
+                "academie": "الأكاديميات",
+                "nom": "اسم الاكاديمية"
+            },
+            "ville": {
+                "ville": "مدن",
+                "nom": "اسم المدينة"
+            }
+        },
+        "footer":{}
+    }
+}

@@ -1,0 +1,91 @@
+{
+    "greeting": "Hello i18n !!",
+    "welcome": "Welcome",
+    "goodbye": "Bye",
+    "allrightreserved": "All rights reserved",
+    "close": "Close",
+    "added": "Added successfully!",
+    "updated": "Update completed!",
+    "deleted": "Deletion done!",
+    "apple": "no apples | one apple | {count} apples",
+    "public": {
+        "nav": {
+            "top": {
+                "monespace": "My space",
+                "profile": "My profile",
+                "inscription": "Sign in",
+                "connexion": "Sign in",
+                "deconnexion": "Logout",
+                "aide": "Help"
+            }
+        },
+        "hero": {
+            "titre": "Application platform for jury presidents",
+            "soustitre": "Follow your file online and be informed in time",
+            "pasdecompte": "You do not have an account?"
+        },
+        "side": {
+            "dashboard": "Dashboard",
+            "profile": "My profile",
+            "signout": "Logout",
+            "academie": "Academy"
+        },
+        "forms":{},
+        "footer":{}
+    },
+    "auth": {
+        "nav": {
+            "top": {}
+        },
+        "side": {},
+        "forms":{
+            "authentification": {
+                "titre": "Authentication",
+                "username": "Username",
+                "mdp": "Password",
+                "mdpoublie": "Forgot password?",
+                "btnconn": "Login",
+                "pasdecompte": "Don't have an account?"
+            }
+        },
+        "footer":{}
+    },
+    "apps": {
+        "nav": {
+            "top": {
+                "public": "Public",
+                "profile": "My profile",
+                "deconnexion": "Logout"
+            }
+        },
+        "side": {
+            "dashboard": "Dashboard",
+            "profile": "Profile",
+            "signout": "Logout",
+            "academie": "Academy",
+            "ville": "City"
+        },
+        "forms":{
+            "nouveau": "New",
+            "nouvelle": "New",
+            "ajouter": "Add",
+            "enregistrer": "Save",
+            "delteTitle": "Deletion",
+            "delteMessage": "Are you sure you want to delete the recording?",
+            "addTitle": "Addition",
+            "modifTitle": "Amendment",
+            "oui": "Yes",
+            "non": "No",
+            "annuler": "Cancel",
+            "academie": {
+                "academie": "Academies",
+                "nom": "Academy name"
+            },
+            "ville": {
+                "ville": "Cities",
+                "nom": "City name"
+            }
+        },
+        "footer":{}
+    }
+}
