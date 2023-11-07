@@ -11,4 +11,5 @@ import lombok.ToString;
 public class VilleRequest {
     private String libelleLong;
     private String libelleCourt;
+    private String academie;
 }

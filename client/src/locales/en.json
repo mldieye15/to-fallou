@@ -63,7 +63,17 @@
             "profile": "Profile",
             "signout": "Logout",
             "academie": "Academy",
-            "ville": "City"
+            "ville": "City",
+            "jury":"Juries",
+            "annee":"Years",
+            "centre":"Centers",
+            "etablissement":"Establishments",
+            "typeEtablissement":"TypeEtablissements",
+            "session":"Sessions",
+            "typeCentre":"TypeCenters",
+            "demande":"Requests"
+            
+
         },
         "forms":{
             "nouveau": "New",
@@ -83,7 +93,44 @@
             },
             "ville": {
                 "ville": "Cities",
-                "nom": "City name"
+                "nom": "City name",
+                "abreviation":"Its abbreviation"
+            },
+            "jury": {
+                "jury": "Juries",
+                "numero": "Jury number"
+            },
+            "annee": {
+                "annee": "Years",
+                "libelle": "year name"
+            },
+            "centre": {
+                "centre": "Centers",
+                "nom": "Center name",
+                "abreviation":"Its abbreviation"
+            },
+            "etablissement":{
+                "etablissement":"establishments",
+                "nom":"Establishment name",
+                "abreviation":"Its abbreviation"
+            },
+            "typeEtablissement":{
+                "typeEtablissement":"typeEstablishment",
+                "nom":"Establishment type name",
+                "abreviation":"Its abbreviation"
+            },
+            "session":{
+                "session":"session",
+                "nom":"Session name"
+            },
+            "typeCentre":{
+                "typeCentre":"typeCenter",
+                "nom":"Center type name",
+                "abreviation":"Its abbreviation"
+            },
+            "demande":{
+                "demande":"request",
+                "nom":"Request Name"
             }
         },
         "footer":{}

@@ -25,6 +25,6 @@ public class SessionRequest {
     private Integer delaisValidation;
     private String  dateDeOuvertureDepotCandidature;
     private String  dateDeClotureDepotCandidature;
-    private Annee   annee;
-    private TypeSession typeSession;
+    private String   annee;
+    private String typeSession;
 }

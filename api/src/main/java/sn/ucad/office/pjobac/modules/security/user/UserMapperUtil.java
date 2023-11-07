@@ -8,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
+import sn.ucad.office.pjobac.modules.etablissement.Etablissement;
+import sn.ucad.office.pjobac.modules.etablissement.EtablissementDao;
 import sn.ucad.office.pjobac.modules.fonction.Fonction;
 import sn.ucad.office.pjobac.modules.fonction.FonctionDao;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
@@ -20,20 +22,39 @@ import java.util.Date;
 @Slf4j
 public class UserMapperUtil {
     private final FonctionDao fonctionDao;
+    private final EtablissementDao etablissementDao;
 
     @Named("getFonctionById")
     Fonction getFonctionById(String fonctionId) throws NumberFormatException {
         try {
             Long myId = Long.valueOf(fonctionId.trim());
-            Fonction response = fonctionDao.findById(myId)
+            Fonction response;
+            response = fonctionDao.findById(myId)
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucune fonction avec " + fonctionId + " trouvée.", HttpStatus.NOT_FOUND)
                     );
             return response;
         } catch (NumberFormatException e) {
-            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getFonctionById>.", fonctionId);
+            log.warn("Paramétre id {} non autorisé. <EtablissementMapperUtil::getFonctionById>.", fonctionId);
             throw new BusinessResourceException("not-valid-param", "Paramétre " + fonctionId + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
+    }
+    @Named("getEtablissementById")
+    Etablissement getEtablissementById(String etablissementId) throws NumberFormatException{
+        try {
+            Long myId= Long.valueOf(etablissementId.trim());
+            Etablissement response;
+            response= etablissementDao.findById(myId)
+                    .orElseThrow( () ->  new BusinessResourceException("not-found", "Aucune etablissement avec " + etablissementId + " trouvée.", HttpStatus.NOT_FOUND)
+
+                    );
+            return  response;
+        }catch (NumberFormatException e){
+            log.warn("Paramétre id {} non autorisé. <EtablissementMapperUtil::getEtablissementById>.", etablissementId);
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + etablissementId + " non autorisé.", HttpStatus.BAD_REQUEST);
+
+        }
+
     }
 
     @Named("encodeMdp")

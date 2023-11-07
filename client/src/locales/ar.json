@@ -58,7 +58,15 @@
             "profile": "ملفي",
             "signout": "تسجيل خروج",
             "academie": "الأكاديمية",
-            "ville": "مدينة"
+            "ville": "مدينة",
+            "jury":"هيئات المحلفين ",
+            "annee":"سنين",
+            "centre":"المراكز",
+            "typeCentre":"اكتب المراكز",
+            "etablissement":"المؤسسات",
+            "typeEtablissement":"نوع المؤسسات",
+            "demande":"الطلبات",
+            "session":"الجلسات"
         },
         "forms":{
             "nouveau": "جديد",
@@ -78,7 +86,44 @@
             },
             "ville": {
                 "ville": "مدن",
-                "nom": "اسم المدينة"
+                "nom": "اسم المدينة",
+                "abreviation":"اختصارها"
+            },
+            "jury":{
+                "jury":"المحلفين",
+                "numero":"رقم هيئة المحلفين"
+            },
+            "annee":{
+                "annee":"سنين",
+                "libelle":"صيغة العام"
+            },
+            "centre":{
+                "centre":"المراكز",
+                "nom":"اسم المركز",
+                "abreviation":"اختصارها"
+            },
+            "etablissement":{
+                "etablissement":"المؤسسات",
+                "nom":"إسم المؤسسة",
+                "abreviation":"اختصارها"
+            },
+            "typeEtablissement":{
+                "typeEtablissement":"نوع المؤسسة",
+                "nom":"اسم نوع المؤسسة",
+                "abreviation":"اختصارها"
+            },
+            "session":{
+                "session":"حصة",
+                "nom":"اسم الجلسة"
+            },
+            "typeCentre":{
+                "typeCentre":"نوع المركز",
+                "nom":"اسم نوع المركز",
+                "abreviation":"اختصارها"
+            },
+            "demande":{
+                "demande":"طلبت",
+                "nom":"اسم الطلب"
             }
         },
         "footer":{}

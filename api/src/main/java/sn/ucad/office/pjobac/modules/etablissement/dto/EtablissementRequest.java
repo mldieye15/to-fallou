@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import sn.ucad.office.pjobac.modules.typeEtablissement.TypeEtablissement;
-import sn.ucad.office.pjobac.modules.ville.Ville;
+
 
 @Data
 @NoArgsConstructor
@@ -14,6 +13,6 @@ import sn.ucad.office.pjobac.modules.ville.Ville;
 public class EtablissementRequest {
     private String libelleLong;
     private String code;
-    private TypeEtablissement typeEtablissement;
-    private Ville ville;
+    private String typeEtablissement;
+    private String ville;
 }

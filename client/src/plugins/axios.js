@@ -3,7 +3,7 @@ import axios from 'axios';
 let lang = localStorage.getItem('lang') || import.meta.env.VITE_I18N_LOCALE || 'fr';
 
 const defaultOptions = {
-baseURL: import.meta.env.VITE_BASE_URL+"/pjobac/api",
+baseURL: import.meta.env.VITE_BASE_URL,
 crossdomain: true,
 //withCredentials: true,
 headers: {

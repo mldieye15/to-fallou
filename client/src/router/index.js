@@ -3,6 +3,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Middleware from '@/middlewares'
 import academieRoutes from '@/modules/academie/routes';
 import villeRoutes from '@/modules/ville/routes';
+import juryRoutes from '@/modules/jury/routes';
+import anneeRoutes from '@/modules/annee/routes';
+import centreRoutes from '@/modules/centre/routes';
+import etablissementRoutes from '@/modules/etablissement/routes';
+import typeEtablissementRoutes from '@/modules/typeEtablissement/routes';
+import sessionRoutes from '@/modules/session/routes';
+import typeCentreRoutes from '@/modules/typeCentre/routes';
+import demandeRoutes from '@/modules/demande/routes';
 
 const routes = [
   {
@@ -102,8 +110,16 @@ const routes = [
           },
       ]
   },
-  ...academieRoutes,
-  ...villeRoutes
+  ...academieRoutes,                                            
+  ...villeRoutes,
+  ...juryRoutes,
+  ...anneeRoutes,
+  ...centreRoutes,
+  ...etablissementRoutes,
+  ...typeEtablissementRoutes,
+  ...sessionRoutes,
+  ...typeCentreRoutes,
+  ...demandeRoutes
 ]
 
 const router = createRouter({

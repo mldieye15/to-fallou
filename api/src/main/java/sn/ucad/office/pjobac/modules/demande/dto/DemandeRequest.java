@@ -9,5 +9,5 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class DemandeRequest {
-    private String libelleLong;
+    private String ville;
 }

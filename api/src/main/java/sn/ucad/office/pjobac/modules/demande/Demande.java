@@ -1,7 +1,6 @@
 package sn.ucad.office.pjobac.modules.demande;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -17,9 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
-)
+@Table
 public class Demande {
     @Id
     @Setter(AccessLevel.PROTECTED)
@@ -38,15 +35,15 @@ public class Demande {
     @ManyToOne
     private EtatDemande etatDemande;
 
-    @NotNull
+//    @NotNull
     private Integer ordreArrivee;
 
-    @NotNull
+//    @NotNull
     private Integer ordre;
-    @NotNull
+//    @NotNull
     private Integer delaisDeValidation;
 
-    protected LocalDateTime dateDemande;
+    protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;
     protected LocalDateTime dateConfirmationDeamnde;
 

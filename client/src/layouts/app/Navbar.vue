@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <v-app-bar class="bg-black-navbar darken-2" dark app inset padless flat>
+    <v-app-bar class="bg-blue-navbar darken-2" dark app inset padless flat>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" class="text-white"></v-app-bar-nav-icon>
       <v-avatar class="elevation-1">
         <v-img alt="Logo" class="shrink logo" rounded lazy-src="" :src="imageUrl" transition="scale-transition" width="40"  />
@@ -53,21 +53,21 @@
       </v-menu>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" dark app class="bg-blue-navbar darken-6" >
+    <v-navigation-drawer v-model="drawer" dark app class="bg-white-navbar darken-6" >
       <v-layout column align-center>
-        <v-flex class="mt-2 mx-auto">
+        <v-flex class="mt-1 mx-auto"> 
             <v-avatar size="100">
               <v-img alt="Logo" class="shrink logo" rounded lazy-src="" :src="profileUrl" transition="scale-transition" width="60"  />
             </v-avatar>
             <p class="text-white subheading mt-1 text-center">mldieye</p>
         </v-flex>
       </v-layout>
-      <v-divider class="mx-10 mt-3"></v-divider>
+      <v-divider class="mx-10 mt-1"></v-divider>
       <SidebarItem :items="fonctionItems.items"/>
     </v-navigation-drawer>
   </nav>
 </template>
-
+  
 <script setup>
 import imageUrl from '@/assets/imgs/logo_blanc.jpg'
 import profileUrl from '@/assets/imgs/profile3.png'
@@ -93,7 +93,7 @@ defineProps({
 
 //
 const defaultSideBarItems = reactive({ items: [
-  {
+  {    
       "id": 1,
       "title": "Tableau de bord",
       "translate": "dashboard",
@@ -116,8 +116,72 @@ const defaultSideBarItems = reactive({ items: [
     "code": "ville",
     "icon": "mdi-city",
     "route": "ville-liste"
+  },
+  {
+    "id": 4,
+    "title": "Jurys",
+    "translate": "jury",
+    "code": "jury",
+    "icon": "mdi-align-vertical-center",
+    "route": "jury-liste"
+  },
+  {
+    "id": 5,
+    "title": "Annees",
+    "translate": "annee",
+    "code": "annee",
+    "icon": "mdi-clock-time-eight",
+    "route": "annee-liste"
+  },
+  {
+    "id": 6,
+    "title": "Centres",
+    "translate": "centre",
+    "code": "centre",
+    "icon": "mdi-cast-education",
+    "route": "centre-liste"
+  },
+  {
+    "id": 7,
+    "title": "Etablissements",
+    "translate": "etablissement",
+    "code": "etablissement",
+    "icon": "mdi-account-school",
+    "route": "etablissement-liste"
+  },
+  {
+    "id": 8,
+    "title": "TypeEtablissements",
+    "translate": "typeEtablissement",
+    "code": "typeEtablissement",
+    "icon": "mdi-account-school-outline",
+    "route": "typeEtablissement-liste"
+  },
+  {
+    "id": 9,
+    "title": "Sessions",
+    "translate": "session",
+    "code": "session",
+    "icon": "mdi-calendar-clock",
+    "route": "session-liste"
+  },
+  {
+    "id": 10,
+    "title": "TypeCentres",
+    "translate": "typeCentre",
+    "code": "typeCentre",
+    "icon": "mdi-school-outline",
+    "route": "typeCentre-liste"
+  },
+  {
+    "id": 11,
+    "title": "Demandes",
+    "translate": "demande",
+    "code": "demande",
+    "icon": "mdi-account-multiple-check",
+    "route": "demande-liste"
   }
-  /*{
+  /*{    
         "id": 2,
         "title": "Profile",
         "translate": "profile",
@@ -125,7 +189,7 @@ const defaultSideBarItems = reactive({ items: [
         "icon": "mdi-account-box",
         "route": "profile"
     },
-  {
+  {    
       "id": 3,
       "title": "Ville",
       "translate": "ville",

@@ -12,6 +12,6 @@ import lombok.ToString;
 public class TypeCentreResponse {
     private Long id;
     private String libelleLong;
-    private String libellecourt;
+    private String libelleCourt;
 
 }

@@ -1,5 +1,5 @@
 server:
-  port: 9201
+  port: 8201
 
 spring:
   application:
@@ -10,7 +10,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/office?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
-    password: Mysql8Pwd
+    password:
       # thes 2 lines are used for productin
     #tomcat:
     #test-while-idle: true

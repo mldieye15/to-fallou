@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -28,7 +29,9 @@ public class Centre {
     private String libelleLong;
 
     @NotNull
-    private String libelleCourt;
+    private String code;
+    @NotNull
+    private Integer nombreJury;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Ville ville;

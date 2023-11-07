@@ -2,7 +2,7 @@
   <div class="text-left">
     <v-list color="transparent" class="text-white" v-for="item in items" :key="item.id" >
       <!--<router-link :to="{name:item.route}" active-class="active-link" exact-active-class="exact-active-link" :class="{'active-link':isChild(`${item.route}`)}">-->
-      <router-link :to="{name:item.route}" v-slot="{ isActive, isExactActive }" class="text-white">
+      <router-link :to="{name:item.route}" v-slot="{ isActive, isExactActive }" class="text-blue">
         <v-list-item  :class="[isActive && 'router-link-active', isExactActive && 'router-link-exact-active']" :prepend-icon="item.icon" :title="$t(`apps.side.${item.translate}`) "></v-list-item>
       </router-link>
     </v-list>
@@ -39,6 +39,6 @@ const isChild = computed( () => (name) => {
     color: #F0F0FF;
     font-weight: bold;
     border-left: 4px solid #e1d8d7;
-    background-color: #343a40 ;
+    background-color: #3592d5 ;
 }
 </style>

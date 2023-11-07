@@ -58,7 +58,15 @@
             "profile": "Mon profil",
             "signout": "Déconnexion",
             "academie": "Académies",
-            "ville": "Ville"
+            "ville": "Villes",
+            "jury":"Jurys",
+            "annee":"Annees",
+            "centre":"Centres",
+            "etablissement":"Etablissements",
+            "typeEtablissement":"TypeEtablissements",
+            "session":"Sessions",
+            "typeCentre":"TypeCentres",
+            "demande":"Demandes"
         },
         "forms":{
             "nouveau": "Nouveau",
@@ -78,7 +86,52 @@
             },
             "ville": {
                 "ville": "Villes",
-                "nom": "Nom de la ville"
+                "nom": "Nom de la ville",
+                "abreviation":"Son abreviation"
+            },
+            "jury":{
+                "jury":"Jurys",
+                "numero":"Numéro du jury"
+            },
+            "annee":{
+                "annee":"Annees",
+                "libelle":"Libelle de l'annee"
+            },
+            "centre":{
+                "centre":"centres",
+                "nom":"Nom du centre",
+                "abreviation":"Son abreviation"
+            },
+            "etablissement":{
+                "etablissement":"etablissements",
+                "nom":"Nom de l'etablissement",
+                "abreviation":"Son abreviation"
+            },
+            "typeEtablissement":{
+                "typeEtablissement":"typeEtablissements",
+                "nom":"Nom du type de l'etablissement",
+                "abreviation":"Son abreviation"
+            },
+            "session":{
+                "session":"session",
+                "nom":"libellé de la session",
+                "dateDebut":"Date de début",
+                "dateFin":"Date de fin",
+                "nombreDemandeAutorise":"Le nombre de demande autorisé",
+                "delaisValidation":"Le délais de validation",
+                "dateOuvertureDepotCandidature":"Date d'ouverture des dépots de candidature",
+                "dateClotureDepotCandidature":"Date de cloture des dépots de candidature"
+
+
+            },
+            "typeCentre":{
+                "typeCentre":"typeCentre",
+                "nom":"Nom du type du centre",
+                "abreviation":"Son abreviation"
+            },
+            "demande":{
+                "demande":"demande",
+                "nom":"Nom de la demande"
             }
         },
         "footer":{}

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-//import sn.ucad.office.pjobac.modules.etablissement.Etablissement;
+import sn.ucad.office.pjobac.modules.etablissement.Etablissement;
 import sn.ucad.office.pjobac.modules.fonction.Fonction;
 import sn.ucad.office.pjobac.modules.security.role.AppRole;
 
@@ -57,8 +57,8 @@ public class AppUser {
     @ManyToOne
     private Fonction fonction;
 
-    //@ManyToOne
-    //private Etablissement etablissement;
+    @ManyToOne
+    private Etablissement etablissement;
     @NotNull
     //@Size(min=6, max=10, message="username doit etre comprise entre 6 et 10 cracteres")
     @Column(unique = true)

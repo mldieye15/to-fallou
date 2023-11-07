@@ -2,15 +2,15 @@
   <v-main id="inspire" class="d-flex flex-column" justify="space-between">
     <Navbar :appName="appName"/>
     <Snackbar :notifications="notifications" :removeNotification="removeNotification"/>
-
+    
     <v-container fluid >
       <router-view/>
     </v-container>
-
+    
     <Footer :copyrightName="copyrightName" />
   </v-main>
-
-
+  
+  
 </template>
 
 <script setup>
@@ -41,7 +41,6 @@ const appName = import.meta.env.VITE_APP_NAME;
 const copyrightName = import.meta.env.VITE_APP_COPYRIGHT;
 
 onMounted(()=>{
-  console.log("changeLoggedIn called on mounted app");
   changeLoggedIn();
 });
 

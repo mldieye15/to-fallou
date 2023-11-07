@@ -26,7 +26,7 @@ public class UserRequest {
     private String telephone;
     private Integer anciennete;
     private String fonction;
-    //private Etablissement etablissement;
+    private String etablissement;
     private String code;
     private boolean isEnabled;
     private boolean isLocked;

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import sn.ucad.office.pjobac.modules.academie.Academie;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +14,6 @@ public class VilleResponse {
     private Long id;
     private String libelleLong;
     private String libelleCourt;
+    private Academie academie;
 
 }

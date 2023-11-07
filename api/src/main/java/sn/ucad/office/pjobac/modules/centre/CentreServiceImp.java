@@ -31,8 +31,9 @@ public class CentreServiceImp implements CentreService {
     public List<CentreResponse> all() throws BusinessResourceException {
         log.info("AcademieServiceImp::all");
         List<Centre> all = dao.findAll();
-        List<CentreResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<CentreResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
