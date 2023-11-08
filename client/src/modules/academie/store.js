@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/academies';
+const add= modulesURL+'/';
 const  all = modulesURL+'/all';
 
 export const useAcademieStore = defineStore('academie', {
@@ -69,7 +70,7 @@ export const useAcademieStore = defineStore('academie', {
     //  ajouter une academéie
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload)
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

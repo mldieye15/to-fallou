@@ -29,12 +29,14 @@ const { one, modify } = sessionStore;
 
 const inputForm = reactive({
   libelleLong:'',
-  dateDebut:'',
-  dateFin:'',
+  dateDeDebut:'',
+  dateDeFin:'',
   nombreDemandeAutorise:'',
   delaisValidation:'',
-  dateOuvertureDepotCandidature:'',
-  dateClotureDepotCandidature:''
+  dateDeOuvertureDepotCandidature:'',
+  dateDeClotureDepotCandidature:'',
+  annee:null,
+  typeSession:null,
 });
 
 const handleSave = (payload) => {
@@ -51,12 +53,16 @@ const handleSave = (payload) => {
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.dateDebut = dataDetails.value.dateDebut,
-    inputForm.dateFin = dataDetails.value.dateFin,
+    inputForm.dateDeDebut = dataDetails.value.dateDebut,
+    inputForm.dateDeFin = dataDetails.value.dateFin,
     inputForm.nombreDemandeAutorise = dataDetails.value.nombreDemandeAutorise,
     inputForm.delaisValidation = dataDetails.value.delaisValidation,
-    inputForm.dateOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
-    inputForm.dateClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
+    inputForm.dateDeOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
+    inputForm.dateDeClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
+    // inputForm.annee=dataDetails.value.annee,
+    // inputForm.typeSession=dataDetails.value.typeSession
+
+
   });
 });
 

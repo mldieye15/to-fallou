@@ -2,13 +2,13 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/v1/sessions';
-const all= modulesURL+'/all';
+const  modulesURL = '/v1/fonctions';
 const add= modulesURL+'/';
+const  all = modulesURL+'/all';
 
-export const useSessionStore = defineStore('session', {
+export const useFonctionStore = defineStore('fonction', {
   state: () => ({
-    dataListeSession: [],  //  List des données à afficher pour la table
+    dataListe: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -20,49 +20,30 @@ export const useSessionStore = defineStore('session', {
       {
         text: 'Académies',
         disabled: true,
-        route: 'src/modules/session/routes.js',
+        route: 'src/modules/fonction/routes.js',
       }
     ],*/
     headerTable: [
-      { text: 'Libelle Long', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'Date Debut', value: 'dateDebut', align: 'start', sortable: true },
-      { text: 'Date Fin', value: 'dateFin', align: 'start', sortable: true },
-      { text: 'Nombre Demande Autorise', value: 'nombreDemandeAutorise', align: 'start', sortable: true },
-      { text: 'Delais Validation', value: 'delaisValidation', align: 'start', sortable: true },
-      { text: 'Date Ouverture Depot Candidature', value: 'dateOuvertureDepotCandidature', align: 'start', sortable: true },
-      { text: 'Date Cloture Depot Candidature', value: 'dateClotureDepotCandidature', align: 'start', sortable: true },
-      { text: 'Annee', value: 'annee', align: 'start', sortable: true },
-      { text: 'TypeSession', value: 'typeSession', align: 'start', sortable: true },
+      { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'Abreviation', value: 'libelleCourt', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListeSession
+    getDataListe: (state) => state.dataListe
   },
 
   actions: {
     //  recupérer la liste des académies et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(`${all}`) 
+        await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
-            let res = response.data.map( (element) => ({
-              id:element.id, 
-              libelleLong: element.libelleLong,
-              dateDebut: element.dateDebut,
-              dateFin: element.dateFin,
-              nombreDemandeAutorise: element.nombreDemandeAutorise,
-              delaisValidation: element.delaisValidation,
-              dateOuvertureDepotCandidature: element.dateOuvertureDepotCandidature,
-              dateClotureDepotCandidature: element.dateClotureDepotCandidature,
-              annee: element.annee.libelleLong,
-              typeSession: element.typeSession.libelleLong,
-            }))
-
-            this.dataListeSession = res;
-          } 
+            console.log(response.data);
+            this.dataListe = response.data;
+          }
         })
       } catch (error) {
         console.log(error);
@@ -71,14 +52,14 @@ export const useSessionStore = defineStore('session', {
         this.loading = false
       }
     },
-    //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
-    async one(session) {
+    //  recupérer les informations d'une académie par son ide et le mettre dans la tabel dataDetails
+    async one(fonction) {
       try {
-        await axios.get(`${modulesURL}/${session}`) 
+        await axios.get(`${modulesURL}/${fonction}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -87,10 +68,10 @@ export const useSessionStore = defineStore('session', {
         this.loading = false
       }
     },
-    //  ajouter une session
+    //  ajouter une academéie
     async add(payload) {
       try {
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -104,7 +85,7 @@ export const useSessionStore = defineStore('session', {
         this.loading = false
       }
     },
-    //  modifier une session
+    //  modifier une academéie
     async modify(id, payload) {
       try {
         console.log("Id: ", id);
@@ -122,10 +103,10 @@ export const useSessionStore = defineStore('session', {
         this.loading = false
       }
     },
-    //  supprimer une session
+    //  modifier une academéie
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -139,5 +120,5 @@ export const useSessionStore = defineStore('session', {
       }
     }
   },
-  
+
 })

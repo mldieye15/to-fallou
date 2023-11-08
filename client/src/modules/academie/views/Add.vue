@@ -26,7 +26,7 @@ const academieStore = useAcademieStore();
 const { add } = academieStore;
 
 const inputForm= reactive({
-  libellelong:''
+  libelleLong:''
 });
 
 const handleSave = (payload) => {

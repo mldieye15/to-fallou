@@ -66,7 +66,10 @@
             "typeEtablissement":"TypeEtablissements",
             "session":"Sessions",
             "typeCentre":"TypeCentres",
-            "demande":"Demandes"
+            "demande":"Demandes",
+            "fonction":"Fonctions",
+            "typeSession":"TypeSessions",
+            "codification":"Codifications"
         },
         "forms":{
             "nouveau": "Nouveau",
@@ -132,6 +135,20 @@
             "demande":{
                 "demande":"demande",
                 "nom":"Nom de la demande"
+            },
+            "fonction":{
+                "fonction":"fonction",
+                "nom":"nom de la fonction",
+                "abreviation":"Son abreviation"
+            },
+            "typeSession":{
+                "typeSession":"typeSessions",
+                "nom":" type de Session"
+            },
+            "codification":{
+                "codification":"Codifications",
+                "email":"le mail",
+                "code":"le code"
             }
         },
         "footer":{}

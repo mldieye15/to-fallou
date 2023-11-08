@@ -1,15 +1,17 @@
 <template>
   <div>
     <v-card
-      class="mx-auto pa-12 pb-8 mt-5"
+      class="mx-auto pa-12 pb-8 mt-1"
       elevation="8"
-      max-width="500"
+      max-width="900"
       rounded="lg"
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.session.session') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="sessionForm" :value="formValid">
-      <v-text-field
+      <v-row style="height: 12vh">
+        <v-col>
+      <v-text-field 
         id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
         name="libelleLong"
@@ -18,82 +20,96 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="underlined"
-      ></v-text-field>
-
-      <v-text-field
-        id="dateDebut"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="dateDebut"
-        density="compact"
-        :label="$t('apps.forms.session.dateDebut')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.dateDebut"
-        variant="underlined"
-      ></v-text-field>
-
-      <v-text-field
-        id="dateFin"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="dateFin"
-        density="compact"
-        :label="$t('apps.forms.session.dateFin')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.dateFin"
-        variant="underlined"
-      ></v-text-field>
-
-      <v-text-field
+        variant="underlined" 
+      ></v-text-field >
+      </v-col>
+      <v-col>
+        <v-text-field
         id="nombreDemandeAutorise"
         prepend-inner-icon="mdi-alpha-a-circle"
         name="nombreDemandeAutorise"
         density="compact"
         :label="$t('apps.forms.session.nombreDemandeAutorise')"
         color="balck"
-        :rules="[rules.required, rules.min]"
+        :rules="[rules.required]"
         v-model="inputForm.nombreDemandeAutorise"
         variant="underlined"
       ></v-text-field>
-
+      </v-col>
+       
+    </v-row>
+    <v-row style="height: 12vh">
+      <v-col>
+        <v-text-field
+        id="dateDebut"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="dateDebut"
+        density="compact"
+        :label="$t('apps.forms.session.dateDebut')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.dateDeDebut"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="dateFin"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="dateFin"
+        density="compact"
+        :label="$t('apps.forms.session.dateFin')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.dateDeFin"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+    </v-row >
+      <v-row style="height: 12vh">
+        <v-col>
+          <v-text-field
+        id="dateDeOuvertureDepotCandidature"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="dateDeOuvertureDepotCandidature"
+        density="compact"
+        :label="$t('apps.forms.session.dateOuvertureDepotCandidature')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.dateDeOuvertureDepotCandidature"
+        variant="underlined"
+      ></v-text-field>
+        </v-col>
+        <v-col>
       <v-text-field
+        id="dateDeClotureDepotCandidature"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="dateDeClotureDepotCandidature"
+        density="compact"
+        :label="$t('apps.forms.session.dateClotureDepotCandidature')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.dateDeClotureDepotCandidature"
+        variant="underlined"
+      ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="reduce-margin">
+        <v-col>
+          <v-text-field
         id="delaisValidation"
         prepend-inner-icon="mdi-alpha-a-circle"
         name="delaisValidation"
         density="compact"
         :label="$t('apps.forms.session.delaisValidation')"
         color="balck"
-        :rules="[rules.required, rules.min]"
+        :rules="[rules.required]"
         v-model="inputForm.delaisValidation"
         variant="underlined"
       ></v-text-field>
-
-      <v-text-field
-        id="dateOuvertureDepotCandidature"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="dateOuvertureDepotCandidature"
-        density="compact"
-        :label="$t('apps.forms.session.dateOuvertureDepotCandidature')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.dateOuvertureDepotCandidature"
-        variant="underlined"
-      ></v-text-field>
-
-      <v-text-field
-        id="dateClotureDepotCandidature"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="dateClotureDepotCandidature"
-        density="compact"
-        :label="$t('apps.forms.session.dateClotureDepotCandidature')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.dateClotureDepotCandidature"
-        variant="underlined"
-      ></v-text-field>
-
-      <v-select
+        </v-col>
+        <v-col>
+          <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="annee"
         density="compact"
@@ -105,11 +121,32 @@
         persistent-hint
         
         single-line
-        item-title="libelle"
+        item-title="libelleLong"
         item-value="id"
       ></v-select>
+        </v-col>
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="typeSession"
+        density="compact"
+        :label="$t('apps.forms.typeSession.nom')"
+        color="balck"
+        v-model="inputForm.typeSession"
+        variant="underlined"
+        :items="dataListeTypeSession"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      </v-row>
+      
+
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -120,12 +157,14 @@ import { reactive, getCurrentInstance } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useAnneeStore } from "@/modules/annee/store";
+import { useTypeSessionStore } from "@/modules/typeSession/store";
 
 const instance = getCurrentInstance();
 
 const anneeStore = useAnneeStore();
+const typeSessionStore= useTypeSessionStore();
 const { dataListe } = storeToRefs(anneeStore);
-
+const {dataListeTypeSession} = storeToRefs(typeSessionStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
@@ -146,6 +185,15 @@ const handleSave = () => {
 
 onMounted(()=>{
   anneeStore.all();
+  typeSessionStore.all();
+
 });
 
 </script>
+
+<!-- <style>
+.reduce-margin .v-text-field {
+  margin-right: 1px; /* Ajustez la valeur pour réduire ou augmenter l'espace entre les champs horizontalement */
+}
+</style> -->
+

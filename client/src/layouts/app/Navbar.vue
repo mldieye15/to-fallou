@@ -180,7 +180,31 @@ const defaultSideBarItems = reactive({ items: [
     "code": "demande",
     "icon": "mdi-account-multiple-check",
     "route": "demande-liste"
-  }
+  },
+  {
+    "id": 12,
+    "title": "Fonctions",
+    "translate": "fonction",
+    "code": "fonction",
+    "icon": "mdi-plus",
+    "route": "fonction-liste"
+  },
+  {
+    "id": 13,
+    "title": "TypeSessions",
+    "translate": "typeSession",
+    "code": "typeSessions",
+    "icon": "mdi-clock ",
+    "route": "typeSession-liste"
+  },
+  {
+    "id": 14,
+    "title": "Codifications",
+    "translate": "codification",
+    "code": "codification",
+    "icon": "mdi-school",
+    "route": "codification-liste"
+  },
   /*{    
         "id": 2,
         "title": "Profile",

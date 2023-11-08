@@ -6,18 +6,29 @@
       max-width="500"
       rounded="lg"
     >
-    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.academie.academie') }}</h2>
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.codification.codification') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="academieForm" :value="formValid">
+    <v-form @submit.prevent="submit" ref="codificationForm" :value="formValid">
       <v-text-field
-        id="libelleLong"
+        id="email"
         prepend-inner-icon="mdi-alpha-a-circle"
-        name="libelleLong"
+        name="email"
         density="compact"
-        :label="$t('apps.forms.academie.nom')"
+        :label="$t('apps.forms.codification.email')"
         color="balck"
         :rules="[rules.required, rules.min]"
-        v-model="inputForm.libelleLong"
+        v-model="inputForm.email"
+        variant="underlined"
+      ></v-text-field>
+      <v-text-field
+        id="code"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="code"
+        density="compact"
+        :label="$t('apps.forms.codification.code')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.code"
         variant="underlined"
       ></v-text-field>
 
@@ -45,7 +56,7 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 const handleSave = () => {
-  if(instance.refs.academieForm.validate){
+  if(instance.refs.codificationForm.validate){
     actionSubmit(inputForm);
   }
 }

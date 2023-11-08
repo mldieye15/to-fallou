@@ -11,6 +11,9 @@ import typeEtablissementRoutes from '@/modules/typeEtablissement/routes';
 import sessionRoutes from '@/modules/session/routes';
 import typeCentreRoutes from '@/modules/typeCentre/routes';
 import demandeRoutes from '@/modules/demande/routes';
+import fonctionRoutes from '@/modules/fonction/routes';
+import typeSessionRoutes from '@/modules/typeSession/routes';
+import codificationRoutes from '@/modules/codifiction/routes';
 
 const routes = [
   {
@@ -119,7 +122,10 @@ const routes = [
   ...typeEtablissementRoutes,
   ...sessionRoutes,
   ...typeCentreRoutes,
-  ...demandeRoutes
+  ...demandeRoutes,
+  ...fonctionRoutes,
+  ...typeSessionRoutes,
+  ...codificationRoutes,
 ]
 
 const router = createRouter({

@@ -6,18 +6,29 @@
       max-width="500"
       rounded="lg"
     >
-    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.academie.academie') }}</h2>
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.fonction.fonction') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="academieForm" :value="formValid">
+    <v-form @submit.prevent="submit" ref="fonctionForm" :value="formValid">
       <v-text-field
         id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
         name="libelleLong"
         density="compact"
-        :label="$t('apps.forms.academie.nom')"
+        :label="$t('apps.forms.fonction.nom')"
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
+        variant="underlined"
+      ></v-text-field>
+      <v-text-field
+        id="libelleCourt"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="libelleCourt"
+        density="compact"
+        :label="$t('apps.forms.fonction.abreviation')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.libelleCourt"
         variant="underlined"
       ></v-text-field>
 
@@ -45,7 +56,7 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 const handleSave = () => {
-  if(instance.refs.academieForm.validate){
+  if(instance.refs.fonctionForm.validate){
     actionSubmit(inputForm);
   }
 }
