@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.academie.academie') }}</p>
     <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
   </div>
 </template>
@@ -13,7 +12,7 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useAcademieStore } from "../store";
+import { useUtilisateurStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -22,12 +21,23 @@ const { addNotification } = notificationStore;
 const instance = getCurrentInstance();
 const router = useRouter();
 
-const academieStore = useAcademieStore();
-const { add } = academieStore;
+const userStore = useUtilisateurStore();
+const { add } = userStore;
 
 const inputForm= reactive({
-  libelleLong:'',
-  libelleCourt: '',
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  dateNaissance:"",
+  email: "",
+  username: "",
+  mdpasse: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  fonction: null,
+  etablissement: null,
 });
 
 const handleSave = (payload) => {
@@ -37,7 +47,7 @@ const handleSave = (payload) => {
         text:  i18n.t('added'),
         color: 'blue'
       });
-    router.push( { name: 'academie-liste'});
+    router.push( { name: 'user-liste'});
   });
 }
 

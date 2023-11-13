@@ -2,13 +2,13 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/v1/centres';
-const all = modulesURL+'/all';
-const add = modulesURL+'/';
+const  modulesURL = '/v1/users';
+const all= modulesURL+'/all';
+const add= modulesURL+'/';
 
-export const useCentreStore = defineStore('centre', {
+export const useUtilisateurStore = defineStore('utilisateur', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeUtilisateur: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -20,44 +20,56 @@ export const useCentreStore = defineStore('centre', {
       {
         text: 'Académies',
         disabled: true,
-        route: 'src/modules/academie/routes.js',
+        route: 'src/modules/session/routes.js',
       }
     ],*/
     headerTable: [
-      { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
-      { text: 'nombre de Jury', value: 'nombreJury', align: 'start', sortable: true },
-      { text: 'TypeCentre', value: 'typeCentre', align: 'start', sortable: true },
-      { text: 'Ville', value: 'ville', align: 'start', sortable: true },
-      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
+      { text: 'Prenoms', value: 'prenoms', align: 'start', sortable: true },
+      { text: 'Nom', value: 'nom', align: 'start', sortable: true },
+      { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
+      { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
+      { text: 'Email', value: 'email', align: 'start', sortable: true },
+      { text: 'Username', value: 'username', align: 'start', sortable: true },
+      { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
+      { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
+      { text: 'Code', value: 'code', align: 'start', sortable: true },
+      { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
+      { text: 'Anciennete', value: 'anciennete', align: 'start', sortable: true },
+      { text: 'Fonction', value: 'fonction', align: 'start', sortable: true },
+      { text: 'Etablissement de Provenance', value: 'etablissement', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeUtilisateur: (state) => state.dataListeUtilisateur,
   },
 
   actions: {
-    //  recupérer la liste des centres et le mettre dans la tabel dataListe
+    //  recupérer la liste des utilisqteurs et le mettre dans la tabel dataListe
     async all() {
       try {
         await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
-
             let res = response.data.map( (element) => ({
               id:element.id, 
-              libelleLong: element.libelleLong,
-              libelleCourt: element.libelleCourt,
-              nombreJury: element.nombreJury,
-              ville: element.ville.libelleLong,
-              typeCentre: element.typeCentre.libelleLong,
-              academie: element.ville.academie.libelleLong
-
+              prenoms: element.prenoms,
+              nom: element.nom,
+              matricule: element.matricule,
+              dateNaiss: element.dateNaiss,
+              email: element.email,
+              username: element.username,
+              code: element.code,
+              mdpasse: element.mdpasse,
+              sexe: element.sexe,
+              telephone: element.telephone,
+              anciennete: element.anciennete,
+              fonction: element.fonction.libelleLong,
+              etablissement: element.etablissement.libelleLong,
             }))
 
-            this.dataListe = res;
+            this.dataListeUtilisateur = res;
           } 
         })
       } catch (error) {
@@ -67,10 +79,10 @@ export const useCentreStore = defineStore('centre', {
         this.loading = false
       }
     },
-    //  recupérer les informations d'un centre par son ide et le mettre dans la tabel dataDetails
-    async one(centre) {
+    //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
+    async one(session) {
       try {
-        await axios.get(`${modulesURL}/${centre}`) 
+        await axios.get(`${modulesURL}/${session}`) 
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
@@ -83,7 +95,7 @@ export const useCentreStore = defineStore('centre', {
         this.loading = false
       }
     },
-    //  ajouter un centre
+    //  ajouter une session
     async add(payload) {
       try {
         await axios.post(`${add}`, payload) 
@@ -100,12 +112,12 @@ export const useCentreStore = defineStore('centre', {
         this.loading = false
       }
     },
-    //  modifier un centre
+    //  modifier une session
     async modify(id, payload) {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload) 
+        await axios.put(`${modulesURL}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -118,7 +130,7 @@ export const useCentreStore = defineStore('centre', {
         this.loading = false
       }
     },
-    //  supprimer un centre
+    //  supprimer une session
     async destroy(id) {
       try {
         await axios.delete(`${modulesURL}/${id}`) 

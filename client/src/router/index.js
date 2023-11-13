@@ -14,6 +14,7 @@ import demandeRoutes from '@/modules/demande/routes';
 import fonctionRoutes from '@/modules/fonction/routes';
 import typeSessionRoutes from '@/modules/typeSession/routes';
 import codificationRoutes from '@/modules/codifiction/routes';
+import userRoutes from '@/modules/user/routes';
 
 const routes = [
   {
@@ -126,6 +127,7 @@ const routes = [
   ...fonctionRoutes,
   ...typeSessionRoutes,
   ...codificationRoutes,
+  ...userRoutes,
 ]
 
 const router = createRouter({

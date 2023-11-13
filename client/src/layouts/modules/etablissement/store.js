@@ -2,11 +2,11 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/etablissements';
+const  modulesURL = '/v1/etablissements';
 
 export const useEtablissementStore = defineStore('etablissement', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeEtab: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -30,7 +30,7 @@ export const useEtablissementStore = defineStore('etablissement', {
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeEtab: (state) => state.dataListeEtab
   },
 
   actions: {
@@ -48,7 +48,7 @@ export const useEtablissementStore = defineStore('etablissement', {
               typeEtablissement: element.typeEtablissement.libelleLong
             }))
 
-            this.dataListe = res;
+            this.dataListeEtab = res;
           } 
         })
       } catch (error) {

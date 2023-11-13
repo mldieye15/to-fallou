@@ -69,7 +69,8 @@
             "demande":"Demandes",
             "fonction":"Fonctions",
             "typeSession":"TypeSessions",
-            "codification":"Codifications"
+            "codification":"Codifications",
+            "user":"Users"
         },
         "forms":{
             "nouveau": "Nouveau",
@@ -85,7 +86,8 @@
             "annuler": "Annuler",
             "academie": {
                 "academie": "Académies",
-                "nom": "Nom de l'académie"
+                "nom": "Nom de l'académie",
+                "abreviation":"Son abreviation"
             },
             "ville": {
                 "ville": "Villes",
@@ -103,7 +105,8 @@
             "centre":{
                 "centre":"centres",
                 "nom":"Nom du centre",
-                "abreviation":"Son abreviation"
+                "abreviation":"Son abreviation",
+                "nombreJury":"nombre de Jury"
             },
             "etablissement":{
                 "etablissement":"etablissements",
@@ -127,9 +130,24 @@
 
 
             },
+            "user":{
+                "user":"utilisateur",
+                "prenoms": "prenoms",
+                "nom": "nom",
+                "matricule": "matricule",
+                "dateNaissance":"date de Naissance",
+                "email": "l'address email",
+                "username": "Nom d'utilisateur",
+                "mdpasse": "mot de passe",
+                "sexe": "sexe",
+                "code": "code",
+                "telephone": "telephone",
+                "anciennete": "enciennete"
+            },
+
             "typeCentre":{
                 "typeCentre":"typeCentre",
-                "nom":"Nom du type du centre",
+                "nom":"Nom du type de centre",
                 "abreviation":"Son abreviation"
             },
             "demande":{

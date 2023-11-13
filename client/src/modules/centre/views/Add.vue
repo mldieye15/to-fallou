@@ -27,6 +27,7 @@ const { add } = centreStore;
 const inputForm= reactive({
   libelleLong:'',
   libelleCourt:'',
+  nombreJury:'',
   ville: null,
   typeCentre: null
 });

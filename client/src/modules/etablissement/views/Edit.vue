@@ -25,11 +25,13 @@ const route = useRoute();
 
 const etablissementStore = useEtablissementStore();
 const { dataDetails, loading } = storeToRefs(etablissementStore);
-const { one, modify } = academietore;
+const { one, modify } = etablissementStore;
 
 const inputForm = reactive({
   libelleLong:'',
-  libelleCourt:''
+  libelleCourt:'',
+  typeEtablissement: null,
+  ville: null,
 }); 
 
 const handleSave = (payload) => {
@@ -46,7 +48,9 @@ const handleSave = (payload) => {
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.libelleCourt = dataDetails.value.libelleCourt
+    inputForm.libelleCourt = dataDetails.value.libelleCourt,
+    inputForm.typeEtablissement=dataDetails.value.typeEtablissement.id,
+    inputForm.ville = dataDetails.value.ville.id
 
   });
 });

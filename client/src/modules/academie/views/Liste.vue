@@ -2,7 +2,7 @@
   <div>
     <p class="text-h6">{{ $t('apps.forms.academie.academie') }}</p>
     
-    <v-container class="my-5" grid-list-xl>
+    <v-container class="my-5 container" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
         <v-col cols="12" sm="6" md="4" >
           <v-text-field
@@ -28,6 +28,7 @@
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
+        class="custom-datatable"
       >
         <template #item-actions="item">
           <div class="actions-wrapper">
@@ -104,5 +105,8 @@ const del = (id) => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+.container {
+  width: 50%; /* Ajustez la largeur en pourcentage ou en pixels selon vos besoins */
 }
 </style>

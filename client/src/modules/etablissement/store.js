@@ -2,11 +2,13 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/etablissements';
+const  modulesURL = '/v1/etablissements';
+const all= modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useEtablissementStore = defineStore('etablissement', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeEtab: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -25,19 +27,21 @@ export const useEtablissementStore = defineStore('etablissement', {
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'TypeEtablissement', value: 'typeEtablissement', align: 'start', sortable: true },
-      { text: 'Actions', value: 'actions', sortable: false }
+      { text: 'Ville', value: 'ville', align: 'start', sortable: true },
+      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
+      { text: 'Actions', value: 'actions',align: 'start', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeEtab: (state) => state.dataListeEtab
   },
 
   actions: {
     //  recupérer la liste des académies et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(modulesURL) 
+        await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
 
@@ -45,10 +49,12 @@ export const useEtablissementStore = defineStore('etablissement', {
               id:element.id, 
               libelleLong: element.libelleLong,
               libelleCourt: element.libelleCourt,
-              typeEtablissement: element.typeEtablissement.libelleLong
+              typeEtablissement: element.typeEtablissement.libelleLong,
+              ville: element.ville.libelleLong,
+              academie: element.ville.academie.libelleCourt,
             }))
 
-            this.dataListe = res;
+            this.dataListeEtab = res;
           } 
         })
       } catch (error) {
@@ -77,7 +83,7 @@ export const useEtablissementStore = defineStore('etablissement', {
     //  ajouter une academéie
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

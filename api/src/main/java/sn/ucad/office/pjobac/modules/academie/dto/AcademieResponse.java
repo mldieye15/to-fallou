@@ -12,4 +12,5 @@ import lombok.ToString;
 public class AcademieResponse {
     private Long id;
     private String libelleLong;
+    private String libelleCourt;
 }

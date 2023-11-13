@@ -13,7 +13,7 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useCentreStore } from "../store";
+import { useUtilisateurStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -23,16 +23,20 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const centreStore = useCentreStore();
-const { dataDetails, loading } = storeToRefs(centreStore);
-const { one, modify } = centreStore;
+const userStore = useUtilisateurStore();
+const { dataDetails, loading } = storeToRefs(userStore);
+const { one, modify } = userStore;
 
 const inputForm = reactive({
-  libelleLong: '',
-  libelleCourt:'',
-  nombreJury:'',
-  ville: null,
-  typeCentre: null
+  libelleLong:'',
+  dateDeDebut:'',
+  dateDeFin:'',
+  nombreDemandeAutorise:'',
+  delaisValidation:'',
+  dateDeOuvertureDepotCandidature:'',
+  dateDeClotureDepotCandidature:'',
+  // annee:null,
+  // typeuser:null,
 });
 
 const handleSave = (payload) => {
@@ -42,17 +46,23 @@ const handleSave = (payload) => {
         text:  i18n.t('updated'),
         color: 'blue'
       });
-    router.push( { name: 'centre-liste'});
+    router.push( { name: 'user-liste'});
   });
 }
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.nombreJury = dataDetails.value.nombreJury,
-    inputForm.ville = dataDetails.value.ville.id,
-    inputForm.typeCentre = dataDetails.value.typeCentre.id
+    inputForm.dateDeDebut = dataDetails.value.dateDebut,
+    inputForm.dateDeFin = dataDetails.value.dateFin,
+    inputForm.nombreDemandeAutorise = dataDetails.value.nombreDemandeAutorise,
+    inputForm.delaisValidation = dataDetails.value.delaisValidation,
+    inputForm.dateDeOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
+    inputForm.dateDeClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
+    // inputForm.annee=dataDetails.value.annee.id,
+    // inputForm.typeuser=dataDetails.value.typeuser.id
+    
+
 
   });
 });

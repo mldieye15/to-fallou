@@ -2,7 +2,9 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/typeCentres';
+const  modulesURL = '/v1/typeCentres';
+const all = modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useTypeCentreStore = defineStore('typeCentre', {
   state: () => ({
@@ -36,7 +38,7 @@ export const useTypeCentreStore = defineStore('typeCentre', {
     //  recupérer la liste des types de centre et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(modulesURL) 
+        await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
             this.dataListeTypeCentre = response.data;
@@ -68,7 +70,7 @@ export const useTypeCentreStore = defineStore('typeCentre', {
     //  ajouter un type de centre
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

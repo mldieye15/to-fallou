@@ -16,8 +16,8 @@
             <v-icon left size="36" class="text-white">mdi-apps</v-icon>
           </v-btn>
         </template>
-        <v-list flat>
-          <v-list-item v-for="link in modules" :key="link.id" router  class="link-item active">
+        <v-list flat >
+          <v-list-item  v-for="link in modules" :key="link.id" router  class="link-item active">
             <v-list-item-title @click="loadFonction(link.id)">{{link.libelle}}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -94,12 +94,20 @@ defineProps({
 //
 const defaultSideBarItems = reactive({ items: [
   {    
-      "id": 1,
+      "id": 0,
       "title": "Tableau de bord",
       "translate": "dashboard",
       "code": "dashboard",
       "icon": "mdi-view-dashboard",
       "route": "dashboard"
+  },
+  {    
+      "id": 1,
+      "title": "Users",
+      "translate": "user",
+      "code": "user",
+      "icon": "mdi-account-cowboy-hat-outline",
+      "route": "user-liste"
   },
   {
     "id": 2,

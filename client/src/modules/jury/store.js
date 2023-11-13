@@ -2,11 +2,13 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/jurys';
+const  modulesURL = '/v1/jurys';
+const all= modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useJuryStore = defineStore('jury', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeJury: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -24,29 +26,33 @@ export const useJuryStore = defineStore('jury', {
     headerTable: [
       { text: 'Numero', value: 'numero', align: 'start', sortable: true },
       { text: 'Centre', value: 'centre', align: 'start', sortable: true },
+      { text: 'Ville', value: 'ville', align: 'start', sortable: true },
+      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeJury: (state) => state.dataListeJury
   },
 
   actions: {
     //  recupérer la liste des jurys et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(modulesURL) 
+        await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
 
             let res = response.data.map( (element) => ({
               id:element.id, 
               numero: element.numero,
-              centre: element.centre.libelleLong
+              centre: element.centre.libelleLong,
+              ville: element.centre.ville.libelleLong,
+              academie: element.centre.ville.academie.libelleLong
             }))
 
-            this.dataListe = res;
+            this.dataListeJury = res;
           } 
         })
       } catch (error) {
@@ -75,7 +81,7 @@ export const useJuryStore = defineStore('jury', {
     //  ajouter un jury
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

@@ -59,8 +59,9 @@ onMounted(()=>{
     inputForm.delaisValidation = dataDetails.value.delaisValidation,
     inputForm.dateDeOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
     inputForm.dateDeClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
-    // inputForm.annee=dataDetails.value.annee,
-    // inputForm.typeSession=dataDetails.value.typeSession
+    inputForm.annee=dataDetails.value.annee.id,
+    inputForm.typeSession=dataDetails.value.typeSession.id
+    
 
 
   });

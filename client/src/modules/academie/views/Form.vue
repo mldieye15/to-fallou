@@ -20,6 +20,17 @@
         v-model="inputForm.libelleLong"
         variant="underlined"
       ></v-text-field>
+      <v-text-field
+        id="libelleCourt"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="libelleCourt"
+        density="compact"
+        :label="$t('apps.forms.academie.abreviation')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.libelleCourt"
+        variant="underlined"
+      ></v-text-field>
 
       <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>

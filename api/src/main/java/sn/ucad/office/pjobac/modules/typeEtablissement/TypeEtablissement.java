@@ -24,6 +24,8 @@ public class TypeEtablissement {
 
     @NotNull
     private String libelleLong;
+    @NotNull
+    private String libelleCourt;
 
     @Column(nullable = true)
     private Long utiCree;

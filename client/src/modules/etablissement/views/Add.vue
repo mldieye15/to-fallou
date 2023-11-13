@@ -27,7 +27,8 @@ const { add } = etablissementStore;
 const inputForm= reactive({
   libelleLong:'',
   libelleCourt:'',
-  typeEtablissement: null
+  typeEtablissement: null,
+  ville: null,
 });
 
 const handleSave = (payload) => {

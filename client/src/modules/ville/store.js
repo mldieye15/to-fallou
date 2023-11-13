@@ -4,20 +4,23 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/villes';
 const  all = modulesURL+'/all';
+const add=modulesURL+'/';
 
 export const useVilleStore = defineStore('ville', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeVille: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     headerTable: [
-      { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'Abreviation', value: 'libelleCourt', align: 'start', sortable: true },
+      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeVille: (state) => state.dataListeVille
   },
 
   actions: {
@@ -27,7 +30,13 @@ export const useVilleStore = defineStore('ville', {
         await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
-            this.dataListe = response.data;
+           let res = response.data.map((element)=>({
+            id: element.id,
+            libelleLong: element.libelleLong,
+            libelleCourt: element.libelleCourt,
+            academie: element.academie.libelleLong,
+           }))
+           this.dataListeVille=res;
           } 
         })
       } catch (error) {
@@ -56,7 +65,7 @@ export const useVilleStore = defineStore('ville', {
     //  ajouter une academéie
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

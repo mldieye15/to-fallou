@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class EtablissementResponse {
     private Long id;
     private String libelleLong;
-    private String code;
+    private String libelleCourt;
     private TypeEtablissement typeEtablissement;
     private Ville ville;
     protected LocalDateTime dateCreation ;

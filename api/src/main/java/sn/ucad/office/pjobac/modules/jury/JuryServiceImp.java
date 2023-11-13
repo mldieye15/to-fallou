@@ -30,21 +30,22 @@ public class JuryServiceImp implements JuryService {
 
     @Override
     public List<JuryResponse> all() throws BusinessResourceException {
-        log.info("AcademieServiceImp::all");
+        log.info("JuryServiceImp::all");
         List<Jury> all = dao.findAll();
-        List<JuryResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<JuryResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
 
     @Override
     public SimplePage<JuryResponse> all(Pageable pageable) throws BusinessResourceException {
-        log.info("Liste des Annees avec pagination. <all>");
+        log.info("Liste des jurys avec pagination. <all>");
         final Page<Jury> page = dao.findAll(pageable);
-        return new SimplePage<JuryResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -56,10 +57,11 @@ public class JuryServiceImp implements JuryService {
             Long myId = Long.valueOf(id.trim());
             Jury one = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<JuryResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            log.info("Jury avec id: " + id + " trouvé. <oneById>");
+            Optional<JuryResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -75,14 +77,14 @@ public class JuryServiceImp implements JuryService {
             Jury one = mapper.requestToEntity(req);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             JuryResponse response = mapper.toEntiteResponse(dao.save(one));
-            log.info("Ajout " + response.getLibelleLong() + " effectué avec succés. <add>");
+            log.info("Ajout " + response.getNumero() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
-            log.error("Erreur technique de creation Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            log.error("Erreur technique de creation Jury: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
         } catch (Exception ex) {
-            log.error("Ajout Academie: Une erreur inattandue est rencontrée." + ex.getMessage());
-            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Ajout Jury: Une erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Jury: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,22 +95,22 @@ public class JuryServiceImp implements JuryService {
             Long myId = Long.valueOf(id.trim());
             Jury juryOptional = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            //Academie annee = mapper.anneRequestToAnneeUp(juryOptional, req, userService.user());
+
             Jury oneBrute = mapper.requestToEntiteUp(juryOptional, req);
             JuryResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-            log.info("Mise à jour " + response.getLibelleLong() + " effectuée avec succés. <maj>");
+            log.info("Mise à jour " + response.getNumero() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
-            log.error("Erreur technique de maj Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            log.error("Erreur technique de maj Jury: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
         } catch (Exception ex) {
             log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
-            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Jury: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,11 +121,12 @@ public class JuryServiceImp implements JuryService {
             Long myId = Long.valueOf(id.trim());
             Jury oneBrute = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             dao.deleteById(myId);
-            log.info("Academie avec id & matricule: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";
+            log.info("Jury avec id & numero: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
+            String response;
+            response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -137,16 +140,17 @@ public class JuryServiceImp implements JuryService {
             Long myId = Long.valueOf(id.trim());
             Jury oneBrute = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucune Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucune Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            log.info("Academie avec id: " + id + " trouvé. <auditOneById>");
-           Optional<JuryAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+            log.info("Jury avec id: " + id + " trouvé. <auditOneById>");
+           Optional<JuryAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
-        //return Optional.empty();
+
     }
 
 

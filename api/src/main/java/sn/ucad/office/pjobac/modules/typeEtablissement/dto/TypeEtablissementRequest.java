@@ -10,4 +10,5 @@ import lombok.ToString;
 @ToString
 public class TypeEtablissementRequest {
     private String libelleLong;
+    private String libelleCourt;
 }

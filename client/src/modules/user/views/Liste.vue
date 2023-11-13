@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.ville.ville') }}</p>
+    <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
     
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
@@ -16,7 +16,7 @@
         <v-spacer></v-spacer>
         <v-col cols="auto">
           <v-btn variant="outlined" color="black" >
-            <router-link :to="{ name: 'ville-add' }" class="">
+            <router-link :to="{ name: 'user-add' }" class="">
               {{ $t('apps.forms.ajouter') }}
             </router-link>
           </v-btn>
@@ -24,15 +24,15 @@
       </v-row>
       <EasyDataTable
         :headers="headerTable"
-        :items="dataListeVille"
+        :items="dataListeUtilisateur"
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
       >
         <template #item-actions="item">
           <div class="actions-wrapper">
-            <router-link :to="{ name: 'ville-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
-            <router-link :to="{ name: 'ville-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
+            <router-link :to="{ name: 'user-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
+            <router-link :to="{ name: 'user-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
@@ -41,7 +41,7 @@
               </template>
               <template v-slot:default="{ isActive }">
                 <v-card>
-                  <v-toolbar color="primary" :title="$t('apps.forms.academie.academie')"></v-toolbar>
+                  <v-toolbar color="primary" :title="$t('apps.forms.user.user')"></v-toolbar>
                   <v-card-text>
                     
                     <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
@@ -63,7 +63,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useVilleStore } from "../store";
+import { useUtilisateurStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
@@ -73,9 +73,9 @@ const i18n = useI18n();
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const villeStore = useVilleStore();
-const { dataListeVille, headerTable, loading } = storeToRefs(villeStore);
-const { all, destroy } = villeStore;
+const userStore = useUtilisateurStore();
+const { dataListeUtilisateur, headerTable, loading } = storeToRefs(userStore);
+const { all, destroy } = userStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });

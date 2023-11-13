@@ -25,6 +25,7 @@ export const useAcademieStore = defineStore('academie', {
     ],*/
     headerTable: [
       { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'Abreviation', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),

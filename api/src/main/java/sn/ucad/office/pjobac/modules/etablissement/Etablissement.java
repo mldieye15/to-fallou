@@ -28,7 +28,7 @@ public class Etablissement {
     private String libelleLong;
 
     @NotNull
-    private String code;
+    private String libelleCourt;
     @ManyToOne
     private TypeEtablissement typeEtablissement;
     @ManyToOne

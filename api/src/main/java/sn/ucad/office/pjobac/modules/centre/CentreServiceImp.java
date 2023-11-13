@@ -29,7 +29,7 @@ public class CentreServiceImp implements CentreService {
 
     @Override
     public List<CentreResponse> all() throws BusinessResourceException {
-        log.info("AcademieServiceImp::all");
+        log.info("CentreServiceImp::all");
         List<Centre> all = dao.findAll();
         List<CentreResponse> response;
         response = all.stream()
@@ -40,11 +40,11 @@ public class CentreServiceImp implements CentreService {
 
     @Override
     public SimplePage<CentreResponse> all(Pageable pageable) throws BusinessResourceException {
-        log.info("Liste des Annees avec pagination. <all>");
+        log.info("Liste des Centres avec pagination. <all>");
         final Page<Centre> page = dao.findAll(pageable);
         return new SimplePage<CentreResponse>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -56,10 +56,11 @@ public class CentreServiceImp implements CentreService {
             Long myId = Long.valueOf(id.trim());
             Centre one = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Centre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<CentreResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            log.info("Centre avec id: " + id + " trouvé. <oneById>");
+            Optional<CentreResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -78,11 +79,11 @@ public class CentreServiceImp implements CentreService {
             log.info("Ajout " + response.getLibelleLong() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
-            log.error("Erreur technique de creation Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            log.error("Erreur technique de creation Centre: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
         } catch (Exception ex) {
-            log.error("Ajout Academie: Une erreur inattandue est rencontrée." + ex.getMessage());
-            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error("Ajout Centre: Une erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Centre: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -93,9 +94,8 @@ public class CentreServiceImp implements CentreService {
             Long myId = Long.valueOf(id.trim());
             Centre centreOptional = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Centre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            //Academie annee = mapper.anneRequestToAnneeUp(centreOptional, req, userService.user());
             Centre oneBrute = mapper.requestToEntiteUp(centreOptional, req);
             CentreResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getLibelleLong() + " effectuée avec succés. <maj>");
@@ -104,11 +104,11 @@ public class CentreServiceImp implements CentreService {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
-            log.error("Erreur technique de maj Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            log.error("Erreur technique de maj Centre: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
         } catch (Exception ex) {
             log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
-            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Centre: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -119,11 +119,12 @@ public class CentreServiceImp implements CentreService {
             Long myId = Long.valueOf(id.trim());
             Centre oneBrute = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Centre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             dao.deleteById(myId);
             log.info("Academie avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -137,16 +138,16 @@ public class CentreServiceImp implements CentreService {
             Long myId = Long.valueOf(id.trim());
             Centre oneBrute = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucune Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucune Centre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            log.info("Academie avec id: " + id + " trouvé. <auditOneById>");
-           Optional<CentreAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+            log.info("Centre avec id: " + id + " trouvé. <auditOneById>");
+           Optional<CentreAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
-        //return Optional.empty();
     }
 
 

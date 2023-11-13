@@ -40,7 +40,21 @@
         color="balck"
         v-model="inputForm.typeEtablissement"
         variant="underlined"
-        :items="dataListe"
+        :items="dataListeTypeEtablissement"
+        persistent-hint
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+      <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="ville"
+        density="compact"
+        :label="$t('apps.forms.ville.nom')"
+        color="balck"
+        v-model="inputForm.ville"
+        variant="underlined"
+        :items="dataListeVille"
         persistent-hint
         
         single-line
@@ -59,10 +73,13 @@ import { reactive, getCurrentInstance } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useTypeEtablissementStore } from "@/modules/typeEtablissement/store";
+import { useVilleStore } from "@/modules/ville/store";
 
 const instance = getCurrentInstance();
 const typeEtablissementStore = useTypeEtablissementStore();
-const { dataListe } = storeToRefs(typeEtablissementStore);
+const { dataListeTypeEtablissement } = storeToRefs(typeEtablissementStore);
+const villeStore = useVilleStore();
+const { dataListeVille } = storeToRefs(villeStore);
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
@@ -84,6 +101,7 @@ const handleSave = () => {
 
 onMounted(()=>{
   typeEtablissementStore.all();
+  villeStore.all();
 });
 
 </script>

@@ -29,7 +29,7 @@ public class Centre {
     private String libelleLong;
 
     @NotNull
-    private String code;
+    private String libelleCourt;
     @NotNull
     private Integer nombreJury;
 
@@ -39,8 +39,8 @@ public class Centre {
     @ManyToOne(fetch = FetchType.EAGER)
     private TypeCentre typeCentre;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Centre centrePrincipal;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    private Centre centrePrincipal;
 
     @Column(nullable = true)
     private Long utiCree;

@@ -24,6 +24,8 @@ public class Academie {
 
     @NotNull
     private String libelleLong;
+    @NotNull
+    private String libelleCourt;
 
     @Column(nullable = true)
     private Long utiCree;

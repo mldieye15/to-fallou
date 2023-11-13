@@ -10,8 +10,8 @@ import lombok.ToString;
 @ToString
 public class CentreRequest {
     private String libelleLong;
+    private String libelleCourt;
     private String ville;
     private String typeCentre;
-    private String code;
     private Integer nombreJury;
 }

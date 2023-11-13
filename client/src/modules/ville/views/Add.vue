@@ -26,7 +26,9 @@ const villeStore = useVilleStore();
 const { add } = villeStore;
 
 const inputForm= reactive({
-  nom:''
+  libelleLong:'',
+  libelleCourt: '',
+  academie:null
 });
 
 const handleSave = (payload) => {
@@ -36,7 +38,7 @@ const handleSave = (payload) => {
         text:  i18n.t('added'),
         color: 'blue'
       });
-    router.push( { name: 'academie-liste'});
+    router.push( { name: 'ville-liste'});
   });
 }
 

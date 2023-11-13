@@ -29,7 +29,8 @@ const { dataDetails, loading } = storeToRefs(academietore);
 const { one, modify } = academietore;
 
 const inputForm = reactive({
-  libelleLong: ''
+  libelleLong: '',
+  libelleCourt: '',
 });
 
 const handleSave = (payload) => {
@@ -46,6 +47,7 @@ const handleSave = (payload) => {
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong
+    inputForm.libelleCourt = dataDetails.value.libelleCourt
   });
 });
 

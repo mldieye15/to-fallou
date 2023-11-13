@@ -29,7 +29,9 @@ const { dataDetails, loading } = storeToRefs(villeStore);
 const { one, modify } = villeStore;
 
 const inputForm = reactive({
-  nom: ''
+  libelleLong:'',
+  libelleCourt: '',
+  academie:null
 });
 
 const handleSave = (payload) => {
@@ -39,13 +41,15 @@ const handleSave = (payload) => {
         text:  i18n.t('updated'),
         color: 'blue'
       });
-    router.push( { name: 'academie-liste'});
+    router.push( { name: 'ville-liste'});
   });
 }
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.nom = dataDetails.value.nom
+    inputForm.libelleLong = dataDetails.value.libelleLong
+    inputForm.libelleCourt = dataDetails.value.libelleCourt
+    inputForm.academie = dataDetails.value.academie.id
   });
 });
 

@@ -10,4 +10,5 @@ import lombok.ToString;
 @ToString
 public class AcademieRequest {
     private String libelleLong;
+    private String libelleCourt;
 }

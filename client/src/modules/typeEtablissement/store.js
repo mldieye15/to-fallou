@@ -2,11 +2,13 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/typeEtablissements';
+const  modulesURL = '/v1/typeEtablissements';
+const all= modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useTypeEtablissementStore = defineStore('typeEtablissement', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeTypeEtablissement: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -29,17 +31,17 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeTypeEtablissement: (state) => state.dataListeTypeEtablissement
   },
 
   actions: {
     //  recupérer la liste des types d'établissements et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(modulesURL) 
+        await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
-            this.dataListe = response.data;
+            this.dataListeTypeEtablissement = response.data;
           } 
         })
       } catch (error) {
@@ -68,7 +70,7 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
     //  ajouter un typeEtablissement
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

@@ -15,7 +15,7 @@ import sn.ucad.office.pjobac.modules.ville.Ville;
 public class CentreResponse {
     private Long id;
     private String libelleLong;
-    private String code;
+    private String libelleCourt;
     private Integer nombreJury;
     private Ville ville;
     private TypeCentre typeCentre;
