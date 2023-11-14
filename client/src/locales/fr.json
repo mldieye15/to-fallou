@@ -135,7 +135,7 @@
                 "prenoms": "prenoms",
                 "nom": "nom",
                 "matricule": "matricule",
-                "dateNaissance":"date de Naissance",
+                "dateNaiss":"date de Naissance",
                 "email": "l'address email",
                 "username": "Nom d'utilisateur",
                 "mdpasse": "mot de passe",

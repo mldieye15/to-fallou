@@ -28,7 +28,7 @@ const inputForm= reactive({
   prenoms: "",
   nom: "",
   matricule: "",
-  dateNaissance:"",
+  dateNaiss:"",
   email: "",
   username: "",
   mdpasse: "",

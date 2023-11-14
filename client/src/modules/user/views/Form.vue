@@ -54,14 +54,14 @@
       </v-col>
       <v-col>
         <v-text-field
-        id="dateNaissance"
+        id="dateNaiss"
         prepend-inner-icon="mdi-alpha-a-circle"
-        name="dateNaissance"
+        name="dateNaiss"
         density="compact"
-        :label="$t('apps.forms.user.dateNaissance')"
+        :label="$t('apps.forms.user.dateNaiss')"
         color="balck"
         :rules="[rules.required]"
-        v-model="inputForm.dateNaissance"
+        v-model="inputForm.dateNaiss"
         variant="underlined"
       ></v-text-field>
       </v-col>
@@ -212,7 +212,7 @@ import { reactive, getCurrentInstance } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
-import { useEtablissementStore } from "@/layouts/modules/etablissement/store";
+import { useEtablissementStore } from "@/modules/etablissement/store";
 
 const instance = getCurrentInstance();
 

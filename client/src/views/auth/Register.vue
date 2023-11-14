@@ -1,83 +1,271 @@
 <template>
   <div>
-    <v-img
-      class="mx-auto my-6"
-      max-width="228"
-      src="https://cdn.vuetifyjs.com/docs/images/logos/vuetify-logo-v3-slim-text-light.svg"
-    ></v-img>
-
     <v-card
-      class="mx-auto pa-12 pb-8"
+      class="mx-auto pa-12 pb-8 mt-1"
       elevation="8"
       max-width="900"
       rounded="lg"
     >
-      <div class="text-subtitle-1 text-medium-emphasis">Account</div>
-
-      <v-text-field
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
+    <v-divider class="my-3" color="white"></v-divider>
+    <v-form @submit.prevent="submit" ref="userForm" :value="formValid">
+      <v-row style="height: 12vh">
+        <v-col>
+      <v-text-field 
+        id="prenoms"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="prenoms"
         density="compact"
-        placeholder="Email address"
-        prepend-inner-icon="mdi-email-outline"
-        variant="outlined"
-      ></v-text-field>
-
-      <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
-        Password
-
-        <a
-          class="text-caption text-decoration-none text-blue"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Forgot login password?</a>
-      </div>
-
-      <v-text-field
-        :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
-        :type="visible ? 'text' : 'password'"
+        :label="$t('apps.forms.user.prenoms')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.prenoms"
+        variant="underlined" 
+      ></v-text-field >
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="nom"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="nom"
         density="compact"
-        placeholder="Enter your password"
-        prepend-inner-icon="mdi-lock-outline"
-        variant="outlined"
-        @click:append-inner="visible = !visible"
+        :label="$t('apps.forms.user.nom')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.nom"
+        variant="underlined"
       ></v-text-field>
+      </v-col>
+       
+    </v-row>
+    <v-row style="height: 12vh">
+        <v-col>
+      <v-text-field 
+        id="matricule"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="matricule"
+        density="compact"
+        :label="$t('apps.forms.user.matricule')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.matricule"
+        variant="underlined" 
+      ></v-text-field >
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="dateNaiss"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="dateNaiss"
+        density="compact"
+        :label="$t('apps.forms.user.dateNaiss')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.dateNaiss"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="email"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="email"
+        density="compact"
+        :label="$t('apps.forms.user.email')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.email"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+       
+    </v-row>
+    <v-row style="height: 12vh">
+      <v-col>
+        <v-text-field
+        id="username"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="username"
+        density="compact"
+        :label="$t('apps.forms.user.username')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.username"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="mdpasse"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="mdpasse"
+        density="compact"
+        :label="$t('apps.forms.user.mdpasse')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.mdpasse"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+      <v-col>
+        <v-text-field
+        id="sexe"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="sexe"
+        density="compact"
+        :label="$t('apps.forms.user.sexe')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.sexe"
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+    </v-row >
+      <v-row style="height: 12vh">
+        <v-col>
+          <v-text-field
+        id="telephone"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="telephone"
+        density="compact"
+        :label="$t('apps.forms.user.telephone')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.telephone"
+        variant="underlined"
+      ></v-text-field>
+        </v-col>
+        <v-col>
+      <v-text-field
+        id="code"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="code"
+        density="compact"
+        :label="$t('apps.forms.user.code')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.code"
+        variant="underlined"
+      ></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row class="reduce-margin">
+        <v-col>
+          <v-text-field
+        id="anciennete"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="anciennete"
+        density="compact"
+        :label="$t('apps.forms.user.anciennete')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.anciennete"
+        variant="underlined"
+      ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="fonction"
+        density="compact"
+        :label="$t('apps.forms.fonction.nom')"
+        color="balck"
+        v-model="inputForm.fonction"
+        variant="underlined"
+        :items="dataListe"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="etablissement"
+        density="compact"
+        :label="$t('apps.forms.etablissement.nom')"
+        color="balck"
+        v-model="inputForm.etablissement"
+        variant="underlined"
+        :items="dataListeEtab"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
 
-      <v-card
-        class="mb-12"
-        color="surface-variant"
-        variant="tonal"
-      >
-        <v-card-text class="text-medium-emphasis text-caption">
-          Warning: After 3 consecutive failed login attempts, you account will be temporarily locked for three hours. If you must login now, you can also click "Forgot login password?" below to reset the login password.
-        </v-card-text>
-      </v-card>
+      </v-row>
+      
 
-      <v-btn
-        block
-        class="mb-8"
-        color="blue"
-        size="large"
-        variant="tonal"
-      >
-        Log In
-      </v-btn>
-
-      <v-card-text class="text-center">
-        <a
-          class="text-blue text-decoration-none"
-          href="#"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Sign up now <v-icon icon="mdi-chevron-right"></v-icon>
-        </a>
-      </v-card-text>
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+    </v-form>
     </v-card>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
-const visible = ref(false);
+import { reactive, getCurrentInstance } from "vue";
+import { useRouter } from 'vue-router';
+import { storeToRefs } from "pinia";
+import { useNotificationStore } from "@/store/notification";
+import { useI18n } from "vue-i18n";
+import { useUtilisateurStore } from "@/modules/user/store";
+import { useFonctionStore } from "@/modules/fonction/store";
+import { useEtablissementStore } from "@/modules/etablissement/store";
+import { onMounted } from "vue"
+
+const fonctionStore = useFonctionStore();
+const etablissementStore= useEtablissementStore();
+const { dataListe } = storeToRefs(fonctionStore);
+const { dataListeEtab } = storeToRefs(etablissementStore);
+const rules = reactive({
+  required: value => !!value || 'Champ obligatoire.',
+  min: v => v.length >= 2 || '2 cractére au moins',
+});
+const i18n = useI18n();
+
+const notificationStore = useNotificationStore();
+const { addNotification } = notificationStore;
+
+const instance = getCurrentInstance();
+const router = useRouter();
+
+const userStore = useUtilisateurStore();
+const { add } = userStore;
+
+const inputForm= reactive({
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  dateNaiss:"",
+  email: "",
+  username: "",
+  mdpasse: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  fonction: null,
+  etablissement: null,
+});
+
+const handleSave = (payload) => {
+  add(payload).then( () => {
+    addNotification({
+        show: true,
+        text:  i18n.t('added'),
+        color: 'blue'
+      });
+    router.push( { name: 'user-liste'});
+  });
+}
+onMounted(()=>{
+  fonctionStore.all();
+  etablissementStore.all();
+
+});
 </script>

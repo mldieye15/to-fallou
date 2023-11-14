@@ -28,15 +28,19 @@ const { dataDetails, loading } = storeToRefs(userStore);
 const { one, modify } = userStore;
 
 const inputForm = reactive({
-  libelleLong:'',
-  dateDeDebut:'',
-  dateDeFin:'',
-  nombreDemandeAutorise:'',
-  delaisValidation:'',
-  dateDeOuvertureDepotCandidature:'',
-  dateDeClotureDepotCandidature:'',
-  // annee:null,
-  // typeuser:null,
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  dateNaiss:"",
+  email: "",
+  username: "",
+  mdpasse: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  fonction: null,
+  etablissement: null,
 });
 
 const handleSave = (payload) => {
@@ -52,15 +56,20 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.dateDeDebut = dataDetails.value.dateDebut,
-    inputForm.dateDeFin = dataDetails.value.dateFin,
-    inputForm.nombreDemandeAutorise = dataDetails.value.nombreDemandeAutorise,
-    inputForm.delaisValidation = dataDetails.value.delaisValidation,
-    inputForm.dateDeOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
-    inputForm.dateDeClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
-    // inputForm.annee=dataDetails.value.annee.id,
-    // inputForm.typeuser=dataDetails.value.typeuser.id
+    inputForm.prenoms = dataDetails.value.prenoms,
+    inputForm.nom = dataDetails.value.nom,
+    inputForm.matricule = dataDetails.value.matricule,
+    inputForm.dateNaiss = dataDetails.value.dateNaiss,
+    inputForm.email = dataDetails.value.email,
+    inputForm.username = dataDetails.value.username,
+    inputForm.mdpasse = dataDetails.value.mdpasse
+    inputForm.sexe = dataDetails.value.sexe,
+    inputForm.code = dataDetails.value.code,
+    inputForm.telephone = dataDetails.value.telephone,
+    inputForm.anciennete = dataDetails.value.anciennete
+
+    inputForm.fonction=dataDetails.value.fonction.id,
+    inputForm.etablissement=dataDetails.value.etablissement.id
     
 
 
