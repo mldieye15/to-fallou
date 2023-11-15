@@ -27,4 +27,7 @@ public interface CodificationService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<CodificationAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    public Optional<CodificationResponse> inscriptionCode(CodificationRequest request)throws BusinessResourceException;
+    void sendCode(CodificationRequest request) throws BusinessResourceException, InterruptedException;
+
 }

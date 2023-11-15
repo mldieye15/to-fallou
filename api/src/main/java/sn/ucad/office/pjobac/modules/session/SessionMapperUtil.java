@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
-import sn.ucad.office.pjobac.modules.annee.Annee;
+import sn.ucad.office.pjobac.modules.centre.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.AnneeDao;
 import sn.ucad.office.pjobac.modules.typeSession.TypeSession;
 import sn.ucad.office.pjobac.modules.typeSession.TypeSessionDao;

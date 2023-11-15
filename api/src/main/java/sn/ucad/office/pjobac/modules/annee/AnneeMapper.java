@@ -1,37 +1,38 @@
-package sn.ucad.office.pjobac.modules.typeSession;
+package sn.ucad.office.pjobac.modules.annee;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import sn.ucad.office.pjobac.config.AppConstants;
-import sn.ucad.office.pjobac.modules.typeSession.dto.TypeSessionAudit;
-import sn.ucad.office.pjobac.modules.typeSession.dto.TypeSessionRequest;
-import sn.ucad.office.pjobac.modules.typeSession.dto.TypeSessionResponse;
+import sn.ucad.office.pjobac.modules.centre.annee.Annee;
+import sn.ucad.office.pjobac.modules.annee.dto.AnneeAudit;
+import sn.ucad.office.pjobac.modules.annee.dto.AnneeRequest;
+import sn.ucad.office.pjobac.modules.annee.dto.AnneeResponse;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
 
 import java.text.ParseException;
 import java.util.Date;
 @Mapper(componentModel = "spring")
-public interface TypeSessionMapper {
+public interface AnneeMapper {
     // transform the entity to PJO class
-    TypeSessionResponse toEntiteResponse(TypeSession typeSession);
+    AnneeResponse toEntiteResponse(Annee annee);
 
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")
     @Mapping(source = "modifName", target = "modificateur")
-    TypeSessionAudit toEntiteAudit(TypeSession typeSession, Long auteurName, Long modifName);
+    AnneeAudit toEntiteAudit(Annee annee, Long auteurName, Long modifName);
 
     // request to entity anne
-    TypeSession requestToEntity(TypeSessionRequest request);
+    Annee requestToEntity(AnneeRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
-    TypeSession requestToEntiteAdd(TypeSessionRequest typeSessionRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
+    Annee requestToEntiteAdd(AnneeRequest anneeRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
-    TypeSession requestToEntiteUp(@MappingTarget TypeSession entity, TypeSessionRequest request/*, Utilisateur user*/);
+    Annee requestToEntiteUp(@MappingTarget Annee entity, AnneeRequest request/*, Utilisateur user*/);
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
     @Named("formatStringToDate")

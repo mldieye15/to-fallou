@@ -23,14 +23,14 @@ public interface UserMapper {
     // transform the PJO request to entity
     //@Mapping(source = "request.dateNaissance", target = "dateNaissance", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
-    @Mapping(source = "request.dateNaissance", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.matricule", target = "matricule")
     @Mapping(source = "request.fonction", target = "fonction ", qualifiedByName = "getFonctionById")
     @Mapping(source ="request.etablissement", target = "etablissement", qualifiedByName = "getEtablissementById")
     AppUser requestToEntity(UserRequest request);
 
     @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
-    @Mapping(source = "request.dateNaissance", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.matricule", target = "matricule")
     @Mapping(source = "request.fonction", target = "fonction ", qualifiedByName = "getFonctionById")
     @Mapping(source ="request.etablissement", target = "etablissement", qualifiedByName = "getEtablissementById")

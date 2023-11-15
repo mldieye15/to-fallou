@@ -34,14 +34,14 @@ public class UserServiceImp implements UserService {
     private final UserDao dao;
     private final UserMapper mapper;
     private final RoleService roleService;
-    //private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> all() throws BusinessResourceException {
         log.info("Liste des users. <all>");
         List<AppUser> users = dao.findAll();
-        List<UserResponse> response = users.stream()
-                .map(user->mapper.toEntiteResponse(user))
+        List<UserResponse> response;
+        response = users.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -50,9 +50,9 @@ public class UserServiceImp implements UserService {
     public SimplePage<UserResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des users avec pagination. <all>");
         final Page<AppUser> page = dao.findAll(pageable);
-        return new SimplePage<UserResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item->mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -67,7 +67,8 @@ public class UserServiceImp implements UserService {
                             () -> new BusinessResourceException("not-found", "User avec "+id+" non trouvé(e).", HttpStatus.NOT_FOUND)
                     );
             log.info("User avec id: "+id+" trouvé(e). <oneById>");
-            Optional<UserResponse> response = Optional.ofNullable(mapper.toEntiteResponse(user));
+            Optional<UserResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(user));
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -127,7 +128,8 @@ public class UserServiceImp implements UserService {
                     );
             dao.deleteById(myId);
             log.info("Role avec id & nom: "+id+" & "+entity.getUsername()+" supprimé avec succés. <del>");
-            String response = "Role: "+entity.getUsername()+" supprimée avec succés. <del>";
+            String response;
+            response = "Role: "+entity.getUsername()+" supprimée avec succés. <del>";
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -144,7 +146,8 @@ public class UserServiceImp implements UserService {
                             () -> new BusinessResourceException("not-found", "User avec "+id+" non trouvé(e).", HttpStatus.NOT_FOUND)
                     );
             log.info("User avec id: "+id+" trouvé. <auditOneById>");
-            Optional<UserAudit> response = Optional.ofNullable(mapper.toEntiteAudit(entity, "admin", "admin"));
+            Optional<UserAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(entity, "admin", "admin"));
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -155,8 +158,7 @@ public class UserServiceImp implements UserService {
     @Override
     public Optional<AppUser> userByUsername(String username) throws BusinessResourceException {
         try {
-            // AppUser entity = dao.findByUsername(username);
-            Optional<AppUser> response = dao.findByUsername(username);//Optional.ofNullable(entity);
+            Optional<AppUser> response = dao.findByUsername(username);
             log.info("User avec username: "+username+" trouvé. <userBy username>");
             return response;
         } catch(Exception ex){

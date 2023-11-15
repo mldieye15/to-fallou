@@ -64,6 +64,11 @@ public class  SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests()
                 .requestMatchers("/web/**",
+                        "/pjobac/api/v1/etablissements/all",
+                        "/pjobac/api/v1/fonctions/all",
+                        "/pjobac/api/v1/users/**",
+                        "/pjobac/api/v1/codifications/get-code",
+                        "/pjobac/api/v1/codifications/send-code",
                         "/pjobac/api/auth/v*/inscription",
                         "/pjobac/api/auth/v*/verif-token/**",
                         "/pjobac/api/auth/v*/connexion",

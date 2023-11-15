@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
-import sn.ucad.office.pjobac.modules.annee.AnneeService;
 import sn.ucad.office.pjobac.modules.ville.VilleService;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;

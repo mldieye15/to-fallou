@@ -199,7 +199,8 @@
         </v-col>
 
       </v-row>
-      
+      <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p>
+       </router-link>
 
       <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>

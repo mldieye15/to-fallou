@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
@@ -13,6 +14,8 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationAudit;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationRequest;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationResponse;
+import sn.ucad.office.pjobac.modules.security.mail.MailService;
+import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -26,6 +29,7 @@ import java.util.stream.Collectors;
 public class CodificationServiceImp implements CodificationService {
     private final CodificationMapper mapper;
     private final CodificationDao dao;
+    private final MailService mailService;
 
     @Override
     public List<CodificationResponse> all() throws BusinessResourceException {
@@ -151,8 +155,27 @@ public class CodificationServiceImp implements CodificationService {
 
     }
 
+    @Override
+    public Optional<CodificationResponse> inscriptionCode(CodificationRequest request) {
+        Codification codification;
+        codification = dao.findByEmail(request.getEmail()).orElseThrow(
+                ()->new BusinessResourceException("not-found", "Aucun Code avec pour l'email:"+request.getEmail(), HttpStatus.NOT_FOUND)
+        );
+        Optional<CodificationResponse> response;
+        response=Optional.ofNullable(mapper.toEntiteResponse(codification));
+        return response;
+    }
 
-
-
-
+    @Override
+    public void sendCode(CodificationRequest request) throws BusinessResourceException, InterruptedException {
+        Codification codification;
+        codification = dao.findByEmail(request.getEmail()).orElseThrow(
+                () -> new BusinessResourceException("not-found", "Aucun Code avec pour l'email:" + request.getEmail(), HttpStatus.NOT_FOUND)
+        );
+        NotificationEmail notificationEmail= new NotificationEmail();
+        notificationEmail.setSubject("code d'inscription");
+        notificationEmail.setRecipient(codification.getEmail());
+        notificationEmail.setBody("Votre code de vérification est :" + codification.getCode());
+        mailService.sendMail(notificationEmail);
+    }
 }

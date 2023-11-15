@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
-import sn.ucad.office.pjobac.modules.annee.AnneeService;
 import sn.ucad.office.pjobac.modules.etablissement.EtablissementService;
 import sn.ucad.office.pjobac.modules.etablissement.dto.EtablissementRequest;
 import sn.ucad.office.pjobac.modules.etablissement.dto.EtablissementResponse;
@@ -41,6 +40,7 @@ public class EtablissementResource {
         List<EtablissementResponse> response = service.all();
         return new ResponseEntity< List<EtablissementResponse> >(response, HttpStatus.OK);
     }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<EtablissementResponse>> one(@PathVariable(value = "id") String id) {

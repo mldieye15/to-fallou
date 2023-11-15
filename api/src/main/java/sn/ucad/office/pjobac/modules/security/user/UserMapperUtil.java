@@ -67,6 +67,10 @@ public class UserMapperUtil {
     public static Date formatStringToDate(String date) throws ParseException {
         final AppDateFormatter dateFormatter = new AppDateFormatter();
         return dateFormatter.dateFormat(date, AppConstants.DATE_FR_FORMAT_SALASH);
-        //  entity.setDateNaissance(dateFormatter.dateFormat(req.getDateNaissance(), MesConstants.DATE_FR_FORMAT_SALASH))
+    }
+
+    @Named("formatStringToLong")
+    public static Long formatStringToLong(String num) throws NumberFormatException {
+        return  Long.valueOf(num.trim());
     }
 }

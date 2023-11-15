@@ -1,14 +1,14 @@
-package sn.ucad.office.pjobac.modules.detailsCandidat;
+package sn.ucad.office.pjobac.modules.centre.annee;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import sn.ucad.office.pjobac.modules.centre.annee.Annee;
-import sn.ucad.office.pjobac.modules.security.user.AppUser;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Builder
@@ -18,32 +18,14 @@ import java.time.LocalDateTime;
 @Table(
         //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
 )
-public class DetailsCandidat {
+public class Annee {
     @Id
     @Setter(AccessLevel.PROTECTED)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private AppUser candidat;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Annee annee;
-
     @NotNull
-    private Integer bonus;
-
-    @NotNull
-    private Integer malus;
-
-    @NotNull
-    private Integer note;
-
-    @NotNull
-    private String appreciation;
-
-    @NotNull
-    private Boolean affectable;
+    private String libelleLong;
 
     @Column(nullable = true)
     private Long utiCree;

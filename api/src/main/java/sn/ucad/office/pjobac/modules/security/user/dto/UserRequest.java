@@ -17,7 +17,7 @@ public class UserRequest {
     private String matricule;
     private String prenoms;
     private String nom;
-    private String  dateNaissance;
+    private String  dateNaiss;
     private String email;
     private String username;
     private String mdpasse;

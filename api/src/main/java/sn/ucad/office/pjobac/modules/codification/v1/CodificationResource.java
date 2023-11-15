@@ -1,5 +1,6 @@
 package sn.ucad.office.pjobac.modules.codification.v1;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -67,5 +68,39 @@ public class CodificationResource {
         service.del(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @GetMapping("/get-code")
+    public ResponseEntity<?> inscriptionCode(@RequestParam String email) {
+        CodificationRequest request;
+        request = new CodificationRequest(email,null);
+        Optional<CodificationResponse> responseOptional = service.inscriptionCode(request);
+
+        if (responseOptional.isPresent()) {
+            CodificationResponse response = responseOptional.get();
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Aucun code de vérification trouvé pour l'e-mail : " + email, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @PostMapping("/send-code")
+    public ResponseEntity<?> sendCode(@RequestParam String email) throws Exception {
+        CodificationRequest request;
+        request = new CodificationRequest(email,null);
+
+        try {
+            service.sendCode(request);
+            return new ResponseEntity<>("Code envoyé avec succès.", HttpStatus.OK);
+        } catch (EntityNotFoundException ex) {
+            return new ResponseEntity<>("Aucun code de vérification trouvé pour l'e-mail : " + email, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
+
+
 }
 

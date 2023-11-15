@@ -59,9 +59,18 @@ const routes = [
         path: 'register',
         name: 'register',
         component: () =>
-            import ( /* webpackChunkName: "register" */ '@/views/auth/Register.vue'),
+            import ( /* webpackChunkName: "registre" */'@/views/auth/Register.vue'),
         meta: {
             middleware: [Middleware.guest]
+        }
+      },
+      {
+        path:'code',
+        name:'code',
+        component: ()=> 
+            import('@/views/auth/RecupererCode.vue'),
+        meta: {
+          middleware: [Middleware.guest]
         }
       },
       {
