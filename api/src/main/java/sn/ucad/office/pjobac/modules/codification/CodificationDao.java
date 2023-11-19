@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface CodificationDao extends JpaRepository<Codification, Long> {
     Optional<Codification> findByEmail(String email);
+    Optional<Codification> findByCodeAndEmail(String code,String email);
 }

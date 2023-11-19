@@ -25,6 +25,21 @@
           readonly
         ></v-text-field>
         </v-row>
+        <v-row v-if="codeStore.error">
+      <v-col>
+        <v-alert type="error">
+          {{ codeStore.error }}
+        </v-alert>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="codeStore.successMessage">
+      <v-col>
+        <v-alert type="success">
+          {{ codeStore.successMessage }}
+        </v-alert>
+      </v-col>
+    </v-row>
         
   
         <v-card

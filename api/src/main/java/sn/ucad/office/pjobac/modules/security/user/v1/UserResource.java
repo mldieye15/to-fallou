@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
@@ -68,5 +70,33 @@ public class UserResource {
         service.del(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+    @GetMapping("/email-availability")
+    public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam String email) {
+        try {
+            service.verifyEmailUnique(email);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+        }
+    @GetMapping("/matricule-availability")
+    public ResponseEntity<Boolean> checkMatriculeAvailability(@RequestParam String matricule) {
+        try {
+            service.verifyMatriculeUnique(matricule);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/username-availability")
+    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam String username) {
+        try {
+            service.verifyUsernamelUnique(username);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 }
+
 

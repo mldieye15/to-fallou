@@ -5,6 +5,9 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/users';
 const all= modulesURL+'/all';
 const add= modulesURL+'/';
+const emailAvailability = modulesURL +'/email-availability';
+const usernameAvailability = modulesURL +'/username-availability';
+const matriculeAvailability = modulesURL +'/matricule-availability';
 
 export const useUtilisateurStore = defineStore('utilisateur', {
   state: () => ({
@@ -145,7 +148,36 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async emailAvailability(email) {
+      try {
+        const response = await axios.get(`${emailAvailability}?email=${email}`);
+        return response.data.isAvailable;
+      } catch (error) {
+        console.error('Erreur lors de la vérification de l\'email :', error);
+        return false;
+      }
+    },
+
+    async usernameAvailability(username) {
+      try {
+        const response = await axios.get(`${usernameAvailability}?username=${username}`);
+        return response.data.isAvailable;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom d\'utilisateur :', error);
+        return false;
+      }
+    },
+
+    async matriculeAvailability(matricule) {
+      try {
+        const response = await axios.get(`${matriculeAvailability}?matricule=${matricule}`);
+        return response.data.isAvailable;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du matricule :', error);
+        return false;
+      }
+    },
   },
   
 })

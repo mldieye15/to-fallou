@@ -24,4 +24,8 @@ public interface UserService {
     void addRoleToUser(RoleToUserRequest request) throws BusinessResourceException;
     AppUser addForAuthService(UserRequest request) throws BusinessResourceException;
     public AppUser activeUser(AppUser user, Boolean action) throws BusinessResourceException;
+    void verifyMatriculeUnique(String matricule) throws BusinessResourceException;
+
+    void verifyEmailUnique(String email)throws  BusinessResourceException;
+    void verifyUsernamelUnique(String username)throws  BusinessResourceException;
 }

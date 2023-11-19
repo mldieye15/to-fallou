@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface UserDao extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByUsername(String username);
+    Optional<AppUser> findByEmail(String email);
+    Optional<AppUser> findByMatricule(String email);
 }

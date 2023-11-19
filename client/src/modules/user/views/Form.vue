@@ -50,7 +50,9 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="underlined" 
-      ></v-text-field >
+        @input="checkMatriculeExistence">
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
       <v-col>
         <v-text-field
@@ -76,7 +78,10 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="underlined"
-      ></v-text-field>
+        @input="checkEmailExistence"
+      >
+    </v-text-field>
+    <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       </v-col>
        
     </v-row>
@@ -92,7 +97,10 @@
         :rules="[rules.required]"
         v-model="inputForm.username"
         variant="underlined"
-      ></v-text-field>
+        @input="checkUsernameExistence"    
+      >
+    </v-text-field> 
+    <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
       </v-col>
       <v-col>
         <v-text-field
@@ -146,6 +154,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
         variant="underlined"
+        @input="checkCodeValidity"
       ></v-text-field>
         </v-col>
       </v-row>
@@ -201,6 +210,13 @@
       </v-row>
       <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p>
        </router-link>
+       <p>
+        <v-alert v-if="codeError" type="error">{{ codeErrorMessage }}
+        <router-link :to="{ name: 'code' }"> Recuperer votre code ici
+       </router-link>
+      </v-alert>
+       </p>
+       
 
       <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
@@ -209,16 +225,20 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance } from "vue";
+import { reactive, getCurrentInstance,watchEffect,ref } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
 import { useEtablissementStore } from "@/modules/etablissement/store";
+import { useCodeStore } from "@/store/codification";
+import { useValidationStore } from "@/store/validationstore";
 
 const instance = getCurrentInstance();
 
 const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
+const codeStore = useCodeStore();
+const validationstore=useValidationStore();
 const { dataListe } = storeToRefs(fonctionStore);
 const { dataListeEtab } = storeToRefs(etablissementStore);
 const rules = reactive({
@@ -233,8 +253,117 @@ const { inputForm, actionSubmit } = defineProps({
   }
 });
 
+const codeError = ref(false);
+const codeErrorMessage = ref("");
+const emailError = ref(false);
+const emailErrorMessage = ref("");
+const usernameError = ref(false);
+const usernameErrorMessage = ref("");
+const matriculeError = ref("");
+const matriculeErrorMessage = ref("");
+const isSubmitDisabled = ref(false);
+watchEffect(() => {
+  isSubmitDisabled.value = codeError.value||emailError.value ||matriculeError.value||usernameError.value
+});
+
+const checkCodeValidity = async () => {
+  codeError.value = false;
+  codeErrorMessage.value = "";
+
+  if (inputForm.code && inputForm.email) {
+    try {
+      const isCodeValid = await codeStore.verifyCode(inputForm.code, inputForm.email);
+      console.log("Après la vérification de l'e-mail");
+
+      if (!isCodeValid) {
+        codeError.value = true;
+        codeErrorMessage.value = "Code invalide. Veuillez vérifier le code saisi.";
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du code :", error);
+      codeError.value = true;
+      codeErrorMessage.value = "Erreur lors de la vérification du code. Veuillez réessayer.";
+    }
+  }
+};
+const checkEmailExistence = async () => {
+  emailError.value = false;
+  emailErrorMessage.value = "";
+  if (inputForm.email) {
+    try {
+      const isAvailable = await validationstore.emailAvailability(inputForm.email);
+      console.log("Résultat de la vérification de l'e-mail (isAvailable) :", isAvailable);
+
+      if (typeof isAvailable === 'undefined' || isAvailable === null) {
+        console.error('La fonction emailAvailability n\'a pas retourné de valeur valide.');
+        return;
+      }
+
+      if (!isAvailable) {
+        emailError.value = true;
+        emailErrorMessage.value = "Cet e-mail est déjà utilisé.";
+        console.log('emailErrorMessage:', emailErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification de l'e-mail :", error);
+      emailError.value = true;
+      emailErrorMessage.value = "Erreur lors de la vérification de l'e-mail. Veuillez réessayer.";
+    }
+  }
+};
+const checkMatriculeExistence = async () => {
+  matriculeError.value = false;
+  matriculeErrorMessage.value = "";
+  if (inputForm.matricule) {
+    try {
+      const isAvailable = await validationstore.matriculeAvailability(inputForm.matricule);
+      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
+
+      if (typeof isAvailable === 'undefined' || isAvailable === null) {
+        console.error('La fonction matriculeAvailability n\'a pas retourné de valeur valide.');
+        return;
+      }
+
+      if (!isAvailable) {
+        matriculeError.value = true;
+        matriculeErrorMessage.value = "Cet matricule est déjà utilisé.";
+        console.log('matriculeErrorMessage:', matriculeErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du matricule :", error);
+      matriculeError.value = true;
+      matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
+    }
+  }
+};
+const checkUsernameExistence = async () => {
+  usernameError.value = false;
+  usernameErrorMessage.value = "";
+  if (inputForm.username) {
+    try {
+      const isAvailable = await validationstore.usernameAvailability(inputForm.username);
+      console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
+
+      if (typeof isAvailable === 'undefined' || isAvailable === null) {
+        console.error('La fonction usernameAvailability n\'a pas retourné de valeur valide.');
+        return;
+      }
+
+      if (!isAvailable) {
+        usernameError.value = true;
+        usernameErrorMessage.value = "Cet nom d'utilisateur est déjà utilisé.";
+        console.log('usernameErrorMessage:', usernameErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification nom d'utilisateur :", error);
+      usernameError.value = true;
+      usernameErrorMessage.value = "Erreur lors de la vérification nom d'utilisateur. Veuillez réessayer.";
+    }
+  }
+};
 const handleSave = () => {
-  if(instance.refs.userForm.validate){
+  console.log("isSubmitDisabled:", isSubmitDisabled.value);
+  if(instance.refs.userForm.validate && !isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
 }
@@ -246,10 +375,12 @@ onMounted(()=>{
 });
 
 </script>
-
-<!-- <style>
-.reduce-margin .v-text-field {
-  margin-right: 1px; /* Ajustez la valeur pour réduire ou augmenter l'espace entre les champs horizontalement */
+<style>
+.error-message {
+  color: red; /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
 }
-</style> -->
+</style>
+
+
 

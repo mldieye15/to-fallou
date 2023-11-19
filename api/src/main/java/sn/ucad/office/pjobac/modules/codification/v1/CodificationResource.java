@@ -94,13 +94,17 @@ public class CodificationResource {
         } catch (EntityNotFoundException ex) {
             return new ResponseEntity<>("Aucun code de vérification trouvé pour l'e-mail : " + email, HttpStatus.NOT_FOUND);
         }
+
     }
-
-
-
-
-
-
-
+    @GetMapping("/verify-code")
+    public ResponseEntity<Boolean> verifyCode(@RequestParam String code, @RequestParam String email) throws InterruptedException {
+        try {
+            boolean isCodeValid = service.verifyCode(code, email);
+            return ResponseEntity.ok(isCodeValid);
+        } catch (Exception e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 }
+
 

@@ -178,4 +178,10 @@ public class CodificationServiceImp implements CodificationService {
         notificationEmail.setBody("Votre code de vérification est :" + codification.getCode());
         mailService.sendMail(notificationEmail);
     }
+
+    @Override
+    public boolean verifyCode(String code, String email) throws BusinessResourceException, InterruptedException {
+        Optional<Codification> response = dao.findByCodeAndEmail(code, email);
+        return response.isPresent();
+    }
 }
