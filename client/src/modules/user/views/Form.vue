@@ -8,32 +8,37 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="userForm" :value="formValid">
+    <v-form @submit.prevent="submit" ref="userForm">
       <v-row style="height: 12vh">
+        <v-col>
+                  <v-date-picker
+                    color="primary"
+                  ></v-date-picker>
+        </v-col>
         <v-col>
       <v-text-field 
         id="prenoms"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-account"
         name="prenoms"
         density="compact"
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.prenoms"
-        variant="underlined" 
+        variant="solo" 
       ></v-text-field >
       </v-col>
-      <v-col>
+      <v-col sm="6" cols="12">
         <v-text-field
         id="nom"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-account"
         name="nom"
         density="compact"
         :label="$t('apps.forms.user.nom')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.nom"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
       </v-col>
        
@@ -42,14 +47,14 @@
         <v-col>
       <v-text-field 
         id="matricule"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-card-account-details"
         name="matricule"
         density="compact"
         :label="$t('apps.forms.user.matricule')"
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
-        variant="underlined" 
+        variant="solo" 
         @input="checkMatriculeExistence">
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -57,46 +62,29 @@
       <v-col>
         <v-text-field
         id="dateNaiss"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar"
         name="dateNaiss"
         density="compact"
         :label="$t('apps.forms.user.dateNaiss')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.dateNaiss"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field
-        id="email"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="email"
-        density="compact"
-        :label="$t('apps.forms.user.email')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.email"
-        variant="underlined"
-        @input="checkEmailExistence"
-      >
-    </v-text-field>
-    <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
-      </v-col>
-       
+      </v-col>     
     </v-row>
     <v-row style="height: 12vh">
       <v-col>
         <v-text-field
         id="username"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-account-circle"
         name="username"
         density="compact"
         :label="$t('apps.forms.user.username')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.username"
-        variant="underlined"
+        variant="solo"
         @input="checkUsernameExistence"    
       >
     </v-text-field> 
@@ -105,27 +93,14 @@
       <v-col>
         <v-text-field
         id="mdpasse"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-lock"
         name="mdpasse"
         density="compact"
         :label="$t('apps.forms.user.mdpasse')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.mdpasse"
-        variant="underlined"
-      ></v-text-field>
-      </v-col>
-      <v-col>
-        <v-text-field
-        id="sexe"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="sexe"
-        density="compact"
-        :label="$t('apps.forms.user.sexe')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.sexe"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
       </v-col>
     </v-row >
@@ -133,54 +108,88 @@
         <v-col>
           <v-text-field
         id="telephone"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-phone"
         name="telephone"
         density="compact"
         :label="$t('apps.forms.user.telephone')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.telephone"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
         </v-col>
         <v-col>
+        <v-text-field
+        id="email"
+        prepend-inner-icon="mdi-email"
+        name="email"
+        density="compact"
+        :label="$t('apps.forms.user.email')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.email"
+        variant="solo"
+        @input="checkEmailExistence"
+      >
+    </v-text-field>
+    <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
+      </v-col> 
+      </v-row>
+      <v-row style="height: 12vh">
+      <v-col>
+        <v-select
+        id="sexe"
+        prepend-inner-icon="mdi-gender-male-female"
+        name="sexe"
+        density="compact"
+        :label="$t('apps.forms.user.sexe')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.sexe"
+        variant="solo"
+        :items="['Homme', 'Femme']"
+      >
+    </v-select>
+      </v-col> 
+      <v-col>
       <v-text-field
         id="code"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-key"
         name="code"
         density="compact"
         :label="$t('apps.forms.user.code')"
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
-        variant="underlined"
+        variant="solo"
         @input="checkCodeValidity"
       ></v-text-field>
         </v-col>
+
       </v-row>
       <v-row class="reduce-margin">
         <v-col>
           <v-text-field
         id="anciennete"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-timer"
         name="anciennete"
         density="compact"
         :label="$t('apps.forms.user.anciennete')"
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.anciennete"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
         </v-col>
         <v-col>
           <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-briefcase"
         name="fonction"
         density="compact"
         :label="$t('apps.forms.fonction.nom')"
         color="balck"
         v-model="inputForm.fonction"
-        variant="underlined"
+        variant="solo"
         :items="dataListe"
         persistent-hint
         
@@ -191,13 +200,13 @@
         </v-col>
         <v-col>
           <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-domain"
         name="etablissement"
         density="compact"
         :label="$t('apps.forms.etablissement.nom')"
         color="balck"
         v-model="inputForm.etablissement"
-        variant="underlined"
+        variant="solo"
         :items="dataListeEtab"
         persistent-hint
         
@@ -346,7 +355,7 @@ const checkUsernameExistence = async () => {
 
       if (typeof isAvailable === 'undefined' || isAvailable === null) {
         console.error('La fonction usernameAvailability n\'a pas retourné de valeur valide.');
-        return;
+        return ;
       }
 
       if (!isAvailable) {
@@ -363,7 +372,7 @@ const checkUsernameExistence = async () => {
 };
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);
-  if(instance.refs.userForm.validate && !isSubmitDisabled.value){
+  if(instance.refs.userForm.validate() && !isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
 }
