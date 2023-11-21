@@ -3,8 +3,8 @@ package sn.ucad.office.pjobac.config;
 public class AppConstants {
     //  ***********************************************
     // constants pour les formats horaires
-    public static final String DATE_FR_FORMAT_TIRET = "dd/MM/yyyy";
-    public static final String DATE_FR_FORMAT_SALASH = "yyyy-MM-dd";
+    public static final String DATE_FR_FORMAT_SALASH = "dd/MM/yyyy";
+    public static final String DATE_FR_FORMAT_TIRET = "yyyy-MM-dd";
     public static final String DATE_EN_FORMAT_TIRET = "yyyy-MM-dd";
     public static final String DATE_EN_FORMAT_SALASH = "yyyy/MM/dd";
 

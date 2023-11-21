@@ -41,6 +41,10 @@ SessionMapper {
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
+    @Mapping(source = "request.dateDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateFin", target = "dateFin", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateClotureDepotCandidature", target = "dateClotureDepotCandidature", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.annee",target = "annee",qualifiedByName = "getAnneeById")
     @Mapping(source = "request.typeSession",target = "typeSession",qualifiedByName = "getTypeSessionById")
     Session requestToEntiteUp(@MappingTarget Session entity, SessionRequest request/*, Utilisateur user*/);

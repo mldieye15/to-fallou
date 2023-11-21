@@ -57,7 +57,7 @@ public class SessionMapperUtil {
     @Named("formatStringToDate")
     public static Date formatStringToDate(String date) throws ParseException {
         final AppDateFormatter dateFormatter = new AppDateFormatter();
-        return dateFormatter.dateFormat(date, AppConstants.DATE_FR_FORMAT_SALASH);
+        return dateFormatter.dateFormat(date, AppConstants.DATE_FR_FORMAT_TIRET);
     }
     @Named("formatStringToLong")
     public static Long formatStringToLong(String num) throws NumberFormatException {
