@@ -8,7 +8,6 @@
 import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/styles'
 import ('@/assets/css/index.css')
-import { VuetifyDateAdapter } from '@/vuetify/date/adapters/vuetify'
 
 // Composables
 import { createVuetify } from 'vuetify'
@@ -32,8 +31,5 @@ export default createVuetify({
         },
       },
     },
-  },
-  date: {
-    adapter: VuetifyDateAdapter,
   },
 })
