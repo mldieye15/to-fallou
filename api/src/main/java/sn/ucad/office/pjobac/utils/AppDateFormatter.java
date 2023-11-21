@@ -13,8 +13,8 @@ public class AppDateFormatter {
     public Date dateFormat(String dateToFomrat, String format) throws ParseException, BusinessResourceException {
         try {
             SimpleDateFormat formattter = new SimpleDateFormat(format);
-            String dateString = formattter.format(new Date());
-            Date date = formattter.parse(dateToFomrat);
+            Date date;
+            date = formattter.parse(dateToFomrat);
             return date;
         } catch (ParseException e) {
             e.printStackTrace();

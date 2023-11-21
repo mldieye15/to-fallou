@@ -11,12 +11,12 @@ import lombok.ToString;
 @ToString
 public class SessionRequest {
     private String  libelleLong;
-    private String  dateDeDebut;
-    private String  dateDeFin;
+    private String  dateDebut;
+    private String  dateFin;
     private Integer nombreDemandeAutorise;
     private Integer delaisValidation;
-    private String  dateDeOuvertureDepotCandidature;
-    private String  dateDeClotureDepotCandidature;
+    private String  dateOuvertureDepotCandidature;
+    private String  dateClotureDepotCandidature;
     private String   annee;
     private String typeSession;
 }

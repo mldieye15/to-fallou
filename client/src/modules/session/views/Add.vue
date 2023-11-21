@@ -26,12 +26,12 @@ const { add } = sessionStore;
 
 const inputForm= reactive({
   libelleLong:'',
-  dateDeDebut:'',
-  dateDeFin:'',
+  dateDebut:null,
+  dateFin:null,
   nombreDemandeAutorise:'',
   delaisValidation:'',
-  dateDeOuvertureDepotCandidature:'',
-  dateDeClotureDepotCandidature:'',
+  dateOuvertureDepotCandidature:null,
+  dateClotureDepotCandidature:null,
   annee:null,
   typeSession:null,
 });

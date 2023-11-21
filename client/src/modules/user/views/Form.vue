@@ -55,7 +55,7 @@
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
       <v-col>
-        <!-- <v-text-field
+        <v-text-field
         id="dateNaiss"
         prepend-inner-icon="mdi-calendar"
         name="dateNaiss"
@@ -65,8 +65,10 @@
         :rules="[rules.required]"
         v-model="inputForm.dateNaiss"
         variant="solo"
-      ></v-text-field> -->
-       <v-menu
+        type="date"
+      ></v-text-field>
+      </v-col>
+       <!-- <v-menu
           v-model="menu"
           :close-on-content-click="false"
           transition="scale-transition"
@@ -79,7 +81,7 @@
               label="Date"
               hint="MM/DD/YYYY format"
               persistent-hint
-              prepend-icon="mdi-calendar"
+              prepend-inner-icon="mdi-calendar"
               readonly
               v-bind="attrs"
               v-on="on"
@@ -88,7 +90,6 @@
             ></v-text-field>
           </template>
           <v-date-picker
-          v-model="date"
           no-title
           scrollable
         >
@@ -109,7 +110,7 @@
           </v-btn>
         </v-date-picker>
       </v-menu>
-      </v-col>     
+      </v-col>      -->
     </v-row>
     <v-row style="height: 12vh">
       <v-col>
@@ -271,13 +272,15 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance,watchEffect,ref,watch,computed} from "vue";
+import { reactive, getCurrentInstance,watchEffect,ref} from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
 import { useEtablissementStore } from "@/modules/etablissement/store";
 import { useCodeStore } from "@/store/codification";
 import { useValidationStore } from "@/store/validationstore";
+import { format } from 'date-fns';
+import { fr } from "date-fns/locale";
 
 const instance = getCurrentInstance();
 
@@ -407,22 +410,15 @@ const checkUsernameExistence = async () => {
     }
   }
 };
-const date = ref((new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000)).toISOString().substr(0, 10));
-const menu = ref(true);
-
-const computedDateFormatted = computed(() => {
-  return formatDate(date.value)
+watchEffect(() => {
+  if (inputForm.dateNaiss) {
+    inputForm.dateNaiss = formatDateForInput(inputForm.dateNaiss);
+  }
 });
-
-watch(date, val => {
-  dateFormatted.value = formatDate(val)
-});
-function formatDate(date) {
-  if (!date) return null;
-  const [year, month, day] = date.split('-');
-  return `${month}/${day}/${year}`;
+function formatDateForInput(date) {
+  const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
+  return formattedDate;
 }
-const dateFormatted = ref(formatDate(date.value));
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);
   if(instance.refs.userForm.validate() && !isSubmitDisabled.value){

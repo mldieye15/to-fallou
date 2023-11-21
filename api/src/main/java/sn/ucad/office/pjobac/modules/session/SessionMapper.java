@@ -21,16 +21,20 @@ SessionMapper {
     SessionAudit toEntiteAudit(Session session, Long auteurName, Long modifName);
 
     // request to entity anne
-    @Mapping(source = "request.dateDeDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
-    @Mapping(source = "request.dateDeFin", target = "dateFin", qualifiedByName = "formatStringToDate")
-    @Mapping(source = "request.dateDeOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")
-    @Mapping(source = "request.dateDeClotureDepotCandidature", target = "dateClotureDepotCandidature", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateFin", target = "dateFin", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "request.dateClotureDepotCandidature", target = "dateClotureDepotCandidature", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.typeSession",target = "typeSession",qualifiedByName = "getTypeSessionById")
     @Mapping(source = "request.annee",target = "annee",qualifiedByName = "getAnneeById")
     Session requestToEntity(SessionRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
+    @Mapping(source = "sessionRequest.dateDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "sessionRequest.dateFin", target = "dateFin", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "sessionRequest.dateOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")
+    @Mapping(source = "sessionRequest.dateClotureDepotCandidature", target = "dateClotureDepotCandidature", qualifiedByName = "formatStringToDate")
     @Mapping(source = "sessionRequest.typeSession",target = "typeSession",qualifiedByName = "getTypeSessionById")
     @Mapping(source = "sessionRequest.annee",target = "annee",qualifiedByName = "getAnneeById")
     Session requestToEntiteAdd(SessionRequest sessionRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur

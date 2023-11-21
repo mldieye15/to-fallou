@@ -20,7 +20,7 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="underlined" 
+        variant="solo" 
       ></v-text-field >
       </v-col>
       <v-col>
@@ -33,7 +33,7 @@
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.nombreDemandeAutorise"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
       </v-col>
        
@@ -48,8 +48,9 @@
         :label="$t('apps.forms.session.dateDebut')"
         color="balck"
         :rules="[rules.required]"
-        v-model="inputForm.dateDeDebut"
-        variant="underlined"
+        v-model="inputForm.dateDebut"
+        variant="solo"
+        type="date"
       ></v-text-field>
       </v-col>
       <v-col>
@@ -61,8 +62,9 @@
         :label="$t('apps.forms.session.dateFin')"
         color="balck"
         :rules="[rules.required]"
-        v-model="inputForm.dateDeFin"
-        variant="underlined"
+        v-model="inputForm.dateFin"
+        type="date"
+        variant="solo"
       ></v-text-field>
       </v-col>
     </v-row >
@@ -76,8 +78,9 @@
         :label="$t('apps.forms.session.dateOuvertureDepotCandidature')"
         color="balck"
         :rules="[rules.required]"
-        v-model="inputForm.dateDeOuvertureDepotCandidature"
-        variant="underlined"
+        v-model="inputForm.dateOuvertureDepotCandidature"
+        variant="solo"
+        type="date"
       ></v-text-field>
         </v-col>
         <v-col>
@@ -89,8 +92,9 @@
         :label="$t('apps.forms.session.dateClotureDepotCandidature')"
         color="balck"
         :rules="[rules.required, rules.min]"
-        v-model="inputForm.dateDeClotureDepotCandidature"
-        variant="underlined"
+        v-model="inputForm.dateClotureDepotCandidature"
+        variant="solo"
+        type="date"
       ></v-text-field>
         </v-col>
       </v-row>
@@ -105,7 +109,7 @@
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.delaisValidation"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
         </v-col>
         <v-col>
@@ -116,7 +120,7 @@
         :label="$t('apps.forms.annee.libelle')"
         color="balck"
         v-model="inputForm.annee"
-        variant="underlined"
+        variant="solo"
         :items="dataListe"
         persistent-hint
         
@@ -133,7 +137,7 @@
         :label="$t('apps.forms.typeSession.nom')"
         color="balck"
         v-model="inputForm.typeSession"
-        variant="underlined"
+        variant="solo"
         :items="dataListeTypeSession"
         persistent-hint
         
@@ -153,11 +157,13 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance } from "vue";
+import { reactive, getCurrentInstance ,watchEffect} from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useAnneeStore } from "@/modules/annee/store";
 import { useTypeSessionStore } from "@/modules/typeSession/store";
+import { format } from 'date-fns';
+import { fr } from "date-fns/locale";
 
 const instance = getCurrentInstance();
 
@@ -176,6 +182,27 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
+watchEffect(() => {
+  if (inputForm.dateClotureDepotCandidature, 
+  inputForm.dateOuvertureDepotCandidature,
+  inputForm.dateDebut,
+  inputForm.dateFin
+  ) {
+    console.log('Avant formatage :', inputForm.dateClotureDepotCandidature);
+    console.log('Avant formatage :', inputForm.dateDebut);
+    inputForm.dateClotureDepotCandidature = formatDateForInput(inputForm.dateClotureDepotCandidature);
+    inputForm.dateOuvertureDepotCandidature= formatDateForInput(inputForm.dateOuvertureDepotCandidature);
+    inputForm.dateDebut=formatDateForInput(inputForm.dateDebut);
+    inputForm.dateFin=formatDateForInput(inputForm.dateFin);
+  }
+  console.log('Après formatage :', inputForm.dateClotureDepotCandidature);
+  console.log('Apres formatage :', inputForm.dateDebut);
+});
+
+function formatDateForInput(date) {
+  const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
+  return formattedDate;
+}
 
 const handleSave = () => {
   if(instance.refs.sessionForm.validate){
