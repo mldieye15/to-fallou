@@ -30,12 +30,16 @@ export const useVilleStore = defineStore('ville', {
         await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
-           let res = response.data.map((element)=>({
-            id: element.id,
+           let res = response.data.map((element)=>{
+            let academieLabel=element.academie?element.academie.libelleLong:null;
+            return{
+              id: element.id,
             libelleLong: element.libelleLong,
             libelleCourt: element.libelleCourt,
-            academie: element.academie.libelleLong,
-           }))
+            academie: academieLabel
+            };
+            
+           });
            this.dataListeVille=res;
           } 
         })

@@ -188,15 +188,15 @@ watchEffect(() => {
   inputForm.dateDebut,
   inputForm.dateFin
   ) {
-    console.log('Avant formatage :', inputForm.dateClotureDepotCandidature);
-    console.log('Avant formatage :', inputForm.dateDebut);
+    // console.log('Avant formatage :', inputForm.dateClotureDepotCandidature);
+    // console.log('Avant formatage :', inputForm.dateDebut);
     inputForm.dateClotureDepotCandidature = formatDateForInput(inputForm.dateClotureDepotCandidature);
     inputForm.dateOuvertureDepotCandidature= formatDateForInput(inputForm.dateOuvertureDepotCandidature);
     inputForm.dateDebut=formatDateForInput(inputForm.dateDebut);
     inputForm.dateFin=formatDateForInput(inputForm.dateFin);
   }
-  console.log('Après formatage :', inputForm.dateClotureDepotCandidature);
-  console.log('Apres formatage :', inputForm.dateDebut);
+  // console.log('Après formatage :', inputForm.dateClotureDepotCandidature);
+  // console.log('Apres formatage :', inputForm.dateDebut);
 });
 
 function formatDateForInput(date) {

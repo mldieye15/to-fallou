@@ -68,8 +68,8 @@ onMounted(()=>{
     inputForm.telephone = dataDetails.value.telephone,
     inputForm.anciennete = dataDetails.value.anciennete
 
-    inputForm.fonction=dataDetails.value.fonction.id,
-    inputForm.etablissement=dataDetails.value.etablissement.id
+    inputForm.fonction=dataDetails.value.fonction?dataDetails.value.fonction.id:null,
+    inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null
     
 
 

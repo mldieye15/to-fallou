@@ -59,8 +59,8 @@ onMounted(()=>{
     inputForm.delaisValidation = dataDetails.value.delaisValidation,
     inputForm.dateOuvertureDepotCandidature = dataDetails.value.dateOuvertureDepotCandidature,
     inputForm.dateClotureDepotCandidature = dataDetails.value.dateClotureDepotCandidature
-    inputForm.annee=dataDetails.value.annee.id,
-    inputForm.typeSession=dataDetails.value.typeSession.id
+    inputForm.annee = dataDetails.value.annee ? dataDetails.value.annee.id : null;
+    inputForm.typeSession = dataDetails.value.typeSession ? dataDetails.value.typeSession.id : null;
     
 
 

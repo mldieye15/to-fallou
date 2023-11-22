@@ -44,13 +44,19 @@ export const useJuryStore = defineStore('jury', {
         .then((response) => {
           if(response.status === 200){
 
-            let res = response.data.map( (element) => ({
-              id:element.id, 
-              numero: element.numero,
-              centre: element.centre.libelleLong,
-              ville: element.centre.ville.libelleLong,
-              academie: element.centre.ville.academie.libelleLong
-            }))
+            let res = response.data.map( (element) => {
+              let centreLabel = element.centre ? element.centre.libelleLong : null;
+              let villeLabel =element.centre&& element.centre.ville ? element.centre.ville.libelleLong :null;
+              let academieLabel =element.centre&& element.centre.ville.academie ? element.centre.ville.academie.libelleLong : null;
+              return {
+                id:element.id, 
+                numero: element.numero,
+                centre: centreLabel,
+                ville: villeLabel,
+                academie: academieLabel
+              };
+             
+            });
 
             this.dataListeJury = res;
           } 

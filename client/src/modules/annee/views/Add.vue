@@ -25,7 +25,7 @@ const anneeStore = useAnneeStore();
 const { add } = anneeStore;
 
 const inputForm= reactive({
-  libelle:''
+  libelleLong:''
 });
 
 const handleSave = (payload) => {

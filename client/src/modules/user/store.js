@@ -1,6 +1,8 @@
 // Utilities
 import { defineStore } from 'pinia';
-import axios from '@/plugins/axios.js'
+import axios from '@/plugins/axios.js';
+import { format } from 'date-fns';
+import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/users';
 const all= modulesURL+'/all';
@@ -33,7 +35,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
       { text: 'Email', value: 'email', align: 'start', sortable: true },
       { text: 'Username', value: 'username', align: 'start', sortable: true },
-      { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
+      // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Code', value: 'code', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
@@ -55,22 +57,27 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
-            let res = response.data.map( (element) => ({
-              id:element.id, 
+            let res = response.data.map( (element) => {
+              let fonctionLabel = element.fonction? element.fonction.libelleLong:null;
+              let etablissementLabel = element.etablissement? element.etablissement.libelleLong:null;
+              return{
+                id:element.id, 
               prenoms: element.prenoms,
               nom: element.nom,
               matricule: element.matricule,
-              dateNaiss: element.dateNaiss,
+              dateNaiss: this.formatDate(element.dateNaiss),
               email: element.email,
               username: element.username,
               code: element.code,
-              mdpasse: element.mdpasse,
+              // mdpasse: element.mdpasse,
               sexe: element.sexe,
               telephone: element.telephone,
               anciennete: element.anciennete,
-              fonction: element.fonction.libelleLong,
-              etablissement: element.etablissement.libelleLong,
-            }))
+              fonction: fonctionLabel,
+              etablissement: etablissementLabel,
+              }
+              
+            })
 
             this.dataListeUtilisateur = res;
           } 
@@ -177,6 +184,9 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         console.error('Erreur lors de la vérification du matricule :', error);
         return false;
       }
+    },
+    formatDate(date) {
+      return format(new Date(date), 'dd-MM-yyyy', { locale: fr }); // Exemple de format, ajustez selon vos besoins
     },
   },
   

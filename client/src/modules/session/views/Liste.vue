@@ -28,6 +28,7 @@
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
+        rows-per-page="5"
       >
         <template #item-actions="item">
           <div class="actions-wrapper">
@@ -104,5 +105,8 @@ const del = (id) => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+.actions-wrapper {
+  width: 120px;
 }
 </style>

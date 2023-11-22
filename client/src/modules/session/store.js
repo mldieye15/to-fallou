@@ -1,6 +1,8 @@
 // Utilities
 import { defineStore } from 'pinia';
-import axios from '@/plugins/axios.js'
+import axios from '@/plugins/axios.js';
+import { format } from 'date-fns';
+import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/sessions';
 const all= modulesURL+'/all';
@@ -48,19 +50,24 @@ export const useSessionStore = defineStore('session', {
         await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
-            let res = response.data.map( (element) => ({
-              id:element.id, 
-              libelleLong: element.libelleLong,
-              dateDebut: element.dateDebut,
-              dateFin: element.dateFin,
-              nombreDemandeAutorise: element.nombreDemandeAutorise,
-              delaisValidation: element.delaisValidation,
-              dateOuvertureDepotCandidature: element.dateOuvertureDepotCandidature,
-              dateClotureDepotCandidature: element.dateClotureDepotCandidature,
-              annee: element.annee.libelleLong,
-              typeSession: element.typeSession.libelleLong,
-            }))
+            let res = response.data.map( (element) => {
+              let anneeLabel = element.annee ? element.annee.libelleLong : null;
+              let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
 
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                dateDebut:this.formatDate(element.dateDebut) ,
+                dateFin: this.formatDate(element.dateFin),
+                nombreDemandeAutorise: element.nombreDemandeAutorise,
+                delaisValidation: element.delaisValidation,
+                dateOuvertureDepotCandidature: this.formatDate(element.dateOuvertureDepotCandidature),
+                dateClotureDepotCandidature: this.formatDate(element.dateClotureDepotCandidature),
+                annee: anneeLabel,
+                typeSession:typeSessionLabel,
+              } ;
+            });
+            console.log('Données avant modification :', this.dataListeSession);
             this.dataListeSession = res;
           } 
         })
@@ -137,7 +144,10 @@ export const useSessionStore = defineStore('session', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    formatDate(date) {
+      return format(new Date(date), 'dd-MM-yyyy', { locale: fr }); // Exemple de format, ajustez selon vos besoins
+    },
   },
   
 })

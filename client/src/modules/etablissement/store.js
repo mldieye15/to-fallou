@@ -45,14 +45,20 @@ export const useEtablissementStore = defineStore('etablissement', {
         .then((response) => {
           if(response.status === 200){
 
-            let res = response.data.map( (element) => ({
-              id:element.id, 
-              libelleLong: element.libelleLong,
-              libelleCourt: element.libelleCourt,
-              typeEtablissement: element.typeEtablissement.libelleLong,
-              ville: element.ville.libelleLong,
-              academie: element.ville.academie.libelleCourt,
-            }))
+            let res = response.data.map( (element) => {
+              let typeEtablissementLabel = element.typeEtablissement?element.typeEtablissement.libelleLong:null;
+              let villeLabel = element.ville?element.ville.libelleLong:null;
+              let academieLabel=element.ville && element.ville.academie?element.ville.academie.libelleLong:null;
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                libelleCourt: element.libelleCourt,
+                typeEtablissement: typeEtablissementLabel,
+                ville: villeLabel,
+                academie: academieLabel,
+              }
+              
+            })
 
             this.dataListeEtab = res;
           } 

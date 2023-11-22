@@ -28,7 +28,15 @@
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
+        rows-per-page="5"
       >
+      <!-- Template pour personnaliser le contenu de la colonne 'Etablissement de Provenance' -->
+        <template #item-etablissement=" item">
+          <!-- Utilisation  d'une classe spécifique pour appliquer des styles à cette colonne -->
+          <div class="etablissement-wrapper">
+            {{ item.etablissement }}
+          </div>
+        </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'user-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -54,6 +62,7 @@
               </template>
             </v-dialog>
           </div>
+          
         </template>
       </EasyDataTable>
     </v-container>
@@ -104,5 +113,11 @@ const del = (id) => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+.actions-wrapper {
+  width: 120px;
+}
+.etablissement-wrapper{
+ width: 110px; 
 }
 </style>

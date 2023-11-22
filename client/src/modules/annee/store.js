@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/annees';
 const all= modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useAnneeStore = defineStore('annee', {
   state: () => ({
@@ -68,7 +69,7 @@ export const useAnneeStore = defineStore('annee', {
     //  ajouter une annee
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

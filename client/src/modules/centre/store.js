@@ -46,16 +46,22 @@ export const useCentreStore = defineStore('centre', {
         .then((response) => {
           if(response.status === 200){
 
-            let res = response.data.map( (element) => ({
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
+              let typeCentreLabel = element.typeCentre ? element.typeCentre.libelleLong:null;
+              return{
               id:element.id, 
               libelleLong: element.libelleLong,
               libelleCourt: element.libelleCourt,
               nombreJury: element.nombreJury,
-              ville: element.ville.libelleLong,
-              typeCentre: element.typeCentre.libelleLong,
-              academie: element.ville.academie.libelleLong
+              ville: villeLabel,
+              typeCentre: typeCentreLabel,
+              academie: academieLabel,
+              }
+              
 
-            }))
+            })
 
             this.dataListe = res;
           } 

@@ -49,8 +49,8 @@ onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
     inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.typeEtablissement=dataDetails.value.typeEtablissement.id,
-    inputForm.ville = dataDetails.value.ville.id
+    inputForm.typeEtablissement=dataDetails.value.typeEtablissement?dataDetails.value.typeEtablissement.id:null,
+    inputForm.ville = dataDetails.value.ville?dataDetails.value.ville.id:null
 
   });
 });

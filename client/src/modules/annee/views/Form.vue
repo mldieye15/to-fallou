@@ -10,14 +10,14 @@
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="anneeForm" :value="formValid">
       <v-text-field
-        id="libelle"
+        id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
-        name="libelle"
+        name="libelleLong"
         density="compact"
         :label="$t('apps.forms.annee.libelle')"
         color="balck"
         :rules="[rules.required, rules.min]"
-        v-model="inputForm.libelle"
+        v-model="inputForm.libelleLong"
         variant="underlined"
       ></v-text-field>
 

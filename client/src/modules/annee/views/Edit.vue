@@ -28,7 +28,7 @@ const { dataDetails, loading } = storeToRefs(anneeStore);
 const { one, modify } = anneeStore;
 
 const inputForm = reactive({
-  libelle: ''
+  libelleLong: ''
 });
 
 const handleSave = (payload) => {
@@ -44,7 +44,7 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.libelle = dataDetails.value.libelle
+    inputForm.libelleLong = dataDetails.value.libelleLong
   });
 });
 
