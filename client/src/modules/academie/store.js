@@ -5,12 +5,14 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/academies';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
+const libelleAvailability = modulesURL +'/libelle-availability';
 
 export const useAcademieStore = defineStore('academie', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
-    loading: true,  //  utilisé pour le chargement
+    loading: true,
+    isAvailable: false,  //  utilisé pour le chargement
     /*breadcrumbs: [
       {
         text: 'Paramétrage',
@@ -118,7 +120,18 @@ export const useAcademieStore = defineStore('academie', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkLibelleExistence(libelleLong) {
+      try {
+        const response = await axios.get(`${libelleAvailability}?libelleLong=${libelleLong}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
   },
 
 })

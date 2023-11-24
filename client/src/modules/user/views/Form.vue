@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="userForm">
-      <v-row style="height: 12vh">
+      <v-row style="height: 15vh">
         <v-col>
       <v-text-field 
         id="prenoms"
@@ -38,7 +38,7 @@
       </v-col>
        
     </v-row>
-    <v-row style="height: 12vh">
+    <v-row style="height: 15vh">
         <v-col>
       <v-text-field 
         id="matricule"
@@ -50,7 +50,8 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
-        @input="checkMatriculeExistence">
+        @input="checkMatriculeExistence"
+    >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
@@ -67,52 +68,9 @@
         variant="solo"
         type="date"
       ></v-text-field>
-      </v-col>
-       <!-- <v-menu
-          v-model="menu"
-          :close-on-content-click="false"
-          transition="scale-transition"
-          offset-y
-          max-width="100px"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              v-model="computedDateFormatted"
-              label="Date"
-              hint="MM/DD/YYYY format"
-              persistent-hint
-              prepend-inner-icon="mdi-calendar"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              variant="solo"
-              density="compact"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-          no-title
-          scrollable
-        >
-          <v-spacer></v-spacer>
-          <v-btn
-            variant="text"
-           color="primary"
-            @click="menu = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-            variant="text"
-            color="primary"
-            @click="menu.save(date)"
-          >
-            OK
-          </v-btn>
-        </v-date-picker>
-      </v-menu>
-      </v-col>      -->
+      </v-col> 
     </v-row>
-    <v-row style="height: 12vh">
+    <v-row style="height: 15vh">
       <v-col>
         <v-text-field
         id="username"
@@ -123,8 +81,8 @@
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.username"
-        variant="solo"
-        @input="checkUsernameExistence"    
+        variant="solo" 
+        @input="checkUsernameExistence"   
       >
     </v-text-field> 
     <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
@@ -143,7 +101,7 @@
       ></v-text-field>
       </v-col>
     </v-row >
-      <v-row style="height: 12vh">
+      <v-row style="height: 15vh">
         <v-col>
           <v-text-field
         id="telephone"
@@ -174,7 +132,8 @@
     <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       </v-col> 
       </v-row>
-      <v-row style="height: 12vh">
+      
+      <v-row >
       <v-col>
         <v-select
         id="sexe"
@@ -206,7 +165,7 @@
         </v-col>
 
       </v-row>
-      <v-row class="reduce-margin">
+      <v-row style="height: 15vh">
         <v-col>
           <v-text-field
         id="anciennete"
@@ -273,21 +232,20 @@
 
 <script setup>
 import { reactive, getCurrentInstance,watchEffect,ref} from "vue";
+import { useUtilisateurStore } from "../store";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
 import { useEtablissementStore } from "@/modules/etablissement/store";
 import { useCodeStore } from "@/store/codification";
-import { useValidationStore } from "@/store/validationstore";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 const instance = getCurrentInstance();
-
+const utilisateurStore= useUtilisateurStore();
 const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
 const codeStore = useCodeStore();
-const validationstore=useValidationStore();
 const { dataListe } = storeToRefs(fonctionStore);
 const { dataListeEtab } = storeToRefs(etablissementStore);
 const rules = reactive({
@@ -340,48 +298,17 @@ const checkEmailExistence = async () => {
   emailErrorMessage.value = "";
   if (inputForm.email) {
     try {
-      const isAvailable = await validationstore.emailAvailability(inputForm.email);
-      console.log("Résultat de la vérification de l'e-mail (isAvailable) :", isAvailable);
-
-      if (typeof isAvailable === 'undefined' || isAvailable === null) {
-        console.error('La fonction emailAvailability n\'a pas retourné de valeur valide.');
-        return;
-      }
-
+      const isAvailable = await utilisateurStore.checkEmailExistence(inputForm.email);
+      console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
       if (!isAvailable) {
         emailError.value = true;
-        emailErrorMessage.value = "Cet e-mail est déjà utilisé.";
+        emailErrorMessage.value = "Cet email  est déjà utilisé.";
         console.log('emailErrorMessage:', emailErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification de l'e-mail :", error);
+      console.error("Erreur lors de la vérification de l'email :", error);
       emailError.value = true;
-      emailErrorMessage.value = "Erreur lors de la vérification de l'e-mail. Veuillez réessayer.";
-    }
-  }
-};
-const checkMatriculeExistence = async () => {
-  matriculeError.value = false;
-  matriculeErrorMessage.value = "";
-  if (inputForm.matricule) {
-    try {
-      const isAvailable = await validationstore.matriculeAvailability(inputForm.matricule);
-      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
-
-      if (typeof isAvailable === 'undefined' || isAvailable === null) {
-        console.error('La fonction matriculeAvailability n\'a pas retourné de valeur valide.');
-        return;
-      }
-
-      if (!isAvailable) {
-        matriculeError.value = true;
-        matriculeErrorMessage.value = "Cet matricule est déjà utilisé.";
-        console.log('matriculeErrorMessage:', matriculeErrorMessage);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du matricule :", error);
-      matriculeError.value = true;
-      matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
+      emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
     }
   }
 };
@@ -390,23 +317,36 @@ const checkUsernameExistence = async () => {
   usernameErrorMessage.value = "";
   if (inputForm.username) {
     try {
-      const isAvailable = await validationstore.usernameAvailability(inputForm.username);
+      const isAvailable = await utilisateurStore.checkUsernameExistence(inputForm.username);
       console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
-
-      if (typeof isAvailable === 'undefined' || isAvailable === null) {
-        console.error('La fonction usernameAvailability n\'a pas retourné de valeur valide.');
-        return ;
-      }
-
       if (!isAvailable) {
         usernameError.value = true;
-        usernameErrorMessage.value = "Cet nom d'utilisateur est déjà utilisé.";
+        usernameErrorMessage.value = "Ce nom d'utilisateur est déjà utilisé.";
         console.log('usernameErrorMessage:', usernameErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification nom d'utilisateur :", error);
+      console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
       usernameError.value = true;
-      usernameErrorMessage.value = "Erreur lors de la vérification nom d'utilisateur. Veuillez réessayer.";
+      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'utilisateur. Veuillez réessayer.";
+    }
+  }
+};
+const checkMatriculeExistence = async () => {
+  matriculeError.value = false;
+  matriculeErrorMessage.value = "";
+  if (inputForm.matricule) {
+    try {
+      const isAvailable = await utilisateurStore.checkMatriculeExistence(inputForm.matricule);
+      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        matriculeError.value = true;
+        matriculeErrorMessage.value = "Ce matricule  est déjà utilisé.";
+        console.log('matriculeErrorMessage:', matriculeErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du matricule :", error);
+      matriculeError.value = true;
+      matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
     }
   }
 };
@@ -418,13 +358,13 @@ watchEffect(() => {
 function formatDateForInput(date) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
   return formattedDate;
-}
+};
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);
   if(instance.refs.userForm.validate() && !isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
-}
+};
 
 onMounted(()=>{
   fonctionStore.all();

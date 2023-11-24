@@ -122,7 +122,8 @@ public class TypeCentreServiceImp implements TypeCentreService {
                     );
             dao.deleteById(myId);
             log.info("TypeCentre avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -139,7 +140,8 @@ public class TypeCentreServiceImp implements TypeCentreService {
                             () -> new BusinessResourceException("not-found", "Aucune TypeCentre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("TypeCentre avec id: " + id + " trouvé. <auditOneById>");
-            Optional<TypeCentreAudit> response = (Optional<TypeCentreAudit>) Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+            Optional<TypeCentreAudit> response;
+            response = (Optional<TypeCentreAudit>) Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
@@ -148,8 +150,13 @@ public class TypeCentreServiceImp implements TypeCentreService {
         //return Optional.empty();
     }
 
+    @Override
+    public void verifyLibelleUnique(String libelleLong) throws BusinessResourceException {
+        if (dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("Ce type de centre est deja existe déjà");
+        }
 
-
+    }
 
 
 }

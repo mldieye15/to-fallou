@@ -26,4 +26,5 @@ public interface CentreService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<CentreAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyCentreUnique(String libelleLong)throws  BusinessResourceException;
 }

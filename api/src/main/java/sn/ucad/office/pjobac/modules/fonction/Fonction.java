@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
+@Table(name = "fonction"
+        , uniqueConstraints = @UniqueConstraint(columnNames="libelleLong")
 )
 public class Fonction {
     @Id

@@ -184,4 +184,19 @@ public class CodificationServiceImp implements CodificationService {
         Optional<Codification> response = dao.findByCodeAndEmail(code, email);
         return response.isPresent();
     }
+
+    @Override
+    public void verifyCodeUnique(String code) throws BusinessResourceException {
+        if(dao.findByCode(code).isPresent()){
+            throw new ResourceAlreadyExists("Le code  existe déjà.");
+        }
+    }
+
+    @Override
+    public void verifyEmailUnique(String email) throws BusinessResourceException {
+        if(dao.findByEmail(email).isPresent()){
+            throw new ResourceAlreadyExists("Le mail existe déjà.");
+        }
+
+    }
 }

@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
+@Table(name="typeCentre",
+        uniqueConstraints = @UniqueConstraint(columnNames="libelleLong")
 )
 public class TypeCentre {
     @Id

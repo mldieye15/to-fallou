@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.fonction.FonctionService;
 import sn.ucad.office.pjobac.modules.fonction.dto.FonctionRequest;
 import sn.ucad.office.pjobac.modules.fonction.dto.FonctionResponse;
@@ -66,6 +67,15 @@ public class FonctionResource {
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/libelle-availability")
+    public ResponseEntity<Boolean> checkAnneeAvailability(@RequestParam String libelleLong) {
+        try {
+            service.verifyFonctionUnique(libelleLong);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
     }
 }
 

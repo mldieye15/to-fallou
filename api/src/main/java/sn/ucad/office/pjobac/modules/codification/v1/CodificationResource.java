@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.codification.CodificationService;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationRequest;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationResponse;
@@ -105,6 +106,25 @@ public class CodificationResource {
             return ResponseEntity.ok(false);
         }
     }
+    @GetMapping("/code-availability")
+    public ResponseEntity<Boolean> checkCodeAvailability(@RequestParam String code) {
+        try {
+            service.verifyCodeUnique(code);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/email-availability")
+    public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam String email) {
+        try {
+            service.verifyEmailUnique(email);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+
 }
 
 

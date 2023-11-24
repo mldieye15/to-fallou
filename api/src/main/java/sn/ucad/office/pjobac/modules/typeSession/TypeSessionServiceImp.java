@@ -32,7 +32,8 @@ public class TypeSessionServiceImp implements TypeSessionService {
     public List<TypeSessionResponse> all() throws BusinessResourceException {
         log.info("TypeSessionServiceImp::all");
         List<TypeSession> all = dao.findAll();
-        List<TypeSessionResponse> response = all.stream()
+        List<TypeSessionResponse> response;
+        response = all.stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
@@ -151,8 +152,13 @@ public class TypeSessionServiceImp implements TypeSessionService {
 
     }
 
+    @Override
+    public void verifyTypeSessionUnique(String libelleLong) throws BusinessResourceException {
+        if(dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("L' annee existe déjà.");
+        }
 
-
+    }
 
 
 }

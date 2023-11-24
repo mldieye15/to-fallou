@@ -156,32 +156,36 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         this.loading = false
       }
     },
-    async emailAvailability(email) {
+    async checkEmailExistence(email) {
       try {
         const response = await axios.get(`${emailAvailability}?email=${email}`);
-        return response.data.isAvailable;
+        console.log("Réponse de emailAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
       } catch (error) {
-        console.error('Erreur lors de la vérification de l\'email :', error);
+        console.error("Erreur lors de la vérification de l'email :", error);
         return false;
       }
     },
-
-    async usernameAvailability(username) {
+    async checkUsernameExistence(username) {
       try {
         const response = await axios.get(`${usernameAvailability}?username=${username}`);
-        return response.data.isAvailable;
+        console.log("Réponse de usernameAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
       } catch (error) {
-        console.error('Erreur lors de la vérification du nom d\'utilisateur :', error);
+        console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
         return false;
       }
     },
-
-    async matriculeAvailability(matricule) {
+    async checkMatriculeExistence(matricule) {
       try {
         const response = await axios.get(`${matriculeAvailability}?matricule=${matricule}`);
-        return response.data.isAvailable;
+        console.log("Réponse de matriculeAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
       } catch (error) {
-        console.error('Erreur lors de la vérification du matricule :', error);
+        console.error("Erreur lors de la vérification du matricule :", error);
         return false;
       }
     },

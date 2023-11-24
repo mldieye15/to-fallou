@@ -89,7 +89,7 @@ public class UserResource {
         }
     }
     @GetMapping("/username-availability")
-    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam String username) {
+    public ResponseEntity<Boolean> verifyUsernamelUnique(@RequestParam String username) {
         try {
             service.verifyUsernamelUnique(username);
             return ResponseEntity.ok(true);

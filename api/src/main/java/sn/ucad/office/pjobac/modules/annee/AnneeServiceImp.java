@@ -60,7 +60,8 @@ public class AnneeServiceImp implements AnneeService {
                             () -> new BusinessResourceException("not-found", "Aucune annee avec " + id + " trouvée.", HttpStatus.NOT_FOUND)
                     );
             log.info("TypeSession avec id: " + id + " trouvé. <oneById>");
-            Optional<AnneeResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<AnneeResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -124,7 +125,8 @@ public class AnneeServiceImp implements AnneeService {
                     );
             dao.deleteById(myId);
             log.info("Academie avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -141,7 +143,8 @@ public class AnneeServiceImp implements AnneeService {
                             () -> new BusinessResourceException("not-found", "Aucune Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Academie avec id: " + id + " trouvé. <auditOneById>");
-           Optional<AnneeAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<AnneeAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
@@ -150,8 +153,13 @@ public class AnneeServiceImp implements AnneeService {
         //return Optional.empty();
     }
 
+    @Override
+    public void verifyAnneeUnique(String libelleLong) throws BusinessResourceException {
+        if(dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("L' annee existe déjà.");
+        }
 
-
+    }
 
 
 }

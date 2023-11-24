@@ -150,8 +150,13 @@ public class CentreServiceImp implements CentreService {
         }
     }
 
+    @Override
+    public void verifyCentreUnique(String libelleLong) throws BusinessResourceException {
+        if(dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("Le centre existe déjà.");
+        }
 
-
+    }
 
 
 }

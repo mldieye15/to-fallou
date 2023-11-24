@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.annee.AnneeService;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeRequest;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeResponse;
@@ -67,6 +68,15 @@ public class AnneeResource {
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+    @GetMapping("/libelle-availability")
+    public ResponseEntity<Boolean> checkAnneeAvailability(@RequestParam String libelleLong) {
+        try {
+            service.verifyAnneeUnique(libelleLong);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
     }
 }
 

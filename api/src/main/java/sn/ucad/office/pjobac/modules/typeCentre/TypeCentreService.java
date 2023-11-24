@@ -26,4 +26,5 @@ public interface TypeCentreService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<TypeCentreAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyLibelleUnique(String libelleLong) throws  BusinessResourceException;
 }

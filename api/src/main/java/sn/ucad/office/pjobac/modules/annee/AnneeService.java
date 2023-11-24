@@ -25,4 +25,5 @@ public interface AnneeService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<AnneeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyAnneeUnique(String libelleLong)throws  BusinessResourceException;
 }

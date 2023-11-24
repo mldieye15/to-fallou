@@ -31,8 +31,9 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
     public List<TypeEtablissementResponse> all() throws BusinessResourceException {
         log.info("TypeEtablissementServiceImp::all");
         List<TypeEtablissement> all = dao.findAll();
-        List<TypeEtablissementResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<TypeEtablissementResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -43,7 +44,7 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
         final Page<TypeEtablissement> page = dao.findAll(pageable);
         return new SimplePage<TypeEtablissementResponse>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -122,7 +123,8 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
                     );
             dao.deleteById(myId);
             log.info("typeEtablissement avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -139,7 +141,8 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
                             () -> new BusinessResourceException("not-found", "Aucune typeEtablissement avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("typeEtablissement avec id: " + id + " trouvé. <auditOneById>");
-           Optional<TypeEtablissementAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<TypeEtablissementAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
@@ -148,8 +151,13 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
         //return Optional.empty();
     }
 
+    @Override
+    public void verifyTypeEtablissementUnique(String libelleLong) throws BusinessResourceException {
+        if(dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("Le nom du typeEtablissement   existe déjà.");
+        }
 
-
+    }
 
 
 }

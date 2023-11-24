@@ -26,4 +26,5 @@ public interface TypeEtablissementService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<TypeEtablissementAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyTypeEtablissementUnique(String libelleLong)throws  BusinessResourceException;
 }

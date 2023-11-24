@@ -30,5 +30,8 @@ public interface CodificationService {
     public Optional<CodificationResponse> inscriptionCode(CodificationRequest request)throws BusinessResourceException;
     void sendCode(CodificationRequest request) throws BusinessResourceException, InterruptedException;
     boolean verifyCode(String code, String email)throws BusinessResourceException, InterruptedException;
+    void verifyCodeUnique(String code)throws  BusinessResourceException;
+    void verifyEmailUnique(String email)throws  BusinessResourceException;
+
 
 }

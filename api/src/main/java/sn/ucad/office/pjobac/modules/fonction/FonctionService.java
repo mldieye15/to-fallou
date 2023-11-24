@@ -24,4 +24,5 @@ public interface FonctionService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<FonctionAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyFonctionUnique(String libelleLong)throws  BusinessResourceException;
 }

@@ -25,4 +25,5 @@ public interface TypeSessionService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<TypeSessionAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyTypeSessionUnique(String libelleLong)throws  BusinessResourceException;
 }

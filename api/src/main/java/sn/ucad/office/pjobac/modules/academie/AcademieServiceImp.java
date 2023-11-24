@@ -47,7 +47,7 @@ public class AcademieServiceImp implements AcademieService {
         final Page<Academie> page = dao.findAll(pageable);
         return new SimplePage<AcademieResponse>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -62,7 +62,8 @@ public class AcademieServiceImp implements AcademieService {
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<AcademieResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<AcademieResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -126,7 +127,8 @@ public class AcademieServiceImp implements AcademieService {
                     );
             dao.deleteById(myId);
             log.info("Academie avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -143,7 +145,8 @@ public class AcademieServiceImp implements AcademieService {
                             () -> new BusinessResourceException("not-found", "Aucune Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Academie avec id: " + id + " trouvé. <auditOneById>");
-           Optional<AcademieAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<AcademieAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
@@ -152,8 +155,13 @@ public class AcademieServiceImp implements AcademieService {
         //return Optional.empty();
     }
 
+    @Override
+    public void verifyAcademieUnique(String libelleLong) throws BusinessResourceException {
+        if(dao.findByLibelleLong(libelleLong).isPresent()){
+            throw new ResourceAlreadyExists("Le nom de l' academie   existe déjà.");
+        }
 
-
+    }
 
 
 }
