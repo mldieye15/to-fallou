@@ -18,7 +18,7 @@ import java.util.Date;
 @Component
 public interface CentreMapper {
     // transform the entity to PJO class
-    CentreResponse toEntiteResponse(Centre Centre);
+    CentreResponse toEntiteResponse(Centre centre);
 
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")

@@ -157,7 +157,8 @@
             "fonction":{
                 "fonction":"fonction",
                 "nom":"nom de la fonction",
-                "abreviation":"Son abreviation"
+                "abreviation":"Son abreviation",
+                "nombrePoint":"Nombre de point"
             },
             "typeSession":{
                 "typeSession":"typeSessions",

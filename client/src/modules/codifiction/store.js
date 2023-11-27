@@ -5,7 +5,8 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/codifications';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
-
+const emailAvailability = modulesURL +'/email-availability';
+const codeAvailability = modulesURL +'/code-availability';
 export const useCodificationStore = defineStore('codification', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
@@ -118,7 +119,29 @@ export const useCodificationStore = defineStore('codification', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkEmailExistence(email) {
+      try {
+        const response = await axios.get(`${emailAvailability}?email=${email}`);
+        console.log("Réponse de emailAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkCodeExistence(code) {
+      try {
+        const response = await axios.get(`${codeAvailability}?code=${code}`);
+        console.log("Réponse de codeAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
   },
 
 })

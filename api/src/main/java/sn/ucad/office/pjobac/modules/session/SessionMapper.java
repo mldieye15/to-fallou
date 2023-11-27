@@ -21,6 +21,7 @@ SessionMapper {
     SessionAudit toEntiteAudit(Session session, Long auteurName, Long modifName);
 
     // request to entity anne
+    @Mapping(target = "libelleLong", source = ".", qualifiedByName = "formatLibelle")
     @Mapping(source = "request.dateDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.dateFin", target = "dateFin", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.dateOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")
@@ -41,6 +42,7 @@ SessionMapper {
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
+    @Mapping(target = "libelleLong", source = ".", qualifiedByName = "formatLibelle")
     @Mapping(source = "request.dateDebut", target = "dateDebut", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.dateFin", target = "dateFin", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.dateOuvertureDepotCandidature", target = "dateOuvertureDepotCandidature", qualifiedByName = "formatStringToDate")

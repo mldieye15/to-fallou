@@ -11,15 +11,18 @@
     <v-form @submit.prevent="submit" ref="anneeForm" :value="formValid">
       <v-text-field
         id="libelleLong"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar-blank-multiple"
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.annee.libelle')"
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="underlined"
-      ></v-text-field>
+        variant="solo"
+        @input="checkLibelleExistence"
+      >
+    </v-text-field>
+    <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
 
       <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
@@ -28,14 +31,41 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance } from "vue";
+import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
+import { useAnneeStore } from "../store";
 
 const instance = getCurrentInstance();
+const anneeStore=useAnneeStore();
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
 });
+const libelleError = ref(false);
+const libelleErrorMessage = ref("");
+const isSubmitDisabled = ref(false);
+watchEffect(() => {
+  isSubmitDisabled.value = libelleError.value
+});
+const checkLibelleExistence = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    try {
+      const isAvailable = await anneeStore.checkLibelleExistence(inputForm.libelleLong);
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "L'annee   existe deja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
 
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
@@ -45,9 +75,15 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 const handleSave = () => {
-  if(instance.refs.anneeForm.validate){
+  if(instance.refs.anneeForm.validate && !isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
 }
 
 </script>
+<style>
+.error-message {
+  color: red; /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+</style>

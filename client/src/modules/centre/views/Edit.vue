@@ -30,7 +30,6 @@ const { one, modify } = centreStore;
 const inputForm = reactive({
   libelleLong: '',
   libelleCourt:'',
-  nombreJury:'',
   ville: null,
   typeCentre: null
 });
@@ -50,7 +49,6 @@ onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
     inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.nombreJury = dataDetails.value.nombreJury,
     inputForm.ville =dataDetails.value.ville? dataDetails.value.ville.id:null,
     inputForm.typeCentre =dataDetails.value.typeCentre? dataDetails.value.typeCentre.id:null
 

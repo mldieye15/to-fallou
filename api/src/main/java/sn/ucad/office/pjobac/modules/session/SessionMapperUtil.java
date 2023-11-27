@@ -9,6 +9,7 @@ import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.centre.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.AnneeDao;
+import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 import sn.ucad.office.pjobac.modules.typeSession.TypeSession;
 import sn.ucad.office.pjobac.modules.typeSession.TypeSessionDao;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
@@ -62,6 +63,19 @@ public class SessionMapperUtil {
     @Named("formatStringToLong")
     public static Long formatStringToLong(String num) throws NumberFormatException {
         return  Long.valueOf(num.trim());
+    }
+    @Named("formatLibelle")
+    public String formatLibelle(SessionRequest request) {
+        if (request.getTypeSession() != null && request.getAnnee() != null) {
+            String typeSession=request.getTypeSession();
+            String annee=request.getAnnee();
+            String libelleLongTypeSession;
+            libelleLongTypeSession = getTypeSessionById(typeSession).getLibelleLong();
+            String libelleLongAnnee;
+            libelleLongAnnee=getAnneeById(annee).getLibelleLong();
+            return "Session " + libelleLongTypeSession+ " " + libelleLongAnnee;
+        }
+        return null;
     }
 }
 

@@ -13,5 +13,4 @@ public class CentreRequest {
     private String libelleCourt;
     private String ville;
     private String typeCentre;
-    private Integer nombreJury;
 }

@@ -5,7 +5,7 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/annees';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
-
+const libelleAvailability = modulesURL +'/libelle-availability';
 export const useAnneeStore = defineStore('annee', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
@@ -116,7 +116,18 @@ export const useAnneeStore = defineStore('annee', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkLibelleExistence(libelleLong) {
+      try {
+        const response = await axios.get(`${libelleAvailability}?libelleLong=${libelleLong}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
   },
   
 })

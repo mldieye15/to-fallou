@@ -11,7 +11,7 @@
     <v-form @submit.prevent="submit" ref="academieForm" :value="formValid">
       <v-text-field
         id="libelleLong"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-school"
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.academie.nom')"
@@ -25,7 +25,7 @@
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
       <v-text-field
         id="libelleCourt"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-school"
         name="libelleCourt"
         density="compact"
         :label="$t('apps.forms.academie.abreviation')"

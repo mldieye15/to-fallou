@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
@@ -27,6 +28,7 @@ import java.util.stream.Collectors;
 public class JuryServiceImp implements JuryService {
     private final JuryMapper mapper;
     private final JuryDao dao;
+    private final CentreDao centreDao;
 
     @Override
     public List<JuryResponse> all() throws BusinessResourceException {
@@ -153,8 +155,10 @@ public class JuryServiceImp implements JuryService {
 
     }
 
-
-
+    @Override
+    public int countJuryByCentre(Long centreId) {
+        return centreDao.totalJuryByCentre(centreId);
+    }
 
 
 }

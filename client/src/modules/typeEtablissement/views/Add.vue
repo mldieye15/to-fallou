@@ -26,7 +26,8 @@ const { add } = typeEtablissementStore;
 
 const inputForm= reactive({
   libelleLong:'',
-  libelleCourt:''
+  libelleCourt:'',
+  nombrePoint:''
 });
 
 const handleSave = (payload) => {

@@ -30,7 +30,8 @@ const { one, modify } = fonctiontore;
 
 const inputForm = reactive({
   libelleLong: '',
-  libelleCourt:''
+  libelleCourt:'',
+  nombrePoint: '',
 });
 
 const handleSave = (payload) => {
@@ -46,8 +47,9 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.libelleLong = dataDetails.value.libelleLong
-    inputForm.libelleCourt = dataDetails.value.libelleCourt
+    inputForm.libelleLong = dataDetails.value.libelleLong,
+    inputForm.libelleCourt = dataDetails.value.libelleCourt,
+    inputForm.nombrePoint = dataDetails.value.nombrePoint
   });
 });
 

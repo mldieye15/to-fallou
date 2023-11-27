@@ -27,7 +27,8 @@ const { add } = fonctionStore;
 
 const inputForm= reactive({
   libelleLong:'',
-  libelleCourt:''
+  libelleCourt:'',
+  nombrePoint:'',
 });
 
 const handleSave = (payload) => {

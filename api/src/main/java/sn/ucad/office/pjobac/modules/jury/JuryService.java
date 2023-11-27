@@ -27,4 +27,5 @@ public interface JuryService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<JuryAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    int countJuryByCentre(Long centreId);
 }

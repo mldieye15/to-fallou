@@ -13,6 +13,7 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreAudit;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
+import sn.ucad.office.pjobac.modules.jury.JuryService;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class CentreServiceImp implements CentreService {
     private final CentreMapper mapper;
     private final CentreDao dao;
+    private final JuryService juryService;
 
     @Override
     public List<CentreResponse> all() throws BusinessResourceException {
@@ -33,7 +35,11 @@ public class CentreServiceImp implements CentreService {
         List<Centre> all = dao.findAll();
         List<CentreResponse> response;
         response = all.stream()
-                .map(mapper::toEntiteResponse)
+                .map(centre -> {
+                    int nombreJury= juryService.countJuryByCentre(centre.getId());
+                    centre.setNombreJury(nombreJury);
+                    return mapper.toEntiteResponse(centre);
+                })
                 .collect(Collectors.toList());
         return response;
     }
@@ -59,6 +65,8 @@ public class CentreServiceImp implements CentreService {
                             () -> new BusinessResourceException("not-found", "Aucun Centre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Centre avec id: " + id + " trouvé. <oneById>");
+            int nombreJury = juryService.countJuryByCentre(myId);
+            one.setNombreJury(nombreJury);
             Optional<CentreResponse> response;
             response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;

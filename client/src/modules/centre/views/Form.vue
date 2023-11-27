@@ -18,8 +18,11 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="underlined"
-      ></v-text-field>
+        variant="solo"
+        @input="checkLibelleExistence"
+      >
+      </v-text-field>
+      <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
 
       <v-text-field
         id="libelleCourt"
@@ -30,55 +33,38 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleCourt"
-        variant="underlined"
+        variant="solo"
       ></v-text-field>
-      <v-text-field
-        id="nombreJury"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="nombreJury"
-        density="compact"
-        :label="$t('apps.forms.centre.nombreJury')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.nombreJury"
-        variant="underlined"
-      ></v-text-field>
-      <v-row>
-        <v-col>
-              <v-select
+       <v-select
             prepend-inner-icon="mdi-alpha-a-circle"
             name="ville"
             density="compact"
             :label="$t('apps.forms.ville.nom')"
             color="balck"
             v-model="inputForm.ville"
-            variant="underlined"
+            variant="solo"
             :items="dataListeVille"
             persistent-hint
             
             single-line
             item-title="libelleLong"
             item-value="id"
-          ></v-select>
-        </v-col>
-        <v-col>
-            <v-select
+        ></v-select>
+        <v-select
               prepend-inner-icon="mdi-alpha-a-circle"
               name="typeCentre"
               density="compact"
               :label="$t('apps.forms.typeCentre.nom')"
               color="balck"
               v-model="inputForm.typeCentre"
-              variant="underlined"
+              variant="solo"
               :items="dataListeTypeCentre"
               persistent-hint
               
               single-line
               item-title="libelleLong"
               item-value="id"
-            ></v-select>
-        </v-col>
-      </v-row>
+        ></v-select>
       
       <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
@@ -87,15 +73,16 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance } from "vue";
+import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
+import { useCentreStore } from "../store";
 import { useVilleStore } from "@/modules/ville/store";
 import { useTypeCentreStore } from "@/modules/typeCentre/store";
 
 
 const instance = getCurrentInstance();
-
+const centreStore=useCentreStore();
 const villeStore = useVilleStore();
 const { dataListeVille } = storeToRefs(villeStore);
 
@@ -107,6 +94,31 @@ const rules = reactive({
   min: v => v.length >= 2 || '2 cractére au moins',
 });
 
+const libelleError = ref(false);
+const libelleErrorMessage = ref("");
+const isSubmitDisabled = ref(false);
+watchEffect(() => {
+  isSubmitDisabled.value = libelleError.value
+});
+const checkLibelleExistence = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    try {
+      const isAvailable = await centreStore.checkLibelleExistence(inputForm.libelleLong);
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "Ce centre   existe deja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {
@@ -115,7 +127,7 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 const handleSave = () => {
-  if(instance.refs.centreForm.validate){
+  if(instance.refs.centreForm.validate  && !isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
 }
@@ -126,3 +138,9 @@ onMounted(()=>{
 });
 
 </script>
+<style>
+.error-message {
+  color: red; /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+</style>

@@ -5,6 +5,7 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/typeEtablissements';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
+const libelleAvailability = modulesURL +'/libelle-availability';
 
 export const useTypeEtablissementStore = defineStore('typeEtablissement', {
   state: () => ({
@@ -26,6 +27,7 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
     headerTable: [
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
+      { text: 'Nombre de point', value: 'nombrePoint', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
@@ -117,7 +119,18 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkLibelleExistence(libelleLong) {
+      try {
+        const response = await axios.get(`${libelleAvailability}?libelleLong=${libelleLong}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
   },
   
 })

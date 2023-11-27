@@ -13,4 +13,5 @@ public class TypeEtablissementResponse {
     private Long id;
     private String libelleLong;
     private String libelleCourt;
+    private String nombrePoint;
 }

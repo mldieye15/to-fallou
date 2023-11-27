@@ -30,7 +30,7 @@ public class Centre {
 
     @NotNull
     private String libelleCourt;
-    @NotNull
+
     private Integer nombreJury;
 
     @ManyToOne(fetch = FetchType.EAGER)

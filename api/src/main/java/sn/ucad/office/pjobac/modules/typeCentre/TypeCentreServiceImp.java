@@ -31,8 +31,9 @@ public class TypeCentreServiceImp implements TypeCentreService {
     public List<TypeCentreResponse> all() throws BusinessResourceException {
         log.info("TypeCentreServiceImp::all");
         List<TypeCentre> all = dao.findAll();
-        List<TypeCentreResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<TypeCentreResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -43,7 +44,7 @@ public class TypeCentreServiceImp implements TypeCentreService {
         final Page<TypeCentre> page = dao.findAll(pageable);
         return new SimplePage<TypeCentreResponse>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -58,7 +59,8 @@ public class TypeCentreServiceImp implements TypeCentreService {
                             () -> new BusinessResourceException("not-found", "Aucun TypeCentre avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<TypeCentreResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<TypeCentreResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
