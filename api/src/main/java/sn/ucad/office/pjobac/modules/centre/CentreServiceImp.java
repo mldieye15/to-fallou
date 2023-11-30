@@ -35,14 +35,24 @@ public class CentreServiceImp implements CentreService {
         List<Centre> all = dao.findAll();
         List<CentreResponse> response;
         response = all.stream()
-                .map(centre -> {
-                    int nombreJury= juryService.countJuryByCentre(centre.getId());
-                    centre.setNombreJury(nombreJury);
-                    return mapper.toEntiteResponse(centre);
-                })
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
+//    @Override
+//    public List<CentreResponse> all() throws BusinessResourceException {
+//        log.info("CentreServiceImp::all");
+//        List<Centre> all = dao.findAll();
+//        List<CentreResponse> response;
+//        response = all.stream()
+//                .map(centre -> {
+//                    int nombreJury= juryService.countJuryByCentre(centre.getId());
+//                    centre.setNombreJury(nombreJury);
+//                    return mapper.toEntiteResponse(centre);
+//                })
+//                .collect(Collectors.toList());
+//        return response;
+//    }
 
     @Override
     public SimplePage<CentreResponse> all(Pageable pageable) throws BusinessResourceException {
@@ -57,6 +67,7 @@ public class CentreServiceImp implements CentreService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Optional<CentreResponse> oneById(String id) throws NumberFormatException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
@@ -77,7 +88,6 @@ public class CentreServiceImp implements CentreService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public CentreResponse add(CentreRequest req) throws BusinessResourceException {
         try {
             log.info("Debug 001-add:  " + req.toString());

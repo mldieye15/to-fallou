@@ -25,7 +25,6 @@ const juryStore = useJuryStore();
 const { add } = juryStore;
 
 const inputForm= reactive({
-  numero:'',
   centre: null
 });
 

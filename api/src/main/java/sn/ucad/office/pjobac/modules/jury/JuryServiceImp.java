@@ -54,6 +54,7 @@ public class JuryServiceImp implements JuryService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Optional<JuryResponse> oneById(String id) throws NumberFormatException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
@@ -79,6 +80,7 @@ public class JuryServiceImp implements JuryService {
             Jury one = mapper.requestToEntity(req);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             JuryResponse response = mapper.toEntiteResponse(dao.save(one));
+            updateCentreTotalJury(one.getCentre().getId());
             log.info("Ajout " + response.getNumero() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -126,6 +128,7 @@ public class JuryServiceImp implements JuryService {
                             () -> new BusinessResourceException("not-found", "Aucun Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             dao.deleteById(myId);
+            updateCentreTotalJury(oneBrute.getCentre().getId());
             log.info("Jury avec id & numero: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
             String response;
             response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";
@@ -158,6 +161,13 @@ public class JuryServiceImp implements JuryService {
     @Override
     public int countJuryByCentre(Long centreId) {
         return centreDao.totalJuryByCentre(centreId);
+    }
+
+    @Override
+    public void updateCentreTotalJury(Long centreId) {
+        int totalJury = centreDao.totalJuryByCentre(centreId);
+        centreDao.updateTotalJury(centreId, totalJury);
+
     }
 
 

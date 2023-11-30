@@ -9,18 +9,6 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.jury.jury') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="juryForm" :value="formValid">
-      <v-text-field
-        id="numero"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="numero"
-        density="compact"
-        :label="$t('apps.forms.jury.numero')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.numero"
-        variant="underlined"
-      ></v-text-field>
-
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="centre"
@@ -28,7 +16,7 @@
         :label="$t('apps.forms.centre.nom')"
         color="balck"
         v-model="inputForm.centre"
-        variant="underlined"
+        variant="solo"
         :items="dataListe"
         persistent-hint
         

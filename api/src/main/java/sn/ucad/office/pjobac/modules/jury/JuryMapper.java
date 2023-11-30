@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.config.AppConstants;
 
@@ -26,6 +27,7 @@ public interface JuryMapper {
     JuryAudit toEntiteAudit(Jury jury, Long auteurName, Long modifName);
 
     // request to entity anne
+    @Mapping(target ="numero",source =".",qualifiedByName="juryNumber")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
     Jury requestToEntity(JuryRequest request);
 
@@ -36,10 +38,21 @@ public interface JuryMapper {
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
+    @Mapping(target ="numero",source =".",qualifiedByName="juryNumber")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
-    Jury requestToEntiteUp(@MappingTarget Jury entity, JuryRequest request/*, Utilisateur user*/);
-
-    //  Source: https://www.baeldung.com/mapstruct-custom-mapper
+    Jury requestToEntiteUp(@MappingTarget Jury entity, JuryRequest request);
+//    {
+//        if (entity.getCentre() == null || !entity.getCentre().equals(request.getCentre())) {
+//            entity.setNumero(numeroJury(request));
+//        } else {
+//            String existingNumero = entity.getNumero();
+//            String newNumero = numeroJury(request);
+//            if (!existingNumero.equals(newNumero)) {
+//                entity.setNumero(newNumero);
+//            }
+//        }
+//        return entity;
+//    }
     @Named("formatStringToDate")
     static Date formatStringToDate(String date) throws ParseException {
         final AppDateFormatter dateFormatter = new AppDateFormatter();
@@ -51,5 +64,7 @@ public interface JuryMapper {
     static Long formatStringToLong(String num) throws NumberFormatException {
         return  Long.valueOf(num.trim());
     }
+
+
 
 }

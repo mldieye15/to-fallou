@@ -28,7 +28,6 @@ const { dataDetails, loading } = storeToRefs(juryStore);
 const { one, modify } = juryStore;
 
 const inputForm = reactive({
-  numero:'',
   centre: null
 });
 
@@ -45,7 +44,6 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.numero = dataDetails.value.numero,
     inputForm.centre= dataDetails.value.centre?dataDetails.value.centre.id:null
   });
 });
