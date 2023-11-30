@@ -13,4 +13,6 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     Optional<Centre> findByLibelleLong(String libelleLong);
     @Query("SELECT COUNT(j) FROM Jury j WHERE j.centre.id = :centreId")
     int totalJuryByCentre(@Param("centreId") Long centreId);
+    @Query("SELECT MAX(CAST(j.numero AS int)) FROM Jury j WHERE j.centre.id = :centreId")
+    Integer findLastJuryNumber(@Param("centreId") Long centreId);
 }

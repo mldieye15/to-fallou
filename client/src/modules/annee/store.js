@@ -66,6 +66,10 @@ export const useAnneeStore = defineStore('annee', {
         this.loading = false
       }
     },
+    getLibelleById(id) {
+      const annee = this.dataListe.find(item => item.id === id);
+      return annee ? annee.libelleLong : '';
+    },
     //  ajouter une annee
     async add(payload) {
       try {

@@ -1,6 +1,7 @@
 package sn.ucad.office.pjobac.modules.session;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -65,4 +66,23 @@ public class Session {
     @Column(nullable = true)
     @UpdateTimestamp
     protected LocalDateTime dateModification;
+    @AssertTrue(message = "La date de debut doit être antérieure à la date de fin")
+    private boolean isDateDebutBeforeDateFin() {
+        return dateDebut.before(dateFin);
+    }
+
+    @AssertTrue(message = "La date d'ouverture de candidature doit être incluse entre la date de début et la date de fin")
+    private boolean isDateOuvertureCandidature() {
+        return dateDebut.before(dateOuvertureDepotCandidature) && dateOuvertureDepotCandidature.before(dateFin);
+    }
+
+    @AssertTrue(message = "La date de cloture de candidature doit être incluse entre la date de début et la date de fin")
+    private boolean isDateClotureDepotCandidatureValid() {
+        return dateDebut.before(dateClotureDepotCandidature) && dateClotureDepotCandidature.before(dateFin);
+    }
+
+    @AssertTrue(message = "La date d'ouverture de candidature doit être antérieure à la date de cloture de candidature")
+    private boolean isDateOuvertureBeforeCloture() {
+        return dateOuvertureDepotCandidature.before(dateClotureDepotCandidature);
+    }
 }

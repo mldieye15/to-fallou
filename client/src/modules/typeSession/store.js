@@ -68,6 +68,10 @@ export const useTypeSessionStore = defineStore('typeSession', {
         this.loading = false
       }
     },
+    getLibelleById(id) {
+      const typeSession = this.dataListeTypeSession.find(item => item.id === id);
+      return typeSession ? typeSession.libelleLong : '';
+    },
     //  ajouter une academéie
     async add(payload) {
       try {

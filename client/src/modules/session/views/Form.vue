@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.session.session') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="sessionForm" :value="formValid">
-      <v-row style="height: 12vh">
+      <v-row >
         <v-col>
       <v-text-field 
         id="libelleLong"
@@ -19,8 +19,9 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         :rules="[rules.required, rules.min]"
-        v-model="inputForm.libelleLong"
-        variant="solo" 
+        v-model="libelleLongSession"
+        variant="solo"
+        readonly
       ></v-text-field >
       </v-col>
       <v-col>
@@ -38,7 +39,7 @@
       </v-col>
        
     </v-row>
-    <v-row style="height: 12vh">
+    <v-row >
       <v-col>
         <v-text-field
         id="dateDebut"
@@ -51,7 +52,9 @@
         v-model="inputForm.dateDebut"
         variant="solo"
         type="date"
+         @input="validateDates"
       ></v-text-field>
+      <div v-if="dateDebutError" class="error-message">{{ dateDebutErrorMessage }}</div>
       </v-col>
       <v-col>
         <v-text-field
@@ -68,7 +71,7 @@
       ></v-text-field>
       </v-col>
     </v-row >
-      <v-row style="height: 12vh">
+      <v-row >
         <v-col>
           <v-text-field
         id="dateDeOuvertureDepotCandidature"
@@ -81,7 +84,9 @@
         v-model="inputForm.dateOuvertureDepotCandidature"
         variant="solo"
         type="date"
-      ></v-text-field>
+        @change="validateDates"
+        ></v-text-field>
+        <div v-if="dateOuvertureError" class="error-message">{{ dateOuvertureErrorMessage }}</div>
         </v-col>
         <v-col>
       <v-text-field
@@ -95,7 +100,9 @@
         v-model="inputForm.dateClotureDepotCandidature"
         variant="solo"
         type="date"
+         @change="validateDates"
       ></v-text-field>
+       <div v-if="dateClotureError" class="error-message">{{ dateClotureErrorMessage }}</div>
         </v-col>
       </v-row>
       <v-row class="reduce-margin">
@@ -115,23 +122,6 @@
         <v-col>
           <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
-        name="annee"
-        density="compact"
-        :label="$t('apps.forms.annee.libelle')"
-        color="balck"
-        v-model="inputForm.annee"
-        variant="solo"
-        :items="dataListe"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
         name="typeSession"
         density="compact"
         :label="$t('apps.forms.typeSession.nom')"
@@ -146,7 +136,23 @@
         item-value="id"
       ></v-select>
         </v-col>
-
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="annee"
+        density="compact"
+        :label="$t('apps.forms.annee.libelle')"
+        color="balck"
+        v-model="inputForm.annee"
+        variant="solo"
+        :items="dataListe"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
       </v-row>
       
 
@@ -157,7 +163,7 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance ,watchEffect} from "vue";
+import { reactive, getCurrentInstance ,watchEffect,ref,computed} from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useAnneeStore } from "@/modules/annee/store";
@@ -182,18 +188,38 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
+const dateDebutError = ref(false);
+const dateDebutErrorMessage = ref("");
+const dateOuvertureError = ref(false);
+const dateOuvertureErrorMessage =ref("");
+const dateClotureError = ref(false);
+const dateClotureErrorMessage = ref("");
+const isSubmitDisabled = ref(false);
+
+const libelleLongSession = computed(() => {
+  const session = inputForm.typeSession;
+  const annee = inputForm.annee;
+  const typeSessionLibelle = typeSessionStore.getLibelleById(session);
+  const anneeLibelle = anneeStore.getLibelleById(annee);
+  return `Session ${typeSessionLibelle} ${anneeLibelle}`.trim();
+});
 watchEffect(() => {
-  if (inputForm.dateClotureDepotCandidature, 
-  inputForm.dateOuvertureDepotCandidature,
+  validateDates();
+  isSubmitDisabled.value=dateClotureError.value||dateOuvertureError.value||dateDebutError.value;
+});
+watchEffect(() => {
+  if (
   inputForm.dateDebut,
-  inputForm.dateFin
+  inputForm.dateFin,
+  inputForm.dateOuvertureDepotCandidature,
+  inputForm.dateClotureDepotCandidature 
   ) {
     // console.log('Avant formatage :', inputForm.dateClotureDepotCandidature);
     // console.log('Avant formatage :', inputForm.dateDebut);
-    inputForm.dateClotureDepotCandidature = formatDateForInput(inputForm.dateClotureDepotCandidature);
-    inputForm.dateOuvertureDepotCandidature= formatDateForInput(inputForm.dateOuvertureDepotCandidature);
     inputForm.dateDebut=formatDateForInput(inputForm.dateDebut);
     inputForm.dateFin=formatDateForInput(inputForm.dateFin);
+    inputForm.dateOuvertureDepotCandidature= formatDateForInput(inputForm.dateOuvertureDepotCandidature);
+    inputForm.dateClotureDepotCandidature = formatDateForInput(inputForm.dateClotureDepotCandidature);
   }
   // console.log('Après formatage :', inputForm.dateClotureDepotCandidature);
   // console.log('Apres formatage :', inputForm.dateDebut);
@@ -203,9 +229,43 @@ function formatDateForInput(date) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
   return formattedDate;
 }
+function validateDates() {
+  const dateOuverture = new Date(inputForm.dateOuvertureDepotCandidature);
+  const dateCloture = new Date(inputForm.dateClotureDepotCandidature);
+  const dateDebut = new Date(inputForm.dateDebut);
+  const dateFin = new Date(inputForm.dateFin);
+
+  // Réinitialisez les messages d'erreur à chaque validation
+  dateOuvertureError.value=false;
+  dateOuvertureErrorMessage.value = "";
+  dateClotureError.value=false ;
+  dateClotureErrorMessage.value = "";
+  dateDebutError.value = false;
+  dateDebutErrorMessage.value = "";
+
+  if (dateOuverture <= dateDebut||dateOuverture>=dateFin) {
+    dateOuvertureError.value=true
+    dateOuvertureErrorMessage.value = "La date d'ouverture de dépôt de candidature doit être comprise entre la date de debut et la date de fin de session";
+  }
+
+  if (dateOuverture >= dateCloture) {
+    dateOuvertureError.value=true
+    dateOuvertureErrorMessage.value = "La date d'ouverture de dépôt de candidature doit être antérieure à la date de clôture de dépôt de candidature.";
+  }
+
+  if (dateDebut >= dateFin) {
+    dateDebutError.value = true;
+    dateDebutErrorMessage.value = "La date de début de la session doit être antérieure à la date de fin de la session.";
+  }
+  if (dateCloture >= dateFin) {
+    dateClotureError.value = true;
+    dateClotureErrorMessage.value = "La date de cloture de dépôt de candidature doit être antérieure à la date de fin de la session.";
+  }
+}
 
 const handleSave = () => {
-  if(instance.refs.sessionForm.validate){
+  console.log("isSubmitDisabled:", isSubmitDisabled.value);
+  if(instance.refs.sessionForm.validate&&!isSubmitDisabled.value){
     actionSubmit(inputForm);
   }
 }
@@ -218,9 +278,10 @@ onMounted(()=>{
 
 </script>
 
-<!-- <style>
-.reduce-margin .v-text-field {
-  margin-right: 1px; /* Ajustez la valeur pour réduire ou augmenter l'espace entre les champs horizontalement */
+<style>
+.error-message {
+  color: rgb(161, 13, 13); /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
 }
-</style> -->
+</style>
 
