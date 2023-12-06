@@ -35,8 +35,9 @@ public class AcademieServiceImp implements AcademieService {
     public List<AcademieResponse> all() throws BusinessResourceException {
         log.info("AcademieServiceImp::all");
         List<Academie> all = dao.findAll();
-        List<AcademieResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<AcademieResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }

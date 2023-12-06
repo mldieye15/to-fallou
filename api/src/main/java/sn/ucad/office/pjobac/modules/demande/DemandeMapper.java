@@ -20,16 +20,22 @@ public interface DemandeMapper {
 
     // request to entity demande
     @Mapping(source = "request.ville", target = "ville",qualifiedByName = "getVilleById")
+    @Mapping(source = "request.academie", target = "academie",qualifiedByName = "getAcademieById")
+    @Mapping(target = "session", source = "request.session",qualifiedByName = "getSessionById")
     Demande requestToEntity(DemandeRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
     @Mapping(source = "demandeRequest.ville", target = "ville",qualifiedByName = "getVilleById")
+    @Mapping(source = "demandeRequest.academie", target = "academie",qualifiedByName = "getAcademieById")
+    @Mapping(target = "session", source = "demandeRequest.session",qualifiedByName = "getSessionById")
     Demande requestToEntiteAdd(DemandeRequest demandeRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
     @Mapping(source = "request.ville", target = "ville",qualifiedByName = "getVilleById")
+    @Mapping(source = "request.academie", target = "academie",qualifiedByName = "getAcademieById")
+    @Mapping(target = "session", source = "request.session",qualifiedByName = "getSessionById")
     Demande requestToEntiteUp(@MappingTarget Demande entity, DemandeRequest request/*, Utilisateur user*/);
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper

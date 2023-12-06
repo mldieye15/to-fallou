@@ -30,7 +30,7 @@ public class SessionResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<SessionResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<SessionResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -38,19 +38,26 @@ public class SessionResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<SessionResponse>> all(){
         List<SessionResponse> response = service.all();
-        return new ResponseEntity< List<SessionResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/allActives")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<SessionResponse>> allActives(){
+        List<SessionResponse> response = service.allActiveSessions();
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<SessionResponse>> one(@PathVariable(value = "id") String id) {
         Optional<SessionResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<SessionResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<SessionResponse> add(@RequestBody @Valid SessionRequest request) {
         SessionResponse response = service.add(request);
-        return new ResponseEntity<SessionResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -58,14 +65,25 @@ public class SessionResource {
     public ResponseEntity<SessionResponse> maj(@PathVariable(value="id") String id,
                                                @RequestBody @Valid SessionRequest request) {
         SessionResponse response = service.maj(request, id);
-        return new ResponseEntity<SessionResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PutMapping("{sessionId}/etatSession")
+    public ResponseEntity<Void> changerEtatSession(@PathVariable Long sessionId) {
+            service.changerEtatSession(sessionId);
+            return ResponseEntity.ok().build();
+    }
+        @PutMapping("/{sessionId}/etatCandidature")
+        public ResponseEntity<Void> changerEtatCandidature(@PathVariable Long sessionId) {
+            service.changerEtatCandidature(sessionId);
+            return ResponseEntity.ok().build();
+        }
+
 }
 

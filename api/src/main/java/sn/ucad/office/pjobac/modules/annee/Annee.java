@@ -40,4 +40,5 @@ public class Annee {
     @Column(nullable = true)
     @UpdateTimestamp
     protected LocalDateTime dateModification;
+    private  boolean encours=false;
 }

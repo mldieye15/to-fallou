@@ -12,4 +12,5 @@ import lombok.ToString;
 public class AnneeResponse {
     private Long id;
     private String libelleLong;
+    private  boolean encours;
 }

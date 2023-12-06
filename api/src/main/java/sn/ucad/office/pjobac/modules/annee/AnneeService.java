@@ -14,6 +14,7 @@ import java.util.Optional;
 public interface AnneeService {
     public List<AnneeResponse> all() throws BusinessResourceException;
 
+    public List<AnneeResponse> anneeEncours() throws BusinessResourceException;
     public SimplePage<AnneeResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<AnneeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
@@ -26,4 +27,5 @@ public interface AnneeService {
 
     public Optional<AnneeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyAnneeUnique(String libelleLong)throws  BusinessResourceException;
+    void changerEtatAnnee(Long anneeId);
 }

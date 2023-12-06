@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.academie.Academie;
+import sn.ucad.office.pjobac.modules.academie.AcademieDao;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleAudit;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
@@ -26,13 +28,27 @@ import java.util.stream.Collectors;
 public class VilleServiceImp implements VilleService {
     private final VilleMapper mapper;
     private final VilleDao dao;
+    private final AcademieDao academieDao;
 
     @Override
     public List<VilleResponse> all() throws BusinessResourceException {
         log.info("VilleServiceImp::all");
         List<Ville> all = dao.findAll();
-        List<VilleResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<VilleResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<VilleResponse> getVilleByAcademie(Long idAcademie) throws BusinessResourceException {
+        Academie academie = academieDao.findById(idAcademie)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + idAcademie));
+        List<Ville> villes=dao.findByAcademie(academie);
+        List<VilleResponse> response;
+        response= villes.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -43,7 +59,7 @@ public class VilleServiceImp implements VilleService {
         final Page<Ville> page = dao.findAll(pageable);
         return new SimplePage<VilleResponse>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -58,7 +74,8 @@ public class VilleServiceImp implements VilleService {
                             () -> new BusinessResourceException("not-found", "Aucun Ville avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<VilleResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<VilleResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -122,7 +139,8 @@ public class VilleServiceImp implements VilleService {
                     );
             dao.deleteById(myId);
             log.info("Ville avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -139,7 +157,8 @@ public class VilleServiceImp implements VilleService {
                             () -> new BusinessResourceException("not-found", "Aucune Ville avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Ville avec id: " + id + " trouvé. <auditOneById>");
-           Optional<VilleAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<VilleAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");

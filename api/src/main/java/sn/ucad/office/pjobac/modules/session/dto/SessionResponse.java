@@ -24,4 +24,6 @@ public class SessionResponse {
     private Date dateClotureDepotCandidature;
     private Annee annee;
     private TypeSession typeSession;
+    private  boolean sessionOuvert;
+    private  boolean candidatureOuvert;
 }

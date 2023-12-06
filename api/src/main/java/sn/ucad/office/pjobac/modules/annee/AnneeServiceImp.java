@@ -16,6 +16,7 @@ import sn.ucad.office.pjobac.modules.annee.dto.AnneeResponse;
 import sn.ucad.office.pjobac.modules.centre.annee.Annee;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -40,10 +41,20 @@ public class AnneeServiceImp implements AnneeService {
     }
 
     @Override
+    public List<AnneeResponse> anneeEncours() throws BusinessResourceException {
+        Optional <Annee> anneeEncours= Optional.ofNullable(dao.findByEncoursTrue());
+        if(anneeEncours.isPresent()){
+            AnneeResponse response= mapper.toEntiteResponse(anneeEncours.get());
+            return Collections.singletonList(response);
+        }else {
+            return Collections.emptyList();
+        }
+    }
+    @Override
     public SimplePage<AnneeResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("TypeSessionServiceImp::all, pagination");
         final Page<Annee> page = dao.findAll(pageable);
-        return new SimplePage<AnneeResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
@@ -159,6 +170,23 @@ public class AnneeServiceImp implements AnneeService {
             throw new ResourceAlreadyExists("L' annee existe déjà.");
         }
 
+    }
+
+    @Override
+    public void changerEtatAnnee(Long anneeId) {
+        Annee annee= dao.findById(anneeId).orElse(null);
+        if (annee!=null){
+            Annee anneeEncours=dao.findByEncoursTrue();
+            if (anneeEncours!=null && !anneeEncours.getId().equals(anneeId)){
+                log.warn("Impossible de changer l'état de l'année avec l'ID " + anneeId + " car une autre année est déjà en cours.");
+                return;
+            }
+            annee.setEncours(!annee.isEncours());
+            dao.save(annee);
+            log.info("État de l'année avec l'ID " + anneeId + " changer avec succès.");
+        }else {
+            log.warn("Année avec l'ID " +  anneeId + " non trouvée.");
+        }
     }
 
 

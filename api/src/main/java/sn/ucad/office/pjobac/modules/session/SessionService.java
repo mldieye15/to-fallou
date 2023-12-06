@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface SessionService {
     public List<SessionResponse> all() throws BusinessResourceException;
 
+    public List<SessionResponse> allActiveSessions() throws BusinessResourceException;
     public SimplePage<SessionResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<SessionResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
@@ -26,4 +27,7 @@ public interface SessionService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<SessionAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void changerEtatSession(Long sessionId);
+
+    void changerEtatCandidature(Long sessionId);
 }

@@ -16,6 +16,8 @@ import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 import sn.ucad.office.pjobac.modules.session.dto.SessionResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -32,8 +34,31 @@ public class SessionServiceImp implements SessionService {
     public List<SessionResponse> all() throws BusinessResourceException {
         log.info("SessionServiceImp::all");
         List<Session> all = dao.findAll();
-        List<SessionResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<SessionResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+    @Override
+    public List<SessionResponse> allActiveSessions() throws BusinessResourceException {
+        log.info("SessionServiceImp::all");
+
+        // Récupérer toutes les sessions
+        List<Session> allSessions = dao.findAll();
+
+        // Filtrer les sessions actives
+        List<Session> activeSessions;
+        activeSessions = allSessions.stream()
+                .filter(session ->
+                                LocalDateTime.now().isAfter(session.getDateOuvertureDepotCandidature().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
+                                && LocalDateTime.now().isBefore(session.getDateClotureDepotCandidature().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()))
+                .collect(Collectors.toList());
+
+        // on mappe les sessions actives en SessionResponse
+        List<SessionResponse> response;
+        response = activeSessions.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -42,9 +67,9 @@ public class SessionServiceImp implements SessionService {
     public SimplePage<SessionResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Sessions avec pagination. <all>");
         final Page<Session> page = dao.findAll(pageable);
-        return new SimplePage<SessionResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -58,8 +83,9 @@ public class SessionServiceImp implements SessionService {
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucun Session avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<SessionResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            log.info("Session avec id: " + id + " trouvé. <oneById>");
+            Optional<SessionResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -123,7 +149,8 @@ public class SessionServiceImp implements SessionService {
                     );
             dao.deleteById(myId);
             log.info("Session avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -140,13 +167,49 @@ public class SessionServiceImp implements SessionService {
                             () -> new BusinessResourceException("not-found", "Aucune Session avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Session avec id: " + id + " trouvé. <auditOneById>");
-           Optional<SessionAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<SessionAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
         //return Optional.empty();
+    }
+
+    @Override
+    public void changerEtatSession(Long sessionId) {
+        Session session = dao.findById(sessionId).orElse(null);
+        if (session != null) {
+            session.setSessionOuvert(!session.isSessionOuvert());
+            dao.save(session);
+            log.info("État de la session avec l'ID " + sessionId + " changer avec succès.");
+            if (!session.isSessionOuvert()) {
+                session.setCandidatureOuvert(false);
+                dao.save(session);
+                log.info("Candidature de la session avec l'ID " + sessionId + " fermée avec succès.");
+            }
+        } else {
+            log.warn("Session avec l'ID " + sessionId + " non trouvée.");
+        }
+
+    }
+
+    @Override
+    public void changerEtatCandidature(Long sessionId) {
+        Session session = dao.findById(sessionId).orElse(null);
+        if (session != null) {
+            if (session.isSessionOuvert()){
+                session.setCandidatureOuvert(!session.isCandidatureOuvert());
+                dao.save(session);
+                log.info("État de la candidature de la session avec l'ID " + sessionId + " changer avec succès.");
+            }
+            else {
+                log.warn("Impossible de changer l'état de la candidature pour la session avec l'ID " + sessionId + " car la session est fermée.");
+            }
+        } else {
+            log.warn("Session avec l'ID " + sessionId + " non trouvée.");
+        }
     }
 
 }

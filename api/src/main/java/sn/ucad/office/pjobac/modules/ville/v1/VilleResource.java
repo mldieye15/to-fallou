@@ -30,7 +30,7 @@ public class VilleResource {
             @SortDefault(sort = "libelleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<VilleResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<VilleResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -38,19 +38,24 @@ public class VilleResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<VilleResponse>> all(){
         List<VilleResponse> response = service.all();
-        return new ResponseEntity< List<VilleResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "/by-academie/{idAcademie}")
+    public ResponseEntity<List<VilleResponse>> getVillesByAcademie(@PathVariable Long idAcademie) {
+        List<VilleResponse> response = service.getVilleByAcademie(idAcademie);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<VilleResponse>> one(@PathVariable(value = "id") String id) {
         Optional<VilleResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<VilleResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<VilleResponse> add(@RequestBody @Valid VilleRequest request) {
         VilleResponse response = service.add(request);
-        return new ResponseEntity<VilleResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -58,14 +63,14 @@ public class VilleResource {
     public ResponseEntity<VilleResponse> maj(@PathVariable(value="id") String id,
                                              @RequestBody @Valid VilleRequest request) {
         VilleResponse response = service.maj(request, id);
-        return new ResponseEntity<VilleResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

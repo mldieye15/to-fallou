@@ -10,4 +10,5 @@ import java.util.Optional;
 @Repository
 public interface AnneeDao extends JpaRepository<Annee, Long> {
     Optional<Annee> findByLibelleLong(String libelleLong);
+    Annee findByEncoursTrue();
 }

@@ -38,6 +38,12 @@ public class DetailsCandidat {
 
     @NotNull
     private Integer note;
+    @NotNull
+    private Integer noteFonction;
+    @NotNull
+    private Integer noteEtablissementProvenance;
+    @NotNull
+    private Integer noteAnciennete;
 
     @NotNull
     private String appreciation;
