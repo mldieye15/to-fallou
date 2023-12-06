@@ -2,7 +2,9 @@
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
-const  modulesURL = '/demandes';
+const  modulesURL = '/v1/demandes';
+const all = modulesURL+'/all';
+const add = modulesURL+'/';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
@@ -24,6 +26,7 @@ export const useDemandeStore = defineStore('demande', {
     headerTable: [
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
+      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -37,16 +40,23 @@ export const useDemandeStore = defineStore('demande', {
     //  recupérer la liste des demandes et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(modulesURL) 
+        await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
 
-            let res = response.data.map( (element) => ({
-              id:element.id, 
-              nom: element.nom,
-              ville: element.ville.libelleLong,
-              session: element.session.libelleLong
-            }))
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
+              let sessionLabel = element.session ? element.session.libelleLong:null;
+              return{
+                id:element.id, 
+                nom: element.nom,
+                ville: villeLabel,
+                academie:academieLabel,
+                session:sessionLabel
+              }
+              
+            })
 
             this.dataListe = res;
           } 
@@ -77,7 +87,7 @@ export const useDemandeStore = defineStore('demande', {
     //  ajouter une demande
     async add(payload) {
       try {
-        await axios.post(modulesURL, payload) 
+        await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

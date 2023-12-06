@@ -30,6 +30,14 @@ const inputForm= reactive({
   ville: null,
   typeCentre: null
 });
+const updateLibelleLong = () => {
+  if (inputForm.typeSession && inputForm.annee) {
+    const typeSessionLibelleLong = getTypeSessionLibelleLong(inputForm.typeSession);
+    const anneeLibelleLong = getAnneeLibelleLong(inputForm.annee);
+    const libelleLong = `Session ${typeSessionLibelleLong} ${anneeLibelleLong}`;
+    inputForm.libelleLong = libelleLong;
+  }
+};
 
 const handleSave = (payload) => {
   add(payload).then( () => {

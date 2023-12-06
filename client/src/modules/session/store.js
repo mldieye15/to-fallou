@@ -29,10 +29,12 @@ export const useSessionStore = defineStore('session', {
       { text: 'Libelle Long', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'Date Debut', value: 'dateDebut', align: 'start', sortable: true },
       { text: 'Date Fin', value: 'dateFin', align: 'start', sortable: true },
+      { text: 'Etat Session', value: 'sessionOuvert', align: 'start', sortable: true },
       { text: 'Nombre Demande Autorise', value: 'nombreDemandeAutorise', align: 'start', sortable: true },
       { text: 'Delais Validation', value: 'delaisValidation', align: 'start', sortable: true },
       { text: 'Date Ouverture Depot Candidature', value: 'dateOuvertureDepotCandidature', align: 'start', sortable: true },
       { text: 'Date Cloture Depot Candidature', value: 'dateClotureDepotCandidature', align: 'start', sortable: true },
+      { text: 'Candidature', value: 'candidatureOuvert', align: 'start', sortable: true },
       { text: 'Annee', value: 'annee', align: 'start', sortable: true },
       { text: 'TypeSession', value: 'typeSession', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
@@ -53,10 +55,14 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
+              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
+              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
+                sessionOuvert:sessionOuvertLabel,
+                candidatureOuvert:candidatureOuvertLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -148,6 +154,37 @@ export const useSessionStore = defineStore('session', {
     formatDate(date) {
       return format(new Date(date), 'dd-MM-yyyy', { locale: fr }); // Exemple de format, ajustez selon vos besoins
     },
+    // ouvrir et clocturer session
+    async toggleSessionState(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/etatSession`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    // ouvrir et clocturer candidature
+    async toggleCandidatureState(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/etatCandidature`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    }
+
   },
   
 })

@@ -9,6 +9,55 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.session.session') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="sessionForm" :value="formValid">
+      <v-row class="reduce-margin">
+        <v-col>
+          <v-text-field
+        id="delaisValidation"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="delaisValidation"
+        density="compact"
+        :label="$t('apps.forms.session.delaisValidation')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.delaisValidation"
+        variant="solo"
+      ></v-text-field>
+        </v-col>
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="typeSession"
+        density="compact"
+        :label="$t('apps.forms.typeSession.nom')"
+        color="balck"
+        v-model="inputForm.typeSession"
+        variant="solo"
+        :items="dataListeTypeSession"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
+        <v-col>
+          <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="annee"
+        density="compact"
+        :label="$t('apps.forms.annee.libelle')"
+        color="balck"
+        v-model="inputForm.annee"
+        variant="solo"
+        :items="dataAnneeEnours"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
+        </v-col>
+      </v-row>
       <v-row >
         <v-col>
       <v-text-field 
@@ -105,57 +154,6 @@
        <div v-if="dateClotureError" class="error-message">{{ dateClotureErrorMessage }}</div>
         </v-col>
       </v-row>
-      <v-row class="reduce-margin">
-        <v-col>
-          <v-text-field
-        id="delaisValidation"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="delaisValidation"
-        density="compact"
-        :label="$t('apps.forms.session.delaisValidation')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.delaisValidation"
-        variant="solo"
-      ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="typeSession"
-        density="compact"
-        :label="$t('apps.forms.typeSession.nom')"
-        color="balck"
-        v-model="inputForm.typeSession"
-        variant="solo"
-        :items="dataListeTypeSession"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="annee"
-        density="compact"
-        :label="$t('apps.forms.annee.libelle')"
-        color="balck"
-        v-model="inputForm.annee"
-        variant="solo"
-        :items="dataListe"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-      </v-row>
-      
-
       <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
@@ -175,7 +173,8 @@ const instance = getCurrentInstance();
 
 const anneeStore = useAnneeStore();
 const typeSessionStore= useTypeSessionStore();
-const { dataListe } = storeToRefs(anneeStore);
+const { dataAnneeEnours } = storeToRefs(anneeStore);
+
 const {dataListeTypeSession} = storeToRefs(typeSessionStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
@@ -270,10 +269,10 @@ const handleSave = () => {
   }
 }
 
-onMounted(()=>{
-  anneeStore.all();
-  typeSessionStore.all();
-
+onMounted(() => {
+   anneeStore.anneeEnours();
+    typeSessionStore.all();
+  
 });
 
 </script>

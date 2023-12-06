@@ -5,11 +5,13 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/annees';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
+const encours = modulesURL+'/encours';
 const libelleAvailability = modulesURL +'/libelle-availability';
 export const useAnneeStore = defineStore('annee', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
-    dataDetails: {},  //  Détails d'un élment,
+    dataDetails: {},
+    dataAnneeEnours:[],  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
       {
@@ -25,12 +27,14 @@ export const useAnneeStore = defineStore('annee', {
     ],*/
     headerTable: [
       { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'Annee en cour', value: 'encours', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListe: (state) => state.dataListe,
+    getDataAnneeEncours: (state) => state.dataAnneeEnours,
   },
 
   actions: {
@@ -40,7 +44,38 @@ export const useAnneeStore = defineStore('annee', {
         await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
-            this.dataListe = response.data;
+            let res=response.data.map((element) => {
+              let encoursLabel = element.encours ? 'en cours' : 'obselete';
+              return{
+                id: element.id,
+                libelleLong: element.libelleLong,
+                encours:encoursLabel,
+              }
+              
+            });
+            this.dataListe = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async anneeEnours() {
+      try {
+        await axios.get(`${encours}`)
+        .then((response) => {
+          if(response.status === 200){
+            let res=response.data.map((element) => {
+              return{
+                id: element.id,
+                libelleLong: element.libelleLong,
+                encours: element.encours,
+              }  
+            });
+            this.dataAnneeEnours = res;
           } 
         })
       } catch (error) {
@@ -132,6 +167,20 @@ export const useAnneeStore = defineStore('annee', {
         return false;
       }
     },
+    async toggleAnneeState(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/etatAnnee`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    }
   },
   
 })

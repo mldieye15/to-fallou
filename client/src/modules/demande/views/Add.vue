@@ -25,9 +25,11 @@ const demandeStore = useDemandeStore();
 const { add } = demandeStore;
 
 const inputForm= reactive({
-  nom:'',
+  session: null,
   ville: null,
-  session: null
+  academie: null,
+  
+
 });
 
 const handleSave = (payload) => {

@@ -30,6 +30,16 @@
         :search-value="searchValue"
         rows-per-page="5"
       >
+      <template #item-sessionOuvert="item">
+          <v-chip  @click="toggleSessionState(item)" :color="item.sessionOuvert === 'ouverte' ? 'green' : 'red'" text variant="tonal">
+              {{ item.sessionOuvert}}
+          </v-chip>
+      </template>
+      <template #item-candidatureOuvert="item">
+        <v-chip @click="toggleCandidatureState(item)" :color="item.candidatureOuvert === 'ouverte' ? 'green' : 'red'" text>
+        {{ item.candidatureOuvert }}
+      </v-chip>
+      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'session-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -86,7 +96,23 @@ const dialog = ref(false);
 onMounted(()=>{
   all();
 });
-
+const toggleSessionState = (item) => {
+  // Inverser l'état sessionOuvert
+  sessionStore.toggleSessionState(item.id);
+};
+const toggleCandidatureState = (item) => {
+  // Inverser l'état candidatureOuvert
+  if (item.sessionOuvert=== 'ouverte'){
+    sessionStore.toggleCandidatureState(item.id);
+  }else{
+    addNotification({
+      show: true,
+      text: "Impossible d'ouvrir les candidatures, la session est fermée.",
+      color: 'red'
+    });
+  }
+  
+};
 const del = (id) => {
   destroy(id).then( () => {
     addNotification({

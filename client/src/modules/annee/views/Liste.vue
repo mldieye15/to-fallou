@@ -29,6 +29,11 @@
         buttons-pagination
         :search-value="searchValue"
       >
+      <template #item-encours="item">
+          <v-chip  @click="toggleAnneeState(item)" :color="item.encours === 'en cours' ? 'green' : 'red'" text variant="tonal">
+              {{ item.encours}}
+          </v-chip>
+      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'annee-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -85,7 +90,10 @@ const dialog = ref(false);
 onMounted(()=>{
   all();
 });
-
+const toggleAnneeState = (item) => {
+  // Inverser l'état anne en cours
+  anneeStore.toggleAnneeState(item.id);
+};
 const del = (id) => {
   destroy(id).then( () => {
     addNotification({
