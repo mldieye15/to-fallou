@@ -40,11 +40,25 @@ public class SessionResource {
         List<SessionResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("/allActives")
+    @GetMapping("/sessionsOuvertes")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<SessionResponse>> allActives(){
-        List<SessionResponse> response = service.allActiveSessions();
+    public ResponseEntity<List<SessionResponse>> findSessionsOuvertes(){
+        List<SessionResponse> response = service.findSessionsOuvertes();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/candidaturesOuvertes")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<SessionResponse>> findCandidaturesOuvertes(){
+        List<SessionResponse> response = service.findCandidaturesOuvertes();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/enCoursSession")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<SessionResponse>> findEnCoursSession(){
+        List<SessionResponse> response = service.findEnCoursSession();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

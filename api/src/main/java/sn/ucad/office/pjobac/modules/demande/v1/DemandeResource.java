@@ -53,13 +53,17 @@ public class DemandeResource {
         DemandeResponse response = service.add(request);
         return new ResponseEntity<DemandeResponse>(response, HttpStatus.CREATED);
     }
-
+    @PostMapping(value = "/addAll")
+    public ResponseEntity<List<DemandeResponse>> addAll(@RequestBody @Valid List<DemandeRequest> requests) {
+        List<DemandeResponse> responses = service.addAll(requests);
+        return new ResponseEntity<>(responses, HttpStatus.CREATED);
+    }
     @PutMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<DemandeResponse> maj(@PathVariable(value="id") String id,
                                                @RequestBody @Valid DemandeRequest request) {
         DemandeResponse response = service.maj(request, id);
-        return new ResponseEntity<DemandeResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")

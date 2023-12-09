@@ -30,4 +30,9 @@ public interface SessionService {
     void changerEtatSession(Long sessionId);
 
     void changerEtatCandidature(Long sessionId);
+    List<SessionResponse> findEnCoursSession()throws BusinessResourceException;
+
+    List<SessionResponse> findSessionsOuvertes()throws BusinessResourceException;
+
+    List<SessionResponse> findCandidaturesOuvertes()throws BusinessResourceException;
 }

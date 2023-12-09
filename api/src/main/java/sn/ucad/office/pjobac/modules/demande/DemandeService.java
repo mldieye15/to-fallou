@@ -20,6 +20,7 @@ public interface DemandeService {
     public Optional<DemandeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
 
     public DemandeResponse add(DemandeRequest req) throws BusinessResourceException;
+    public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException;
 
     public DemandeResponse maj(DemandeRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 

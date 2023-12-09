@@ -212,4 +212,34 @@ public class SessionServiceImp implements SessionService {
         }
     }
 
+    @Override
+    public List<SessionResponse> findEnCoursSession()throws BusinessResourceException {
+        List<Session> sessions = dao.findEnCoursSession();
+        List<SessionResponse> responses;
+        responses = sessions.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return responses;
+    }
+
+    @Override
+    public List<SessionResponse> findSessionsOuvertes() throws BusinessResourceException {
+        List<Session> sessions = dao.findSessionsOuvertes();
+        List<SessionResponse> responses;
+        responses = sessions.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return responses;
+    }
+
+    @Override
+    public List<SessionResponse> findCandidaturesOuvertes() throws BusinessResourceException {
+        List<Session> sessions = dao.findCandidaturesOuvertes();
+        List<SessionResponse> responses;
+        responses = sessions.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return responses;
+    }
+
 }

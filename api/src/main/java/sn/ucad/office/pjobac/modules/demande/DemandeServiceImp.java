@@ -14,6 +14,8 @@ import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -30,8 +32,9 @@ public class DemandeServiceImp implements DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException {
         log.info("DemandeServiceImp::all");
         List<Demande> all = dao.findAll();
-        List<DemandeResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<DemandeResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -40,9 +43,9 @@ public class DemandeServiceImp implements DemandeService {
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Demandes avec pagination. <all>");
         final Page<Demande> page = dao.findAll(pageable);
-        return new SimplePage<DemandeResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -57,7 +60,8 @@ public class DemandeServiceImp implements DemandeService {
                             () -> new BusinessResourceException("not-found", "Aucun Demande avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<DemandeResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<DemandeResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -82,6 +86,28 @@ public class DemandeServiceImp implements DemandeService {
             log.error("Ajout Demande: Une erreur inattandue est rencontrée." + ex.getMessage());
             throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Override
+    public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException {
+        try {
+            List<Demande> demandes = req.stream()
+                    .map(mapper::requestToEntity)
+                    .collect(Collectors.toList());
+
+            List<DemandeResponse> responses = dao.saveAll(demandes).stream()
+                    .map(mapper::toEntiteResponse)
+                    .collect(Collectors.toList());
+            log.info("Ajout des demandes effectué avec succès. <add>");
+            return responses;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique de création Demande: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Ajout Demande: Une erreur inattendue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Demande.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @Override
@@ -121,7 +147,8 @@ public class DemandeServiceImp implements DemandeService {
                     );
             dao.deleteById(myId);
             log.info("Demande avec id & matricule: " + id + " & " + oneBrute.getId() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getId() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getId() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -138,13 +165,14 @@ public class DemandeServiceImp implements DemandeService {
                             () -> new BusinessResourceException("not-found", "Aucune Demande avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Demande avec id: " + id + " trouvé. <auditOneById>");
-           Optional<DemandeAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<DemandeAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
-        //return Optional.empty();
+
     }
 
 }
