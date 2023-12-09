@@ -102,7 +102,7 @@ export const useAnneeStore = defineStore('annee', {
       }
     },
     getLibelleById(id) {
-      const annee = this.dataListe.find(item => item.id === id);
+      const annee = this.dataAnneeEnours.find(item => item.id === id);
       return annee ? annee.libelleLong : '';
     },
     //  ajouter une annee

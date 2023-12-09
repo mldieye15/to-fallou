@@ -6,13 +6,17 @@ import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/sessions';
 const all= modulesURL+'/all';
+const enCoursSession=modulesURL+'/enCoursSession';
+const sessionsOuvertes=modulesURL+'/sessionsOuvertes';
+const candidaturesOuvertes=modulesURL+'/candidaturesOuvertes';
 const add= modulesURL+'/';
 
 export const useSessionStore = defineStore('session', {
   state: () => ({
     dataListeSession: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
-    loading: true,  //  utilisé pour le chargement
+    loading: true,
+    demandesAutorisees: 0,  //  utilisé pour le chargement
     /*breadcrumbs: [
       {
         text: 'Paramétrage',
@@ -75,6 +79,122 @@ export const useSessionStore = defineStore('session', {
             });
             console.log('Données avant modification :', this.dataListeSession);
             this.dataListeSession = res;
+            this.demandesAutorisees=nombreDemandeAutorise;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async candidaturesOuvertes() {
+      try {
+        await axios.get(`${candidaturesOuvertes}`) 
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let anneeLabel = element.annee ? element.annee.libelleLong : null;
+              let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
+              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
+              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                sessionOuvert:sessionOuvertLabel,
+                candidatureOuvert:candidatureOuvertLabel,
+                dateDebut:this.formatDate(element.dateDebut) ,
+                dateFin: this.formatDate(element.dateFin),
+                nombreDemandeAutorise: element.nombreDemandeAutorise,
+                delaisValidation: element.delaisValidation,
+                dateOuvertureDepotCandidature: this.formatDate(element.dateOuvertureDepotCandidature),
+                dateClotureDepotCandidature: this.formatDate(element.dateClotureDepotCandidature),
+                annee: anneeLabel,
+                typeSession:typeSessionLabel,
+              } ;
+            });
+            console.log('Données avant modification :', this.dataListeSession);
+            this.dataListeSession = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async sessionsOuvertes() {
+      try {
+        await axios.get(`${sessionsOuvertes}`) 
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let anneeLabel = element.annee ? element.annee.libelleLong : null;
+              let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
+              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
+              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                sessionOuvert:sessionOuvertLabel,
+                candidatureOuvert:candidatureOuvertLabel,
+                dateDebut:this.formatDate(element.dateDebut) ,
+                dateFin: this.formatDate(element.dateFin),
+                nombreDemandeAutorise: element.nombreDemandeAutorise,
+                delaisValidation: element.delaisValidation,
+                dateOuvertureDepotCandidature: this.formatDate(element.dateOuvertureDepotCandidature),
+                dateClotureDepotCandidature: this.formatDate(element.dateClotureDepotCandidature),
+                annee: anneeLabel,
+                typeSession:typeSessionLabel,
+              } ;
+            });
+            console.log('Données avant modification :', this.dataListeSession);
+            this.dataListeSession = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async enCoursSession() {
+      try {
+        await axios.get(`${enCoursSession}`) 
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let anneeLabel = element.annee ? element.annee.libelleLong : null;
+              let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
+              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
+              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                sessionOuvert:sessionOuvertLabel,
+                candidatureOuvert:candidatureOuvertLabel,
+                dateDebut:this.formatDate(element.dateDebut) ,
+                dateFin: this.formatDate(element.dateFin),
+                nombreDemandeAutorise: element.nombreDemandeAutorise,
+                delaisValidation: element.delaisValidation,
+                dateOuvertureDepotCandidature: this.formatDate(element.dateOuvertureDepotCandidature),
+                dateClotureDepotCandidature: this.formatDate(element.dateClotureDepotCandidature),
+                annee: anneeLabel,
+                typeSession:typeSessionLabel,
+              } ;
+            });
+            console.log('Données après modification :', res);
+            if (res.length > 0) {
+              this.dataListeSession = res;
+            } else {
+              console.log('Aucune session en cours.');
+            }
           } 
         })
       } catch (error) {

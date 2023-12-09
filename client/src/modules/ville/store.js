@@ -17,6 +17,7 @@ export const useVilleStore = defineStore('ville', {
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'Abreviation', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
+      { text: 'AcademieID', value: 'academieId', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
@@ -35,11 +36,13 @@ export const useVilleStore = defineStore('ville', {
           if(response.status === 200){
            let res = response.data.map((element)=>{
             let academieLabel=element.academie?element.academie.libelleLong:null;
+            let academieIdLabel = element.academie?element.academie.id:null;
             return{
               id: element.id,
             libelleLong: element.libelleLong,
             libelleCourt: element.libelleCourt,
-            academie: academieLabel
+            academie: academieLabel,
+            academieId:academieIdLabel
             };
             
            });
@@ -70,6 +73,7 @@ export const useVilleStore = defineStore('ville', {
             
            });
            this.dataListeByAcademie=res;
+           console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademie);
           } 
         })
       } catch (error) {

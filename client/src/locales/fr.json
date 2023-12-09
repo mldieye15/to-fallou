@@ -152,7 +152,8 @@
             },
             "demande":{
                 "demande":"demande",
-                "nom":"Nom de la demande"
+                "nom":"Nom de la demande",
+                "choix":"Choix N°"
             },
             "fonction":{
                 "fonction":"fonction",

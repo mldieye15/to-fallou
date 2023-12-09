@@ -4,7 +4,7 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/demandes';
 const all = modulesURL+'/all';
-const add = modulesURL+'/';
+const add = modulesURL+'/addAll';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
