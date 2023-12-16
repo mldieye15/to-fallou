@@ -37,7 +37,7 @@
         single-line
         item-title="libelleLong"
         item-value="id"
-        @click="updateVilles(index)"
+        @input="onAcademieChange(index)"
         :rules="[rules.required]"
       ></v-select>
       <v-select
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance,watch } from "vue";
+import { reactive, getCurrentInstance,watchEffect } from "vue";
 import { onMounted,ref,onBeforeMount } from "vue"
 import { storeToRefs } from "pinia";
 import { useVilleStore } from "@/modules/ville/store";
@@ -79,8 +79,8 @@ import { useRouter, useRoute } from 'vue-router';
 const instance = getCurrentInstance();
 
 const villeStore = useVilleStore();
-const {dataListeVille} = storeToRefs(villeStore);
-const{villesByAcademie}=villeStore;
+const {dataListeVille,dataListeByAcademie} = storeToRefs(villeStore);
+const {villesByAcademie}=villeStore;
 const academieStore = useAcademieStore();
 const { dataListe } = storeToRefs(academieStore);
 const sessionStore=useSessionStore();
@@ -99,20 +99,6 @@ const { addNotification } = notificationStore;
 const demandeStore = useDemandeStore();
 const { add } = demandeStore;
 const formValid = ref(false);
-const updateVilles = async (index) => {
-  console.log("updateVilles appelée avec l'index :", index);
-
-  const idAcademie = requests.value[index].academie;
-
-  // Charger les villes en fonction de l'académie choisie
-  await villesByAcademie(idAcademie);
-
-  // Mettre à jour la liste des villes pour le formulaire actuel
-  requests.value[index].villes = this.dataListeByAcademie;
-
-  console.log("Villes mises à jour pour l'index", index, ":", this.dataListeByAcademie);
-};
-
 const handleSave = () => {
   console.log("Payload avant envoi:", requests.value);
     const payload = requests.value.map((inputForm) => ({
@@ -132,6 +118,28 @@ const handleSave = () => {
       })
   };
 const requests = ref([]);
+const onAcademieChange = (index) => {
+  console.log(`onAcademieChange appelée avec l'index : ${index}`);
+  if (requests.value[index].academie !== null) {
+    console.log(`Academie avant mise à jour des villes : ${requests.value[index].academie}`);
+    updateVilles(index);
+    console.log(`Academie après mise à jour des villes : ${requests.value[index].academie}`);
+  }
+};
+const updateVilles = async (index) => {
+  console.log(`updateVilles appelée avec l'index : ${index}`);
+  console.log(`Academie avant mise à jour des villes : ${requests.value[index].academie}`);
+
+  let academieId = requests.value[index].academie;
+  console.log(`Academie après récupération : ${academieId}`);
+
+  await villesByAcademie(academieId);
+  // console.log(`Academie après mise à jour des villes : ${academieId}`);
+
+  requests.value[index].villes = dataListeByAcademie.value;
+
+  //console.log(`Villes mises à jour pour l'index ${index} :`, dataListeByAcademie);
+};
 onMounted(async () => {
   villeStore.all();
   academieStore.all();
@@ -140,11 +148,17 @@ onMounted(async () => {
   if (dataDetails.value) {
     requests.value = Array.from({ length: dataDetails.value.nombreDemandeAutorise }, () => ({
       ville: null,
-      academie: null,
+      academie:null,
       session: dataDetails.value.id,
       libelleLong: dataDetails.value.libelleLong,
     }));
   }
+  watchEffect(() => {
+  requests.value.forEach((inputForm, index) => {
+    onAcademieChange(index);
+  });
+});
   console.log("Données initialisées :", dataListeVille.value, dataListe.value, dataDetails.value);
+  console.log("Requests après initialisation :", requests.value);
 });
 </script>

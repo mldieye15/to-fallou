@@ -29,6 +29,11 @@
         buttons-pagination
         :search-value="searchValue"
       >
+        <template #item-etatDemande="item">
+            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[item.etatDemande]" variant="tonal">
+              <span >{{ item.etatDemande }}</span>
+            </v-chip>
+        </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'demande-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -74,7 +79,7 @@ const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
 const demandeStore = useDemandeStore();
-const { dataListe, headerTable, loading } = storeToRefs(demandeStore);
+const { dataListe, headerTable, loading,etatCouleurs } = storeToRefs(demandeStore);
 const { all, destroy } = demandeStore;
 
 const liste = reactive({ items: [] });

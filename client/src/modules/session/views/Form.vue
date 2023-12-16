@@ -8,18 +8,17 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.session.session') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="sessionForm" :value="formValid">
+    <v-form @submit.prevent="submit" ref="sessionForm" v-model="formValid">
       <v-row class="reduce-margin">
         <v-col>
           <v-text-field
-        id="delaisValidation"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        v-model="inputForm.delaisValidation"
+        prepend-inner-icon="mdi-clock-time-four-outline"
         name="delaisValidation"
         density="compact"
         :label="$t('apps.forms.session.delaisValidation')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.delaisValidation"
+        color="black"
+        :rules="[rules.required, rules.validateHeur]"
         variant="solo"
       ></v-text-field>
         </v-col>
@@ -81,7 +80,7 @@
         density="compact"
         :label="$t('apps.forms.session.nombreDemandeAutorise')"
         color="balck"
-        :rules="[rules.required]"
+        :rules="[rules.required,rules.validateNombre]"
         v-model="inputForm.nombreDemandeAutorise"
         variant="solo"
       ></v-text-field>
@@ -154,7 +153,7 @@
        <div v-if="dateClotureError" class="error-message">{{ dateClotureErrorMessage }}</div>
         </v-col>
       </v-row>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -179,8 +178,10 @@ const {dataListeTypeSession} = storeToRefs(typeSessionStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
+  validateHeur: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide d\'heures.',
+  validateNombre: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide de demandes autorises.',
 });
-
+const formValid = ref(false);
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {

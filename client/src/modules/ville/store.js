@@ -16,8 +16,8 @@ export const useVilleStore = defineStore('ville', {
     headerTable: [
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'Abreviation', value: 'libelleCourt', align: 'start', sortable: true },
+      { text: 'Nombre de Jury', value: 'totalJury', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
-      { text: 'AcademieID', value: 'academieId', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
@@ -41,6 +41,7 @@ export const useVilleStore = defineStore('ville', {
               id: element.id,
             libelleLong: element.libelleLong,
             libelleCourt: element.libelleCourt,
+            totalJury: element.totalJury,
             academie: academieLabel,
             academieId:academieIdLabel
             };
@@ -59,28 +60,32 @@ export const useVilleStore = defineStore('ville', {
     //  recupérer la liste des villes par academie et le mettre dans la tabel dataListeByAcademie
     async villesByAcademie(academie) {
       try {
-        await axios.get(`${villesByAcademie}/${academie}`)
-        .then((response) => {
-          if(response.status === 200){
-           let res = response.data.map((element)=>{
-            let academieLabel=element.academie?element.academie.libelleLong:null;
-            return{
-              id: element.id,
-            libelleLong: element.libelleLong,
-            libelleCourt: element.libelleCourt,
-            academie: academieLabel
-            };
-            
-           });
-           this.dataListeByAcademie=res;
-           console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademie);
-          } 
-        })
+        // Ajouter une vérification pour s'assurer que academie est un nombre non nul
+        if (typeof academie === 'number' && !isNaN(academie)) {
+          await axios.get(`${villesByAcademie}/${academie}`)
+            .then((response) => {
+              if (response.status === 200) {
+                let res = response.data.map((element) => {
+                  let academieLabel = element.academie ? element.academie.libelleLong : null;
+                  return {
+                    id: element.id,
+                    libelleLong: element.libelleLong,
+                    libelleCourt: element.libelleCourt,
+                    academie: academieLabel
+                  };
+                });
+                this.dataListeByAcademie = res;
+                console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademie);
+              }
+            });
+        } else {
+          console.error("La valeur de academie est invalide. La requête n'a pas été effectuée.");
+        }
       } catch (error) {
         console.log(error);
-        this.error = error
+        this.error = error;
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
     //  recupérer les informations d'une ville par son ide et le mettre dans la tabel dataDetails

@@ -11,29 +11,27 @@ export const useDemandeStore = defineStore('demande', {
     dataListe: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
-    /*breadcrumbs: [
-      {
-        text: 'Paramétrage',
-        disabled: true,
-        route: 'home',
-      },
-      {
-        text: 'demandes',
-        disabled: true,
-        route: 'src/modules/demande/routes.js',
-      }
-    ],*/
+    etatCouleurs: {
+      'ACCEPTE': 'orange',
+      'EN ATTENTE': 'grey',
+      'REJETE': 'red',
+      'VALIDE': 'green',
+      'OBSELETE':'yellow',
+      // Ajoutez d'autres états et couleurs selon vos besoins
+},
     headerTable: [
-      { text: 'Nom', value: 'nom', align: 'start', sortable: true },
+      { text: 'Nom', value: 'user', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
+      { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListe: (state) => state.dataListe,
+    getEtatCouleurs: (state) => state.etatCouleurs,
   },
 
   actions: {
@@ -48,12 +46,16 @@ export const useDemandeStore = defineStore('demande', {
               let villeLabel = element.ville? element.ville.libelleLong:null;
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let sessionLabel = element.session ? element.session.libelleLong:null;
+              let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
+              let nomLabel = element.user ? element.user.nom : null;
               return{
                 id:element.id, 
                 nom: element.nom,
                 ville: villeLabel,
                 academie:academieLabel,
-                session:sessionLabel
+                session:sessionLabel,
+                etatDemande:etatLabel,
+                nom:nomLabel,
               }
               
             })
@@ -134,7 +136,13 @@ export const useDemandeStore = defineStore('demande', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    getColorForEtat(etat) {
+      console.log(`État demandé : ${etat}`);
+      const couleur = this.etatCouleurs[etat] || 'grey';
+      console.log(`Couleur choisie : ${couleur}`);
+      return couleur;
+    },
   },
   
 })
