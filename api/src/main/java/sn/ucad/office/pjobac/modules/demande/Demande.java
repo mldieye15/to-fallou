@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import sn.ucad.office.pjobac.modules.academie.Academie;
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.session.Session;
@@ -34,7 +35,8 @@ public class Demande {
 
     @ManyToOne
     private Session session;
-
+    @ManyToOne
+    private Centre centre;
     @ManyToOne
     private EtatDemande etatDemande;
 

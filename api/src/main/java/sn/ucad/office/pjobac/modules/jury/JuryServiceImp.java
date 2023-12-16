@@ -15,6 +15,7 @@ import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
+import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public class JuryServiceImp implements JuryService {
     private final JuryMapper mapper;
     private final JuryDao dao;
     private final CentreDao centreDao;
+    private final VilleDao villeDao;
 
     @Override
     public List<JuryResponse> all() throws BusinessResourceException {
@@ -81,6 +83,7 @@ public class JuryServiceImp implements JuryService {
             log.info("Debug 001-req_to_entity:  " + one.toString());
             JuryResponse response = mapper.toEntiteResponse(dao.save(one));
             updateCentreTotalJury(one.getCentre().getId());
+            updateVilleTotalJury(one.getCentre().getVille().getId());
             log.info("Ajout " + response.getNumero() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -129,6 +132,7 @@ public class JuryServiceImp implements JuryService {
                     );
             dao.deleteById(myId);
             updateCentreTotalJury(oneBrute.getCentre().getId());
+            updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
             log.info("Jury avec id & numero: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
             String response;
             response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";
@@ -160,6 +164,7 @@ public class JuryServiceImp implements JuryService {
 
     @Override
     public int countJuryByCentre(Long centreId) {
+
         return centreDao.totalJuryByCentre(centreId);
     }
 
@@ -167,6 +172,18 @@ public class JuryServiceImp implements JuryService {
     public void updateCentreTotalJury(Long centreId) {
         int totalJury = centreDao.totalJuryByCentre(centreId);
         centreDao.updateTotalJury(centreId, totalJury);
+
+    }
+
+    @Override
+    public int countJuryByVille(Long villeId) {
+        return villeDao.getTotalJuryByVilleId(villeId);
+    }
+
+    @Override
+    public void updateVilleTotalJury(Long villeId) {
+        int totalJury=villeDao.getTotalJuryByVilleId(villeId);
+        villeDao.updateTotalJury(villeId,totalJury);
 
     }
 

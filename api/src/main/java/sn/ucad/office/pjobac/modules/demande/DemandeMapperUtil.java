@@ -10,6 +10,10 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeMapper;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeService;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -30,6 +35,8 @@ public class DemandeMapperUtil {
     private final VilleDao villeDao;
     private final AcademieDao academieDao;
     private final SessionDao sessionDao;
+    private final EtatDemandeService service;
+    private final EtatDemandeMapper mapper;
 
     @Named("getVilleById")
     Ville getVilleById(String villeId) throws NumberFormatException {
@@ -78,7 +85,7 @@ public class DemandeMapperUtil {
                     );
             return response;
         } catch (NumberFormatException e) {
-            log.warn("Paramétre id {} non autorisé. <DemandeMapperUtil::getVilleById>.", sessionId);
+            log.warn("Paramétre id {} non autorisé. <DemandeMapperUtil::getSessionById>.", sessionId);
             throw new BusinessResourceException("not-valid-param", "Paramétre " + sessionId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }

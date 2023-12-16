@@ -60,7 +60,8 @@ public class AuthServiceImp implements AuthService {
                             AppConstants.LIEN_ACTIV_COMPTE+"/"+token
             ));
             userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
-            UserResponse response = mapper.toEntiteResponse(entity);
+            UserResponse response;
+            response = mapper.toEntiteResponse(entity);
             //  Activation automatique à enlever une fois le probl
 
             //
@@ -147,7 +148,7 @@ public class AuthServiceImp implements AuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
                 .username(request.getUsername())
                 .build();
-        //return new AuthenticationResponse(token, request.getUsername());
+        /* return new AuthenticationResponse(token, request.getUsername()); */
     }
 
     @Override

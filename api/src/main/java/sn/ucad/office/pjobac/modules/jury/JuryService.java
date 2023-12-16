@@ -29,4 +29,6 @@ public interface JuryService {
     public Optional<JuryAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     int countJuryByCentre(Long centreId);
     void updateCentreTotalJury(Long centreId);
+    int countJuryByVille(Long villeId);
+    void updateVilleTotalJury(Long villeId);
 }

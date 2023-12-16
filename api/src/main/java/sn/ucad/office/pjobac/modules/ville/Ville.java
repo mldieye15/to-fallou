@@ -28,6 +28,8 @@ public class Ville {
 
     @NotNull
     private String libelleCourt;
+    @NotNull
+    private Integer totalJury;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Academie academie;

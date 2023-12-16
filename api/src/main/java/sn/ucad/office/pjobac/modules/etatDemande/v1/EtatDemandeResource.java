@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeService;
 import sn.ucad.office.pjobac.modules.etatDemande.dto.EtatDemandeRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.dto.EtatDemandeResponse;
@@ -30,7 +31,7 @@ public class EtatDemandeResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<EtatDemandeResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<EtatDemandeResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -38,19 +39,19 @@ public class EtatDemandeResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<EtatDemandeResponse>> all(){
         List<EtatDemandeResponse> response = service.all();
-        return new ResponseEntity< List<EtatDemandeResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<EtatDemandeResponse>> one(@PathVariable(value = "id") String id) {
         Optional<EtatDemandeResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<EtatDemandeResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<EtatDemandeResponse> add(@RequestBody @Valid EtatDemandeRequest request) {
         EtatDemandeResponse response = service.add(request);
-        return new ResponseEntity<EtatDemandeResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -58,14 +59,20 @@ public class EtatDemandeResource {
     public ResponseEntity<EtatDemandeResponse> maj(@PathVariable(value="id") String id,
                                                    @RequestBody @Valid EtatDemandeRequest request) {
         EtatDemandeResponse response = service.maj(request, id);
-        return new ResponseEntity<EtatDemandeResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/idEnAttente")
+        public ResponseEntity<Long> findIdByLibelleLong() {
+        Optional<Long> id = service.findIdByLibelleLong("EN ATTENTE");
+        return id.map(aLong -> new ResponseEntity<>(aLong, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
     }
 }
 

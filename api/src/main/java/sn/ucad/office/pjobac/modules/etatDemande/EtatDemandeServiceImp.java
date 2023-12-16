@@ -32,8 +32,9 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
     public List<EtatDemandeResponse> all() throws BusinessResourceException {
         log.info("EtatDemandeServiceImp::all");
         List<EtatDemande> all = dao.findAll();
-        List<EtatDemandeResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<EtatDemandeResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -42,9 +43,9 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
     public SimplePage<EtatDemandeResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des EtatDemandes avec pagination. <all>");
         final Page<EtatDemande> page = dao.findAll(pageable);
-        return new SimplePage<EtatDemandeResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -59,7 +60,8 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
                             () -> new BusinessResourceException("not-found", "Aucun EtatDemande avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<EtatDemandeResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<EtatDemandeResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -123,7 +125,8 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
                     );
             dao.deleteById(myId);
             log.info("EtatDemande avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -140,17 +143,23 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
                             () -> new BusinessResourceException("not-found", "Aucune EtatDemande avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("EtatDemande avec id: " + id + " trouvé. <auditOneById>");
-           Optional<EtatDemandeAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<EtatDemandeAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
-        //return Optional.empty();
     }
 
-
-
+    @Override
+    public Optional<Long> findIdByLibelleLong(String libelleLong) throws BusinessResourceException {
+        Optional<EtatDemande> etatDemande;
+        etatDemande = Optional.ofNullable(dao.findByLibelleLong(libelleLong).orElseThrow(
+                () -> new BusinessResourceException("not-found", "Aucun EtatDemande avec " + libelleLong + " trouvé.", HttpStatus.NOT_FOUND)
+        ));
+        return etatDemande.map(EtatDemande::getId);
+    }
 
 
 }

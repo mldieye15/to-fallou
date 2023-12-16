@@ -13,20 +13,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
+@Table(name = "etatDemande"
+        , uniqueConstraints = @UniqueConstraint(columnNames="LibelleLong")
 )
 public class EtatDemande {
     @Id
-    @Setter(AccessLevel.PROTECTED)
+//    @Setter(AccessLevel.PROTECTED)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     private String libelleLong;
 
-    @NotNull
-    private String libelleCourt;
 
     @Column(nullable = true)
     private Long utiCree;

@@ -13,6 +13,9 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ import java.util.stream.Collectors;
 public class DemandeServiceImp implements DemandeService {
     private final DemandeMapper mapper;
     private final DemandeDao dao;
+    private final EtatDemandeDao etatDemandeDao;
+    private final EtatDemandeServiceImp service;
 
     @Override
     public List<DemandeResponse> all() throws BusinessResourceException {
@@ -37,6 +42,16 @@ public class DemandeServiceImp implements DemandeService {
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
+    }
+
+    @Override
+    public List<DemandeResponse> allUsers() throws BusinessResourceException {
+        return null;
+    }
+
+    @Override
+    public List<DemandeResponse> getAllForUser(Long userId) throws BusinessResourceException {
+        return null;
     }
 
     @Override
@@ -92,13 +107,27 @@ public class DemandeServiceImp implements DemandeService {
     public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException {
         try {
             List<Demande> demandes = req.stream()
-                    .map(mapper::requestToEntity)
+                    .map(request -> {
+                        Demande demande = mapper.requestToEntity(request);
+                        if (demande.getEtatDemande() == null) {
+                            EtatDemande etatParDefaut = service.findIdByLibelleLong("EN ATTENTE")
+                                    .map(id->{
+                                        EtatDemande etatDemande = new EtatDemande();
+                                        etatDemande.setId(id);
+                                        return etatDemande;
+                                    })
+                                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+                            demande.setEtatDemande(etatParDefaut);
+                        }
+                        return demande;
+                    })
                     .collect(Collectors.toList());
 
             List<DemandeResponse> responses = dao.saveAll(demandes).stream()
                     .map(mapper::toEntiteResponse)
                     .collect(Collectors.toList());
-            log.info("Ajout des demandes effectué avec succès. <add>");
+
+            log.info("Ajout des demandes effectué avec succès. <addAll>");
             return responses;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de création Demande: donnée en doublon ou contrainte non respectée" + e.toString());
@@ -107,8 +136,8 @@ public class DemandeServiceImp implements DemandeService {
             log.error("Ajout Demande: Une erreur inattendue est rencontrée." + ex.getMessage());
             throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Demande.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
+
 
     @Override
     @Transactional(readOnly = false)

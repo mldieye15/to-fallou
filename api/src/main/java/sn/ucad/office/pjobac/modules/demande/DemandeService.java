@@ -14,7 +14,8 @@ import java.util.Optional;
 
 public interface DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException;
-
+    public List<DemandeResponse> allUsers() throws BusinessResourceException;
+    public List<DemandeResponse> getAllForUser(Long userId) throws BusinessResourceException ;
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<DemandeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;

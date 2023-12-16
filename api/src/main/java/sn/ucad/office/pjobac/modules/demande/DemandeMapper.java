@@ -38,6 +38,7 @@ public interface DemandeMapper {
     @Mapping(target = "session", source = "request.session",qualifiedByName = "getSessionById")
     Demande requestToEntiteUp(@MappingTarget Demande entity, DemandeRequest request/*, Utilisateur user*/);
 
+
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
 
 }

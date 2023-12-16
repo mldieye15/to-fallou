@@ -42,8 +42,10 @@ public class VilleServiceImp implements VilleService {
     }
 
     @Override
-    public List<VilleResponse> getVilleByAcademie(Long idAcademie) throws BusinessResourceException {
-        Academie academie = academieDao.findById(idAcademie)
+    public List<VilleResponse> getVilleByAcademie(String idAcademie) throws BusinessResourceException {
+        Long myId= Long.valueOf(idAcademie.trim());
+        Academie academie;
+        academie=academieDao.findById(myId)
                 .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + idAcademie));
         List<Ville> villes=dao.findByAcademie(academie);
         List<VilleResponse> response;
@@ -147,7 +149,6 @@ public class VilleServiceImp implements VilleService {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
-
     @Override
     public Optional<VilleAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException {
         try {

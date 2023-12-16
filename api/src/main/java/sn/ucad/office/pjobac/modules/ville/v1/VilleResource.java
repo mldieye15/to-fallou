@@ -41,7 +41,7 @@ public class VilleResource {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/by-academie/{idAcademie}")
-    public ResponseEntity<List<VilleResponse>> getVillesByAcademie(@PathVariable Long idAcademie) {
+    public ResponseEntity<List<VilleResponse>> getVillesByAcademie(@PathVariable String idAcademie) {
         List<VilleResponse> response = service.getVilleByAcademie(idAcademie);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
