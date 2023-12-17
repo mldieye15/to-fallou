@@ -5,6 +5,7 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/demandes';
 const all = modulesURL+'/all';
 const add = modulesURL+'/addAll';
+const accepter=modulesURL+'/accepter';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
@@ -20,10 +21,11 @@ export const useDemandeStore = defineStore('demande', {
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
     headerTable: [
-      { text: 'Nom', value: 'user', align: 'start', sortable: true },
+      { text: 'Prenoms', value: 'user', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
+      { text: 'Centre d/ecrit', value: 'centre', align: 'start', sortable: true },
       { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -47,7 +49,8 @@ export const useDemandeStore = defineStore('demande', {
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let sessionLabel = element.session ? element.session.libelleLong:null;
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
-              let nomLabel = element.user ? element.user.nom : null;
+              let nomLabel = element.user ? element.user.prenoms : null;
+              let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
                 id:element.id, 
                 nom: element.nom,
@@ -55,7 +58,8 @@ export const useDemandeStore = defineStore('demande', {
                 academie:academieLabel,
                 session:sessionLabel,
                 etatDemande:etatLabel,
-                nom:nomLabel,
+                user:nomLabel,
+                centre:centreLabel,
               }
               
             })
@@ -109,6 +113,23 @@ export const useDemandeStore = defineStore('demande', {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
         await axios.put(`${modulesURL}/${id}`, payload) 
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async accepterDemande(id, payload) {
+      try {
+        console.log("Id: ", id);
+        console.log("Payload: ", payload);
+        await axios.put(`${accepter}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

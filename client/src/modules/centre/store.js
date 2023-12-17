@@ -5,11 +5,13 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/centres';
 const all = modulesURL+'/all';
 const add = modulesURL+'/';
+const centreByville = modulesURL+'/by-ville';
 const libelleAvailability = modulesURL +'/libelle-availability';
 
 export const useCentreStore = defineStore('centre', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListeCentre: [],
+    dataListeByVille: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     /*breadcrumbs: [
@@ -36,7 +38,8 @@ export const useCentreStore = defineStore('centre', {
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListeCentre: (state) => state.dataListeCentre,
+    getDataListeByVille: (state) => state.dataListeByVille
   },
 
   actions: {
@@ -64,7 +67,7 @@ export const useCentreStore = defineStore('centre', {
 
             })
 
-            this.dataListe = res;
+            this.dataListeCentre = res;
           } 
         })
       } catch (error) {
@@ -72,6 +75,35 @@ export const useCentreStore = defineStore('centre', {
         this.error = error
       } finally {
         this.loading = false
+      }
+    },
+    async centresByVille(ville) {
+      try {
+        // Ajouter une vérification pour s'assurer que ville est un nombre non nul
+        if (typeof ville === 'number' && !isNaN(ville)) {
+          await axios.get(`${centreByville}/${ville}`)
+            .then((response) => {
+              if (response.status === 200) {
+                let res = response.data.map((element) => {
+                  let villeLabel = element.ville ? element.ville.libelleLong : null;
+                  return {
+                    id: element.id,
+                    libelleLong: element.libelleLong,
+                    libelleCourt: element.libelleCourt,
+                    ville: villeLabel
+                  };
+                });
+                this.dataListeByVille = res;
+              }
+            });
+        } else {
+          console.error("La valeur de centre est invalide. La requête n'a pas été effectuée.");
+        }
+      } catch (error) {
+        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     //  recupérer les informations d'un centre par son ide et le mettre dans la tabel dataDetails

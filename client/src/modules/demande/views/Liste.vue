@@ -35,15 +35,11 @@
             </v-chip>
         </template>
         <template #item-actions="item">
-          <div class="actions-wrapper">
-            <router-link :to="{ name: 'demande-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
-            <router-link :to="{ name: 'demande-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
+          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE'">
+            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
+              <router-link  :to="{ name: 'accepte-Demande', params: { id: item.id } }" > <v-icon small flat color="green">mdi-check</v-icon> Accepte</router-link>
+            </v-chip>
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
-              <template v-slot:activator="{ props }">
-                <v-btn variant="text"  class="text" v-bind="props">
-                  <v-icon small flat color="red dark">mdi-delete</v-icon>
-              </v-btn>
-              </template>
               <template v-slot:default="{ isActive }">
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>

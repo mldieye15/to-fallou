@@ -24,7 +24,7 @@
       </v-row>
       <EasyDataTable
         :headers="headerTable"
-        :items="dataListe"
+        :items="dataListeCentre"
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
@@ -78,7 +78,7 @@ const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
 const centreStore = useCentreStore();
-const { dataListe, headerTable, loading } = storeToRefs(centreStore);
+const { dataListeCentre, headerTable, loading } = storeToRefs(centreStore);
  const { all, destroy } = centreStore;
  
 const listeVille = reactive({ items: [] });

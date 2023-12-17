@@ -16,10 +16,10 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         v-model="inputForm.session"
-        variant="underlined"
+        variant="solo"
         :items="dataListeSession"
         persistent-hint
-        
+        readonly
         single-line
         item-title="libelleLong"
         item-value="id"
@@ -32,10 +32,10 @@
         :label="$t('apps.forms.ville.nom')"
         color="balck"
         v-model="inputForm.ville"
-        variant="underlined"
-        :items="dataListeByAcademie"
+        variant="solo"
+        :items="dataListeVille"
         persistent-hint
-        
+        readonly
         single-line
         item-title="libelleLong"
         item-value="id"
@@ -45,18 +45,29 @@
         prepend-inner-icon="mdi-alpha-a-circle"
         name="academie"
         density="compact"
-        :label="$t('apps.forms.academie.nom')"
         color="balck"
         v-model="inputForm.academie"
-        variant="underlined"
+        variant="solo"
         :items="dataListe"
         persistent-hint
-        
-        single-line
+        readonly
         item-title="libelleLong"
         item-value="id"
-        @change="handleAcademieChange"
-      ></v-select>
+      >
+    </v-select>
+    <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="centre"
+        density="compact"
+        color="balck"
+        v-model="inputForm.centre"
+        variant="solo"
+        :items="dataListeCentre"
+        persistent-hint
+        item-title="libelleLong"
+        item-value="id"
+      >
+    </v-select>
 
       <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
@@ -70,17 +81,20 @@ import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useVilleStore } from "@/modules/ville/store";
 import { useAcademieStore } from "@/modules/academie/store";
+import { useCentreStore } from "@/modules/centre/store";
 import { useSessionStore } from "@/modules/session/store";
 
 const instance = getCurrentInstance();
 
 const villeStore = useVilleStore();
-const {dataListeByAcademie} = storeToRefs(villeStore);
+const {dataListeVille} = storeToRefs(villeStore);
 
 const academieStore = useAcademieStore();
 const { dataListe } = storeToRefs(academieStore);
 const sesssionStore=useSessionStore();
 const { dataListeSession } = storeToRefs(sesssionStore);
+const centreStore=useCentreStore();
+const { dataListeCentre } = storeToRefs(centreStore);
 
 
 const rules = reactive({
@@ -112,6 +126,7 @@ onMounted(()=>{
   villeStore.all();
   academieStore.all();
   sesssionStore.all();
+  centreStore.all();
 });
 
 </script>

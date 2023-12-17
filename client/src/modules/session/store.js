@@ -79,7 +79,7 @@ export const useSessionStore = defineStore('session', {
             });
             console.log('Données avant modification :', this.dataListeSession);
             this.dataListeSession = res;
-            this.demandesAutorisees=nombreDemandeAutorise;
+            // this.demandesAutorisees=nombreDemandeAutorise;
           } 
         })
       } catch (error) {

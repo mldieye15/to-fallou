@@ -25,6 +25,11 @@ const demandeRoutes = [{
         path: '/app/dashboard/demandes/edit/:id',
         name: 'demande-edit',
         component: () => import( /* webpackChunkName: 'demande_edit */ './views/Edit.vue')
+      },
+      {
+        path: '/app/dashboard/demandes/accepte/:id',
+        name: 'accepte-Demande',
+        component: () => import( /* webpackChunkName: 'demande_edit */ './views/AccepteDemande.vue')
       }
     ]
 }];

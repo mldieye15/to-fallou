@@ -17,7 +17,7 @@
         color="balck"
         v-model="inputForm.centre"
         variant="solo"
-        :items="dataListe"
+        :items="dataListeCentre"
         persistent-hint
         
         single-line
@@ -40,7 +40,7 @@ import { useCentreStore } from "@/modules/centre/store";
 const instance = getCurrentInstance();
 
 const centreStore = useCentreStore();
-const { dataListe } = storeToRefs(centreStore);
+const { dataListeCentre } = storeToRefs(centreStore);
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
