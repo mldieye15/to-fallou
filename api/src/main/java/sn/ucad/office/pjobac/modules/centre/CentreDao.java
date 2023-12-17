@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import sn.ucad.office.pjobac.modules.ville.Ville;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -19,4 +21,9 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     @Modifying
     @Query("UPDATE Centre c SET c.nombreJury = :totalJury WHERE c.id = :centreId")
     void updateTotalJury(@Param("centreId") Long centreId, @Param("totalJury") int totalJury);
+    @Query("SELECT c FROM Centre c " +
+            "WHERE c.ville = :ville " +
+            "AND NOT EXISTS (SELECT d FROM Demande d WHERE d.centre = c)")
+    List<Centre> findCentresSansDemandeParVille(@Param("ville") Ville ville);
 }
+

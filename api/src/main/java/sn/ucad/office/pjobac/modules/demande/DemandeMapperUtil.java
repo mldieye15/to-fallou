@@ -9,11 +9,15 @@ import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
+import sn.ucad.office.pjobac.modules.centre.Centre;
+import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeMapper;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeService;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
@@ -35,8 +39,8 @@ public class DemandeMapperUtil {
     private final VilleDao villeDao;
     private final AcademieDao academieDao;
     private final SessionDao sessionDao;
-    private final EtatDemandeService service;
-    private final EtatDemandeMapper mapper;
+    private final UserDao userDao;
+    private  final CentreDao centreDao;
 
     @Named("getVilleById")
     Ville getVilleById(String villeId) throws NumberFormatException {
@@ -66,6 +70,36 @@ public class DemandeMapperUtil {
         } catch (NumberFormatException e) {
             log.warn("Paramétre id {} non autorisé. <VilleMapperUtil::getAcademieById>.", academieId);
             throw new BusinessResourceException("not-valid-param", "Paramétre " + academieId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
+//    @Named("getUserById")
+//    AppUser getUserById(String userId) throws NumberFormatException {
+//        try {
+//            Long myId = Long.valueOf(userId.trim());
+//            AppUser response;
+//            response = userDao.findById(myId)
+//                    .orElseThrow(
+//                            () -> new BusinessResourceException("not-found", "Aucune user avec " + userId + " trouvée.", HttpStatus.NOT_FOUND)
+//                    );
+//            return response;
+//        } catch (NumberFormatException e) {
+//            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getUserById>.", userId );
+//            throw new BusinessResourceException("not-valid-param", "Paramétre " + userId + " non autorisé.", HttpStatus.BAD_REQUEST);
+//        }
+//    }
+    @Named("getCentreById")
+    Centre getCentrerById(String centreId) throws NumberFormatException {
+        try {
+            Long myId = Long.valueOf(centreId.trim());
+            Centre response;
+            response = centreDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune user avec " + centreId + " trouvée.", HttpStatus.NOT_FOUND)
+                    );
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getUserById>.", centreId );
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + centreId + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
     @Named("formatStringToDate")

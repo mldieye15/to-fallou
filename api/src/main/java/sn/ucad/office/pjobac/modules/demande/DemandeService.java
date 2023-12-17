@@ -3,6 +3,7 @@ package sn.ucad.office.pjobac.modules.demande;
 import org.springframework.data.domain.Pageable;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
@@ -23,7 +24,8 @@ public interface DemandeService {
     public DemandeResponse add(DemandeRequest req) throws BusinessResourceException;
     public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException;
 
-    public DemandeResponse maj(DemandeRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 

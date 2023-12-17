@@ -10,10 +10,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreAudit;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
+import sn.ucad.office.pjobac.modules.ville.Ville;
+import sn.ucad.office.pjobac.modules.ville.VilleDao;
+import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -27,6 +31,7 @@ import java.util.stream.Collectors;
 public class CentreServiceImp implements CentreService {
     private final CentreMapper mapper;
     private final CentreDao dao;
+    private final VilleDao villeDao;
     private final JuryService juryService;
 
     @Override
@@ -37,6 +42,22 @@ public class CentreServiceImp implements CentreService {
         response = all.stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<CentreResponse> centreParVilleSansJury(String villeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(villeId.trim());
+        Ville ville;
+        ville=villeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + villeId));
+        List<Centre> centres=dao.findCentresSansDemandeParVille(ville);
+        List<CentreResponse> response;
+        response= centres.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        System.out.println("Ville ID: " + ville.getId());
+        System.out.println("Nombre de centres sans demande : " + centres.size());
         return response;
     }
 //    @Override

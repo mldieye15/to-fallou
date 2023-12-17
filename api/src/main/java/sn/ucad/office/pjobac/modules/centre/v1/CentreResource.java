@@ -13,6 +13,7 @@ import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.centre.CentreService;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
+import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class CentreResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<CentreResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<CentreResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -39,19 +40,24 @@ public class CentreResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CentreResponse>> all(){
         List<CentreResponse> response = service.all();
-        return new ResponseEntity< List<CentreResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "/by-ville/{villeId}")
+    public ResponseEntity<List<CentreResponse>> centresSansJuryByVille(@PathVariable String villeId) {
+        List<CentreResponse> response = service.centreParVilleSansJury(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<CentreResponse>> one(@PathVariable(value = "id") String id) {
         Optional<CentreResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<CentreResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<CentreResponse> add(@RequestBody @Valid CentreRequest request) {
         CentreResponse response = service.add(request);
-        return new ResponseEntity<CentreResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -59,14 +65,14 @@ public class CentreResource {
     public ResponseEntity<CentreResponse> maj(@PathVariable(value="id") String id,
                                               @RequestBody @Valid CentreRequest request) {
         CentreResponse response = service.maj(request, id);
-        return new ResponseEntity<CentreResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/libelle-availability")
     public ResponseEntity<Boolean> checkCentreAvailability(@RequestParam String libelleLong) {

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -63,6 +64,13 @@ public class DemandeResource {
     public ResponseEntity<DemandeResponse> maj(@PathVariable(value="id") String id,
                                                @RequestBody @Valid DemandeRequest request) {
         DemandeResponse response = service.maj(request, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping(value = "/accepter/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DemandeResponse> accepterDemande(@PathVariable(value="id") String id,
+                                               @RequestBody @Valid DemandeAccepter accepter) {
+        DemandeResponse response = service.accepterDemande(accepter, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -32,14 +32,12 @@ public class Demande {
     private Ville ville;
     @ManyToOne
     private Academie academie;
-
     @ManyToOne
     private Session session;
     @ManyToOne
     private Centre centre;
     @ManyToOne
     private EtatDemande etatDemande;
-
 //    @NotNull
     private Integer ordreArrivee;
 

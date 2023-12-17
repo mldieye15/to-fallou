@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
+import sn.ucad.office.pjobac.modules.security.mail.MailService;
+import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class DemandeServiceImp implements DemandeService {
     private final DemandeDao dao;
     private final EtatDemandeDao etatDemandeDao;
     private final EtatDemandeServiceImp service;
+    private  final MailService mailService;
 
     @Override
     public List<DemandeResponse> all() throws BusinessResourceException {
@@ -141,21 +145,30 @@ public class DemandeServiceImp implements DemandeService {
 
     @Override
     @Transactional(readOnly = false)
-    public DemandeResponse maj(DemandeRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+    public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
-            Long myId = Long.valueOf(id.trim());
+            Long myId = Long.valueOf(demandeId.trim());
             Demande demandeOptional = dao.findById(myId)
                     .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             //Demande annee = mapper.anneRequestToAnneeUp(demandeOptional, req, userService.user());
             Demande oneBrute = mapper.requestToEntiteUp(demandeOptional, req);
+                EtatDemande etatParDefaut = service.findIdByLibelleLong("EN ATTENTE")
+                        .map(id->{
+                            EtatDemande etatDemande = new EtatDemande();
+                            etatDemande.setId(id);
+                            return etatDemande;
+                        })
+                        .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+                oneBrute.setEtatDemande(etatParDefaut);
+
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getId() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {
-            log.warn("Paramétre id " + id + " non autorisé. <maj>.");
-            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+            log.warn("Paramétre id " + demandeId+ " non autorisé. <maj>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de maj Demande: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
@@ -164,7 +177,6 @@ public class DemandeServiceImp implements DemandeService {
             throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @Override
     @Transactional(readOnly = false)
     public String del(String id) throws NumberFormatException, BusinessResourceException {
@@ -200,6 +212,42 @@ public class DemandeServiceImp implements DemandeService {
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+    @Override
+    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            Demande oneBrute = mapper.accepterToEntiteUp(demandeOptional, req);
+            EtatDemande etatAccepter = service.findIdByLibelleLong("ACCEPTE")
+                    .map(id->{
+                        EtatDemande etatDemande = new EtatDemande();
+                        etatDemande.setId(id);
+                        return etatDemande;
+                    })
+                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+            oneBrute.setEtatDemande(etatAccepter);
+            DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            NotificationEmail notificationEmail= new NotificationEmail();
+            notificationEmail.setSubject("code d'inscription");
+            notificationEmail.setRecipient(oneBrute.getUser().getEmail());
+            notificationEmail.setBody("Votre demande a ete accepté au centre d' écrit du "
+                    + oneBrute.getCentre().getLibelleLong()
+                    +"vous avec " + oneBrute.getSession().getDelaisValidation()+ "pour le valider");
+            mailService.sendMail(notificationEmail);
+            log.info("Demande " + response.getId() + " accepetée avec succés. <accepterDemande>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + demandeId+ " non autorisé. <accepterDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + demandeId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error("Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique d'acceptation d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

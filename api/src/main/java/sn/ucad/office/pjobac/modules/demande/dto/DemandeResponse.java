@@ -4,7 +4,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import sn.ucad.office.pjobac.modules.academie.Academie;
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.jury.Jury;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 
@@ -19,6 +22,9 @@ public class DemandeResponse {
     private Ville ville;
     private Session session;
     private Academie academie;
+    private Centre centre;
     private EtatDemande etatDemande;
+    private AppUser user;
     private LocalDateTime dateDemande=LocalDateTime.now();
+
 }

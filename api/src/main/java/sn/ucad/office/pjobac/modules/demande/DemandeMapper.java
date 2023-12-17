@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Component;
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
@@ -37,7 +38,11 @@ public interface DemandeMapper {
     @Mapping(source = "request.academie", target = "academie",qualifiedByName = "getAcademieById")
     @Mapping(target = "session", source = "request.session",qualifiedByName = "getSessionById")
     Demande requestToEntiteUp(@MappingTarget Demande entity, DemandeRequest request/*, Utilisateur user*/);
-
+    @Mapping(target = "ville",source = "accepteRequest.ville", qualifiedByName = "getVilleById")
+    @Mapping(target = "academie",source = "accepteRequest.academie" ,qualifiedByName = "getAcademieById")
+    @Mapping(target = "session", source = "accepteRequest.session",qualifiedByName = "getSessionById")
+    @Mapping(target = "centre", source = "accepteRequest.centre",qualifiedByName = "getCentreById")
+    Demande accepterToEntiteUp(@MappingTarget Demande entity, DemandeAccepter accepteRequest );
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
 
