@@ -6,6 +6,7 @@ const  modulesURL = '/v1/demandes';
 const all = modulesURL+'/all';
 const add = modulesURL+'/addAll';
 const accepter=modulesURL+'/accepter';
+const valider=modulesURL+'/valider';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
@@ -17,7 +18,7 @@ export const useDemandeStore = defineStore('demande', {
       'EN ATTENTE': 'grey',
       'REJETE': 'red',
       'VALIDE': 'green',
-      'OBSELETE':'yellow',
+      'OBSOLETE':'yellow',
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
     headerTable: [
@@ -26,6 +27,7 @@ export const useDemandeStore = defineStore('demande', {
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Centre d/ecrit', value: 'centre', align: 'start', sortable: true },
+      { text: 'Quota', value: 'quotaDemandeAccepte', align: 'start', sortable: true },
       { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -51,6 +53,7 @@ export const useDemandeStore = defineStore('demande', {
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
+              let labelQuotaAccepte=element.ville.quotaDemandeAccepte?'OUI' : 'NON';
               return{
                 id:element.id, 
                 nom: element.nom,
@@ -60,6 +63,7 @@ export const useDemandeStore = defineStore('demande', {
                 etatDemande:etatLabel,
                 user:nomLabel,
                 centre:centreLabel,
+                quotaDemandeAccepte:labelQuotaAccepte,
               }
               
             })
@@ -130,6 +134,21 @@ export const useDemandeStore = defineStore('demande', {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
         await axios.put(`${accepter}/${id}`, payload)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async validerDemande(id) {
+      try {
+        await axios.put(`${valider}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

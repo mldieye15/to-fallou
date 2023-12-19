@@ -94,7 +94,7 @@ const { dataListe } = storeToRefs(academieStore);
 const sesssionStore=useSessionStore();
 const { dataListeSession } = storeToRefs(sesssionStore);
 const centreStore=useCentreStore();
-const { dataListeCentre } = storeToRefs(centreStore);
+const { dataListeCentre,dataDetails} = storeToRefs(centreStore);
 
 
 const rules = reactive({
@@ -108,13 +108,6 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-const handleAcademieChange = async () => {
-  const academieId = inputForm.academie;
-  console.log('Academie ID before method call:', academieId);
-  // Appelle de la méthode pour charger les villes par académie
-  await villeStore.villesByAcademie(academieId);
-  console.log('Villes updated in store:', villeStore.getDataListeByAcademie());
-};
 
 const handleSave = () => {
   if(instance.refs.demandeForm.validate){

@@ -35,21 +35,29 @@
             </v-chip>
         </template>
         <template #item-actions="item">
-          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE'">
+          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE' && item.quotaDemandeAccepte==='NON'">
             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
               <router-link  :to="{ name: 'accepte-Demande', params: { id: item.id } }" > <v-icon small flat color="green">mdi-check</v-icon> Accepte</router-link>
             </v-chip>
+          </div>
+          <div v-if="item.etatDemande==='ACCEPTE'">
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+              <template v-slot:activator="{ props }">
+                <v-chip :style="{ 'font-size': '15px', 'height': '25px' }" color="green" variant="tonal">
+                  <v-btn variant="text"  class="text" v-bind="props">
+                 valider
+                </v-btn>
+                </v-chip>
+              </template>
               <template v-slot:default="{ isActive }">
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
                   <v-card-text>
-                    
                     <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
                     <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
-                    <v-btn variant="outlined" color="black"  @click="del(item.id)">{{ $t('apps.forms.oui') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="valider(item.id)">{{ $t('apps.forms.oui') }}</v-btn>
                   </v-card-actions>
                 </v-card>
               </template>
@@ -67,7 +75,10 @@ import { storeToRefs } from "pinia";
 import { useDemandeStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
+import { useCentreStore } from "@/modules/centre/store";
 import { useI18n } from "vue-i18n";
+const centreStore=useCentreStore();
+const { dataListeByVille} = storeToRefs(centreStore);
 
 const i18n = useI18n();
 
@@ -76,7 +87,7 @@ const { addNotification } = notificationStore;
 
 const demandeStore = useDemandeStore();
 const { dataListe, headerTable, loading,etatCouleurs } = storeToRefs(demandeStore);
-const { all, destroy } = demandeStore;
+const { all, destroy,validerDemande } = demandeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -87,6 +98,17 @@ onMounted(()=>{
   all();
 });
 
+const valider = (id) => {
+  validerDemande(id).then( () => {
+    addNotification({
+        show: true,
+        text:  i18n.t('valider'),
+        color: 'blue'
+      });
+      dialog.value=false;
+      all();
+  });
+}
 const del = (id) => {
   destroy(id).then( () => {
     addNotification({

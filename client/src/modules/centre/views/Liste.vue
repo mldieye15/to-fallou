@@ -29,6 +29,24 @@
         buttons-pagination
         :search-value="searchValue"
       >
+      <template #item-quota="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+                 :color="item.quota === 'OUI' ? 'green' : 'red'" text variant="tonal">
+              {{ item.quota}}
+          </v-chip>
+      </template>
+      <template #item-nombreJuryAffecte="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+                 color="green" text variant="standard">
+              {{ item.nombreJuryAffecte}}
+          </v-chip>
+      </template>
+      <template #item-nombreJury="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+                 color="blue" text variant="standard">
+              {{ item.nombreJury}}
+          </v-chip>
+      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'centre-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -108,5 +126,9 @@ const del = (id) => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+
+.actions-wrapper {
+  width: 120px;
 }
 </style>
