@@ -51,7 +51,7 @@ public class CentreServiceImp implements CentreService {
         Ville ville;
         ville=villeDao.findById(myId)
                 .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + villeId));
-        List<Centre> centres=dao.findCentresSansDemandeParVille(ville);
+        List<Centre> centres=dao.findCentresQuotaNonAtteintParVille(ville);
         List<CentreResponse> response;
         response= centres.stream()
                 .map(mapper::toEntiteResponse)

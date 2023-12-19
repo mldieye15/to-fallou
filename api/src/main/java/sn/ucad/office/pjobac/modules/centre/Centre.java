@@ -30,17 +30,17 @@ public class Centre {
 
     @NotNull
     private String libelleCourt;
-
-    private Integer nombreJury;
-
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int nombreJury=0;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int nombreJuryAffecte=0;
+    private boolean quota=false;
     @ManyToOne(fetch = FetchType.EAGER)
     private Ville ville;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private TypeCentre typeCentre;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    private Centre centrePrincipal;
 
     @Column(nullable = true)
     private Long utiCree;

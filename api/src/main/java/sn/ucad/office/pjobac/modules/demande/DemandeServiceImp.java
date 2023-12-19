@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
@@ -19,6 +20,7 @@ import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
 import sn.ucad.office.pjobac.modules.security.mail.MailService;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
+import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ public class DemandeServiceImp implements DemandeService {
     private final EtatDemandeDao etatDemandeDao;
     private final EtatDemandeServiceImp service;
     private  final MailService mailService;
+    private final CentreDao centreDao;
+    private final VilleDao villeDao;
 
     @Override
     public List<DemandeResponse> all() throws BusinessResourceException {
@@ -216,6 +220,88 @@ public class DemandeServiceImp implements DemandeService {
 
     }
     @Override
+    @Transactional(readOnly = false)
+    public int countJuryAffecteByCentre(Long centreId) {
+        return centreDao.totalJuryAffecteByCentre(centreId);
+    }
+    @Override
+    @Transactional(readOnly = false)
+    public void updateCentreTotalJuryAffecte(Long centreId) {
+       int totalJuryAffecte =centreDao.totalJuryAffecteByCentre(centreId);
+       centreDao.updateTotalJuryAffecte(centreId,totalJuryAffecte);
+
+    }
+//    @Override
+//    @Transactional(readOnly = false)
+//    public int countJuryAffecteByVille(Long villeId) {
+//        return villeDao.totalJuryAffecteByVille(villeId);
+//    }
+    @Override
+    @Transactional(readOnly = false)
+    public void updateVilleTotalJuryAffecte(Long villeId) {
+        EtatDemande etatvalide = service.findIdByLibelleLong("VALIDE")
+                .map(id->{
+                    EtatDemande etatDemande = new EtatDemande();
+                    etatDemande.setId(id);
+                    return etatDemande;
+                })
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé Valide trouvée.", HttpStatus.NOT_FOUND));
+        Long myId= etatvalide.getId();
+      int  totalJuryAffecte=villeDao.totalJuryAffecteByVille(villeId,myId);
+      villeDao.updateTotalJuryAffecte(villeId,totalJuryAffecte);
+
+
+    }
+    @Override
+    @Transactional(readOnly = false)
+    public void updateVilleTotalDemandeAccepte(Long villeId) {
+        int totalDemandeAccepte=villeDao.getTotalDemandeAccepteByVilleId(villeId);
+        villeDao.updateDemandeAccepte(villeId,totalDemandeAccepte);
+
+    }
+
+    @Override
+    public void demandeObseleteByVille(Long villeId) throws NumberFormatException, BusinessResourceException {
+        EtatDemande etatObsolete = service.findIdByLibelleLong("OBSOLETE")
+                .map(id->{
+                    EtatDemande etatDemande = new EtatDemande();
+                    etatDemande.setId(id);
+                    return etatDemande;
+                })
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+        EtatDemande etatEnAttente = service.findIdByLibelleLong("EN ATTENTE")
+                .map(id->{
+                    EtatDemande etatDemande = new EtatDemande();
+                    etatDemande.setId(id);
+                    return etatDemande;
+                })
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+
+        dao.demandeObselete(villeId, etatObsolete, etatEnAttente);
+    }
+
+    @Override
+    public void rejeterDemande(Long userId) throws NumberFormatException, BusinessResourceException {
+        EtatDemande enAttente= service.findIdByLibelleLong("EN ATTENTE")
+                .map(id->{
+                    EtatDemande etatDemande = new EtatDemande();
+                    etatDemande.setId(id);
+                    return etatDemande;
+                })
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+        EtatDemande rejeteEtat = service.findIdByLibelleLong("REJETE")
+                .map(id->{
+                    EtatDemande etatDemande = new EtatDemande();
+                    etatDemande.setId(id);
+                    return etatDemande;
+                })
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+
+        dao.rejeterDemande(userId, rejeteEtat ,enAttente);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(demandeId.trim());
@@ -233,6 +319,26 @@ public class DemandeServiceImp implements DemandeService {
                     .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
             oneBrute.setEtatDemande(etatAccepter);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            updateCentreTotalJuryAffecte(oneBrute.getCentre().getId());
+            updateVilleTotalDemandeAccepte(oneBrute.getCentre().getVille().getId());
+            Integer nombreJury= oneBrute.getCentre().getNombreJury();
+            Integer nombreJuryAffecte=oneBrute.getCentre().getNombreJuryAffecte();
+            Integer totalJury=oneBrute.getCentre().getVille().getTotalJury();
+            Integer totalDemandeAccepte=oneBrute.getCentre().getVille().getTotalDemandeAccepte();
+            if (nombreJury != null && nombreJuryAffecte != null) {
+                int quota = nombreJury - nombreJuryAffecte -1;
+                log.info("Calcule du quota: {}", quota);
+                if (quota == 0) {
+                   centreDao.updateCentreQuota(oneBrute.getCentre().getId());
+                }
+            }
+            if (totalJury != null && totalDemandeAccepte != null) {
+                int quotaAccepte = totalJury - totalDemandeAccepte -1;
+                log.info("Calcule du quotaAccepte: {}", quotaAccepte);
+                if (quotaAccepte == 0) {
+                   villeDao.updateVilleQuotaDemandeAccepteTrue(oneBrute.getCentre().getVille().getId());
+                }
+            }
             NotificationEmail notificationEmail= new NotificationEmail();
             notificationEmail.setSubject("code d'inscription");
             notificationEmail.setRecipient(oneBrute.getUser().getEmail());
@@ -252,4 +358,53 @@ public class DemandeServiceImp implements DemandeService {
 
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public DemandeResponse validerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun Demande avec l'ID " + demandeId + " trouvé.", HttpStatus.NOT_FOUND));
+
+            EtatDemande etatValide = service.findIdByLibelleLong("VALIDE")
+                    .map(id -> {
+                        EtatDemande etatDemande = new EtatDemande();
+                        etatDemande.setId(id);
+                        return etatDemande;
+                    })
+                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune état avec le libellé VALIDE trouvé.", HttpStatus.NOT_FOUND));
+
+            demandeOptional.setEtatDemande(etatValide);
+
+            DemandeResponse response = mapper.toEntiteResponse(dao.save(demandeOptional));
+            updateVilleTotalJuryAffecte(demandeOptional.getVille().getId());
+            rejeterDemande(demandeOptional.getUser().getId());
+            Integer totalJuryAffecte=demandeOptional.getVille().getTotalJuryAffecte();
+            Integer totalJury=demandeOptional.getVille().getTotalJury();
+            if (totalJury != null && totalJuryAffecte != null) {
+                int quota = totalJury - totalJuryAffecte -1;
+                log.info("Calcule du quota: {}", quota);
+                if (quota == 0) {
+                    villeDao.updateVilleQuotaTrue(demandeOptional.getVille().getId());
+                    demandeObseleteByVille(demandeOptional.getVille().getId());
+                }
+            }
+            NotificationEmail notificationEmail= new NotificationEmail();
+            notificationEmail.setSubject("code d'inscription");
+            notificationEmail.setRecipient(demandeOptional.getUser().getEmail());
+            notificationEmail.setBody("Bravo vous etes president d'un jury dans le centre d' écrit du "
+                    + demandeOptional.getCentre().getLibelleLong()
+                    );
+            mailService.sendMail(notificationEmail);
+
+            log.info("Demande " + response.getId() + " validée avec succès. <validerDemande>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + demandeId + " non autorisé. <validerDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error("Une erreur inattendue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de validation d'une Demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

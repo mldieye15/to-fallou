@@ -26,8 +26,16 @@ public interface DemandeService {
 
     public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DemandeResponse validerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<DemandeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    int countJuryAffecteByCentre(Long centreId);
+    void updateCentreTotalJuryAffecte(Long centreId);
+//    int countJuryAffecteByVille(Long villeId);
+    void updateVilleTotalJuryAffecte(Long villeId);
+    void updateVilleTotalDemandeAccepte(Long villeId);
+    public void demandeObseleteByVille(Long villeId)throws NumberFormatException, BusinessResourceException;
+    public void rejeterDemande(Long villeId)throws NumberFormatException, BusinessResourceException;
 }

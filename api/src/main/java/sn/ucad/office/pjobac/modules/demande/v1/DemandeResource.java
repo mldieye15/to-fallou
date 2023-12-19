@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
@@ -32,7 +33,16 @@ public class DemandeResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<DemandeResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<DemandeResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping("/obselete/{villeId}")
+    public ResponseEntity<String> demandePourVille(@PathVariable Long villeId) {
+        try {
+           service.demandeObseleteByVille(villeId);
+            return new ResponseEntity<>("État de demande mis à jour avec succès pour la ville " + villeId, HttpStatus.OK);
+        } catch (BusinessResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        }
     }
 
     @GetMapping("/all")
@@ -40,19 +50,19 @@ public class DemandeResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<DemandeResponse>> all(){
         List<DemandeResponse> response = service.all();
-        return new ResponseEntity< List<DemandeResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<DemandeResponse>> one(@PathVariable(value = "id") String id) {
         Optional<DemandeResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<DemandeResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<DemandeResponse> add(@RequestBody @Valid DemandeRequest request) {
         DemandeResponse response = service.add(request);
-        return new ResponseEntity<DemandeResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     @PostMapping(value = "/addAll")
     public ResponseEntity<List<DemandeResponse>> addAll(@RequestBody @Valid List<DemandeRequest> requests) {
@@ -73,12 +83,20 @@ public class DemandeResource {
         DemandeResponse response = service.accepterDemande(accepter, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @PutMapping("/valider/{userId}")
+    public ResponseEntity<DemandeResponse> validerDemande(@PathVariable("userId") String userId) {
+        try {
+            DemandeResponse response = service.validerDemande(userId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessResourceException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

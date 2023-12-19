@@ -1,5 +1,6 @@
 package sn.ucad.office.pjobac.modules.ville.dto;
 
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,10 @@ public class VilleResponse {
     private String libelleLong;
     private String libelleCourt;
     private Academie academie;
-    private Integer totalJury;
+    private int totalJury;
+    private int totalJuryAffecte;
+    private boolean quota;
+    private int totalDemandeAccepte;
+    private boolean quotaDemandeAccepte;
 
 }

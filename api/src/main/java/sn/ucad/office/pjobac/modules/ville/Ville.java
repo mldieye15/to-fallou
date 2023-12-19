@@ -28,8 +28,13 @@ public class Ville {
 
     @NotNull
     private String libelleCourt;
-    @NotNull
-    private Integer totalJury;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int totalJury=0;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int totalJuryAffecte=0;
+    private int totalDemandeAccepte=0;
+    private boolean quota=false;
+    private boolean quotaDemandeAccepte=false;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Academie academie;
