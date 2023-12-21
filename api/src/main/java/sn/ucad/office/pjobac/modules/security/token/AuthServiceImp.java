@@ -29,6 +29,7 @@ import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
 import sn.ucad.office.pjobac.utils.JwtProvider;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -142,12 +143,32 @@ public class AuthServiceImp implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
 
+        //  recuperation fullname et photo profile
+        Optional<AppUser> userBis = userService.userByUsername(request.getUsername());
+        String fullName = "";
+        String photo = "";
+        String initiale = "";
+        if(userBis.isPresent()){
+            fullName = userBis.get().getPrenoms()+" "+userBis.get().getNom().toUpperCase(Locale.ROOT);
+            photo = userBis.get().getProfileImageUrl();
+            initiale = userBis.get().getPrenoms().charAt(0)+""+userBis.get().getNom().charAt(0);
+        }
+        //
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
                 .username(request.getUsername())
+                .fullname(fullName)
+                .photo(photo)
+                .initiale(initiale)
                 .build();
+        /*return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
+                .username(request.getUsername())
+                .build();*/
         /* return new AuthenticationResponse(token, request.getUsername()); */
     }
 

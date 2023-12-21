@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from '@/plugins/axios.js'
 
-const  loginURL = '/auth/v1/connexion';
+const  loginURL = '/pjobac/api/auth/v1/connexion';
 
 export const useUserStore = defineStore('user', {
 
