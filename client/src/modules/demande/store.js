@@ -4,13 +4,15 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/demandes';
 const all = modulesURL+'/all';
+const allGroupedByUser = modulesURL+'/allGroupedByUser';
 const add = modulesURL+'/addAll';
 const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListe: [],
+    dataListeGroupedByUser: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     etatCouleurs: {
@@ -35,6 +37,7 @@ export const useDemandeStore = defineStore('demande', {
 
   getters: {
     getDataListe: (state) => state.dataListe,
+    getDataListeGroupedByUser: (state) => state.dataListeGroupedByUser,
     getEtatCouleurs: (state) => state.etatCouleurs,
   },
 
@@ -76,6 +79,57 @@ export const useDemandeStore = defineStore('demande', {
         this.error = error
       } finally {
         this.loading = false
+      }
+    },
+    async allGroupedByUser() {
+      try {
+        await axios.get(`${allGroupedByUser}`)
+          .then((response) => {
+            if (response.status === 200) {
+              let res = response.data;
+  
+              // Transformation du format de données
+              let formattedData = [];
+              for (const userId in res) {
+                if (res.hasOwnProperty(userId)) {
+                  const demandes = res[userId].map((element) => {
+                    let villeLabel = element.ville ? element.ville.libelleLong : null;
+                    let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
+                    let sessionLabel = element.session ? element.session.libelleLong : null;
+                    let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
+                    let nomLabel = element.user ? element.user.prenoms : null;
+                    let centreLabel = element.centre ? element.centre.libelleLong : null;
+                    let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
+  
+                    return {
+                      id: element.id,
+                      nom: element.nom,
+                      ville: villeLabel,
+                      academie: academieLabel,
+                      session: sessionLabel,
+                      etatDemande: etatLabel,
+                      user: nomLabel,
+                      centre: centreLabel,
+                      quotaDemandeAccepte: labelQuotaAccepte,
+                    };
+                  });
+  
+                  formattedData.push({
+                    userId: userId,
+                    demandes: demandes,
+                  });
+                }
+              }
+  
+              this.dataListeGroupedByUser = formattedData;
+              console.log(formattedData);
+            }
+          });
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     //  recupérer les informations d'une demande par son ide et le mettre dans la tabel dataDetails

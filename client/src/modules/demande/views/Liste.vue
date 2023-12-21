@@ -29,6 +29,7 @@
         buttons-pagination
         :search-value="searchValue"
       >
+     
         <template #item-etatDemande="item">
             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[item.etatDemande]" variant="tonal">
               <span >{{ item.etatDemande }}</span>
@@ -64,6 +65,7 @@
             </v-dialog>
           </div>
         </template>
+        {{ console.log(dataListeGroupedByUser) }}
       </EasyDataTable>
     </v-container>
     
@@ -86,8 +88,8 @@ const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
 const demandeStore = useDemandeStore();
-const { dataListe, headerTable, loading,etatCouleurs } = storeToRefs(demandeStore);
-const { all, destroy,validerDemande } = demandeStore;
+const { dataListeGroupedByUser, headerTable, loading,etatCouleurs,dataListe } = storeToRefs(demandeStore);
+const { all, destroy,validerDemande,allGroupedByUser } = demandeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });

@@ -95,7 +95,12 @@ const handleLogin = () => {
   if(instance.refs.loginForm.validate){
      login(userForm).then( () => {
       console.log("Debug 2: ",userForm);
-      router.push( { name: 'dashboard'});
+      const role = localStorage.getItem('username');
+      if (role === 'test2081') {
+        router.push({ name: 'accueil' });
+      } else {
+        router.push({ name: 'dashboard' });
+      }
       this.addNotification({
         show: true,
         text:  this.$i18n.t('welcome')+' '+this.user.username,

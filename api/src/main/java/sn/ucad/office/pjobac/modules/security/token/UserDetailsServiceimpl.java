@@ -28,7 +28,6 @@ public class UserDetailsServiceimpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("No user " +
                         "Found with username : " + username));
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user);
-        //log.info("Liste roles: {} ", authorities);
         return new User(user.getUsername(),
                 user.getMdpasse(),
                 user.isEnabled(), true, true,
@@ -38,14 +37,9 @@ public class UserDetailsServiceimpl implements UserDetailsService {
 
     private Collection<? extends GrantedAuthority> getAuthorities(AppUser user) {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(r -> {
-            authorities.add(new SimpleGrantedAuthority( r.getNom() ));
-        });
+        user.getRoles().forEach(r -> authorities.add(new SimpleGrantedAuthority( r.getNom() )));
 
         return authorities;
     }
-    /*private Collection<? extends GrantedAuthority> getAuthorities(String role) {
-        return singletonList(new SimpleGrantedAuthority(role));
-    }*/
 }
 

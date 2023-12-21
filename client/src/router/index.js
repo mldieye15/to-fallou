@@ -132,27 +132,27 @@ const routes = [
             name: 'accueil',
             component: () =>
                 import ( /* webpackChunkName: "dashboard" */ '@/views/user/Accueil.vue'),
-            // meta: {
-            //     middleware: [Middleware.auth]
-            // }
+            meta: {
+                middleware: [Middleware.auth]
+            }
         },
         {
           path: 'demande/:id',
           name: 'demande',
           component: () =>
               import ( /* webpackChunkName: "dashboard" */ '@/views/user/Demande.vue'),
-          // meta: {
-          //     middleware: [Middleware.auth]
-          // }
+          meta: {
+              middleware: [Middleware.auth]
+          }
       },
         {
           path: 'profile',
           name: 'profile',
           component: () =>
               import ( /* webpackChunkName: "profile" */ '@/views/auth/Profile.vue'),
-          // meta: {
-          //     middleware: [Middleware.auth]
-          // }
+          meta: {
+              middleware: [Middleware.auth]
+          }
         },
     ]
 },
