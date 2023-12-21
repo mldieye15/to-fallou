@@ -2,16 +2,24 @@ import { defineStore } from 'pinia'
 import axios from '@/plugins/axios.js'
 
 const  loginURL = '/pjobac/api/auth/v1/connexion';
+const  lougoutURL = '/pjobac/api/auth/v1/deconnexion';
+const  refreshtokenURL = '/pjobac/api/auth/v1/refresh-token';
 
 export const useUserStore = defineStore('user', {
 
   state: () => ({
     isLoggedIn: false,
-    userDetails: {
+    /*userDetails: {
       email: '',
       prenoms: '',
       nom: '',
       username: ''
+    },*/
+    user: {
+      username: '',
+      fullname: '',
+      photo: '',
+      initiale: ''
     },
     refreshToken:'',
     username:'',
@@ -24,8 +32,10 @@ export const useUserStore = defineStore('user', {
   getters: {
     getLoggedIn: (state) => state.isLoggedIn,
     getUerDetails: (state) => state.userDetails,
+    getUser: (state) => state.user,
     getRefreshToken: (state) => state.refreshToken,
     getUsername: (state) => state.username,
+    getError: (state) => state.error
   },
 
   actions: {
@@ -33,6 +43,7 @@ export const useUserStore = defineStore('user', {
     async login(payload){
       this.user = null;
       this.loading = true;
+      this.error = null
       console.log("Payload connexion", payload);
       console.log("loginURL", loginURL);
       try {
@@ -44,7 +55,12 @@ export const useUserStore = defineStore('user', {
             localStorage.setItem('token', response.data.authenticationToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             localStorage.setItem('username', response.data.username);
-            this.user = response.data;
+            this.user = {
+              username: response.data.username,
+              fullname: response.data.fullname,
+              photo: response.data.photo,
+              initiale: response.data.initiale
+            };
             console.log(this.user);
             this.changeLoggedIn(true);
             this.refreshToken = response.data.refreshToken;
@@ -64,6 +80,67 @@ export const useUserStore = defineStore('user', {
       }
     },
 
+    async logout(){
+      //this.user = null;
+      this.loading = true;
+      let refreshTokenLocal = localStorage.getItem('refreshToken');//(this.refreshToken == " ") ? localStorage.getItem('refreshToken') : this.refreshToken;
+      let usernameLocal = localStorage.getItem('username'); // this.username || localStorage.getItem('username');
+      const payload = {
+        refreshToken: refreshTokenLocal, //this.refreshToken,
+        username: usernameLocal //this.username
+      };
+      //console.log(payload);
+      try {
+        await axios.post(lougoutURL, payload).then((response) => {
+          if(response.status === 200){
+            /*this.changeLoggedIn(false);
+            localStorage.removeItem('refreshToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('token');
+            this.user = null;*/
+            this.resetCredentials();
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async refreshToken(){
+      //this.user = null;
+      this.loading = true;
+      const payload = {
+        refreshToken: this.refreshToken,
+        username: this.username
+      };
+      console.log(payload);
+      try {
+        await axios.post(refreshtokenURL, payload).then((response) => {
+          if(response.status === 200 && response.data.authenticationToken){
+            localStorage.setItem('token', response.data.authenticationToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+            localStorage.setItem('username', response.data.username);
+            this.user = {
+              username: response.data.username,
+              fullname: response.data.fullname,
+              photo: response.data.photo,
+              initiale: response.data.initiale
+            };
+            this.changeLoggedIn(true);
+            this.refreshToken = response.data.refreshToken;
+            this.username = response.data.username;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     //
     changeLoggedIn() {
       console.log("changeLoggedIn in user store");
@@ -72,6 +149,17 @@ export const useUserStore = defineStore('user', {
       } else{
         this.isLoggedIn = false;
       }
+    },
+
+    //  reset credentials
+    resetCredentials() {
+      this.changeLoggedIn(false);
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('username');
+      localStorage.removeItem('token');
+      this.user = null;
+      this.refreshToken = "";
+      this.username = "";
     }
   }
 })
