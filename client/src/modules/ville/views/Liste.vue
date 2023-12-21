@@ -49,7 +49,7 @@
       </template>
       <template #item-quotaDemandeAccepte="item">
           <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-                 :color="item.quota === 'OUI' ? 'green' : 'red'" text variant="tonal">
+                 :color="item.quotaDemandeAccepte === 'OUI' ? 'green' : 'red'" text variant="tonal">
               {{ item.quotaDemandeAccepte}}
           </v-chip>
       </template>
@@ -134,5 +134,8 @@ const del = (id) => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+.actions-wrapper {
+  width: 120px;
 }
 </style>

@@ -12,7 +12,7 @@
       <div v-for="(inputForm,index) in requests" :key="index">
        <v-chip color="green" class="mt-3 mb-2"><h3>Choix N°{{ index }}</h3></v-chip> 
       <v-text-field
-        :id="'session'+index"
+        :id="'session'+(index+1)"
         prepend-inner-icon="mdi-alpha-a-circle"
         :name="'session'+index"
         density="compact"

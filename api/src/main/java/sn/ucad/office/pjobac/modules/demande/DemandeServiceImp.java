@@ -23,10 +23,7 @@ import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,8 +50,15 @@ public class DemandeServiceImp implements DemandeService {
     }
 
     @Override
-    public List<DemandeResponse> allUsers() throws BusinessResourceException {
-        return null;
+    public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException {
+        log.info("DemandeServiceImp::allGroupedByUser");
+        List<Demande> all = dao.findAll();
+        Map<Long, List<DemandeResponse>> response;
+        response = all.stream()
+                .collect(Collectors.groupingBy(demande -> demande.getUser().getId(),
+                        Collectors.mapping(mapper::toEntiteResponse, Collectors.toList())));
+
+        return response;
     }
 
     @Override

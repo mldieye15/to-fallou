@@ -18,6 +18,7 @@ import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -44,7 +45,6 @@ public class DemandeResource {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
         }
     }
-
     @GetMapping("/all")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
@@ -52,7 +52,13 @@ public class DemandeResource {
         List<DemandeResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping("/allGroupedByUser")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<Long, List<DemandeResponse>>> allGroupedByUser() {
+        Map<Long, List<DemandeResponse>> response = service.allGroupedByUser();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<DemandeResponse>> one(@PathVariable(value = "id") String id) {
         Optional<DemandeResponse> response = service.oneById(id);

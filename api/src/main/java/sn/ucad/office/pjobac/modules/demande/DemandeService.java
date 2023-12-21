@@ -10,12 +10,13 @@ import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public interface DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException;
-    public List<DemandeResponse> allUsers() throws BusinessResourceException;
+    public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException;
     public List<DemandeResponse> getAllForUser(Long userId) throws BusinessResourceException ;
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;
 
