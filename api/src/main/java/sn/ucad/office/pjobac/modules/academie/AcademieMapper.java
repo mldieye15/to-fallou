@@ -16,19 +16,19 @@ import java.util.Date;
 @Mapper(componentModel = "spring")
 public interface AcademieMapper {
     // transform the entity to PJO class
-    AcademieResponse toEntiteResponse(Academie Academie);
+    AcademieResponse toEntiteResponse(Academie academie);
 
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")
     @Mapping(source = "modifName", target = "modificateur")
-    AcademieAudit toEntiteAudit(Academie Academie, Long auteurName, Long modifName);
+    AcademieAudit toEntiteAudit(Academie academie, Long auteurName, Long modifName);
 
     // request to entity academie
     Academie requestToEntity(AcademieRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
-    Academie requestToEntiteAdd(AcademieRequest AcademieRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
+    Academie requestToEntiteAdd(AcademieRequest academieRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")

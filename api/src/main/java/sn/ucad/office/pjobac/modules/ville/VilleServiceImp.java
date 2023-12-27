@@ -12,6 +12,10 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
+import sn.ucad.office.pjobac.modules.demande.Demande;
+import sn.ucad.office.pjobac.modules.security.token.AuthService;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleAudit;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
@@ -29,6 +33,8 @@ public class VilleServiceImp implements VilleService {
     private final VilleMapper mapper;
     private final VilleDao dao;
     private final AcademieDao academieDao;
+    private final AuthService authService;
+    private final UserDao userDao;
 
     @Override
     public List<VilleResponse> all() throws BusinessResourceException {
@@ -53,6 +59,24 @@ public class VilleServiceImp implements VilleService {
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
+    }
+
+    @Override
+    public List<VilleResponse> availableVillesForUserAndAcademy(String academieId) {
+        Long myId= Long.valueOf(academieId.trim());
+        Academie academie;
+        academie=academieDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + academieId));
+        AppUser currentUser = authService.getCurrentUser();
+        log.info("User: {}", currentUser.getUsername());
+        log.info("Academie: {}", academie.getLibelleLong());
+        List<Ville> villes=dao.availableVillesForUserAndAcademy(currentUser,academie);
+        List<VilleResponse> response;
+        response= villes.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        log.info("Result size: {}", response.size());
+        return  response;
     }
 
     @Override

@@ -36,33 +36,10 @@
             </v-chip>
         </template>
         <template #item-actions="item">
-          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE' && item.quotaDemandeAccepte==='NON'">
+          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE' && item.quotaDemandeAccepte==='NON' && item.hasAcceptedDemande==='NON'">
             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
               <router-link  :to="{ name: 'accepte-Demande', params: { id: item.id } }" > <v-icon small flat color="green">mdi-check</v-icon> Accepte</router-link>
             </v-chip>
-          </div>
-          <div v-if="item.etatDemande==='ACCEPTE'">
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
-              <template v-slot:activator="{ props }">
-                <v-chip :style="{ 'font-size': '15px', 'height': '25px' }" color="green" variant="tonal">
-                  <v-btn variant="text"  class="text" v-bind="props">
-                 valider
-                </v-btn>
-                </v-chip>
-              </template>
-              <template v-slot:default="{ isActive }">
-                <v-card>
-                  <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
-                  <v-card-text>
-                    <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
-                  </v-card-text>
-                  <v-card-actions class="justify-end">
-                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
-                    <v-btn variant="outlined" color="black"  @click="valider(item.id)">{{ $t('apps.forms.oui') }}</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </template>
-            </v-dialog>
           </div>
         </template>
         {{ console.log(dataListeGroupedByUser) }}

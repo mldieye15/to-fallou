@@ -145,6 +145,15 @@ const routes = [
               middleware: [Middleware.auth]
           }
       },
+      {
+        path: 'edit/:id',
+        name: 'edit',
+        component: () =>
+            import ( /* webpackChunkName: "dashboard" */ '@/views/user/Edit.vue'),
+        meta: {
+            middleware: [Middleware.auth]
+        }
+    },
         {
           path: 'profile',
           name: 'profile',

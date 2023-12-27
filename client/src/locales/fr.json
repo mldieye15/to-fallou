@@ -14,8 +14,8 @@
                 "monespace": "Mon espace",
                 "profile": "Mon profil",
                 "inscription": "S'inscrire",
-                "connexion": "Se déconnecter",
-                "deconnexion": "S'authentifier",
+                "deconnexion": "Se déconnecter",
+                "connexion": "S'authentifier",
                 "aide": "Aide"
             }
         },
@@ -79,6 +79,7 @@
             "enregistrer": "Enregister",
             "delteTitle": "Supression",
             "delteMessage": "Voulez-vous vraiment supprimer l'enregistremnet?",
+            "validerMessage": "Voulez-vous vraiment valider cette demande?",
             "addTitle": "Ajout",
             "modifTitle": "Modification",
             "oui": "Oui",

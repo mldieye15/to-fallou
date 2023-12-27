@@ -27,4 +27,5 @@ public interface EtatDemandeService {
 
     public Optional<EtatDemandeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     Optional<Long> findIdByLibelleLong(String libelleLong) throws BusinessResourceException;
+    Optional<EtatDemande> findByLibelleLong(String libelleLong) throws BusinessResourceException;
 }

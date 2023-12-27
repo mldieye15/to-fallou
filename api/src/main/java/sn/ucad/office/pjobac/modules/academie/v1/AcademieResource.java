@@ -32,7 +32,7 @@ public class AcademieResource {
             @SortDefault(sort = "libelleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<AcademieResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<AcademieResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -40,19 +40,26 @@ public class AcademieResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<AcademieResponse>> all(){
         List<AcademieResponse> response = service.all();
-        return new ResponseEntity< List<AcademieResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/availableAcademiesForUser")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<AcademieResponse>> availableAcademiesForUser(@RequestParam String demandeId){
+        List<AcademieResponse> response = service.availableAcademiesForUser(demandeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<AcademieResponse>> one(@PathVariable(value = "id") String id) {
         Optional<AcademieResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<AcademieResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<AcademieResponse> add(@RequestBody @Valid AcademieRequest request) {
         AcademieResponse response = service.add(request);
-        return new ResponseEntity<AcademieResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -60,14 +67,14 @@ public class AcademieResource {
     public ResponseEntity<AcademieResponse> maj(@PathVariable(value="id") String id,
                                                 @RequestBody @Valid AcademieRequest request) {
         AcademieResponse response = service.maj(request, id);
-        return new ResponseEntity<AcademieResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/libelle-availability")
     public ResponseEntity<Boolean> checkAcademieAvailability(@RequestParam String libelleLong) {

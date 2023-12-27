@@ -12,6 +12,12 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
 import sn.ucad.office.pjobac.modules.academie.dto.*;
+import sn.ucad.office.pjobac.modules.demande.Demande;
+import sn.ucad.office.pjobac.modules.demande.DemandeDao;
+import sn.ucad.office.pjobac.modules.security.token.AuthService;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.ville.Ville;
+import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -25,6 +31,8 @@ import java.util.stream.Collectors;
 public class AcademieServiceImp implements AcademieService {
     private final AcademieMapper mapper;
     private final AcademieDao dao;
+    private final AuthService authService;
+    private  final DemandeDao demandeDao;
 
     public List<AcademieVille> academieWithVille() throws BusinessResourceException {
         log.info("AcademieServiceImp::academieWithVille");
@@ -43,10 +51,24 @@ public class AcademieServiceImp implements AcademieService {
     }
 
     @Override
+    public List<AcademieResponse> availableAcademiesForUser( String demandeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(demandeId.trim());
+        Demande demande;
+        demande=demandeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + demandeId));
+        AppUser currentUser = authService.getCurrentUser();
+        List<Academie> academies=dao.availableAcademiesForUser(currentUser,demande);
+        List<AcademieResponse> response;
+        response= academies.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return  response;
+    }
+    @Override
     public SimplePage<AcademieResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Annees avec pagination. <all>");
         final Page<Academie> page = dao.findAll(pageable);
-        return new SimplePage<AcademieResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),

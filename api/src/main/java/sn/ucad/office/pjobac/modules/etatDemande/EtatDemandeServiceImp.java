@@ -14,6 +14,7 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.etatDemande.dto.EtatDemandeAudit;
 import sn.ucad.office.pjobac.modules.etatDemande.dto.EtatDemandeRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.dto.EtatDemandeResponse;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -159,6 +160,18 @@ public class EtatDemandeServiceImp implements EtatDemandeService {
                 () -> new BusinessResourceException("not-found", "Aucun EtatDemande avec " + libelleLong + " trouvé.", HttpStatus.NOT_FOUND)
         ));
         return etatDemande.map(EtatDemande::getId);
+    }
+
+    @Override
+    public Optional<EtatDemande> findByLibelleLong(String libelleLong) throws BusinessResourceException {
+        try {
+            Optional<EtatDemande> response = dao.findByLibelleLong(libelleLong);
+            log.info("EtatDemande avec libelleLong: " + libelleLong + " trouvé. <etatDemandeBy libelleLong>");
+            return response;
+        } catch (Exception ex) {
+            log.error("EtatDemande by libelleLong: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("not-found", "EtatDemande avec libelleLong: " + libelleLong + " non trouvé(e).", HttpStatus.NOT_FOUND);
+        }
     }
 
 

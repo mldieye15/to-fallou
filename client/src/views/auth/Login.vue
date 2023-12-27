@@ -61,17 +61,21 @@
 import { storeToRefs } from "pinia";
 import { ref, reactive, getCurrentInstance } from "vue";
 import { useRouter } from 'vue-router'
+import { useNotificationStore } from "@/store/notification";
 //  recupération des states et des actions définies dans la store
 import { useUserStore } from "@/store/user";
 import axios from '@/plugins/axios.js'
+import { useI18n } from "vue-i18n";
 
 //
 const instance = getCurrentInstance();
 const router = useRouter();
-
+const notificationStore = useNotificationStore();
+const { addNotification } = notificationStore;
 const userStore = useUserStore();
 const { isLoggedIn, userDetails, refreshToken, username, users, loading, error } = storeToRefs(userStore);
 const { login } = useUserStore();
+const i18n = useI18n();
 
 //  définition de quelques variables utilisées dans le formulaire
 const formValid = ref(false);
@@ -95,15 +99,16 @@ const handleLogin = () => {
   if(instance.refs.loginForm.validate){
      login(userForm).then( () => {
       console.log("Debug 2: ",userForm);
-      const role = localStorage.getItem('username');
-      if (role === 'test2081') {
+      const role = localStorage.getItem('role');
+      const name = localStorage.getItem('username');
+      if (role === 'ROLE_USER') {
         router.push({ name: 'accueil' });
       } else {
         router.push({ name: 'dashboard' });
       }
-      this.addNotification({
+      addNotification({
         show: true,
-        text:  this.$i18n.t('welcome')+' '+this.user.username,
+        text:  i18n.t('welcome')+' '+name,
         color: 'black'
       });
     });

@@ -15,4 +15,7 @@ public class AuthenticationResponse {
     private Instant expiresAt;
     private String username;
     private String role;
+    private String fullname;
+    private String photo;
+    private String initiale;
 }

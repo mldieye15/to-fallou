@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface AcademieService {
     public List<AcademieResponse> all() throws BusinessResourceException;
+    public List<AcademieResponse> availableAcademiesForUser(String demandeId) throws BusinessResourceException;
 
     public SimplePage<AcademieResponse> all(Pageable pageable) throws BusinessResourceException;
 

@@ -17,7 +17,8 @@ import java.util.Optional;
 public interface DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException;
     public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException;
-    public List<DemandeResponse> getAllForUser(Long userId) throws BusinessResourceException ;
+    List<DemandeResponse> allForUser() throws BusinessResourceException;
+
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<DemandeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
@@ -34,9 +35,9 @@ public interface DemandeService {
     public Optional<DemandeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     int countJuryAffecteByCentre(Long centreId);
     void updateCentreTotalJuryAffecte(Long centreId);
-//    int countJuryAffecteByVille(Long villeId);
     void updateVilleTotalJuryAffecte(Long villeId);
     void updateVilleTotalDemandeAccepte(Long villeId);
     public void demandeObseleteByVille(Long villeId)throws NumberFormatException, BusinessResourceException;
     public void rejeterDemande(Long villeId)throws NumberFormatException, BusinessResourceException;
+    boolean hasAcceptedDemande(String userId);
 }

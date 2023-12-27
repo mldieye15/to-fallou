@@ -1,7 +1,7 @@
 export default function guest( { next, router }  ) {
     if(localStorage.getItem('token')){
-        let role= localStorage.getItem('username');
-        if(role=='test2081'){
+        let role= localStorage.getItem('role');
+        if(role=='ROLE_USER'){
         return router.push( { name: 'accueil'}) ;
         
         }

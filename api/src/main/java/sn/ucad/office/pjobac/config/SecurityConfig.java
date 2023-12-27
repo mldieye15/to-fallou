@@ -94,7 +94,7 @@ public class  SecurityConfig {
                         "/pjobac/api/v1/academies/{id}",
                         "/pjobac/api/auth/v*/inscription",
                         "/pjobac/api/auth/v*/verif-token/**",
-                        "/pjobac/api/auth/v*/connexion",
+                        "/pjobac/api/auth/v1/connexion",
                         "/pjobac/api/auth/v*/refresh-token",
                         "/pjobac/api/auth/v*/deconnexion",
                         "/v*/api-docs",

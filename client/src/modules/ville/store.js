@@ -6,11 +6,13 @@ const  modulesURL = '/v1/villes';
 const  all = modulesURL+'/all';
 const add=modulesURL+'/';
 const villesByAcademie=modulesURL+'/by-academie'
+const availableVillesForUserAndAcademy= modulesURL+'/availableVillesForUserAndAcademy'
 
 export const useVilleStore = defineStore('ville', {
   state: () => ({
     dataListeVille: [],
-    dataListeByAcademie:[],  //  List des données à afficher pour la table
+    dataListeByAcademie:[], 
+    dataListeByAcademieAndUser:[], //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
     headerTable: [
@@ -29,6 +31,7 @@ export const useVilleStore = defineStore('ville', {
   getters: {
     getDataListeVille: (state) => state.dataListeVille,
     getDataListeByAcademie: (state) => state.dataListeByAcademie,
+    getDataListeByAcademieAndUser: (state) => state.dataListeByAcademieAndUser,
   },
 
   actions: {
@@ -87,6 +90,36 @@ export const useVilleStore = defineStore('ville', {
                 });
                 this.dataListeByAcademie = res;
                 console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademie);
+              }
+            });
+        } else {
+          console.error("La valeur de academie est invalide. La requête n'a pas été effectuée.");
+        }
+      } catch (error) {
+        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async availableVillesForUserAndAcademy(academie) {
+      try {
+        // Ajouter une vérification pour s'assurer que academie est un nombre non nul
+        if (typeof academie === 'number' && !isNaN(academie)) {
+          await axios.get(`${availableVillesForUserAndAcademy}/${academie}`)
+            .then((response) => {
+              if (response.status === 200) {
+                let res = response.data.map((element) => {
+                  let academieLabel = element.academie ? element.academie.libelleLong : null;
+                  return {
+                    id: element.id,
+                    libelleLong: element.libelleLong,
+                    libelleCourt: element.libelleCourt,
+                    academie: academieLabel
+                  };
+                });
+                this.dataListeByAcademieAndUser = res;
+                console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademieAndUser);
               }
             });
         } else {

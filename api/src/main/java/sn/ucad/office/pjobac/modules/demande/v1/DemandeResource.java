@@ -52,6 +52,13 @@ public class DemandeResource {
         List<DemandeResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allForUser")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeResponse>> allForUser(){
+        List<DemandeResponse> response = service.allForUser();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/allGroupedByUser")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
@@ -103,6 +110,11 @@ public class DemandeResource {
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/hasAcceptedDemande")
+    public ResponseEntity<Boolean> hasAcceptedDemande(@RequestParam String userId) {
+        boolean result = service.hasAcceptedDemande(userId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
 

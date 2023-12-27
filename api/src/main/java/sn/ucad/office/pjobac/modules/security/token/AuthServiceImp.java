@@ -7,7 +7,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.config.AppConstants;
@@ -20,6 +23,7 @@ import sn.ucad.office.pjobac.modules.security.refresh.dto.RefreshTokenRequest;
 import sn.ucad.office.pjobac.modules.security.role.RoleService;
 import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
+import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserMapper;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
@@ -29,6 +33,7 @@ import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
 import sn.ucad.office.pjobac.utils.JwtProvider;
 
 import java.time.Instant;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -120,17 +125,30 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public AppUser getCurrentUser() {
-        return null;
-        /*
-        User principal = (User) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal()
-                ;
-        return userService.userByUsername(principal.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + principal.getUsername() + " trouve."))
-                ;
-        * */
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return null;
+        }
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof User user) {
+            String username = user.getUsername();
+            return userService.userByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + username + " trouvé."));
+        } else {
+            // Le principal est probablement de type String (nom d'utilisateur) ou autre objet
+            String username = principal.toString();
+            return userService.userByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + username + " trouvé."));
+        }
+    }
+    @Override
+    public UserDetailsResponse getCurrentUserDetails() throws BusinessResourceException {
+        AppUser user = getCurrentUser();
+        return UserDetailsResponse.builder()
+                .userId(user.getId())  // Utilisez la méthode getId() ou le champ correspondant de votre classe AppUser
+                .username(user.getUsername())
+                .nom(user.getNom())
+                .build();
     }
 
     @Override
@@ -141,13 +159,39 @@ public class AuthServiceImp implements AuthService {
         ));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
+        String role;
+        role = authenticate.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("");
 
+        //  recuperation fullname et photo profile
+        Optional<AppUser> userBis = userService.userByUsername(request.getUsername());
+        String fullName = "";
+        String photo = "";
+        String initiale = "";
+        if(userBis.isPresent()){
+            fullName = userBis.get().getPrenoms()+" "+userBis.get().getNom().toUpperCase(Locale.ROOT);
+            photo = userBis.get().getProfileImageUrl();
+            initiale = userBis.get().getPrenoms().charAt(0)+""+userBis.get().getNom().charAt(0);
+        }
+        //
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
                 .username(request.getUsername())
+                .fullname(fullName)
+                .photo(photo)
+                .initiale(initiale)
+                .role(role)
                 .build();
+        /*return AuthenticationResponse.builder()
+                .authenticationToken(token)
+                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
+                .username(request.getUsername())
+                .build();*/
         /* return new AuthenticationResponse(token, request.getUsername()); */
     }
 
@@ -162,7 +206,6 @@ public class AuthServiceImp implements AuthService {
                 .username(refreshTokenRequest.getUsername())
                 .build();
     }
-
     @Override
     public void deleteRefreshToken(String token) throws BusinessResourceException {
         log.warn("Suppression token: {} <deleteRefreshToken>", token);

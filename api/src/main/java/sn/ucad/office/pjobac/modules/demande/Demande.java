@@ -45,7 +45,6 @@ public class Demande {
     private Integer ordre;
 //    @NotNull
     private Integer delaisDeValidation;
-
     protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;
     protected LocalDateTime dateConfirmationDeamnde;

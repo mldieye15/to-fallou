@@ -30,16 +30,17 @@
           <v-btn icon x-large v-bind="props">
             <v-avatar color="white" size="46" light >
               <!--<v-img alt="Logo" class="shrink logo" rounded lazy-src="" :src="imageUrl" transition="scale-transition" width="40"  />-->
-              <span black class="black--text text-h5">LD</span>
+              <span v-if="user != null" black class="black--text text-h5">{{ user.initiale }}</span>
             </v-avatar>
           </v-btn>
         </template>
+
         <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto text-center">
-              <h3>Lamine DIEYE</h3>
-              <p class="text-caption mt-1">
-                mldieye
+              <h3 v-if="user != null">{{ user.fullname }} </h3>
+              <p class="text-caption mt-1" v-if="user != null">
+                {{ user.username }}
               </p>
               <v-divider class="my-3"></v-divider>
               <router-link :to="{name:'profile'}" class="text">{{ $t('public.nav.top.profile') }}</router-link>
@@ -77,6 +78,12 @@ import SidebarItem from '@/components/core/SidebarItem.vue';
 import { ref, onMounted, reactive } from 'vue';
 import { storeToRefs } from "pinia";
 import { useAppStore } from "@/store/app";
+import { useUserStore } from '@/store/user';
+import { useRouter } from 'vue-router'
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
+const { logout } = userStore;
 
 
 const appStore = useAppStore();
@@ -85,6 +92,7 @@ const { listeModules, listeFonctionnalitesByModule } = useAppStore();
 
 const drawer = ref(true);
 const fonctionItems = reactive({ items: [] });
+const router = useRouter();
 
 defineProps({
   appName: String,
@@ -246,6 +254,14 @@ defineProps({
 //  deconnexion
 const handleLogout = () => {
   console.log("handleLogout clicked");
+  logout().then( () => {
+      router.push( { name: 'login'});
+      addNotification({
+        show: true,
+        text:  i18n.t('welcome')+' '+user.fullname,
+        color: 'black'
+      });
+    });
 }
 </script>
 

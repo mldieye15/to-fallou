@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Repository
 public interface DemandeDao extends JpaRepository<Demande, Long> {
+    List<Demande> findByUser(AppUser user);
     @Query("SELECT d FROM Demande d WHERE d.user.id = :userId")
     List<Demande> findAllByUserId(@Param("userId") Long userId);
 
@@ -25,6 +27,8 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     void demandeObselete(@Param("villeId") Long villeId, @Param("obseleteEtat") EtatDemande obseleteEtat, @Param("enAttenteEtat") EtatDemande enAttenteEtat);
     @Transactional
     @Modifying
-    @Query("UPDATE Demande d SET d.etatDemande = :rejeterEtat WHERE d.user.id = :userId AND d.etatDemande = :enAttente")
-    void rejeterDemande(@Param("userId") Long villeId, @Param("rejeterEtat") EtatDemande rejeterEtat, @Param("enAttente") EtatDemande enAttenteEtat);
+    @Query("UPDATE Demande d SET d.etatDemande = :rejeterEtat WHERE d.user.id = :userId AND d.etatDemande <> :valider")
+    void rejeterDemande(@Param("userId") Long villeId, @Param("rejeterEtat") EtatDemande rejeterEtat, @Param("valider") EtatDemande validerEtat);
+    @Query("SELECT COUNT(d) > 0 FROM Demande d WHERE d.user = :user AND d.etatDemande.libelleLong = 'ACCEPTE'")
+    boolean hasAcceptedDemande(@Param("user") AppUser user);
 }

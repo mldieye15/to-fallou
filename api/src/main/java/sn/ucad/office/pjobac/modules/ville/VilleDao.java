@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sn.ucad.office.pjobac.modules.academie.Academie;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 
 import java.util.List;
 
@@ -40,4 +41,6 @@ public interface VilleDao extends JpaRepository<Ville, Long> {
     @Modifying
     @Query("UPDATE Ville v SET v.quota = false WHERE v.id = :villeId")
     void updateVilleQuotaFalse(@Param("villeId") Long villeId);
+    @Query("SELECT v FROM Ville v WHERE v.academie = :academie AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie)AND v.quota = false")
+    List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academie") Academie academie);
 }

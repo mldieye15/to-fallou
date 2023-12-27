@@ -16,6 +16,7 @@ import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeMapper;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeService;
+import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.session.Session;
@@ -41,6 +42,7 @@ public class DemandeMapperUtil {
     private final SessionDao sessionDao;
     private final UserDao userDao;
     private  final CentreDao centreDao;
+    private  final AuthService authService;
 
     @Named("getVilleById")
     Ville getVilleById(String villeId) throws NumberFormatException {
@@ -123,6 +125,5 @@ public class DemandeMapperUtil {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + sessionId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
-
 }
 

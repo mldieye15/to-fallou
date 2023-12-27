@@ -40,6 +40,13 @@ public class VilleResource {
         List<VilleResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/availableVillesForUserAndAcademy/{academieId}")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<VilleResponse>> availableVillesForUserAndAcademy(@PathVariable String academieId){
+        List<VilleResponse> response = service.availableVillesForUserAndAcademy(academieId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/by-academie/{idAcademie}")
     public ResponseEntity<List<VilleResponse>> getVillesByAcademie(@PathVariable String idAcademie) {
         List<VilleResponse> response = service.getVilleByAcademie(idAcademie);

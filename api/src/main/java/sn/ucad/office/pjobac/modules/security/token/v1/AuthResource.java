@@ -9,6 +9,7 @@ import sn.ucad.office.pjobac.modules.security.refresh.dto.RefreshTokenRequest;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
+import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
 import sn.ucad.office.pjobac.modules.security.user.dto.RoleToUserRequest;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
@@ -23,25 +24,25 @@ public class AuthResource {
     @PostMapping("/inscription")
     public ResponseEntity<UserResponse> addV1(@RequestBody @Valid UserRequest request) {
         UserResponse response = service.inscrire(request);
-        return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/verif-token/{token}")
     public ResponseEntity<String> verifToken(@PathVariable String token) {
         service.verifToken(token);
-        return new ResponseEntity<String>("Activation compte effectué avec succés.", HttpStatus.OK);
+        return new ResponseEntity<>("Activation compte effectué avec succés.", HttpStatus.OK);
     }
 
     @PostMapping(value = "/connexion")
     public ResponseEntity<AuthenticationResponse>  login(@RequestBody @Valid LoginRequest loginRequest) {
         AuthenticationResponse result = service.login(loginRequest);
-        return new ResponseEntity<AuthenticationResponse>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/refresh-token")
     public ResponseEntity<AuthenticationResponse>  refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         AuthenticationResponse result = service.refreshToken(refreshTokenRequest);
-        return new ResponseEntity<AuthenticationResponse>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping(value = "/deconnexion")
@@ -55,6 +56,11 @@ public class AuthResource {
     public ResponseEntity<?> addRoleToUser(@RequestBody @Valid RoleToUserRequest request) {
         service.addRoleToUser(request);
         return ResponseEntity.ok().build();//.body(request.getRole()+" affected to "+request.getUsername());
+    }
+    @GetMapping("/current")
+    public ResponseEntity<UserDetailsResponse> getCurrentUserDetails() {
+        UserDetailsResponse userDetailsResponse = service.getCurrentUserDetails();
+        return ResponseEntity.ok(userDetailsResponse );
     }
 }
 

@@ -8,13 +8,17 @@ const allGroupedByUser = modulesURL+'/allGroupedByUser';
 const add = modulesURL+'/addAll';
 const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
+const allForUser=modulesURL+'/allForUser';
+const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
     dataListe: [],
-    dataListeGroupedByUser: [],  //  List des données à afficher pour la table
+    dataListeGroupedByUser: [],
+    dataListeForUser: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
-    loading: true,  //  utilisé pour le chargement
+    loading: true,
+    hasAcceptedDemande: false,  //  utilisé pour le chargement
     etatCouleurs: {
       'ACCEPTE': 'orange',
       'EN ATTENTE': 'grey',
@@ -30,6 +34,7 @@ export const useDemandeStore = defineStore('demande', {
       { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Centre d/ecrit', value: 'centre', align: 'start', sortable: true },
       { text: 'Quota', value: 'quotaDemandeAccepte', align: 'start', sortable: true },
+      { text: 'UserId', value: 'UserId', align: 'start', sortable: true },
       { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -38,14 +43,55 @@ export const useDemandeStore = defineStore('demande', {
   getters: {
     getDataListe: (state) => state.dataListe,
     getDataListeGroupedByUser: (state) => state.dataListeGroupedByUser,
+    getDataListeForUser: (state) => state.dataListeForUser,
     getEtatCouleurs: (state) => state.etatCouleurs,
+    getHasAcceptedDemande: (state) => state.hasAcceptedDemande,
   },
 
   actions: {
     //  recupérer la liste des demandes et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(`${all}`) 
+        const response = await axios.get(`${all}`);
+        if (response.status === 200) {
+          let res = await Promise.all(response.data.map(async (element) => {
+            let villeLabel = element.ville ? element.ville.libelleLong : null;
+            let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
+            let sessionLabel = element.session ? element.session.libelleLong : null;
+            let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
+            let nomLabel = element.user ? element.user.prenoms : null;
+            let idLabel = element.user ? element.user.id : null;
+            let centreLabel = element.centre ? element.centre.libelleLong : null;
+            let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
+            let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
+    
+            return {
+              id: element.id,
+              ville: villeLabel,
+              academie: academieLabel,
+              session: sessionLabel,
+              etatDemande: etatLabel,
+              user: nomLabel,
+              centre: centreLabel,
+              quotaDemandeAccepte: labelQuotaAccepte,
+              userId: idLabel,
+              hasAcceptedDemande: hasAccepted,
+            };
+          }));
+    
+          this.dataListe = res;
+          console.log(this.dataListe);
+        }
+      } catch (error) {
+        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async allForUser() {
+      try {
+        await axios.get(`${allForUser}`) 
         .then((response) => {
           if(response.status === 200){
 
@@ -56,22 +102,18 @@ export const useDemandeStore = defineStore('demande', {
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
-              let labelQuotaAccepte=element.ville.quotaDemandeAccepte?'OUI' : 'NON';
               return{
                 id:element.id, 
-                nom: element.nom,
                 ville: villeLabel,
                 academie:academieLabel,
                 session:sessionLabel,
                 etatDemande:etatLabel,
                 user:nomLabel,
                 centre:centreLabel,
-                quotaDemandeAccepte:labelQuotaAccepte,
               }
-              
             })
-
-            this.dataListe = res;
+            this.dataListeForUser = res;
+            console.log( "DatalisteForUser",this.dataListeForUser)
           } 
         })
       } catch (error) {
@@ -81,57 +123,59 @@ export const useDemandeStore = defineStore('demande', {
         this.loading = false
       }
     },
-    async allGroupedByUser() {
-      try {
-        await axios.get(`${allGroupedByUser}`)
-          .then((response) => {
-            if (response.status === 200) {
-              let res = response.data;
+    // async allGroupedByUser() {
+    //   try {
+    //     await axios.get(`${allGroupedByUser}`)
+    //       .then((response) => {
+    //         if (response.status === 200) {
+    //           let res = response.data;
   
-              // Transformation du format de données
-              let formattedData = [];
-              for (const userId in res) {
-                if (res.hasOwnProperty(userId)) {
-                  const demandes = res[userId].map((element) => {
-                    let villeLabel = element.ville ? element.ville.libelleLong : null;
-                    let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
-                    let sessionLabel = element.session ? element.session.libelleLong : null;
-                    let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
-                    let nomLabel = element.user ? element.user.prenoms : null;
-                    let centreLabel = element.centre ? element.centre.libelleLong : null;
-                    let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
+    //           // Transformation du format de données
+    //           let formattedData = [];
+    //           for (const userId in res) {
+    //             if (res.hasOwnProperty(userId)) {
+    //               const demandes = res[userId].map((element) => {
+    //                 let villeLabel = element.ville ? element.ville.libelleLong : null;
+    //                 let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
+    //                 let sessionLabel = element.session ? element.session.libelleLong : null;
+    //                 let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
+    //                 let nomLabel = element.user ? element.user.prenoms : null;
+    //                 let idLabel = element.user ? element.user.id : null;
+    //                 let centreLabel = element.centre ? element.centre.libelleLong : null;
+    //                 let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
   
-                    return {
-                      id: element.id,
-                      nom: element.nom,
-                      ville: villeLabel,
-                      academie: academieLabel,
-                      session: sessionLabel,
-                      etatDemande: etatLabel,
-                      user: nomLabel,
-                      centre: centreLabel,
-                      quotaDemandeAccepte: labelQuotaAccepte,
-                    };
-                  });
+    //                 return {
+    //                   id: element.id,
+    //                   nom: element.nom,
+    //                   ville: villeLabel,
+    //                   academie: academieLabel,
+    //                   session: sessionLabel,
+    //                   etatDemande: etatLabel,
+    //                   user: nomLabel,
+    //                   centre: centreLabel,
+    //                   quotaDemandeAccepte: labelQuotaAccepte,
+    //                   userId:idLabel,
+    //                 };
+    //               });
   
-                  formattedData.push({
-                    userId: userId,
-                    demandes: demandes,
-                  });
-                }
-              }
+    //               formattedData.push({
+    //                 userId: userId,
+    //                 demandes: demandes,
+    //               });
+    //             }
+    //           }
   
-              this.dataListeGroupedByUser = formattedData;
-              console.log(formattedData);
-            }
-          });
-      } catch (error) {
-        console.error(error);
-        this.error = error;
-      } finally {
-        this.loading = false;
-      }
-    },
+    //           this.dataListeGroupedByUser = formattedData;
+    //           console.log(formattedData);
+    //         }
+    //       });
+    //   } catch (error) {
+    //     console.error(error);
+    //     this.error = error;
+    //   } finally {
+    //     this.loading = false;
+    //   }
+    // },
     //  recupérer les informations d'une demande par son ide et le mettre dans la tabel dataDetails
     async one(demande) {
       try {
@@ -237,6 +281,23 @@ export const useDemandeStore = defineStore('demande', {
       console.log(`Couleur choisie : ${couleur}`);
       return couleur;
     },
+    async hasAcceptedDemande(userId) {
+      this.loading = true;
+      try {
+        const response = await axios.get(`${hasAcceptedDemande}?userId=${userId}`);
+        if (response.status === 200) {
+          console.log(response.data);
+          return response.data === true; // Retourne true si la réponse est true, sinon retourne false
+        }
+      } catch (error) {
+        console.error(error);
+        this.setError(error.message);
+        return false; // En cas d'erreur, retourne false
+      } finally {
+        this.loading = false;
+      }
+    }
+    
   },
   
 })

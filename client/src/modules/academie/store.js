@@ -5,11 +5,13 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/academies';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
+const availableAcademiesForUser= modulesURL+'/availableAcademiesForUser'
 const libelleAvailability = modulesURL +'/libelle-availability';
 
 export const useAcademieStore = defineStore('academie', {
   state: () => ({
-    dataListe: [],  //  List des données à afficher pour la table
+    dataListe: [],
+    dataListeForUser: [],   //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,
     isAvailable: false,  //  utilisé pour le chargement
@@ -33,7 +35,8 @@ export const useAcademieStore = defineStore('academie', {
   }),
 
   getters: {
-    getDataListe: (state) => state.dataListe
+    getDataListe: (state) => state.dataListe,
+    getDataListeForUser: (state) => state.dataListeForUser
   },
 
   actions: {
@@ -45,6 +48,22 @@ export const useAcademieStore = defineStore('academie', {
           if(response.status === 200){
             console.log(response.data);
             this.dataListe = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async availableAcademiesForUser(demande) {
+      try {
+        await axios.get(`${availableAcademiesForUser}?demandeId=${demande}`)
+        .then((response) => {
+          if(response.status === 200){
+            console.log(response.data);
+            this.dataListeForUser = response.data;
           }
         })
       } catch (error) {

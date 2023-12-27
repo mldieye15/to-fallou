@@ -31,8 +31,9 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     public List<DetailsCandidatResponse> all() throws BusinessResourceException {
         log.info("AcademieServiceImp::all");
         List<DetailsCandidat> all = dao.findAll();
-        List<DetailsCandidatResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<DetailsCandidatResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -41,9 +42,9 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     public SimplePage<DetailsCandidatResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Annees avec pagination. <all>");
         final Page<DetailsCandidat> page = dao.findAll(pageable);
-        return new SimplePage<DetailsCandidatResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -58,7 +59,8 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<DetailsCandidatResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<DetailsCandidatResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -139,7 +141,8 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                             () -> new BusinessResourceException("not-found", "Aucune Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Academie avec id: " + id + " trouvé. <auditOneById>");
-           Optional<DetailsCandidatAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<DetailsCandidatAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
