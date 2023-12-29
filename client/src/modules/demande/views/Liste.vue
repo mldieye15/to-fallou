@@ -36,7 +36,7 @@
             </v-chip>
         </template>
         <template #item-actions="item">
-          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE' && item.quotaDemandeAccepte==='NON' && item.hasAcceptedDemande==='NON'">
+          <div class="actions-wrapper" v-if="item.etatDemande==='EN ATTENTE' && item.quota==='OUI' && item.hasAcceptedDemande==='NON'">
             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
               <router-link  :to="{ name: 'accepte-Demande', params: { id: item.id } }" > <v-icon small flat color="green">mdi-check</v-icon> Accepte</router-link>
             </v-chip>

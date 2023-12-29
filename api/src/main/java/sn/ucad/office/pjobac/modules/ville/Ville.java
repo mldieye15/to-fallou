@@ -32,10 +32,7 @@ public class Ville {
     private int totalJury=0;
     @Column(columnDefinition = "INT DEFAULT 0")
     private int totalJuryAffecte=0;
-    private int totalDemandeAccepte=0;
     private boolean quota=false;
-    private boolean quotaDemandeAccepte=false;
-
     @ManyToOne(fetch = FetchType.EAGER)
     private Academie academie;
 

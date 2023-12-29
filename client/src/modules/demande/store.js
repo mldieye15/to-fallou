@@ -10,6 +10,7 @@ const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
 const allForUser=modulesURL+'/allForUser';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
+const quotaAccepte=modulesURL+'/quotaAccepte';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
@@ -33,8 +34,6 @@ export const useDemandeStore = defineStore('demande', {
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Centre d/ecrit', value: 'centre', align: 'start', sortable: true },
-      { text: 'Quota', value: 'quotaDemandeAccepte', align: 'start', sortable: true },
-      { text: 'UserId', value: 'UserId', align: 'start', sortable: true },
       { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -61,9 +60,10 @@ export const useDemandeStore = defineStore('demande', {
             let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
             let nomLabel = element.user ? element.user.prenoms : null;
             let idLabel = element.user ? element.user.id : null;
+            let idLabelVille = element.ville ? element.ville.id : null;
             let centreLabel = element.centre ? element.centre.libelleLong : null;
-            let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
             let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
+            let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
     
             return {
               id: element.id,
@@ -73,9 +73,10 @@ export const useDemandeStore = defineStore('demande', {
               etatDemande: etatLabel,
               user: nomLabel,
               centre: centreLabel,
-              quotaDemandeAccepte: labelQuotaAccepte,
               userId: idLabel,
+              villeId:idLabelVille,
               hasAcceptedDemande: hasAccepted,
+              quota: quotaAccept,
             };
           }));
     
@@ -282,7 +283,6 @@ export const useDemandeStore = defineStore('demande', {
       return couleur;
     },
     async hasAcceptedDemande(userId) {
-      this.loading = true;
       try {
         const response = await axios.get(`${hasAcceptedDemande}?userId=${userId}`);
         if (response.status === 200) {
@@ -296,8 +296,22 @@ export const useDemandeStore = defineStore('demande', {
       } finally {
         this.loading = false;
       }
-    }
-    
+    },
+    async quotaAccepteVille(villeId) {
+      try {
+        const response = await axios.get(`${quotaAccepte}?villeId=${villeId}`);
+        if (response.status === 200) {
+          console.log(response.data);
+          return response.data === true; // Retourne true si la réponse est true, sinon retourne false
+        }
+      } catch (error) {
+        console.error(error);
+        this.setError(error.message);
+        return false; // En cas d'erreur, retourne false
+      } finally {
+        this.loading = false;
+      }
+    } 
   },
   
 })

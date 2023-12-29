@@ -85,9 +85,6 @@ public class JuryServiceImp implements JuryService {
             JuryResponse response = mapper.toEntiteResponse(dao.save(one));
             updateCentreTotalJury(one.getCentre().getId());
             updateVilleTotalJury(one.getCentre().getVille().getId());
-            centreDao.updateCentreQuotaFalse(one.getCentre().getId());
-            villeDao.updateVilleQuotaDemandeAccepteFalse(one.getCentre().getVille().getId());
-            villeDao.updateVilleQuotaFalse(one.getCentre().getVille().getId());
             log.info("Ajout " + response.getNumero() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -137,32 +134,6 @@ public class JuryServiceImp implements JuryService {
             dao.deleteById(myId);
             updateCentreTotalJury(oneBrute.getCentre().getId());
             updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
-            Integer nombreJury= oneBrute.getCentre().getNombreJury();
-            Integer nombreJuryAffecte=oneBrute.getCentre().getNombreJuryAffecte();
-            Integer totalJury=oneBrute.getCentre().getVille().getTotalJury();
-            Integer totalJuryAffecte=oneBrute.getCentre().getVille().getTotalJuryAffecte();
-            Integer totalDemandeAccepte=oneBrute.getCentre().getVille().getTotalDemandeAccepte();
-            if (nombreJury != null && nombreJuryAffecte != null) {
-                int quota = nombreJury - nombreJuryAffecte -1;
-                log.info("Calcul du quota: {}", quota);
-                if (quota == 0) {
-                    centreDao.updateCentreQuota(oneBrute.getCentre().getId());
-                }
-            }
-            if (totalJury != null && totalJuryAffecte != null ) {
-                int quotaVille = totalJury - totalJuryAffecte -1;
-                log.info("Calcule du quotaVille: {}", quotaVille);
-                if (quotaVille == 0) {
-                    villeDao.updateVilleQuotaTrue(oneBrute.getCentre().getVille().getId());
-                }
-            }
-            if (totalJury != null && totalDemandeAccepte!= null ) {
-                int quotaAccepte = totalJury - totalDemandeAccepte -1;
-                log.info("Calcule du quotaAccepte: {}", quotaAccepte);
-                if (quotaAccepte == 0) {
-                    villeDao.updateVilleQuotaDemandeAccepteTrue(oneBrute.getCentre().getVille().getId());
-                }
-            }
             log.info("Jury avec id & numero: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
             String response;
             response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";

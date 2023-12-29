@@ -21,24 +21,14 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     @Modifying
     @Query("UPDATE Centre c SET c.nombreJury = :totalJury WHERE c.id = :centreId")
     void updateTotalJury(@Param("centreId") Long centreId, @Param("totalJury") int totalJury);
-    @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre.id = :centreId")
-    int totalJuryAffecteByCentre(@Param("centreId") Long centreId);
-    @Modifying
-    @Query("UPDATE Centre c SET c.nombreJuryAffecte = :nombreJuryAffecte WHERE c.id = :centreId")
-    void updateTotalJuryAffecte(@Param("centreId") Long centreId, @Param("nombreJuryAffecte") int nombreJuryAffecte);
     @Query("SELECT c FROM Centre c " +
             "WHERE c.ville = :ville " +
             "AND NOT EXISTS (SELECT d FROM Demande d WHERE d.centre = c)")
     List<Centre> findCentresSansDemandeParVille(@Param("ville") Ville ville);
     @Query("SELECT c FROM Centre c " +
             "WHERE c.ville = :ville " +
-            "AND c.quota = false")
+            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong = 'ACCEPTE')")
     List<Centre> findCentresQuotaNonAtteintParVille(@Param("ville") Ville ville);
-    @Modifying
-    @Query("UPDATE Centre c SET c.quota = true WHERE c.id = :centreId")
-    void updateCentreQuota(@Param("centreId") Long centreId);
-    @Modifying
-    @Query("UPDATE Centre c SET c.quota = false WHERE c.id = :centreId")
-    void updateCentreQuotaFalse(@Param("centreId") Long centreId);
+
 }
 

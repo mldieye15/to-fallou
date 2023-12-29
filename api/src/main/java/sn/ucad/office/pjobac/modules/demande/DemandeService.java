@@ -33,11 +33,9 @@ public interface DemandeService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<DemandeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
-    int countJuryAffecteByCentre(Long centreId);
-    void updateCentreTotalJuryAffecte(Long centreId);
-    void updateVilleTotalJuryAffecte(Long villeId);
-    void updateVilleTotalDemandeAccepte(Long villeId);
+    int totalJuryAffecteByVille(String villeId)throws NumberFormatException, BusinessResourceException;
     public void demandeObseleteByVille(Long villeId)throws NumberFormatException, BusinessResourceException;
     public void rejeterDemande(Long villeId)throws NumberFormatException, BusinessResourceException;
     boolean hasAcceptedDemande(String userId);
+    boolean quotaAccepteByVille(String villeId);
 }

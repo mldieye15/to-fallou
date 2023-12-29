@@ -47,18 +47,6 @@
               {{ item.totalJury}}
           </v-chip>
       </template>
-      <template #item-quotaDemandeAccepte="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-                 :color="item.quotaDemandeAccepte === 'OUI' ? 'green' : 'red'" text variant="tonal">
-              {{ item.quotaDemandeAccepte}}
-          </v-chip>
-      </template>
-      <template #item-totalDemandeAccepte="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-                 color="orange" text variant="standard">
-              {{ item.totalDemandeAccepte}}
-          </v-chip>
-      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'ville-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>

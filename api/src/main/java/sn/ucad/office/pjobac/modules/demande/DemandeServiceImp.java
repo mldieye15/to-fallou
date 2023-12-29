@@ -23,6 +23,7 @@ import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
+import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
@@ -231,53 +232,21 @@ public class DemandeServiceImp implements DemandeService {
 
     }
     @Override
-    @Transactional(readOnly = false)
-    public int countJuryAffecteByCentre(Long centreId) {
-        return centreDao.totalJuryAffecteByCentre(centreId);
+    public int totalJuryAffecteByVille(String villeId) throws NumberFormatException, BusinessResourceException {
+        Long myId = Long.valueOf(villeId.trim());
+        Ville ville = villeDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
+                );
+        log.info("Ville avec id: " + villeId + " trouvé. <auditOneById>");
+        return villeDao.totalJuryAffecteByVille(ville);
     }
-    @Override
-    @Transactional(readOnly = false)
-    public void updateCentreTotalJuryAffecte(Long centreId) {
-       int totalJuryAffecte =centreDao.totalJuryAffecteByCentre(centreId);
-       centreDao.updateTotalJuryAffecte(centreId,totalJuryAffecte);
-
-    }
-//    @Override
-//    @Transactional(readOnly = false)
-//    public int countJuryAffecteByVille(Long villeId) {
-//        return villeDao.totalJuryAffecteByVille(villeId);
-//    }
-    @Override
-    @Transactional(readOnly = false)
-    public void updateVilleTotalJuryAffecte(Long villeId) {
-        EtatDemande etatvalide = service.findIdByLibelleLong("VALIDE")
-                .map(id->{
-                    EtatDemande etatDemande = new EtatDemande();
-                    etatDemande.setId(id);
-                    return etatDemande;
-                })
-                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé Valide trouvée.", HttpStatus.NOT_FOUND));
-        Long myId= etatvalide.getId();
-      int  totalJuryAffecte=villeDao.totalJuryAffecteByVille(villeId,myId);
-      villeDao.updateTotalJuryAffecte(villeId,totalJuryAffecte);
-
-
-    }
-    @Override
-    @Transactional(readOnly = false)
-    public void updateVilleTotalDemandeAccepte(Long villeId) {
-        int totalDemandeAccepte=villeDao.getTotalDemandeAccepteByVilleId(villeId);
-        villeDao.updateDemandeAccepte(villeId,totalDemandeAccepte);
-
-    }
-
     @Override
     public void demandeObseleteByVille(Long villeId) throws NumberFormatException, BusinessResourceException {
         Optional<EtatDemande> optionalObselete = service.findByLibelleLong("OBSOLETE");
         EtatDemande etatObsolete = optionalObselete.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
         Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
         EtatDemande etatEnAttente = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
-
         dao.demandeObselete(villeId, etatObsolete, etatEnAttente);
     }
     @Override
@@ -288,7 +257,6 @@ public class DemandeServiceImp implements DemandeService {
         EtatDemande rejeteEtat = optionalRejeter.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
         dao.rejeterDemande(userId, rejeteEtat ,valider);
     }
-
     @Override
     public boolean hasAcceptedDemande(String userId) {
         Long myId = Long.valueOf(userId.trim());
@@ -312,29 +280,8 @@ public class DemandeServiceImp implements DemandeService {
             oneBrute.setEtatDemande(etatAccepter);
 
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-
-            updateCentreTotalJuryAffecte(oneBrute.getCentre().getId());
-            updateVilleTotalDemandeAccepte(oneBrute.getCentre().getVille().getId());
-            Integer nombreJury= oneBrute.getCentre().getNombreJury();
-            Integer nombreJuryAffecte=oneBrute.getCentre().getNombreJuryAffecte();
-            Integer totalJury=oneBrute.getCentre().getVille().getTotalJury();
-            Integer totalDemandeAccepte=oneBrute.getCentre().getVille().getTotalDemandeAccepte();
-            if (nombreJury != null && nombreJuryAffecte != null) {
-                int quota = nombreJury - nombreJuryAffecte -1;
-                log.info("Calcule du quota: {}", quota);
-                if (quota == 0) {
-                   centreDao.updateCentreQuota(oneBrute.getCentre().getId());
-                }
-            }
-            if (totalJury != null && totalDemandeAccepte != null) {
-                int quotaAccepte = totalJury - totalDemandeAccepte -1;
-                log.info("Calcule du quotaAccepte: {}", quotaAccepte);
-                if (quotaAccepte == 0) {
-                   villeDao.updateVilleQuotaDemandeAccepteTrue(oneBrute.getCentre().getVille().getId());
-                }
-            }
             NotificationEmail notificationEmail= new NotificationEmail();
-            notificationEmail.setSubject("code d'inscription");
+            notificationEmail.setSubject("Mail d'acceptation");
             notificationEmail.setRecipient(oneBrute.getUser().getEmail());
             notificationEmail.setBody("Votre demande a ete accepté au centre d' écrit du "
                     + oneBrute.getCentre().getLibelleLong()
@@ -365,20 +312,17 @@ public class DemandeServiceImp implements DemandeService {
             demandeOptional.setEtatDemande(etatValide);
 
             DemandeResponse response = mapper.toEntiteResponse(dao.save(demandeOptional));
-            updateVilleTotalJuryAffecte(demandeOptional.getVille().getId());
             rejeterDemande(demandeOptional.getUser().getId());
-            Integer totalJuryAffecte=demandeOptional.getVille().getTotalJuryAffecte();
-            Integer totalJury=demandeOptional.getVille().getTotalJury();
-            if (totalJury != null && totalJuryAffecte != null) {
-                int quota = totalJury - totalJuryAffecte -1;
+            int totalJuryAffecte=villeDao.totalJuryAffecteByVille(demandeOptional.getVille());
+            int totalJury=demandeOptional.getVille().getTotalJury();
+                int quota = totalJury - totalJuryAffecte ;
                 log.info("Calcule du quota: {}", quota);
                 if (quota == 0) {
-                    villeDao.updateVilleQuotaTrue(demandeOptional.getVille().getId());
                     demandeObseleteByVille(demandeOptional.getVille().getId());
                 }
-            }
+
             NotificationEmail notificationEmail= new NotificationEmail();
-            notificationEmail.setSubject("code d'inscription");
+            notificationEmail.setSubject("Mail d'acceptation");
             notificationEmail.setRecipient(demandeOptional.getUser().getEmail());
             notificationEmail.setBody("Bravo vous etes president d'un jury dans le centre d' écrit du "
                     + demandeOptional.getCentre().getLibelleLong()
@@ -395,4 +339,25 @@ public class DemandeServiceImp implements DemandeService {
             throw new BusinessResourceException("technical-error", "Erreur technique de validation d'une Demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @Override
+    public boolean quotaAccepteByVille(String villeId) {
+        try {
+            Long myId = Long.valueOf(villeId.trim());
+            Ville ville = villeDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Ville avec id: " + villeId + " trouvé. <auditOneById>");
+            int accepte= villeDao.totalDemandeAccepteByVille(ville);
+            int totalJury= ville.getTotalJury();
+            log.info("totalJury: " + totalJury + " trouvé. <auditOneById>");
+            log.info("TotalAccepte: " + accepte + " trouvé. <auditOneById>");
+            return accepte < totalJury;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " +villeId+ " non autorisé. <auditOneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
 }

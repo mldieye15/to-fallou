@@ -19,7 +19,5 @@ public class VilleResponse {
     private int totalJury;
     private int totalJuryAffecte;
     private boolean quota;
-    private int totalDemandeAccepte;
-    private boolean quotaDemandeAccepte;
 
 }

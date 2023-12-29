@@ -21,8 +21,6 @@ export const useVilleStore = defineStore('ville', {
       { text: 'Nombre de Jury', value: 'totalJury', align: 'start', sortable: true },
       { text: 'Jury Affecte', value: 'totalJuryAffecte', align: 'start', sortable: true },
       { text: 'Quota atteint', value: 'quota', align: 'start', sortable: true },
-      { text: 'Nbr demande Accepter ', value: 'totalDemandeAccepte', align: 'start', sortable: true },
-      { text: 'Quota accpepte', value: 'quotaDemandeAccepte', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -45,18 +43,15 @@ export const useVilleStore = defineStore('ville', {
             let academieLabel=element.academie?element.academie.libelleLong:null;
             let academieIdLabel = element.academie?element.academie.id:null;
             let quotaLabel = element.quota ? 'OUI' : 'NON';
-            let quotaAccepte = element.quotaDemandeAccepte ? 'OUI' : 'NON';
             return{
               id: element.id,
             libelleLong: element.libelleLong,
             libelleCourt: element.libelleCourt,
             totalJury: element.totalJury,
             totalJuryAffecte: element.totalJuryAffecte,
-            totalDemandeAccepte: element.totalDemandeAccepte,
             academie: academieLabel,
             academieId:academieIdLabel,
             quota: quotaLabel,
-            quotaDemandeAccepte:quotaAccepte,
 
             };
             

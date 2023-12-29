@@ -18,9 +18,6 @@ import java.util.Optional;
 @Repository
 public interface DemandeDao extends JpaRepository<Demande, Long> {
     List<Demande> findByUser(AppUser user);
-    @Query("SELECT d FROM Demande d WHERE d.user.id = :userId")
-    List<Demande> findAllByUserId(@Param("userId") Long userId);
-
     @Transactional
     @Modifying
     @Query("UPDATE Demande d SET d.etatDemande = :obseleteEtat WHERE d.ville.id = :villeId AND d.etatDemande = :enAttenteEtat")
@@ -31,4 +28,5 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     void rejeterDemande(@Param("userId") Long villeId, @Param("rejeterEtat") EtatDemande rejeterEtat, @Param("valider") EtatDemande validerEtat);
     @Query("SELECT COUNT(d) > 0 FROM Demande d WHERE d.user = :user AND d.etatDemande.libelleLong = 'ACCEPTE'")
     boolean hasAcceptedDemande(@Param("user") AppUser user);
+
 }

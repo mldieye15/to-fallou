@@ -116,5 +116,21 @@ public class DemandeResource {
         boolean result = service.hasAcceptedDemande(userId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    @GetMapping("/quotaAccepte")
+    public ResponseEntity<Boolean> quotaAccepteByVille(@RequestParam String villeId) {
+        boolean result = service.quotaAccepteByVille(villeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @GetMapping("/totalJuryAffecte/{villeId}")
+    public ResponseEntity<Integer> getTotalJuryAffecteByVille(@PathVariable String villeId) {
+        try {
+            int totalJuryAffecte = service.totalJuryAffecteByVille(villeId);
+            return new ResponseEntity<>(totalJuryAffecte, HttpStatus.OK);
+        } catch (NumberFormatException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (BusinessResourceException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
 
