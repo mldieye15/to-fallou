@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import sn.ucad.office.pjobac.modules.centre.Centre;
+import sn.ucad.office.pjobac.modules.session.Session;
 
 @Data
 @NoArgsConstructor
@@ -12,6 +13,8 @@ import sn.ucad.office.pjobac.modules.centre.Centre;
 @ToString
 public class JuryResponse {
     private Long id;
+    private String nom;
     private String numero;
     private Centre centre;
+    private Session session;
 }

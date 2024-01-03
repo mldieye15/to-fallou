@@ -24,6 +24,7 @@ export const useJuryStore = defineStore('jury', {
       }
     ],*/
     headerTable: [
+      { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Numero', value: 'numero', align: 'start', sortable: true },
       { text: 'Centre', value: 'centre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
@@ -51,6 +52,7 @@ export const useJuryStore = defineStore('jury', {
               return {
                 id:element.id, 
                 numero: element.numero,
+                nom:element.nom,
                 centre: centreLabel,
                 ville: villeLabel,
                 academie: academieLabel

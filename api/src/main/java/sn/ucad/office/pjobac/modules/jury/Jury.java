@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import sn.ucad.office.pjobac.modules.centre.Centre;
+import sn.ucad.office.pjobac.modules.session.Session;
 
 import java.time.LocalDateTime;
 
@@ -25,10 +26,12 @@ public class Jury {
 
     @NotNull
     private String numero;
-
+    @NotNull
+    private String nom;
     @ManyToOne(fetch = FetchType.EAGER)
     private Centre centre;
-
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Session session;
     @Column(nullable = true)
     private Long utiCree;
 

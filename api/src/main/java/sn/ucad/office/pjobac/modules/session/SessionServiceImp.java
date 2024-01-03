@@ -43,11 +43,7 @@ public class SessionServiceImp implements SessionService {
     @Override
     public List<SessionResponse> allActiveSessions() throws BusinessResourceException {
         log.info("SessionServiceImp::all");
-
-        // Récupérer toutes les sessions
         List<Session> allSessions = dao.findAll();
-
-        // Filtrer les sessions actives
         List<Session> activeSessions;
         activeSessions = allSessions.stream()
                 .filter(session ->
@@ -211,7 +207,6 @@ public class SessionServiceImp implements SessionService {
             log.warn("Session avec l'ID " + sessionId + " non trouvée.");
         }
     }
-
     @Override
     public List<SessionResponse> findEnCoursSession()throws BusinessResourceException {
         List<Session> sessions = dao.findEnCoursSession();

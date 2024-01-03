@@ -28,9 +28,10 @@ const { dataDetails, loading } = storeToRefs(juryStore);
 const { one, modify } = juryStore;
 
 const inputForm = reactive({
-  centre: null
+  centre: null,
+  numero:'',
+  session: null,
 });
-
 const handleSave = (payload) => {
   modify(route.params.id, payload).then( () => {
     addNotification({
@@ -45,6 +46,8 @@ const handleSave = (payload) => {
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.centre= dataDetails.value.centre?dataDetails.value.centre.id:null
+    inputForm.session= dataDetails.value.session?dataDetails.value.session.id:null,
+    inputForm.numero= dataDetails.value.numero
   });
 });
 

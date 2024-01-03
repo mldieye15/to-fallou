@@ -123,7 +123,6 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     academie: inputForm.academie,
     centre: inputForm.centre,
   };
-
   accepterDemande(route.params.id, payload).then(() => {
     addNotification({
       show: true,

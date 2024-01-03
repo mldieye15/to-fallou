@@ -27,19 +27,22 @@ public interface JuryMapper {
     JuryAudit toEntiteAudit(Jury jury, Long auteurName, Long modifName);
 
     // request to entity anne
-    @Mapping(target ="numero",source =".",qualifiedByName="juryNumber")
+    @Mapping(target ="nom",source =".",qualifiedByName="juryNom")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
+    @Mapping(source = "request.session", target = "session",qualifiedByName = "getSessionById")
     Jury requestToEntity(JuryRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
     @Mapping(source = "juryRequest.centre", target = "centre",qualifiedByName = "getCentreById")
+    @Mapping(source = "juryRequest.session", target = "session",qualifiedByName = "getSessionById")
     Jury requestToEntiteAdd(JuryRequest juryRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
-    @Mapping(target ="numero",source =".",qualifiedByName="juryNumber")
+    @Mapping(target ="nom",source =".",qualifiedByName="juryNom")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
+    @Mapping(source = "request.session", target = "session",qualifiedByName = "getSessionById")
     Jury requestToEntiteUp(@MappingTarget Jury entity, JuryRequest request);
 //    {
 //        if (entity.getCentre() == null || !entity.getCentre().equals(request.getCentre())) {

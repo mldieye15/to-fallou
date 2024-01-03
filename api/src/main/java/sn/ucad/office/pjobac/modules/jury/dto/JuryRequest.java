@@ -9,6 +9,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class JuryRequest {
+    private String nom;
     private String numero;
     private String centre;
+    private String session;
 }

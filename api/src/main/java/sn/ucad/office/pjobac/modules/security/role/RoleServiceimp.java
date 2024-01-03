@@ -31,8 +31,9 @@ public class RoleServiceimp implements RoleService {
     public List<RoleResponse> all() throws BusinessResourceException {
         log.info("Liste des roles. <all>");
         List<AppRole> roles = dao.findAll();
-        List<RoleResponse> response = roles.stream()
-                .map(role->mapper.toEntiteResponse(role))
+        List<RoleResponse> response;
+        response = roles.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -41,10 +42,10 @@ public class RoleServiceimp implements RoleService {
     public SimplePage<RoleResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des roles avec pagination. <all>");
         final Page<AppRole> page = dao.findAll(pageable);
-        return new SimplePage<RoleResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
                 //.map(role -> mapToDTO(role, new RoleDTO()))
-                .map(item->mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable);
     }
@@ -58,7 +59,8 @@ public class RoleServiceimp implements RoleService {
                             () -> new BusinessResourceException("not-found", "Role avec "+id+" non trouvé(e).", HttpStatus.NOT_FOUND)
                     );
             log.info("Role avec id: "+id+" trouvé(e). <oneById>");
-            Optional<RoleResponse> response = Optional.ofNullable(mapper.toEntiteResponse(role));
+            Optional<RoleResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(role));
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -70,8 +72,6 @@ public class RoleServiceimp implements RoleService {
     public RoleResponse add(RoleRequest request) throws BusinessResourceException {
         try{
             log.info("Debug 001-request:  "+request.toString());
-            //logger.info("Debug 002-username:  "+userService.user().getUsername());
-            //AppRole role = mapper.anneRequestToAnneeAdd(request, userService.user());
             AppRole entity = mapper.requestToEntity(request);
             log.info("Debug 002-request_to_entity:  "+entity.toString());
             RoleResponse response = mapper.toEntiteResponse( dao.save(entity) );
@@ -120,7 +120,8 @@ public class RoleServiceimp implements RoleService {
                     );
             dao.deleteById(myId);
             log.info("Role avec id & nom: "+id+" & "+entity.getNom()+" supprimé avec succés. <del>");
-            String response = "Role: "+entity.getNom()+" supprimée avec succés. <del>";
+            String response;
+            response = "Role: "+entity.getNom()+" supprimée avec succés. <del>";
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -138,7 +139,8 @@ public class RoleServiceimp implements RoleService {
                     );
             log.info("Role avec id: "+id+" trouvé. <auditOneById>");
             //Optional<RoleAudit> response = Optional.ofNullable(mapper.toEntiteAudit(role, role.getUtiCree().getUsername(), annee.getUtiModifie().getUsername()));
-            Optional<RoleAudit> response = Optional.ofNullable(mapper.toEntiteAudit(role, "admin", "admin"));
+            Optional<RoleAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(role, "admin", "admin"));
             return response;
         } catch (NumberFormatException e){
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");

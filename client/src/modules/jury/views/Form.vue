@@ -8,7 +8,18 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.jury.jury') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="juryForm" :value="formValid">
+    <v-form @submit.prevent="submit" ref="juryForm" v-model="formValid">
+      <v-text-field
+        id="numero"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="numero"
+        density="compact"
+        :label="$t('apps.forms.jury.numero')"
+        color="balck"
+        :rules="[rules.required,rules.validateNombre]"
+        v-model="inputForm.numero"
+        variant="solo"
+      ></v-text-field>
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="centre"
@@ -24,8 +35,23 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
+      <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="session"
+        density="compact"
+        :label="$t('apps.forms.session.nom')"
+        color="balck"
+        v-model="inputForm.session"
+        variant="solo"
+        :items="dataListeSession"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -36,15 +62,18 @@ import { reactive, getCurrentInstance } from "vue";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useCentreStore } from "@/modules/centre/store";
+import { useSessionStore } from "@/modules/session/store";
 
 const instance = getCurrentInstance();
 
 const centreStore = useCentreStore();
 const { dataListeCentre } = storeToRefs(centreStore);
+const sessionStore = useSessionStore();
+const{dataListeSession}=storeToRefs(sessionStore);
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+  validateNombre: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide de demandes autorises.',
 });
 
 const { inputForm, actionSubmit } = defineProps({
@@ -55,13 +84,12 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 const handleSave = () => {
-  if(instance.refs.juryForm.validate){
     actionSubmit(inputForm);
-  }
 }
 
 onMounted(()=>{
   centreStore.all();
+  sessionStore.enCoursSession();
 });
 
 </script>

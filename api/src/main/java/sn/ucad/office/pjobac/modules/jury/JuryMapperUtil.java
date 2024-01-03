@@ -9,6 +9,8 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
+import sn.ucad.office.pjobac.modules.session.SessionDao;
+import sn.ucad.office.pjobac.modules.session.Session;
 
 import java.util.*;
 
@@ -17,6 +19,7 @@ import java.util.*;
 @Slf4j
 public class JuryMapperUtil {
     private final CentreDao centreDao;
+    private final SessionDao sessionDao;
     private final JuryDao juryDao;
 
     @Named("getCentreById")
@@ -34,8 +37,23 @@ public class JuryMapperUtil {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + centreId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
+    @Named("getSessionById")
+    Session getSessionById(String sessionId) throws NumberFormatException {
+        try {
+            Long myId = Long.valueOf(sessionId.trim());
+            Session response;
+            response = sessionDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune session avec " + sessionId + " trouvée.", HttpStatus.NOT_FOUND)
+                    );
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id {} non autorisé. <sessionMapperUtil::getSessionById>.", sessionId);
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + sessionId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
     private final Map<String, Set<Long>> numerosAttribuesParCentre = new HashMap<>();
-    @Named("juryNumber")
+    @Named("juryNom")
     public String numeroJury(JuryRequest request) {
         if (request.getCentre() != null) {
             String centreId= request.getCentre();

@@ -25,7 +25,9 @@ const juryStore = useJuryStore();
 const { add } = juryStore;
 
 const inputForm= reactive({
-  centre: null
+  centre: null,
+  numero:'',
+  session: null,
 });
 
 const handleSave = (payload) => {
