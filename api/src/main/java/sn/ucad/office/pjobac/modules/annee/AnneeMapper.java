@@ -5,7 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import sn.ucad.office.pjobac.config.AppConstants;
-import sn.ucad.office.pjobac.modules.centre.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeAudit;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeRequest;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeResponse;

@@ -4,16 +4,26 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Component;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
+import sn.ucad.office.pjobac.modules.demande.dto.*;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
+
 @Mapper(componentModel = "spring", uses={DemandeMapperUtil.class})
 @Component
 public interface DemandeMapper {
     // transform the entity to PJO class
     DemandeResponse toEntiteResponse(Demande demande);
-
+//    @Mapping(source = "demande.id", target = "id")
+//    @Mapping(source = "demande.user", target = "user")
+//    @Mapping(source = "demande.ville", target = "ville")
+//    @Mapping(source = "demande.session", target = "session")
+//    @Mapping(source = "demande.academie", target = "academie")
+//    @Mapping(source = "demande.etatDemande", target = "etatDemande")
+//    @Mapping(source = "demande.centre", target = "centre")
+//    @Mapping(source = "demande.dateDemande", target = "dateDemande")
+//    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
+//    @Mapping(source = "detailsCandidat.affectable", target = "affectable")
+//    @Mapping(source = "detailsCandidat.note", target = "note")
+    DemandeDetailsCandidatResponse mapToResponse(DemandeDetailsCandidat demandeDetailsCandidat);
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")
     @Mapping(source = "modifName", target = "modificateur")

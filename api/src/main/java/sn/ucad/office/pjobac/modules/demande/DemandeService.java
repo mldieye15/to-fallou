@@ -3,10 +3,7 @@ package sn.ucad.office.pjobac.modules.demande;
 import org.springframework.data.domain.Pageable;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
+import sn.ucad.office.pjobac.modules.demande.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.Optional;
 
 public interface DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException;
+    List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException;
     public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
 

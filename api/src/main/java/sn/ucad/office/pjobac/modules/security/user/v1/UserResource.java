@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
-import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
@@ -33,7 +32,7 @@ public class UserResource {
             @SortDefault(sort = "email") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<UserResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<UserResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -41,34 +40,32 @@ public class UserResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<UserResponse>> all(){
         List<UserResponse> response = service.all();
-        return new ResponseEntity< List<UserResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<UserResponse>> one(@PathVariable(value = "id") String id) {
         Optional<UserResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<UserResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> add(@RequestBody @Valid UserRequest request) {
         UserResponse response = service.add(request);
-        return new ResponseEntity<UserResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
     @PutMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> maj(@PathVariable(value="id") String id,
                                             @RequestBody @Valid UserRequest request) {
         UserResponse response = service.maj(request, id);
-        return new ResponseEntity<UserResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/email-availability")
     public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam String email) {

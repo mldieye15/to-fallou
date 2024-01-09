@@ -27,7 +27,7 @@ export const useAnneeStore = defineStore('annee', {
     ],*/
     headerTable: [
       { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'Annee en cour', value: 'encours', align: 'start', sortable: true },
+      { text: "Statut de L 'annee", value: "encours", align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),

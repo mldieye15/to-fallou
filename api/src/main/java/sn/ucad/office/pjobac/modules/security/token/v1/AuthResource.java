@@ -10,9 +10,7 @@ import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
 import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
-import sn.ucad.office.pjobac.modules.security.user.dto.RoleToUserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 
 @RestController
 @RequestMapping("/pjobac/api/auth/v1")
@@ -26,6 +24,25 @@ public class AuthResource {
         UserResponse response = service.inscrire(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+    @PostMapping(value = "/admin")
+    // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
+    public ResponseEntity<AdminResponse> addAdmin(@RequestBody @Valid AdminRequest request) {
+        AdminResponse response = service.addAdmin(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @PostMapping(value = "/planificateur")
+    // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
+    public ResponseEntity<AdminResponse> addPlanificateur(@RequestBody @Valid AdminRequest request) {
+        AdminResponse response = service.addPlanificateur(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+    @PostMapping(value = "/supervisseur")
+    // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
+    public ResponseEntity<AdminResponse> addSupervisseur(@RequestBody @Valid AdminRequest request) {
+        AdminResponse response = service.addSupervisseur(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
 
     @GetMapping(value = "/verif-token/{token}")
     public ResponseEntity<String> verifToken(@PathVariable String token) {

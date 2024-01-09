@@ -174,7 +174,7 @@ const defaultSideBarItems = reactive({ items: [
   },
   {
     "id": 8,
-    "title": "TypeEtablissements",
+    "title": "Type d'etablissements",
     "translate": "typeEtablissement",
     "code": "typeEtablissement",
     "icon": "mdi-account-school-outline",
@@ -228,23 +228,22 @@ const defaultSideBarItems = reactive({ items: [
     "icon": "mdi-school",
     "route": "codification-liste"
   },
-  /*{
-        "id": 2,
-        "title": "Profile",
-        "translate": "profile",
-        "code": "profile",
-        "icon": "mdi-account-box",
-        "route": "profile"
-    },
   {
-      "id": 3,
-      "title": "Ville",
-      "translate": "ville",
-      "code": "ville",
-      "icon": "mdi-city",
-      "route": "profile"
-  }
-  */
+    "id": 15,
+    "title": "Candidats",
+    "translate": "candidat",
+    "code": "candidat",
+    "icon": "mdi-school",
+    "route": "candidat-liste"
+  },
+  // {
+  //     "id": 3,
+  //     "title": "Ville",
+  //     "translate": "ville",
+  //     "code": "ville",
+  //     "icon": "mdi-city",
+  //     "route": "profile"
+  // }
 ] });
 
 onMounted(()=>{

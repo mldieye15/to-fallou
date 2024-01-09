@@ -15,10 +15,7 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.codification.CodificationService;
 import sn.ucad.office.pjobac.modules.security.role.AppRole;
 import sn.ucad.office.pjobac.modules.security.role.RoleService;
-import sn.ucad.office.pjobac.modules.security.user.dto.RoleToUserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserAudit;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import javax.management.relation.RoleNotFoundException;
@@ -92,6 +89,60 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.requestToEntity(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             UserResponse response = mapper.toEntiteResponse(dao.save(entity));
+            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Ajout user: erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: " + request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addAdmin(AdminRequest request) throws BusinessResourceException {
+        try {
+            log.info("Debug 001-request:  " + request.toString());
+            AppUser entity = mapper.adminRequestToUser(request);
+            log.info("Debug 002-request_to_entity:  " + entity.toString());
+            AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
+            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Ajout user: erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: " + request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addSupervisseur(AdminRequest request) throws BusinessResourceException {
+        try {
+            log.info("Debug 001-request:  " + request.toString());
+            AppUser entity = mapper.adminRequestToUser(request);
+            log.info("Debug 002-request_to_entity:  " + entity.toString());
+            AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
+            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Ajout user: erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: " + request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addPlanificateur(AdminRequest request) throws BusinessResourceException {
+        try {
+            log.info("Debug 001-request:  " + request.toString());
+            AppUser entity = mapper.adminRequestToUser(request);
+            log.info("Debug 002-request_to_entity:  " + entity.toString());
+            AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
             log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -210,6 +261,24 @@ public class UserServiceImp implements UserService {
         try {
             log.info("Debug 001-request:  " + request.toString());
             AppUser entity = mapper.requestToEntity(request);
+            log.info("Debug 002-request_to_entity:  " + entity.toString());
+            AppUser response = dao.save(entity);
+            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Ajout user: erreur inattandue est rencontrée." + ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: " + request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AppUser addAdminForAuthService(AdminRequest request) throws BusinessResourceException {
+        try {
+            log.info("Debug 001-request:  " + request.toString());
+            AppUser entity = mapper.adminRequestToUser(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AppUser response = dao.save(entity);
             log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");

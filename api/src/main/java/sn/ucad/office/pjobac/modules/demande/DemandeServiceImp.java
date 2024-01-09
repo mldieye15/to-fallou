@@ -11,10 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAudit;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
+import sn.ucad.office.pjobac.modules.demande.dto.*;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
+import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
@@ -43,6 +42,7 @@ public class DemandeServiceImp implements DemandeService {
     private final VilleDao villeDao;
     private final AuthService authService;
     private final UserDao userDao;
+    private final DetailsCandidatService candidatService;
 
     @Override
     public List<DemandeResponse> all() throws BusinessResourceException {
@@ -55,6 +55,14 @@ public class DemandeServiceImp implements DemandeService {
         return response;
     }
 
+    @Override
+    public List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException {
+        log.info("DemandeServiceImp::all");
+        List<DemandeDetailsCandidat> all = dao.demandesWithAffectable();
+        return all.stream()
+                .map(mapper::mapToResponse)
+                .collect(Collectors.toList());
+    }
     @Override
     public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException {
         log.info("DemandeServiceImp::allGroupedByUser");
@@ -152,7 +160,8 @@ public class DemandeServiceImp implements DemandeService {
             List<DemandeResponse> responses = dao.saveAll(demandes).stream()
                     .map(mapper::toEntiteResponse)
                     .collect(Collectors.toList());
-
+            DetailsCandidatRequest detailsRequest = new DetailsCandidatRequest();
+            candidatService.add(detailsRequest);
             log.info("Ajout des demandes effectué avec succès. <addAll>");
             return responses;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {

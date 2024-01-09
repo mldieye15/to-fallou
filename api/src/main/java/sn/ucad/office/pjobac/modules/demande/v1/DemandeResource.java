@@ -13,6 +13,7 @@ import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeDetailsCandidatResponse;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -50,6 +51,13 @@ public class DemandeResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<DemandeResponse>> all(){
         List<DemandeResponse> response = service.all();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/withAffectable")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeDetailsCandidatResponse>> withAffectable(){
+        List<DemandeDetailsCandidatResponse> response = service.allWithAffectable();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/allForUser")

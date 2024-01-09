@@ -38,12 +38,7 @@ public class Demande {
     private Centre centre;
     @ManyToOne
     private EtatDemande etatDemande;
-//    @NotNull
     private Integer ordreArrivee;
-
-//    @NotNull
-    private Integer ordre;
-//    @NotNull
     private Integer delaisDeValidation;
     protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;

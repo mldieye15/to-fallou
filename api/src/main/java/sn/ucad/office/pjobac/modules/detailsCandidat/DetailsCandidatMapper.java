@@ -16,19 +16,19 @@ import java.util.Date;
 @Mapper(componentModel = "spring")
 public interface DetailsCandidatMapper {
     // transform the entity to PJO class
-    DetailsCandidatResponse toEntiteResponse(DetailsCandidat DetailsCandidat);
+    DetailsCandidatResponse toEntiteResponse(DetailsCandidat detailsCandidat);
 
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")
     @Mapping(source = "modifName", target = "modificateur")
-    DetailsCandidatAudit toEntiteAudit(DetailsCandidat DetailsCandidat, Long auteurName, Long modifName);
+    DetailsCandidatAudit toEntiteAudit(DetailsCandidat detailsCandidat, Long auteurName, Long modifName);
 
     // request to entity anne
     DetailsCandidat requestToEntity(DetailsCandidatRequest request);
 
     // transform the PJO request to an entity
     //@Mapping(source = "user", target = "utiCree")
-    DetailsCandidat requestToEntiteAdd(DetailsCandidatRequest DetailsCandidatRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
+    DetailsCandidat requestToEntiteAdd(DetailsCandidatRequest detailsCandidatRequest/*, Utilisateur user*/);   // ici on n'a pa la classe Utilisateur
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")

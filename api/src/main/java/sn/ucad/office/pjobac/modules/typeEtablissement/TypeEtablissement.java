@@ -27,7 +27,7 @@ public class TypeEtablissement {
     @NotNull
     private String libelleCourt;
     @NotNull
-    private String nombrePoint;
+    private int nombrePoint;
 
     @Column(nullable = true)
     private Long utiCree;

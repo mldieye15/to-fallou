@@ -51,7 +51,6 @@ public class AppUser {
     @NotNull
     private String telephone;
 
-    @NotNull
     private Integer anciennete;
 
     @ManyToOne
@@ -59,7 +58,6 @@ public class AppUser {
 
     @ManyToOne
     private Etablissement etablissement;
-    @NotNull
     //@Size(min=6, max=10, message="username doit etre comprise entre 6 et 10 cracteres")
     @Column(unique = true)
     private String code;

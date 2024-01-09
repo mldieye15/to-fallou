@@ -63,12 +63,12 @@
             "annee":"Annees",
             "centre":"Centres",
             "etablissement":"Etablissements",
-            "typeEtablissement":"TypeEtablissements",
+            "typeEtablissement":"Type d'Etablissement",
             "session":"Sessions",
-            "typeCentre":"TypeCentres",
+            "typeCentre":"Type de Centres",
             "demande":"Demandes",
             "fonction":"Fonctions",
-            "typeSession":"TypeSessions",
+            "typeSession":"Type de Sessions",
             "codification":"Codifications",
             "user":"Users"
         },
@@ -115,7 +115,7 @@
                 "abreviation":"Son abreviation"
             },
             "typeEtablissement":{
-                "typeEtablissement":"typeEtablissements",
+                "typeEtablissement":"Type d'etablissement",
                 "nom":"Nom du type de l'etablissement",
                 "abreviation":"Son abreviation"
             },
@@ -147,7 +147,7 @@
             },
 
             "typeCentre":{
-                "typeCentre":"typeCentre",
+                "typeCentre":"type du Centre",
                 "nom":"Nom du type de centre",
                 "abreviation":"Son abreviation"
             },
@@ -163,8 +163,8 @@
                 "nombrePoint":"Nombre de point"
             },
             "typeSession":{
-                "typeSession":"typeSessions",
-                "nom":" type de Session"
+                "typeSession":"type de la session",
+                "nom":" nom type de la Session"
             },
             "codification":{
                 "codification":"Codifications",

@@ -13,7 +13,6 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeAudit;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeRequest;
 import sn.ucad.office.pjobac.modules.annee.dto.AnneeResponse;
-import sn.ucad.office.pjobac.modules.centre.annee.Annee;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.Collections;

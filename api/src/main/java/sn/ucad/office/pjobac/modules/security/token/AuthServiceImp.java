@@ -27,9 +27,7 @@ import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserMapper;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
-import sn.ucad.office.pjobac.modules.security.user.dto.RoleToUserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.JwtProvider;
 
 import java.time.Instant;
@@ -67,6 +65,93 @@ public class AuthServiceImp implements AuthService {
             userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
             UserResponse response;
             response = mapper.toEntiteResponse(entity);
+            //  Activation automatique à enlever une fois le probl
+
+            //
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée"+e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch(Exception ex){
+            log.error("Ajout user: erreur inattandue est rencontrée."+ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: "+request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addAdmin(AdminRequest request) throws BusinessResourceException {
+        try{
+            AppUser entity = userService.addAdminForAuthService(request);
+            log.info("Debug 001-generation verifcation token:  "+entity.toString());
+            //  generation token
+            String token = verifTokenService.genVerifToken(entity);
+            mailService.sendMail(new NotificationEmail(
+                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+                    entity.getEmail(),
+                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+            ));
+            userService.addRoleToUser(entity.getUsername(), "ROLE_ADMIN");
+            AdminResponse response;
+            response = mapper.userToAdminResponse(entity);
+            //  Activation automatique à enlever une fois le probl
+
+            //
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée"+e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch(Exception ex){
+            log.error("Ajout user: erreur inattandue est rencontrée."+ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: "+request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addPlanificateur(AdminRequest request) throws BusinessResourceException {
+        try{
+            AppUser entity = userService.addAdminForAuthService(request);
+            log.info("Debug 001-generation verifcation token:  "+entity.toString());
+            //  generation token
+            String token = verifTokenService.genVerifToken(entity);
+            mailService.sendMail(new NotificationEmail(
+                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+                    entity.getEmail(),
+                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+            ));
+            userService.addRoleToUser(entity.getUsername(), "ROLE_PLANIFICATEUR");
+            AdminResponse response;
+            response = mapper.userToAdminResponse(entity);
+            //  Activation automatique à enlever une fois le probl
+
+            //
+            return response;
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Ajout user: donnée existante ou contrainte non respectée"+e.toString());
+            throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch(Exception ex){
+            log.error("Ajout user: erreur inattandue est rencontrée."+ex.getMessage());
+            throw new BusinessResourceException("technical-error", "Erreur technique de création d'un utilisateur: "+request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AdminResponse addSupervisseur(AdminRequest request) throws BusinessResourceException {
+        try{
+            AppUser entity = userService.addAdminForAuthService(request);
+            log.info("Debug 001-generation verifcation token:  "+entity.toString());
+            //  generation token
+            String token = verifTokenService.genVerifToken(entity);
+            mailService.sendMail(new NotificationEmail(
+                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+                    entity.getEmail(),
+                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+            ));
+            userService.addRoleToUser(entity.getUsername(), "ROLE_SUPERVISSEUR");
+            AdminResponse response;
+            response = mapper.userToAdminResponse(entity);
             //  Activation automatique à enlever une fois le probl
 
             //

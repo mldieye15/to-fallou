@@ -6,13 +6,13 @@ import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
 import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
-import sn.ucad.office.pjobac.modules.security.user.dto.RoleToUserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 
 public interface AuthService {
     UserResponse inscrire(UserRequest request) throws BusinessResourceException;
-    //public String generateVerificationToken(AppUser user) throws BusinessResourceException;
+    AdminResponse addAdmin(AdminRequest request) throws BusinessResourceException;
+    AdminResponse addPlanificateur(AdminRequest request) throws BusinessResourceException;
+    AdminResponse addSupervisseur(AdminRequest request) throws BusinessResourceException;
     public void verifToken(String token) throws BusinessResourceException;
     public void fetchUserAndEnable(VerificationToken verificationToken) throws BusinessResourceException;
     public AppUser getCurrentUser() throws BusinessResourceException;

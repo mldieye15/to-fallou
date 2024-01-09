@@ -1,11 +1,10 @@
 package sn.ucad.office.pjobac.modules.detailsCandidat;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import sn.ucad.office.pjobac.modules.centre.annee.Annee;
+import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 
 import java.time.LocalDateTime;
@@ -15,41 +14,35 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
+@Table(name = "detailsCandidat"
         //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
 )
-public class DetailsCandidat {
+public class DetailsCandidat{
     @Id
     @Setter(AccessLevel.PROTECTED)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private AppUser candidat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Annee annee;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int bonus=0;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int malus=0;
 
-    @NotNull
-    private Integer bonus;
-
-    @NotNull
-    private Integer malus;
-
-    @NotNull
-    private Integer note;
-    @NotNull
-    private Integer noteFonction;
-    @NotNull
-    private Integer noteEtablissementProvenance;
-    @NotNull
-    private Integer noteAnciennete;
-
-    @NotNull
+    private int noteFonction;
+    private int noteEtablissementProvenance;
+    private int noteAnciennete;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int note = 0;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int noteSupervisseur = 0;
+    @Column(nullable = true)
     private String appreciation;
-
-    @NotNull
-    private Boolean affectable;
+    private boolean affectable=false;
 
     @Column(nullable = true)
     private Long utiCree;

@@ -1,14 +1,12 @@
-package sn.ucad.office.pjobac.modules.centre.annee;
+package sn.ucad.office.pjobac.modules.annee;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Builder

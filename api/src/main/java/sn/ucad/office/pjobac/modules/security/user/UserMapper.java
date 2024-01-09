@@ -4,9 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.stereotype.Component;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserAudit;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 
 @Mapper(componentModel = "spring", uses = {UserMapperUtil.class})
 @Component
@@ -35,6 +33,10 @@ public interface UserMapper {
     @Mapping(source = "request.fonction", target = "fonction ", qualifiedByName = "getFonctionById")
     @Mapping(source ="request.etablissement", target = "etablissement", qualifiedByName = "getEtablissementById")
     AppUser requestToEntiteUp(@MappingTarget AppUser user, UserRequest request);
+    AdminResponse userToAdminResponse(AppUser user);
+    @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
+    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+    AppUser adminRequestToUser(AdminRequest request);
 
 
 }

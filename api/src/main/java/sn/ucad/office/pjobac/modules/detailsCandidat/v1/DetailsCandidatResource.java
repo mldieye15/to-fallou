@@ -30,7 +30,7 @@ public class DetailsCandidatResource {
             @SortDefault(sort = "appreciation") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<DetailsCandidatResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<DetailsCandidatResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -38,13 +38,13 @@ public class DetailsCandidatResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<DetailsCandidatResponse>> all(){
         List<DetailsCandidatResponse> response = service.all();
-        return new ResponseEntity< List<DetailsCandidatResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<DetailsCandidatResponse>> one(@PathVariable(value = "id") String id) {
         Optional<DetailsCandidatResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<DetailsCandidatResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")

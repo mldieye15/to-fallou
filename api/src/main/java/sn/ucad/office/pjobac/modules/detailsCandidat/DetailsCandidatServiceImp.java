@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.annee.Annee;
+import sn.ucad.office.pjobac.modules.annee.AnneeDao;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatAudit;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatResponse;
+import sn.ucad.office.pjobac.modules.security.token.AuthService;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -26,6 +30,8 @@ import java.util.stream.Collectors;
 public class DetailsCandidatServiceImp implements DetailsCandidatService {
     private final DetailsCandidatMapper mapper;
     private final DetailsCandidatDao dao;
+    private final AuthService authService;
+    private final AnneeDao anneeDao;
 
     @Override
     public List<DetailsCandidatResponse> all() throws BusinessResourceException {
@@ -74,10 +80,20 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
         try {
             log.info("Debug 001-add:  " + req.toString());
             DetailsCandidat one = mapper.requestToEntity(req);
+            AppUser currentUser = authService.getCurrentUser();
+            Annee annee= anneeDao.findByEncoursTrue();
+            int noteFonction= currentUser.getFonction().getNombrePoint();
+            int noteEtablissementProvenance=currentUser.getEtablissement().getTypeEtablissement().getNombrePoint();
+            one.setCandidat(currentUser);
+            one.setNoteEtablissementProvenance(noteEtablissementProvenance);
+            one.setNoteFonction(noteFonction);
+            one.setAnnee(annee);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
             log.info("Ajout " + response.getAppreciation() + " effectué avec succés. <add>");
+            dao.updateNoteBy(currentUser);
             return response;
+
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de creation Academie: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
