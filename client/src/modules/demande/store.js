@@ -28,15 +28,17 @@ export const useDemandeStore = defineStore('demande', {
       'OBSOLETE':'yellow',
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
-    headerTable: [
-      { text: 'Prenoms', value: 'user', align: 'start', sortable: true },
-      { text: 'Ville', value: 'ville', align: 'start', sortable: true },
-      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
-      { text: 'Session', value: 'session', align: 'start', sortable: true },
-      { text: 'Centre d/ecrit', value: 'centre', align: 'start', sortable: true },
-      { text: 'Statut', value: 'etatDemande', align: 'start', sortable: true },
-      { text: 'Actions', value: 'actions', sortable: false }
-    ]
+    columns: [
+      { label: 'Ville', field: 'ville',width: "200px",resizable: true},
+      { label: 'Session', field: 'session',width: "200px",resizable: true },
+      { label: 'Academie', field: 'academie',width: "200px",resizable: true },
+      { label: 'Centre d/ecrit', field: 'centre',width: "200px" ,resizable: true},
+      { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
+      { label: 'Points', field: 'note',width: "100px",resizable: true },
+      { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
+      { label: 'Actions', field: 'actions',width: "100px",resizable: true }
+      // Ajoutez d'autres colonnes selon vos besoins
+    ],
   }),
 
   getters: {
@@ -81,7 +83,6 @@ export const useDemandeStore = defineStore('demande', {
           }));
     
           this.dataListe = res;
-          console.log(this.dataListe);
         }
       } catch (error) {
         console.log(error);
@@ -114,7 +115,6 @@ export const useDemandeStore = defineStore('demande', {
               }
             })
             this.dataListeForUser = res;
-            console.log( "DatalisteForUser",this.dataListeForUser)
           } 
         })
       } catch (error) {
@@ -124,60 +124,68 @@ export const useDemandeStore = defineStore('demande', {
         this.loading = false
       }
     },
-    // async allGroupedByUser() {
-    //   try {
-    //     await axios.get(`${allGroupedByUser}`)
-    //       .then((response) => {
-    //         if (response.status === 200) {
-    //           let res = response.data;
-  
-    //           // Transformation du format de données
-    //           let formattedData = [];
-    //           for (const userId in res) {
-    //             if (res.hasOwnProperty(userId)) {
-    //               const demandes = res[userId].map((element) => {
-    //                 let villeLabel = element.ville ? element.ville.libelleLong : null;
-    //                 let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
-    //                 let sessionLabel = element.session ? element.session.libelleLong : null;
-    //                 let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
-    //                 let nomLabel = element.user ? element.user.prenoms : null;
-    //                 let idLabel = element.user ? element.user.id : null;
-    //                 let centreLabel = element.centre ? element.centre.libelleLong : null;
-    //                 let labelQuotaAccepte = element.ville.quotaDemandeAccepte ? 'OUI' : 'NON';
-  
-    //                 return {
-    //                   id: element.id,
-    //                   nom: element.nom,
-    //                   ville: villeLabel,
-    //                   academie: academieLabel,
-    //                   session: sessionLabel,
-    //                   etatDemande: etatLabel,
-    //                   user: nomLabel,
-    //                   centre: centreLabel,
-    //                   quotaDemandeAccepte: labelQuotaAccepte,
-    //                   userId:idLabel,
-    //                 };
-    //               });
-  
-    //               formattedData.push({
-    //                 userId: userId,
-    //                 demandes: demandes,
-    //               });
-    //             }
-    //           }
-  
-    //           this.dataListeGroupedByUser = formattedData;
-    //           console.log(formattedData);
-    //         }
-    //       });
-    //   } catch (error) {
-    //     console.error(error);
-    //     this.error = error;
-    //   } finally {
-    //     this.loading = false;
-    //   }
-    // },
-    //  recupérer les informations d'une demande par son ide et le mettre dans la tabel dataDetails
+    async allGroupedByUser() {
+      try {
+        const response = await axios.get(`${allGroupedByUser}`);
+        
+        if (response.status === 200) {
+          let res = response.data;
+          let formattedData = [];
+      
+          const promises = Object.keys(res).map(async (userId) => {
+            const user = res[userId][0].user;
+            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null; 
+            
+            const demandes = await Promise.all(res[userId].map(async (element) => {
+              let villeLabel = element.ville ? element.ville.libelleLong : null;
+              let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
+              let sessionLabel = element.session ? element.session.libelleLong : null;
+              let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
+              let nomLabel = element.user ? element.user.prenoms : null;
+              let idLabel = element.user ? element.user.id : null;
+              let idLabelVille = element.ville ? element.ville.id : null;
+              let affectableLabel= element.affectable? 'OUI' : 'NON';
+              let centreLabel = element.centre ? element.centre.libelleLong : null;
+              let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
+              let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
+              
+              return {
+                id: element.demandeId,
+                nom: element.nom,
+                note: element.note,
+                affectable: affectableLabel,
+                ville: villeLabel,
+                academie: academieLabel,
+                session: sessionLabel,
+                etatDemande: etatLabel,
+                user: nomLabel,
+                centre: centreLabel,
+                userId: idLabel,
+                villeId:idLabelVille,
+                hasAcceptedDemande: hasAccepted,
+                quota: quotaAccept,
+              };
+            }));
+      
+            formattedData.push({
+              user: nomPrenomLabel,
+              userId: userId,
+              demandes: demandes,
+            });
+          });
+          await Promise.all(promises);
+          this.dataListeGroupedByUser = formattedData;
+          console.log("Donnees imbriquees", formattedData);
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+      
+      
     async one(demande) {
       try {
         await axios.get(`${modulesURL}/${demande}`) 
@@ -291,7 +299,6 @@ export const useDemandeStore = defineStore('demande', {
         }
       } catch (error) {
         console.error(error);
-        this.setError(error.message);
         return false; // En cas d'erreur, retourne false
       } finally {
         this.loading = false;
@@ -306,12 +313,11 @@ export const useDemandeStore = defineStore('demande', {
         }
       } catch (error) {
         console.error(error);
-        this.setError(error.message);
         return false; // En cas d'erreur, retourne false
       } finally {
         this.loading = false;
       }
-    } 
+    }, 
   },
   
 })

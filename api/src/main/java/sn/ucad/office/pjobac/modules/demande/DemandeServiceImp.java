@@ -12,6 +12,8 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatDao;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
@@ -43,6 +45,7 @@ public class DemandeServiceImp implements DemandeService {
     private final AuthService authService;
     private final UserDao userDao;
     private final DetailsCandidatService candidatService;
+    private final DetailsCandidatDao candidatDao;
 
     @Override
     public List<DemandeResponse> all() throws BusinessResourceException {
@@ -55,22 +58,25 @@ public class DemandeServiceImp implements DemandeService {
         return response;
     }
 
+//    @Override
+//    public List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException {
+//        log.info("DemandeServiceImp::all");
+//        List<DemandeDetailsCandidat> all = dao.demandesWithAffectable();
+//        return all.stream()
+//                .map(mapper::mapToResponse)
+//                .collect(Collectors.toList());
+//    }
     @Override
-    public List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException {
-        log.info("DemandeServiceImp::all");
-        List<DemandeDetailsCandidat> all = dao.demandesWithAffectable();
-        return all.stream()
-                .map(mapper::mapToResponse)
-                .collect(Collectors.toList());
-    }
-    @Override
-    public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException {
+    public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException {
         log.info("DemandeServiceImp::allGroupedByUser");
         List<Demande> all = dao.findAll();
-        Map<Long, List<DemandeResponse>> response;
+        Map<Long, List<DemandeDetailsCandidatResponse>> response;
         response = all.stream()
                 .collect(Collectors.groupingBy(demande -> demande.getUser().getId(),
-                        Collectors.mapping(mapper::toEntiteResponse, Collectors.toList())));
+                        Collectors.mapping( demande -> {
+                                    DetailsCandidat detailsCandidat= candidatDao.detailsForUser(demande.getUser());
+                                    return  mapper.mapToResponse(demande,detailsCandidat);
+                                }, Collectors.toList())));
 
         return response;
     }

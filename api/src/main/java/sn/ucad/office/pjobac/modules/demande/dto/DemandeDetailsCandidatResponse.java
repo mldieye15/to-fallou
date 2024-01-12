@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class DemandeDetailsCandidatResponse implements DemandeDetailsCandidat{
-    private Long id;
+public class DemandeDetailsCandidatResponse{
+    private Long demandeId;
     private AppUser user;
     private Ville ville;
     private Academie academie;
@@ -25,6 +25,17 @@ public class DemandeDetailsCandidatResponse implements DemandeDetailsCandidat{
     private EtatDemande etatDemande;
     private Integer ordreArrivee;
     private LocalDateTime dateDemande;
-    private Integer note;
+    private LocalDateTime dateRejetDemande;
+    private LocalDateTime dateConfirmationDemande;
+    private Long detailsCandidatId;
+    private Annee annee;
+    private int bonus;
+    private int malus;
+    private int noteFonction;
+    private int noteEtablissementProvenance;
+    private int noteAnciennete;
+    private int note;
+    private int noteSupervisseur;
+    private String appreciation;
     private boolean affectable;
 }

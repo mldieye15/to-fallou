@@ -25,6 +25,6 @@ public class DemandeResponse {
     private Centre centre;
     private EtatDemande etatDemande;
     private AppUser user;
-    private LocalDateTime dateDemande=LocalDateTime.now();
+    private LocalDateTime dateDemande;
 
 }

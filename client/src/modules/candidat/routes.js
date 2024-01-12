@@ -17,14 +17,9 @@ const candidatRoutes = [{
         component: () => import( /* webpackChunkName: 'candidat_details' */ './views/Details.vue'),
       },
       {
-        path: '/app/dashboard/candidats/add',
-        name: 'candidat-add',
-        component: () => import( /* webpackChunkName: 'candidat_add' */ './views/Add.vue')
-      },
-      {
-        path: '/app/dashboard/candidats/edit/:id',
-        name: 'candidat-edit',
-        component: () => import( /* webpackChunkName: 'candidat_edit */ './views/Edit.vue')
+        path: '/app/dashboard/candidats/appreciation/:id',
+        name: 'candidat-appreciation',
+        component: () => import('./views/Appreciation.vue'),
       }
     ]
 }];

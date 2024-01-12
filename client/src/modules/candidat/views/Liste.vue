@@ -13,14 +13,6 @@
             v-model="searchValue"
           ></v-text-field>
         </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="auto">
-          <v-btn variant="outlined" color="black" >
-            <router-link :to="{ name: 'candidat-add' }" class="">
-              {{ $t('apps.forms.ajouter') }}
-            </router-link>
-          </v-btn>
-        </v-col>
       </v-row>
       <EasyDataTable
         :headers="headerTable"
@@ -44,28 +36,12 @@
         </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
-            <router-link :to="{ name: 'candidat-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
-            <router-link :to="{ name: 'candidat-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
-              <template v-slot:activator="{ props }">
-                <v-btn variant="text"  class="text" v-bind="props">
-                  <v-icon small flat color="red dark">mdi-delete</v-icon>
-              </v-btn>
-              </template>
-              <template v-slot:default="{ isActive }">
-                <v-card>
-                  <v-toolbar color="primary" :title="$t('apps.forms.candidat.candidat')"></v-toolbar>
-                  <v-card-text>
-                    
-                    <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
-                  </v-card-text>
-                  <v-card-actions class="justify-end">
-                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
-                    <v-btn variant="outlined" color="black"  @click="del(item.id)">{{ $t('apps.forms.oui') }}</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </template>
-            </v-dialog>
+            <v-btn  size="small" @click.prevent="redirectToDetails(item.id)">
+              Details
+            </v-btn>
+            <v-btn size="small" @click.prevent="redirectToAppreciation(item.id)" class="ml-4">
+              Appreciation
+            </v-btn>
           </div>
           
         </template>
@@ -81,7 +57,8 @@ import { useCandidatStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
-
+import { useRouter } from 'vue-router';
+const router = useRouter();
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -95,6 +72,12 @@ const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
 const searchValue = ref("");
 const dialog = ref(false);
+const redirectToDetails = (id) => {
+  router.push({ name: 'candidat-details', params: { id } });
+};
+const redirectToAppreciation = (id) => {
+  router.push({ name: 'candidat-appreciation', params: { id } });
+};
 
 onMounted(()=>{
   all();
@@ -120,7 +103,7 @@ const del = (id) => {
   background-color: white;
 }
 .actions-wrapper {
-  width: 120px;
+  width: 300px;
 }
 .etablissement-wrapper{
  width: 110px; 

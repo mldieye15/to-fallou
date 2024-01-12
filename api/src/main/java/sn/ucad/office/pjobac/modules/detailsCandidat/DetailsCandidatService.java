@@ -3,9 +3,7 @@ package sn.ucad.office.pjobac.modules.detailsCandidat;
 import org.springframework.data.domain.Pageable;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatAudit;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatResponse;
+import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -22,6 +20,9 @@ public interface DetailsCandidatService {
     public DetailsCandidatResponse add(DetailsCandidatRequest req) throws BusinessResourceException;
 
     public DetailsCandidatResponse maj(DetailsCandidatRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DetailsCandidatResponse note(DetailsCandidatNoteRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DetailsCandidatResponse malus(DetailsCandidatMalusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DetailsCandidatResponse bonus(DetailsCandidatBonusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 

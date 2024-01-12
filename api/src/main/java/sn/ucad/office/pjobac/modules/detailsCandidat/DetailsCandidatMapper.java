@@ -6,9 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import sn.ucad.office.pjobac.config.AppConstants;
 
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatAudit;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatResponse;
+import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
 
 import java.text.ParseException;
@@ -33,6 +31,9 @@ public interface DetailsCandidatMapper {
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
     DetailsCandidat requestToEntiteUp(@MappingTarget DetailsCandidat entity, DetailsCandidatRequest request/*, Utilisateur user*/);
+    DetailsCandidat requestNoteToEntiteUp(@MappingTarget DetailsCandidat entity, DetailsCandidatNoteRequest request/*, Utilisateur user*/);
+    DetailsCandidat requestMalusToEntiteUp(@MappingTarget DetailsCandidat entity, DetailsCandidatMalusRequest request/*, Utilisateur user*/);
+    DetailsCandidat requestBonusToEntiteUp(@MappingTarget DetailsCandidat entity, DetailsCandidatBonusRequest request/*, Utilisateur user*/);
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
     @Named("formatStringToDate")

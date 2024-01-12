@@ -53,13 +53,13 @@ public class DemandeResource {
         List<DemandeResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("/withAffectable")
-    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<DemandeDetailsCandidatResponse>> withAffectable(){
-        List<DemandeDetailsCandidatResponse> response = service.allWithAffectable();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @GetMapping("/withAffectable")
+//    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<List<DemandeDetailsCandidatResponse>> withAffectable(){
+//        List<DemandeDetailsCandidatResponse> response = service.allWithAffectable();
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
     @GetMapping("/allForUser")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
@@ -70,8 +70,8 @@ public class DemandeResource {
     @GetMapping("/allGroupedByUser")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Map<Long, List<DemandeResponse>>> allGroupedByUser() {
-        Map<Long, List<DemandeResponse>> response = service.allGroupedByUser();
+    public ResponseEntity<Map<Long, List<DemandeDetailsCandidatResponse>>> allGroupedByUser() {
+        Map<Long, List<DemandeDetailsCandidatResponse>> response = service.allGroupedByUser();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")

@@ -83,7 +83,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom d'Candidat:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Nom du candidat:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.username }}</v-list-item-subtitle>
@@ -206,7 +206,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Note Anciennete:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Note d' anciennete:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteAnciennete }}</v-list-item-subtitle>
@@ -220,7 +220,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">note Etablissement de Provenance:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">note de l'etablissement de Provenance:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteEtablissementProvenance }}</v-list-item-subtitle>
@@ -234,7 +234,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold"> Note Supervisseur:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold"> Note du Supervisseur:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm. noteSupervisseur}}</v-list-item-subtitle>
@@ -248,7 +248,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">NoteFonction:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Note de la Fonction:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteFonction }}</v-list-item-subtitle>

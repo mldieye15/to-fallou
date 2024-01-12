@@ -42,7 +42,7 @@ public class Demande {
     private Integer delaisDeValidation;
     protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;
-    protected LocalDateTime dateConfirmationDeamnde;
+    protected LocalDateTime dateConfirmationDemande;
 
     @Column(nullable = true)
     private Long utiCree;

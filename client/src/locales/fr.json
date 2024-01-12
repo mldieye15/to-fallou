@@ -70,7 +70,8 @@
             "fonction":"Fonctions",
             "typeSession":"Type de Sessions",
             "codification":"Codifications",
-            "user":"Users"
+            "user":"Users",
+            "candidat":"Candidats"
         },
         "forms":{
             "nouveau": "Nouveau",
@@ -170,6 +171,13 @@
                 "codification":"Codifications",
                 "email":"le mail",
                 "code":"le code"
+            },
+            "candidat":{
+                "candidat":"Candidats",
+                "note":"note du supervisseur",
+                "bonus":"bonus",
+                "malus":"malus",
+                "appreciation":"Appreciation du supervisseur"
             }
         },
         "footer":{}

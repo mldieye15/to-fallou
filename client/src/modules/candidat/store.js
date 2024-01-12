@@ -6,6 +6,9 @@ import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/detailsCandidats';
 const all= modulesURL+'/all';
+const note= modulesURL+'/note';
+const bonus= modulesURL+'/bonus';
+const malus= modulesURL+'/malus';
 export const useCandidatStore = defineStore('candidat', {
   state: () => ({
     dataListeCandidat: [],  //  List des données à afficher pour la table
@@ -30,10 +33,10 @@ export const useCandidatStore = defineStore('candidat', {
       { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
       // { text: 'Email', value: 'email', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
-      { text: 'Affectable', value: 'affectable', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
       { text: 'Fonction', value: 'fonction', align: 'start', sortable: true },
       { text: 'Etablissement de Provenance', value: 'etablissement', align: 'start', sortable: true },
+      { text: 'Affectable', value: 'affectable', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
@@ -120,12 +123,45 @@ export const useCandidatStore = defineStore('candidat', {
         this.loading = false
       }
     },
-    //  modifier une session
+    async appreciation(id, payload) {
+      try {
+        console.log("Id: ", id);
+        console.log("Payload: ", payload);
+        await axios.put(`${note}/${id}`, payload)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async bonus(id, payload) {
+      try {
+        console.log("Id: ", id);
+        console.log("Payload: ", payload);
+        await axios.put(`${bonus}/${id}`, payload)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     async modify(id, payload) {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload)
+        await axios.put(`${malus}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

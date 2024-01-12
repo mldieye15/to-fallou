@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public interface DemandeService {
     public List<DemandeResponse> all() throws BusinessResourceException;
-    List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException;
-    public Map<Long, List<DemandeResponse>> allGroupedByUser() throws BusinessResourceException;
+//    List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException;
+    public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
 
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;

@@ -12,9 +12,7 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.AnneeDao;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatAudit;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatResponse;
+import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -112,7 +110,6 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
-            //Academie annee = mapper.anneRequestToAnneeUp(detailsCandidatOptional, req, userService.user());
             DetailsCandidat oneBrute = mapper.requestToEntiteUp(detailsCandidatOptional, req);
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
@@ -130,6 +127,80 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     }
 
     @Override
+    public DetailsCandidatResponse note(DetailsCandidatNoteRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(id.trim());
+            DetailsCandidat detailsCandidatOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            DetailsCandidat oneBrute = mapper.requestNoteToEntiteUp(detailsCandidatOptional, req);
+            DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            log.info("appreciation " + response.getAppreciation() + " effectuée avec succés. <appreciation>");
+            dao.updateNote(detailsCandidatOptional);
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + id + " non autorisé. <appreciation>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique l'appreciation: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de  l'appreciation: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public DetailsCandidatResponse malus(DetailsCandidatMalusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(id.trim());
+            DetailsCandidat detailsCandidatOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            DetailsCandidat oneBrute = mapper.requestMalusToEntiteUp(detailsCandidatOptional, req);
+            DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
+            dao.updateNote(detailsCandidatOptional);
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + id + " non autorisé. <maj>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique de maj Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public DetailsCandidatResponse bonus(DetailsCandidatBonusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(id.trim());
+            DetailsCandidat detailsCandidatOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            DetailsCandidat oneBrute = mapper.requestBonusToEntiteUp(detailsCandidatOptional, req);
+            DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
+            dao.updateNote(detailsCandidatOptional);
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + id + " non autorisé. <maj>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique de maj Academie: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Override
     @Transactional(readOnly = false)
     public String del(String id) throws NumberFormatException, BusinessResourceException {
         try {
@@ -140,7 +211,8 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                     );
             dao.deleteById(myId);
             log.info("Academie avec id & matricule: " + id + " & " + oneBrute.getId() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getId() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getId() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -164,7 +236,6 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
-        //return Optional.empty();
     }
 
 }

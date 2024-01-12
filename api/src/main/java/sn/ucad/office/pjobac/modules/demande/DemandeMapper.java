@@ -12,18 +12,21 @@ import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
 public interface DemandeMapper {
     // transform the entity to PJO class
     DemandeResponse toEntiteResponse(Demande demande);
-//    @Mapping(source = "demande.id", target = "id")
-//    @Mapping(source = "demande.user", target = "user")
-//    @Mapping(source = "demande.ville", target = "ville")
-//    @Mapping(source = "demande.session", target = "session")
-//    @Mapping(source = "demande.academie", target = "academie")
-//    @Mapping(source = "demande.etatDemande", target = "etatDemande")
-//    @Mapping(source = "demande.centre", target = "centre")
-//    @Mapping(source = "demande.dateDemande", target = "dateDemande")
-//    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
-//    @Mapping(source = "detailsCandidat.affectable", target = "affectable")
-//    @Mapping(source = "detailsCandidat.note", target = "note")
-    DemandeDetailsCandidatResponse mapToResponse(DemandeDetailsCandidat demandeDetailsCandidat);
+    @Mapping(source = "demande.id", target = "demandeId")
+    @Mapping(source = "demande.user", target = "user")
+    @Mapping(source = "demande.ville", target = "ville")
+    @Mapping(source = "demande.session", target = "session")
+    @Mapping(source = "demande.academie", target = "academie")
+    @Mapping(source = "demande.etatDemande", target = "etatDemande")
+    @Mapping(source = "demande.centre", target = "centre")
+    @Mapping(source = "demande.dateDemande", target = "dateDemande")
+    @Mapping(source = "demande.dateRejetDemande", target = "dateRejetDemande")
+    @Mapping(source = "demande.dateConfirmationDemande", target = "dateConfirmationDemande")
+    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
+    @Mapping(source = "detailsCandidat.id", target = "detailsCandidatId")
+    @Mapping(source = "detailsCandidat.affectable", target = "affectable")
+    @Mapping(source = "detailsCandidat.note", target = "note")
+    DemandeDetailsCandidatResponse mapToResponse(Demande demande, DetailsCandidat detailsCandidat);
     // transform the entity to PJO class with audit information
     @Mapping(source = "auteurName", target = "auteur")
     @Mapping(source = "modifName", target = "modificateur")

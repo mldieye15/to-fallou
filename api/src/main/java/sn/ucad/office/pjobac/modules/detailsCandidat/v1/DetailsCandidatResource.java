@@ -10,8 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
-import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatResponse;
+import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class DetailsCandidatResource {
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<DetailsCandidatResponse> add(@RequestBody @Valid DetailsCandidatRequest request) {
         DetailsCandidatResponse response = service.add(request);
-        return new ResponseEntity<DetailsCandidatResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -58,14 +57,35 @@ public class DetailsCandidatResource {
     public ResponseEntity<DetailsCandidatResponse> maj(@PathVariable(value="id") String id,
                                                        @RequestBody @Valid DetailsCandidatRequest request) {
         DetailsCandidatResponse response = service.maj(request, id);
-        return new ResponseEntity<DetailsCandidatResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping(value = "note/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DetailsCandidatResponse> note(@PathVariable(value="id") String id,
+                                                       @RequestBody @Valid DetailsCandidatNoteRequest request) {
+        DetailsCandidatResponse response = service.note(request, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping(value = "bonus/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DetailsCandidatResponse> bonus(@PathVariable(value="id") String id,
+                                                       @RequestBody @Valid DetailsCandidatBonusRequest request) {
+        DetailsCandidatResponse response = service.bonus(request, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping(value = "malus/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DetailsCandidatResponse> malus(@PathVariable(value="id") String id,
+                                                       @RequestBody @Valid DetailsCandidatMalusRequest request) {
+        DetailsCandidatResponse response = service.malus(request, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

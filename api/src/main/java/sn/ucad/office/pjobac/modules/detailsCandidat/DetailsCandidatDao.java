@@ -15,4 +15,11 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
     @Modifying
     @Query("UPDATE DetailsCandidat dc SET dc.note = dc.noteSupervisseur + dc.noteEtablissementProvenance + dc.noteFonction + dc.noteAnciennete + dc.bonus - dc.malus WHERE dc.candidat = :candidat")
     void updateNoteBy(@Param("candidat") AppUser candidat);
+    @Transactional
+    @Modifying
+    @Query("UPDATE DetailsCandidat dc SET dc.note = dc.noteSupervisseur + dc.noteEtablissementProvenance + dc.noteFonction + dc.noteAnciennete + dc.bonus - dc.malus WHERE dc = :detailsCandidat")
+    void updateNote(@Param("detailsCandidat") DetailsCandidat detailsCandidat);
+    @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.candidat = :user")
+    DetailsCandidat detailsForUser(@Param("user") AppUser user);
+
 }
