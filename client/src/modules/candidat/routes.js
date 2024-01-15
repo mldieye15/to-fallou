@@ -20,6 +20,16 @@ const candidatRoutes = [{
         path: '/app/dashboard/candidats/appreciation/:id',
         name: 'candidat-appreciation',
         component: () => import('./views/Appreciation.vue'),
+      },
+      {
+        path: '/app/dashboard/candidats/bonus/:id',
+        name: 'candidat-bonus',
+        component: () => import('./views/Bonus.vue'),
+      },
+      {
+        path: '/app/dashboard/candidats/malus/:id',
+        name: 'candidat-malus',
+        component: () => import('./views/Malus.vue'),
       }
     ]
 }];

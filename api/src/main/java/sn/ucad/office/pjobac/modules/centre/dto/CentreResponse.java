@@ -17,8 +17,6 @@ public class CentreResponse {
     private String libelleLong;
     private String libelleCourt;
     private int nombreJury;
-    private int nombreJuryAffecte;
-    private boolean quota;
     private Ville ville;
     private TypeCentre typeCentre;
 

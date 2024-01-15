@@ -12,6 +12,11 @@ const userRoutes = [{
             component: () => import( /* webpackChunkName: 'user_liste' */ './views/Liste.vue')
       },
       {
+        path: 'users',
+        name: 'liste-user',
+        component: () => import( /* webpackChunkName: 'user_liste' */ './views/ListeUser.vue')
+      },
+      {
         path: '/app/dashboard/users/:id',
         name: 'user-details',
         component: () => import( /* webpackChunkName: 'user_details' */ './views/Details.vue'),

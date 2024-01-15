@@ -32,9 +32,6 @@ public class Centre {
     private String libelleCourt;
     @Column(columnDefinition = "INT DEFAULT 0")
     private int nombreJury=0;
-    @Column(columnDefinition = "INT DEFAULT 0")
-    private int nombreJuryAffecte=0;
-    private boolean quota=false;
     @ManyToOne(fetch = FetchType.EAGER)
     private Ville ville;
 

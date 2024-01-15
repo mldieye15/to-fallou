@@ -175,8 +175,8 @@
             "candidat":{
                 "candidat":"Candidats",
                 "note":"note du supervisseur",
-                "bonus":"bonus",
-                "malus":"malus",
+                "bonus":"Bonus",
+                "malus":"Malus",
                 "appreciation":"Appreciation du supervisseur"
             }
         },

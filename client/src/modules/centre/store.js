@@ -30,8 +30,6 @@ export const useCentreStore = defineStore('centre', {
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'nombre de Jury', value: 'nombreJury', align: 'start', sortable: true },
-      { text: 'Jury Affecter ', value: 'nombreJuryAffecte', align: 'start', sortable: true },
-      { text: 'Quota atteint ', value: 'quota', align: 'start', sortable: true },
       { text: 'TypeCentre', value: 'typeCentre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
@@ -56,17 +54,14 @@ export const useCentreStore = defineStore('centre', {
               let villeLabel = element.ville? element.ville.libelleLong:null;
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let typeCentreLabel = element.typeCentre ? element.typeCentre.libelleLong:null;
-              let quotaLabel = element.quota ? 'OUI' : 'NON';
               return{
               id:element.id, 
               libelleLong: element.libelleLong,
               libelleCourt: element.libelleCourt,
               nombreJury: element.nombreJury,
-              nombreJuryAffecte: element.nombreJuryAffecte,
               ville: villeLabel,
               typeCentre: typeCentreLabel,
               academie: academieLabel,
-              quota: quotaLabel,
               }
               
 

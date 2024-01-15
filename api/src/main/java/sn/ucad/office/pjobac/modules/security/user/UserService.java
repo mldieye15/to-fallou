@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public interface UserService {
     public List<UserResponse> all() throws BusinessResourceException;
+    public List<AdminResponse> admin() throws BusinessResourceException;
+    public List<AdminResponse> planificateur() throws BusinessResourceException;
+    public List<AdminResponse> supervisseur() throws BusinessResourceException;
+    public List<AdminResponse> user() throws BusinessResourceException;
     public SimplePage<UserResponse> all(Pageable pageable) throws BusinessResourceException;
     public Optional<UserResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
     UserResponse add(UserRequest request) throws BusinessResourceException;
@@ -17,6 +21,7 @@ public interface UserService {
     AdminResponse addSupervisseur(AdminRequest request) throws BusinessResourceException;
     AdminResponse addPlanificateur(AdminRequest request) throws BusinessResourceException;
     UserResponse maj(UserRequest request, String id)  throws NumberFormatException, BusinessResourceException;
+    AdminResponse majAdmin(AdminRequest request, String id)  throws NumberFormatException, BusinessResourceException;
     public String del(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<UserAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<AppUser> userByUsername(String username) throws BusinessResourceException;

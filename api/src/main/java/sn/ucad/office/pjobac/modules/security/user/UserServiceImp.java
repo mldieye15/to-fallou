@@ -46,6 +46,50 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public List<AdminResponse> admin() throws BusinessResourceException {
+        log.info("Liste des administrateurs. <all>");
+        List<AppUser> admins = dao.adminRole();
+        List<AdminResponse> response;
+        response = admins.stream()
+                .map(mapper::userToAdminResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<AdminResponse> planificateur() throws BusinessResourceException {
+        log.info("Liste des planificateurs. <all>");
+        List<AppUser> planificateurs = dao.planificateurRole();
+        List<AdminResponse> response;
+        response = planificateurs.stream()
+                .map(mapper::userToAdminResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<AdminResponse> supervisseur() throws BusinessResourceException {
+        log.info("Liste des supervisseurs. <all>");
+        List<AppUser> supervisseurs = dao.supervisseurRole();
+        List<AdminResponse> response;
+        response = supervisseurs.stream()
+                .map(mapper::userToAdminResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<AdminResponse> user() throws BusinessResourceException {
+            log.info("Liste des supervisseurs. <all>");
+            List<AppUser> users = dao.userRole();
+            List<AdminResponse> response;
+            response = users.stream()
+                    .map(mapper::userToAdminResponse)
+                    .collect(Collectors.toList());
+            return response;
+    }
+
+    @Override
     public SimplePage<UserResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des users avec pagination. <all>");
         final Page<AppUser> page = dao.findAll(pageable);
@@ -178,6 +222,29 @@ public class UserServiceImp implements UserService {
         }
     }
 
+    @Override
+    public AdminResponse majAdmin(AdminRequest request, String id) throws NumberFormatException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(id.trim());
+            AppUser entiteOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "User avec " + id + " non trouvé(e).", HttpStatus.NOT_FOUND)
+                    );
+            AppUser entity = mapper.adminRequestToUserUp(entiteOptional, request);
+            AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
+            log.info("Mise à jour " + response.getUsername() + " effectué avec succés <maj>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique de maj: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Maj role: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de maj role: " + request.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Override
     public String del(String id) throws NumberFormatException, BusinessResourceException {
         try {

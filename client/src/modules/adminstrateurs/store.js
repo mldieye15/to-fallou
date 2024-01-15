@@ -5,7 +5,11 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/users';
-const all= modulesURL+'/all';
+const adminURL = '/auth/v1';
+const addAdmin =adminURL +'/addAdmin';
+const addPlanificateur=adminURL +'/addPlanificateur';
+const addSupervisseur =adminURL +'/addSupervisseur';
+const upAdmin= modulesURL +'/upAdmin';
 const admins= modulesURL+'/admins';
 const users= modulesURL+'/users';
 const planificateurs= modulesURL+'/planificateurs';
@@ -63,7 +67,6 @@ export const useUtilisateurStore = defineStore('utilisateur', {
   },
 
   actions: {
-    //  recupérer la liste des utilisqteurs et le mettre dans la tabel dataListe
     async all() {
       try {
         await axios.get(`${all}`) 
@@ -100,7 +103,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       } finally {
         this.loading = false
       }
-    },
+    }, //  recupérer la liste des utilisqteurs et le mettre dans la tabel dataListe
     async admin() {
       try {
         await axios.get(`${admins}`) 
@@ -115,10 +118,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
                 username: element.username,
-                code: element.code,
                 sexe: element.sexe,
-                telephone: element.telephone,
-                anciennete: element.anciennete,
               }
               
             })
@@ -147,10 +147,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
                 username: element.username,
-                code: element.code,
                 sexe: element.sexe,
-                telephone: element.telephone,
-                anciennete: element.anciennete,
               }
               
             })
@@ -179,10 +176,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
                 username: element.username,
-                code: element.code,
                 sexe: element.sexe,
-                telephone: element.telephone,
-                anciennete: element.anciennete,
               }
               
             })
@@ -245,13 +239,61 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         this.loading = false
       }
     },
-    //  ajouter une sessio
+    //  ajouter une session
+    async addAdmin(payload) {
+      try {
+        await axios.post(`${addAdmin}`, payload) 
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+            console.log("Response: ", this.dataDetails);
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async addSupervisseur(payload) {
+      try {
+        await axios.post(`${addSupervisseur}`, payload) 
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+            console.log("Response: ", this.dataDetails);
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async addPlanificateur(payload) {
+      try {
+        await axios.post(`${addPlanificateur}`, payload) 
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+            console.log("Response: ", this.dataDetails);
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     //  modifier une session
     async modify(id, payload) {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload)
+        await axios.put(`${upAdmin}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

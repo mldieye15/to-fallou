@@ -17,7 +17,5 @@ public class VilleResponse {
     private String libelleCourt;
     private Academie academie;
     private int totalJury;
-    private int totalJuryAffecte;
-    private boolean quota;
 
 }

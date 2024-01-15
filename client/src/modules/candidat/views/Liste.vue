@@ -35,12 +35,17 @@
           </div>
         </template>
         <template #item-actions="item">
-          <div class="actions-wrapper">
-            <v-btn  size="small" @click.prevent="redirectToDetails(item.id)">
+          <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
+            <v-btn  variant="tonal" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
+              Appreciation
+            </v-btn>
+            <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn>
-            <v-btn size="small" @click.prevent="redirectToAppreciation(item.id)" class="ml-4">
-              Appreciation
+          </div>
+          <div v-else>
+            <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
+              Details
             </v-btn>
           </div>
           
@@ -82,18 +87,7 @@ const redirectToAppreciation = (id) => {
 onMounted(()=>{
   all();
 });
-
-const del = (id) => {
-  destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
-      dialog.value=false;
-      all();
-  });
-}
+let role= localStorage.getItem('role');
 </script>
 <style scoped>
 .v-text-field {
@@ -103,9 +97,9 @@ const del = (id) => {
   background-color: white;
 }
 .actions-wrapper {
-  width: 300px;
+  width: 230px;
 }
 .etablissement-wrapper{
- width: 110px; 
+ width: 240px; 
 }
 </style>

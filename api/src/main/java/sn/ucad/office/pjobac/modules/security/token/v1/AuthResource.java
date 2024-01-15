@@ -24,19 +24,19 @@ public class AuthResource {
         UserResponse response = service.inscrire(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @PostMapping(value = "/admin")
+    @PostMapping(value = "/addAdmin")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<AdminResponse> addAdmin(@RequestBody @Valid AdminRequest request) {
         AdminResponse response = service.addAdmin(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @PostMapping(value = "/planificateur")
+    @PostMapping(value = "/addPlanificateur")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<AdminResponse> addPlanificateur(@RequestBody @Valid AdminRequest request) {
         AdminResponse response = service.addPlanificateur(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-    @PostMapping(value = "/supervisseur")
+    @PostMapping(value = "/addSupervisseur")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<AdminResponse> addSupervisseur(@RequestBody @Valid AdminRequest request) {
         AdminResponse response = service.addSupervisseur(request);

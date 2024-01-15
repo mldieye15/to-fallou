@@ -16,6 +16,7 @@ import typeSessionRoutes from '@/modules/typeSession/routes';
 import codificationRoutes from '@/modules/codifiction/routes';
 import userRoutes from '@/modules/user/routes';
 import candidatRoutes from '@/modules/candidat/routes';
+import adminRoutes from '@/modules/adminstrateurs/routes';
 const routes = [
   {
     path: '/',
@@ -180,6 +181,7 @@ const routes = [
   ...codificationRoutes,
   ...userRoutes,
   ...candidatRoutes,
+  ...adminRoutes,
 ]
 
 const router = createRouter({

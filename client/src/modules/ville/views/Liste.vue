@@ -29,18 +29,6 @@
         buttons-pagination
         :search-value="searchValue"
       >
-      <template #item-quota="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-                 :color="item.quota === 'OUI' ? 'green' : 'red'" text variant="tonal">
-              {{ item.quota}}
-          </v-chip>
-      </template>
-      <template #item-totalJuryAffecte="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-                 color="green" text variant="standard">
-              {{ item.totalJuryAffecte}}
-          </v-chip>
-      </template>
       <template #item-totalJury="item">
           <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
                  color="blue" text variant="standard">

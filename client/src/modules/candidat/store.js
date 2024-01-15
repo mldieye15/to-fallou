@@ -157,7 +157,7 @@ export const useCandidatStore = defineStore('candidat', {
         this.loading = false
       }
     },
-    async modify(id, payload) {
+    async malus(id, payload) {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);

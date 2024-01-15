@@ -1,5 +1,10 @@
 <template>
   <v-container>
+    <div v-if="role=='ROLE_PLANIFICATEUR'" class="text-right">
+      <v-btn  @click.prevent="redirectToBonus(route.id)" class="ma-1" variant="tonal" color="blue"> Bonus</v-btn>
+      <v-btn @click.prevent="redirectToMalus(route.id)" class="ma-1" variant="tonal" color="blue">Malus </v-btn>
+    </div>
+          
     <v-row justify="center">
       <v-col cols="12" sm="6" md="6">
         <v-card>
@@ -388,7 +393,13 @@ onMounted(()=>{
     inputForm.affectable=dataDetails.value.affectable?'OUI':'NON'     
   });
 });
-
+let role= localStorage.getItem('role');
+const redirectToBonus = (id) => {
+  router.push({ name: 'candidat-bonus', params: { id } });
+};
+const redirectToMalus = (id) => {
+  router.push({ name: 'candidat-malus', params: { id } });
+};
 </script>
 <style scoped>
 .custom-card {

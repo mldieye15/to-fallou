@@ -116,6 +116,7 @@ const defaultSideBarItems = reactive({ items: [
       "icon": "mdi-view-dashboard",
       "route": "dashboard"
   },
+  
   {
       "id": 1,
       "title": "Users",
@@ -123,6 +124,14 @@ const defaultSideBarItems = reactive({ items: [
       "code": "user",
       "icon": "mdi-account-cowboy-hat-outline",
       "route": "user-liste"
+  },
+  {
+    "id": 15,
+    "title": "Candidats",
+    "translate": "candidat",
+    "code": "candidat",
+    "icon": "mdi-school",
+    "route": "candidat-liste"
   },
   {
     "id": 2,
@@ -228,14 +237,6 @@ const defaultSideBarItems = reactive({ items: [
     "icon": "mdi-school",
     "route": "codification-liste"
   },
-  {
-    "id": 15,
-    "title": "Candidats",
-    "translate": "candidat",
-    "code": "candidat",
-    "icon": "mdi-school",
-    "route": "candidat-liste"
-  },
   // {
   //     "id": 3,
   //     "title": "Ville",
@@ -245,9 +246,30 @@ const defaultSideBarItems = reactive({ items: [
   //     "route": "profile"
   // }
 ] });
+const sideBarItems = reactive({ items: [
+  {
+      "id": 0,
+      "title": "Tableau de bord",
+      "translate": "dashboard",
+      "code": "dashboard",
+      "icon": "mdi-view-dashboard",
+      "route": "dashboard"
+  },
+  {
+      "id": 1,
+      "title": "Candidats",
+      "translate": "candidat",
+      "code": "candidat",
+      "icon": "mdi-school",
+      "route": "candidat-liste"
+  }
+]});
 
 onMounted(()=>{
   listeModules();
+  if(role=="ROLE_SUPERVISSEUR"){
+    fonctionItems.items=sideBarItems.items;
+  }else
   fonctionItems.items = defaultSideBarItems.items;
 });
 
@@ -256,8 +278,7 @@ const loadFonction = async (module) => {
     fonctionItems.items = fonctionnalites.value;
   });
 }
-
-//  deconnexion
+let role= localStorage.getItem('role');
 //  deconnexion
 const handleLogout = () => {
   console.log("handleLogout clicked");
@@ -270,6 +291,7 @@ const handleLogout = () => {
       });
     });
 }
+
 </script>
 
 <style scoped>

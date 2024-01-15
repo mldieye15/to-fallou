@@ -3,8 +3,8 @@
     <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
     
     <v-container class="my-5" grid-list-xl>
-      <v-row class="mb-0 mx-auto pa-1"  align="center">
-        <v-col cols="12" sm="6" md="4" >
+      <v-row class="mb-0 mx-auto pa-0"  align="center">
+        <v-col cols="12" sm="4" md="4" >
           <v-text-field
             label="Underlined"
             placeholder="Placeholder"
@@ -14,13 +14,13 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="auto">
-          <v-btn variant="outlined" color="black" >
-            <router-link :to="{ name: 'user-add' }" class="">
-              {{ $t('apps.forms.ajouter') }}
-            </router-link>
-          </v-btn>
+        <v-col class="text-right" md="8" cols="auto">
+          <v-chip  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="blue">Planificateurs</v-chip>
+          <v-chip @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="blue">Supervisseurs </v-chip>
+          <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
+          <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip>
         </v-col>
+        
       </v-row>
       <EasyDataTable
         :headers="headerTable"
@@ -76,7 +76,8 @@ import { useUtilisateurStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
-
+import { useRouter } from "vue-router";
+const router = useRouter();
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -106,6 +107,18 @@ const del = (id) => {
       all();
   });
 }
+const redirectToPlanificateurs = () => {
+  router.push({ name: 'liste-planificateur' });
+};
+const redirectToSupervisseurs = () => {
+  router.push({ name: 'liste-supervisseur'});
+};
+const redirectToAdmins = () => {
+  router.push({ name: 'liste-admin'});
+};
+const redirectToUsers = () => {
+  router.push({ name: 'liste-user'});
+};
 </script>
 <style scoped>
 .v-text-field {
