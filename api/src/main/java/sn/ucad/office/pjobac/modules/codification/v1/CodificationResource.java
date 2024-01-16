@@ -32,7 +32,7 @@ public class CodificationResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<CodificationResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<CodificationResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -40,19 +40,19 @@ public class CodificationResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CodificationResponse>> all(){
         List<CodificationResponse> response = service.all();
-        return new ResponseEntity< List<CodificationResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<CodificationResponse>> one(@PathVariable(value = "id") String id) {
         Optional<CodificationResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<CodificationResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<CodificationResponse> add(@RequestBody @Valid CodificationRequest request) {
        CodificationResponse response = service.add(request);
-        return new ResponseEntity<CodificationResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -60,14 +60,14 @@ public class CodificationResource {
     public ResponseEntity<CodificationResponse> maj(@PathVariable(value="id") String id,
                                              @RequestBody @Valid CodificationRequest request) {
         CodificationResponse response = service.maj(request, id);
-        return new ResponseEntity<CodificationResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     @GetMapping("/get-code")
     public ResponseEntity<?> inscriptionCode(@RequestParam String email) {

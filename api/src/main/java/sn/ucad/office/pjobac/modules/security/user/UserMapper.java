@@ -37,9 +37,8 @@ public interface UserMapper {
     @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
     @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     AppUser adminRequestToUser(AdminRequest request);
-    @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
     @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
-    AppUser adminRequestToUserUp(@MappingTarget AppUser user,AdminRequest request);
+    AppUser adminRequestToUserUp(@MappingTarget AppUser user,AdminEditRequest request);
 
 
 }

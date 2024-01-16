@@ -15,8 +15,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
+@Table(name = "jury"
+        , uniqueConstraints ={
+                            @UniqueConstraint(columnNames = "numero"),
+                            @UniqueConstraint(columnNames ="nom" )
+}
 )
 public class Jury {
     @Id

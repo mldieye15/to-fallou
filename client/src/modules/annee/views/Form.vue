@@ -19,7 +19,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
         variant="solo"
-        @input="checkLibelleExistence"
+        @blur="checkLibelleExistence"
       >
     </v-text-field>
     <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>

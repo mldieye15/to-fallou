@@ -148,6 +148,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 email: element.email,
                 username: element.username,
                 sexe: element.sexe,
+                telephone: element.telephone
               }
               
             })
@@ -177,6 +178,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 email: element.email,
                 username: element.username,
                 sexe: element.sexe,
+                telephone: element.telephone
               }
               
             })
@@ -208,7 +210,6 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 code: element.code,
                 sexe: element.sexe,
                 telephone: element.telephone,
-                anciennete: element.anciennete,
               }
               
             })

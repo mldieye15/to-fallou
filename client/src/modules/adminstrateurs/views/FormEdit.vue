@@ -50,7 +50,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
-        @blur="checkMatriculeExistence"
+        @input="checkMatriculeExistence"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -82,23 +82,26 @@
         :rules="[rules.required]"
         v-model="inputForm.username"
         variant="solo" 
-        @blur="checkUsernameExistence"   
+        @input="checkUsernameExistence"   
       >
     </v-text-field> 
+    
     <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
       </v-col>
       <v-col>
-        <v-text-field
-        id="mdpasse"
-        prepend-inner-icon="mdi-lock"
-        name="mdpasse"
+        <v-select
+        id="sexe"
+        prepend-inner-icon="mdi-gender-male-female"
+        name="sexe"
         density="compact"
-        :label="$t('apps.forms.user.mdpasse')"
+        :label="$t('apps.forms.user.sexe')"
         color="balck"
         :rules="[rules.required]"
-        v-model="inputForm.mdpasse"
+        v-model="inputForm.sexe"
         variant="solo"
-      ></v-text-field>
+        :items="['Homme', 'Femme']"
+      >
+    </v-select>
       </v-col>
     </v-row >
       <v-row style="height: 15vh">
@@ -126,105 +129,13 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
-        @blur="checkEmailExistence"
+        @input="checkEmailExistence"
       >
     </v-text-field>
-    <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
+    <div v-if="emailError" class="error-message ma-1">{{ emailErrorMessage }}</div>
       </v-col> 
       </v-row>
-      
-      <v-row >
-      <v-col>
-        <v-select
-        id="sexe"
-        prepend-inner-icon="mdi-gender-male-female"
-        name="sexe"
-        density="compact"
-        :label="$t('apps.forms.user.sexe')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.sexe"
-        variant="solo"
-        :items="['Homme', 'Femme']"
-      >
-    </v-select>
-      </v-col> 
-      <v-col>
-      <v-text-field
-        id="code"
-        prepend-inner-icon="mdi-key"
-        name="code"
-        density="compact"
-        :label="$t('apps.forms.user.code')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.code"
-        variant="solo"
-        @input="checkCodeValidity"
-      ></v-text-field>
-        </v-col>
-
-      </v-row>
-      <v-row style="height: 15vh">
-        <v-col>
-          <v-text-field
-        id="anciennete"
-        prepend-inner-icon="mdi-timer"
-        name="anciennete"
-        density="compact"
-        :label="$t('apps.forms.user.anciennete')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.anciennete"
-        variant="solo"
-      ></v-text-field>
-        </v-col>
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-briefcase"
-        name="fonction"
-        density="compact"
-        :label="$t('apps.forms.fonction.nom')"
-        color="balck"
-        v-model="inputForm.fonction"
-        variant="solo"
-        :items="dataListe"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-domain"
-        name="etablissement"
-        density="compact"
-        :label="$t('apps.forms.etablissement.nom')"
-        color="balck"
-        v-model="inputForm.etablissement"
-        variant="solo"
-        :items="dataListeEtab"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-      </v-row>
-      <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 
-       </router-link>
-       <p>
-        <v-alert v-if="codeError" type="error">{{ codeErrorMessage }}
-        <router-link :to="{ name: 'code' }"> Recuperer votre code ici
-       </router-link>
-      </v-alert>
-       </p>
-       
-
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-8 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -365,12 +276,6 @@ const handleSave = () => {
     actionSubmit(inputForm);
   }
 };
-
-onMounted(()=>{
-  fonctionStore.all();
-  etablissementStore.all();
-
-});
 
 </script>
 <style>

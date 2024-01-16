@@ -223,7 +223,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public AdminResponse majAdmin(AdminRequest request, String id) throws NumberFormatException, BusinessResourceException {
+    public AdminResponse majAdmin(AdminEditRequest request, String id) throws NumberFormatException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
             AppUser entiteOptional = dao.findById(myId)

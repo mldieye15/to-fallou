@@ -5,7 +5,7 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/jurys';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
-
+const numeroAvailability=modulesURL+'/numero-availability';
 export const useJuryStore = defineStore('jury', {
   state: () => ({
     dataListeJury: [],  //  List des données à afficher pour la table
@@ -136,7 +136,18 @@ export const useJuryStore = defineStore('jury', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkNumeroExistence(numero) {
+      try {
+        const response = await axios.get(`${numeroAvailability}?numero=${numero}`);
+        console.log("Réponse de juryAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du jury :", error);
+        return false;
+      }
+    },
   },
   
 })

@@ -19,7 +19,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.email"
         variant="solo"
-        @input="checkEmailExistence"
+        @blur="checkEmailExistence"
        >
         </v-text-field>
         <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
@@ -33,7 +33,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
         variant="solo"
-        @input="checkCodeExistence"
+        @blur="checkCodeExistence"
        >
         </v-text-field>
         <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>

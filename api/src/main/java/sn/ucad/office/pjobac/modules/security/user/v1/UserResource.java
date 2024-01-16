@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
-import sn.ucad.office.pjobac.modules.security.user.dto.AdminRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.AdminResponse;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
-import sn.ucad.office.pjobac.modules.security.user.dto.UserResponse;
+import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -94,7 +91,7 @@ public class UserResource {
     @PutMapping(value = "/upAdmin/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<AdminResponse> majAdmin(@PathVariable(value="id") String id,
-                                            @RequestBody @Valid AdminRequest request) {
+                                            @RequestBody @Valid AdminEditRequest request) {
         AdminResponse response = service.majAdmin(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

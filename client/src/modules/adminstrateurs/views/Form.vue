@@ -50,7 +50,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
-        @input="checkMatriculeExistence"
+        @blur="checkMatriculeExistence"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -82,7 +82,7 @@
         :rules="[rules.required]"
         v-model="inputForm.username"
         variant="solo" 
-        @input="checkUsernameExistence"   
+        @blur="checkUsernameExistence"   
       >
     </v-text-field> 
     
@@ -142,7 +142,7 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
-        @input="checkEmailExistence"
+        @blur="checkEmailExistence"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message ma-1">{{ emailErrorMessage }}</div>

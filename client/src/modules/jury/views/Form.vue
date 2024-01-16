@@ -9,17 +9,6 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.jury.jury') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="juryForm" v-model="formValid">
-      <v-text-field
-        id="numero"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="numero"
-        density="compact"
-        :label="$t('apps.forms.jury.numero')"
-        color="balck"
-        :rules="[rules.required,rules.validateNombre]"
-        v-model="inputForm.numero"
-        variant="solo"
-      ></v-text-field>
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="centre"
@@ -50,8 +39,22 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
+      <v-text-field
+        id="numero"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="numero"
+        density="compact"
+        :label="$t('apps.forms.jury.numero')"
+        color="balck"
+        :rules="[rules.required,rules.validateNombre]"
+        v-model="inputForm.numero"
+        variant="solo"
+        @blur="checkNumeroExistence"
+      >
+      </v-text-field>
+      <div v-if="numeroError" class="error-message">{{ numeroErrorMessage }}</div>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-4 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -59,13 +62,14 @@
 
 <script setup>
 import { reactive, getCurrentInstance } from "vue";
-import { onMounted } from "vue"
+import { onMounted,ref,watchEffect } from "vue"
 import { storeToRefs } from "pinia";
 import { useCentreStore } from "@/modules/centre/store";
 import { useSessionStore } from "@/modules/session/store";
+import { useJuryStore } from "../store";
 
 const instance = getCurrentInstance();
-
+const juryStore=useJuryStore();
 const centreStore = useCentreStore();
 const { dataListeCentre } = storeToRefs(centreStore);
 const sessionStore = useSessionStore();
@@ -75,6 +79,12 @@ const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   validateNombre: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide de demandes autorises.',
 });
+const numeroError = ref(false);
+const numeroErrorMessage = ref("");
+const isSubmitDisabled = ref(false);
+watchEffect(() => {
+  isSubmitDisabled.value = numeroError.value 
+});
 
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
@@ -82,9 +92,30 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
+const checkNumeroExistence = async () => {
+  numeroError.value = false;
+  numeroErrorMessage.value = "";
+  if (inputForm.numero) {
+    try {
+      const isAvailable = await juryStore.checkNumeroExistence(inputForm.numero);
+      console.log("Résultat de la vérification du numero (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        numeroError.value = true;
+        numeroErrorMessage.value = "Ce numero  est déjà utilisé.";
+        console.log('numeroErrorMessage:', numeroErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du numero :", error);
+      numeroError.value = true;
+      numeroErrorMessage.value = "Erreur lors de la vérification du numero. Veuillez réessayer.";
+    }
+  }
+};
 
 const handleSave = () => {
+  if(!isSubmitDisabled.value){
     actionSubmit(inputForm);
+  }
 }
 
 onMounted(()=>{
@@ -93,3 +124,9 @@ onMounted(()=>{
 });
 
 </script>
+<style>
+.error-message {
+  color: red; /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+</style>

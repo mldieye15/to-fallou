@@ -188,5 +188,12 @@ public class JuryServiceImp implements JuryService {
 
     }
 
+    @Override
+    public void verifyJuryUnique(String numero) throws BusinessResourceException {
+        if(dao.findByNumero(numero).isPresent()){
+            throw new ResourceAlreadyExists("Le numero existe déjà.");
+        }
+    }
+
 
 }

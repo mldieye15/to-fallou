@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
@@ -30,7 +31,7 @@ public class JuryResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<JuryResponse>  response = service.all(pageable);
-        return new ResponseEntity< SimplePage<JuryResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/all")
@@ -38,19 +39,19 @@ public class JuryResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<JuryResponse>> all(){
         List<JuryResponse> response = service.all();
-        return new ResponseEntity< List<JuryResponse> >(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<JuryResponse>> one(@PathVariable(value = "id") String id) {
         Optional<JuryResponse> response = service.oneById(id);
-        return new ResponseEntity<Optional<JuryResponse>>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")
     // @PreAuthorize("hasRole('USER_ADD') or hasRole('ADMIN')")
     public ResponseEntity<JuryResponse> add(@RequestBody @Valid JuryRequest request) {
         JuryResponse response = service.add(request);
-        return new ResponseEntity<JuryResponse>(response, HttpStatus.CREATED);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
@@ -58,14 +59,23 @@ public class JuryResource {
     public ResponseEntity<JuryResponse> maj(@PathVariable(value="id") String id,
                                             @RequestBody @Valid JuryRequest request) {
         JuryResponse response = service.maj(request, id);
-        return new ResponseEntity<JuryResponse>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_DEL') or hasRole('ADMIN')")
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/numero-availability")
+    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String numero) {
+        try {
+            service.verifyJuryUnique(numero);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
     }
 }
 

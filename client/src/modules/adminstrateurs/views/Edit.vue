@@ -1,6 +1,7 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <!-- <FormVue :inputForm="inputForm" :actionSubmit="handleSave" /> -->
+    <FormEdit :inputForm="inputForm" :actionSubmit="handleSave" />
   </div>
 </template>
 
@@ -14,6 +15,7 @@ import { useI18n } from "vue-i18n";
 //  
 import FormVue from "./Form.vue";
 import { useUtilisateurStore } from "../store";
+import FormEdit from "./FormEdit.vue";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -34,13 +36,9 @@ const inputForm = reactive({
   dateNaiss:null,
   email: "",
   username: "",
-  mdpasse: "",
   sexe: "",
-  code: "",
   telephone: "",
-  anciennete: "",
-  fonction: null,
-  etablissement: null,
+
 });
 
 const handleSave = (payload) => {
