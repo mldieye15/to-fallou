@@ -126,7 +126,7 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
-        @blur="checkEmailExistence"
+        @blur="onEmailInput"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
@@ -160,7 +160,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
         variant="solo"
-        @input="checkCodeValidity"
+        @blur="checkCodeValidity"
       ></v-text-field>
         </v-col>
 
@@ -217,10 +217,10 @@
       <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 
        </router-link>
        <p>
-        <v-alert v-if="codeError" type="error">{{ codeErrorMessage }}
+        <div v-if="codeError" class="error-message">{{ codeErrorMessage }}
         <router-link :to="{ name: 'code' }"> Recuperer votre code ici
        </router-link>
-      </v-alert>
+      </div>
        </p>
        
 
@@ -284,7 +284,7 @@ const checkCodeValidity = async () => {
 
       if (!isCodeValid) {
         codeError.value = true;
-        codeErrorMessage.value = "Code invalide. Veuillez vérifier le code saisi.";
+        codeErrorMessage.value = "Code ou email invalide. Veuillez vérifier  le code ou l'email saisi.";
       }
     } catch (error) {
       console.error("Erreur lors de la vérification du code :", error);
@@ -371,6 +371,10 @@ onMounted(()=>{
   etablissementStore.all();
 
 });
+const onEmailInput = () => {
+  checkEmailExistence();
+  checkCodeValidity(); 
+};
 
 </script>
 <style>

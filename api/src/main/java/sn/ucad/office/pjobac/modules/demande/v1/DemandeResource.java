@@ -12,10 +12,9 @@ import sn.ucad.office.pjobac.config.AppConstants;
 
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeAccepter;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeDetailsCandidatResponse;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeRequest;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeResponse;
+import sn.ucad.office.pjobac.modules.demande.dto.*;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
+import sn.ucad.office.pjobac.modules.detailsCandidat.OrdreArriveService;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -27,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DemandeResource {
     private final DemandeService service;
+    private final OrdreArriveService ordreArrive;
 
     @GetMapping("")
     //@PreAuthorize("hasRole('ROLE_USER_LISTE') or hasRole('ROLE_ADMIN')")
@@ -72,6 +72,13 @@ public class DemandeResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Map<Long, List<DemandeDetailsCandidatResponse>>> allGroupedByUser() {
         Map<Long, List<DemandeDetailsCandidatResponse>> response = service.allGroupedByUser();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/demandeByVille/{villeId}")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity <List<DemandeDetailsCandidatResponse>> demandeByVille(@PathVariable("villeId") String villeId) {
+         List<DemandeDetailsCandidatResponse> response = service.demandeByVille(villeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")
@@ -140,5 +147,25 @@ public class DemandeResource {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/updateOrderByVille")
+    public ResponseEntity<String> updateOrderByVille() {
+        try {
+            ordreArrive.updateOrderByVille();
+            return ResponseEntity.ok("Mise à jour réussie de l'ordre d'arrivée par ville.");
+        } catch (BusinessResourceException e) {
+            // Gérer les exceptions liées aux ressources métier
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'ordre d'arrivée.");
+        }
+    }
+    @GetMapping("/updateRangByVille")
+    public ResponseEntity<String> updateRangByVille() {
+        try {
+            ordreArrive.updateRangByVille();
+            return ResponseEntity.ok("Mise à jour réussie des rang par ville.");
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'ordre d'arrivée.");
+        }
+    }
+
 }
 

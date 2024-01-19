@@ -1,5 +1,23 @@
 <template>
-      <v-container class="my-6" grid-list-xl>
+      <v-container class="my-1" grid-list-xl>
+        <v-row class="mb-0 mx-auto pa-0"  align="center">
+        <v-col cols="12" sm="4" md="4" >
+          <v-text-field
+            label="Underlined"
+            placeholder="Placeholder"
+            variant="underlined"
+            append-inner-icon="mdi-magnify"
+            v-model="searchValue"
+          ></v-text-field>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col class="text-right" md="8" cols="auto">
+          <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
+          <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
+          <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
+          <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
+        </v-col>
+        </v-row>
         <div v-if="loading">Chargement en cours...</div>
         <div v-for="userEntry in paginatedData" :key="userEntry.userId">
       <div class="mb-2 mt-2"><h2>{{ userEntry.user }}</h2></div>
@@ -19,19 +37,46 @@
             <span>{{ props.row.etatDemande }}</span>
           </v-chip>
           </span>
+          <span v-if="props.column.field == 'ordreArrivee'">
+            <v-chip color="pink"  size="small" variant="flat" >
+              {{ props.row.ordreArrivee}}
+          </v-chip>
+          </span>
+          <span v-if="props.column.field == 'rang'">
+            <v-chip color="cyan"  size="small" variant="flat" >
+              {{ props.row.rang}}
+           </v-chip>
+          </span>
           <div v-if="props.column.field === 'actions'">
-            <div class="actions-wrapper"
-             v-if="props.row.etatDemande === 'EN ATTENTE' &&
-              props.row.quota === 'OUI' && 
-              props.row.hasAcceptedDemande === 'NON'&&
-              props.row.affectable === 'OUI'">
-              <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
-                <router-link :to="{ name: 'accepte-Demande', params: { id: props.row.id } }">
-                  <v-icon small flat color="green">mdi-check</v-icon> Accepte
-                </router-link>
-              </v-chip>
-            </div>
-          </div>
+        <div class="actions-wrapper"
+         v-if="props.row.etatDemande === 'EN ATTENTE' &&
+          props.row.quota === 'OUI' && 
+          props.row.hasAcceptedDemande === 'NON'&&
+          props.row.affectable === 'OUI'">
+            <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              Affecté
+            </v-btn>
+        </div>
+        <div v-else>
+          <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
+          <v-btn  variant="flat" color="red-darken-4" size="small">
+              NON AFFECTABLE
+            </v-btn>
+        </div>
+        <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
+          <v-btn  variant="flat" color="green" size="small">
+              dèja Affecté
+            </v-btn>
+        </div>
+        <div class="actions-wrapper" v-else>
+          <v-btn  variant="flat" color="red" size="small">
+             quota atteint
+            </v-btn>
+        </div>
+
+        </div>
+        
+      </div>
         </template>
       </vue-good-table>
     </div>
@@ -61,7 +106,7 @@
           color="green"
         >
           <template v-slot:item="{ page }">
-              <v-chip color="blue" class="mt-2" size="small" :class="getPageClass(page)">
+              <v-chip color="teal" class="mt-2" size="small" variant="flat" :class="getPageClass(page)">
                 {{ page }}
               </v-chip>
         </template>
@@ -79,6 +124,10 @@ import { useNotificationStore } from "@/store/notification";
 import { useCentreStore } from "@/modules/centre/store";
 import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
+import { useRouter } from "vue-router";
+
+
+const router = useRouter();
 const centreStore=useCentreStore();
 const { dataListeByVille} = storeToRefs(centreStore);
 
@@ -105,8 +154,8 @@ const onItemsPerPageChange = () => {
   currentPage.value = 1; // Réinitialisez la page actuelle lorsque le nombre d'éléments par page change
 };
 
-const itemsPerPageOptions = ref([1,2,5, 10, 20, 30]); // Ajoutez d'autres valeurs au besoin
-const selectedItemsPerPage = ref(2);
+const itemsPerPageOptions = ref([1,2,3,5, 10, 20, 30]); // Ajoutez d'autres valeurs au besoin
+const selectedItemsPerPage = ref(5);
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * selectedItemsPerPage.value;
   const end = start + selectedItemsPerPage.value;
@@ -124,6 +173,13 @@ watch(() => currentPage.value, () => {
 const getPageClass = (pageNumber) => {
   return pageNumber === currentPage.value ? 'active-page' : '';
 }; 
+
+const redirectToVilles = () => {
+  router.push({ name: 'demandeByVille-liste' });
+};
+const redirectToDemandes = (id) => {
+  router.push({ name: 'accepte-Demande', params: { id } });
+};
 </script>
 <style scoped>
 .v-text-field {

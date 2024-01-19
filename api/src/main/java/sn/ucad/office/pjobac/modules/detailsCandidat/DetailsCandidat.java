@@ -46,8 +46,6 @@ public class DetailsCandidat{
 
     @Column(nullable = true)
     private Long utiCree;
-
-
     @Column(updatable = false)
     @CreationTimestamp
     protected LocalDateTime dateCreation = LocalDateTime.now() ;

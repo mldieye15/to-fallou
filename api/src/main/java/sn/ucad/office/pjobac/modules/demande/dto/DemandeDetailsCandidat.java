@@ -14,25 +14,36 @@ import java.time.LocalDateTime;
 
 public interface DemandeDetailsCandidat {
     Long getId();
-
-    AppUser getUser();
-
-    Ville getVille();
-
-    Academie getAcademie();
-
-    Session getSession();
-
-    Centre getCentre();
-
-    EtatDemande getEtatDemande();
-
-    Integer getOrdreArrivee();
-
-    LocalDateTime getDateDemande();
-
+    AppUser getCandidat();
+    Annee getAnnee();
+    Integer getBonus();
+    Integer getMalus();
+    Integer getNoteFonction();
+    Integer getNoteEtablissementProvenance();
+    Integer getNoteAnciennete();
     Integer getNote();
-
+    Integer getNoteSupervisseur();
+    String getAppreciation();
     boolean isAffectable();
+    Long getUtiCree();
+    LocalDateTime getDateCreation();
+    Long getUtiModifie();
+    LocalDateTime getDateModification();
 
+    // Champs de Demande
+    AppUser getUser();
+    String getVille();
+    Academie getAcademie();
+    Session getSession();
+    Centre getCentre();
+    EtatDemande getEtatDemande();
+    Integer getOrdreArrivee();
+    Integer getDelaisDeValidation();
+    LocalDateTime getDateDemande();
+    LocalDateTime getDateRejetDemande();
+    LocalDateTime getDateConfirmationDemande();
+    Long getUtiCreeDemande();
+    LocalDateTime getDateCreationDemande();
+    Long getUtiModifieDemande();
+    LocalDateTime getDateModificationDemande();
 }

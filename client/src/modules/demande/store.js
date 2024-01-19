@@ -22,7 +22,7 @@ export const useDemandeStore = defineStore('demande', {
     hasAcceptedDemande: false,  //  utilisé pour le chargement
     etatCouleurs: {
       'ACCEPTE': 'orange',
-      'EN ATTENTE': 'grey',
+      'EN ATTENTE': 'purple',
       'REJETE': 'red',
       'VALIDE': 'green',
       'OBSOLETE':'yellow',
@@ -36,6 +36,8 @@ export const useDemandeStore = defineStore('demande', {
       { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
       { label: 'Points', field: 'note',width: "100px",resizable: true },
       { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
+      { label: 'Ordre Arrivee', field: 'ordreArrivee',width: "120px",resizable: true},
+      { label: 'Rang', field: 'rang',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions',width: "100px",resizable: true }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
@@ -153,6 +155,8 @@ export const useDemandeStore = defineStore('demande', {
                 id: element.demandeId,
                 nom: element.nom,
                 note: element.note,
+                ordreArrivee:element.ordreArrivee,
+                rang: element.rang,
                 affectable: affectableLabel,
                 ville: villeLabel,
                 academie: academieLabel,

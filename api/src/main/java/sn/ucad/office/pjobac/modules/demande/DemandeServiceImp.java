@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 public class DemandeServiceImp implements DemandeService {
     private final DemandeMapper mapper;
     private final DemandeDao dao;
-    private final EtatDemandeDao etatDemandeDao;
     private final EtatDemandeServiceImp service;
     private  final MailService mailService;
     private final CentreDao centreDao;
@@ -80,6 +79,29 @@ public class DemandeServiceImp implements DemandeService {
 
         return response;
     }
+    @Override
+    public List<DemandeDetailsCandidatResponse> demandeByVille(String villeId) throws BusinessResourceException {
+        log.info("DemandeServiceImp::demandeByVille");
+        Long myId = Long.valueOf(villeId.trim());
+        Ville ville = villeDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "Aucun Ville avec " + villeId + " trouvé.", HttpStatus.NOT_FOUND)
+                );
+        // Récupérer toutes les demandes par ville
+        List<Demande> all = dao.demandeByVille(ville);
+        List<DemandeDetailsCandidatResponse> response;
+        response = all.stream()
+                .map(demande -> {
+                    DetailsCandidat detailsCandidat = candidatDao.detailsForUser(demande.getUser());
+                    DemandeDetailsCandidatResponse demandeResponse;
+                    demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
+                    return demandeResponse;
+                })
+                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getOrdreArrivee))
+                .collect(Collectors.toList());
+        return response;
+    }
+
 
     @Override
     public List<DemandeResponse> allForUser() throws BusinessResourceException {
@@ -374,5 +396,31 @@ public class DemandeServiceImp implements DemandeService {
         }
 
     }
+
+//    @Override
+//    public void updateOrderByVille() throws BusinessResourceException {
+//        log.info("DemandeServiceImp::updateOrderByVille");
+//        // Récupérer toutes les demandes avec les détails de chaque candidat
+//        List<Demande> all = dao.findAll();
+//        // Regrouper les demandes par ville
+//        Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
+//                .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
+//                        Collectors.mapping(demande -> mapper.mapToResponse(demande,
+//                                candidatDao.detailsForUser(demande.getUser())), Collectors.toList())));
+//        // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
+//        groupedByVille.forEach((city, candidates) -> {
+//            candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());
+//            // Mettre à jour l'ordre d'arrivée
+//            int order = 1;
+//            for (DemandeDetailsCandidatResponse candidate : candidates) {
+//                Demande demande = dao.findById(candidate.getDemandeId()).orElse(null);
+//                if (demande != null) {
+//                    demande.setOrdreArrivee(order++);
+//                    dao.save(demande);
+//                }
+//            }
+//        });
+//
+//    }
 
 }

@@ -9,8 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
+import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
+import sn.ucad.office.pjobac.modules.detailsCandidat.OrdreArriveService;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
+import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -21,6 +25,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DetailsCandidatResource {
     private final DetailsCandidatService service;
+    private final OrdreArriveService ordreArriveService;
 
     @GetMapping("")
     //@PreAuthorize("hasRole('ROLE_USER_LISTE') or hasRole('ROLE_ADMIN')")
@@ -87,5 +92,20 @@ public class DetailsCandidatResource {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/max-note/{villeId}")
+    public ResponseEntity<Integer> maxNoteByVille(@PathVariable String villeId) {
+        try {
+            Integer maxNote = service.maxNoteByVille(villeId);
+            return ResponseEntity.ok(maxNote);
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.status(e.getStatus()).body(null);
+        }
+    }
+    @PutMapping("/affectable/{candidatId}")
+    public ResponseEntity<Void> nonAffectable(@PathVariable Long candidatId) {
+        service.nonAffectable(candidatId);
+        return ResponseEntity.ok().build();
+    }
+
 }
 

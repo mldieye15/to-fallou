@@ -1,9 +1,12 @@
 package sn.ucad.office.pjobac.modules.detailsCandidat;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
+import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -27,4 +30,8 @@ public interface DetailsCandidatService {
     public String del(String id) throws NumberFormatException, BusinessResourceException;
 
     public Optional<DetailsCandidatAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void updateOrderByVille() throws BusinessResourceException;
+   Integer maxNoteByVille(String villeId);
+    public void nonAffectable(Long candidatId);
 }

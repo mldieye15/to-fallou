@@ -38,4 +38,5 @@ public class DemandeDetailsCandidatResponse{
     private int noteSupervisseur;
     private String appreciation;
     private boolean affectable;
+    private Integer rang;
 }

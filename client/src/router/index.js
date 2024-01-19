@@ -17,6 +17,7 @@ import codificationRoutes from '@/modules/codifiction/routes';
 import userRoutes from '@/modules/user/routes';
 import candidatRoutes from '@/modules/candidat/routes';
 import adminRoutes from '@/modules/adminstrateurs/routes';
+import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
 const routes = [
   {
     path: '/',
@@ -182,6 +183,7 @@ const routes = [
   ...userRoutes,
   ...candidatRoutes,
   ...adminRoutes,
+  ...demandeByVilleRoutes,
 ]
 
 const router = createRouter({

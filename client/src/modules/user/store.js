@@ -230,6 +230,22 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       }
     },
     //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
+    async add(payload) {
+      try {
+        await axios.post(`${add}`, payload) 
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+            console.log("Response: ", this.dataDetails);
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     async one(session) {
       try {
         await axios.get(`${modulesURL}/${session}`) 

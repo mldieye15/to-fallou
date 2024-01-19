@@ -7,6 +7,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.ville.Ville;
+
+import java.util.List;
 
 
 @Repository
@@ -21,5 +24,13 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
     void updateNote(@Param("detailsCandidat") DetailsCandidat detailsCandidat);
     @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.candidat = :user")
     DetailsCandidat detailsForUser(@Param("user") AppUser user);
+    @Query("SELECT MAX(dc.note) " +
+            "FROM Demande d " +
+            "JOIN DetailsCandidat dc ON dc.candidat = d.user " +
+            "WHERE d.etatDemande.libelleLong = 'EN ATTENTE' " +
+            "AND d.ville = :ville")
+    Integer maxNote(@Param("ville") Ville ville);
 
+    @Query("SELECT dc FROM DetailsCandidat dc INNER JOIN Demande d WHERE d.ville = :ville")
+    List<DetailsCandidat> findByVille(@Param("ville") Ville ville);
 }

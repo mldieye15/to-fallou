@@ -39,6 +39,7 @@ public class Demande {
     @ManyToOne
     private EtatDemande etatDemande;
     private Integer ordreArrivee;
+    private Integer rang;
     private Integer delaisDeValidation;
     protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;

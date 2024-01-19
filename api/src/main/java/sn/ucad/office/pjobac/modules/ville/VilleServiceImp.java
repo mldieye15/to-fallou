@@ -13,6 +13,7 @@ import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
 import sn.ucad.office.pjobac.modules.demande.Demande;
+import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
@@ -35,15 +36,21 @@ public class VilleServiceImp implements VilleService {
     private final AcademieDao academieDao;
     private final AuthService authService;
     private final UserDao userDao;
+    private  final DemandeDao demandeDao;
 
-    @Override
     public List<VilleResponse> all() throws BusinessResourceException {
         log.info("VilleServiceImp::all");
         List<Ville> all = dao.findAll();
         List<VilleResponse> response;
         response = all.stream()
-                .map(mapper::toEntiteResponse)
+                .map(ville -> {
+                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille
+                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
+                    villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
+                    return villeResponse;
+                })
                 .collect(Collectors.toList());
+
         return response;
     }
 
@@ -83,7 +90,7 @@ public class VilleServiceImp implements VilleService {
     public SimplePage<VilleResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des villes avec pagination. <all>");
         final Page<Ville> page = dao.findAll(pageable);
-        return new SimplePage<VilleResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),

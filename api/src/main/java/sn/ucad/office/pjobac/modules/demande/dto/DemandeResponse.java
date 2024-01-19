@@ -26,5 +26,6 @@ public class DemandeResponse {
     private EtatDemande etatDemande;
     private AppUser user;
     private LocalDateTime dateDemande;
+    private Integer rang;
 
 }

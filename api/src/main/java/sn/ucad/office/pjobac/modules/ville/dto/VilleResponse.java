@@ -17,5 +17,6 @@ public class VilleResponse {
     private String libelleCourt;
     private Academie academie;
     private int totalJury;
+    private int totalDemandes;
 
 }

@@ -22,8 +22,8 @@
         <template #table-row="props">
           <div v-if="props.column.field === 'actions'">
             <div class="actions-wrapper">
-            <router-link :to="{ name: 'user-details', params: { id: props.row.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
-            <router-link :to="{ name: 'user-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
+            <router-link :to="{ name: 'admin-details', params: { id: props.row.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
+            <router-link :to="{ name: 'admin-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">

@@ -2,6 +2,7 @@ package sn.ucad.office.pjobac.modules.detailsCandidat;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,17 +13,20 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.AnneeDao;
+import sn.ucad.office.pjobac.modules.demande.DemandeDao;
+import sn.ucad.office.pjobac.modules.demande.DemandeMapper;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.ville.Ville;
+import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Lazy
 @Slf4j
 @RequiredArgsConstructor
 public class DetailsCandidatServiceImp implements DetailsCandidatService {
@@ -30,7 +34,9 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     private final DetailsCandidatDao dao;
     private final AuthService authService;
     private final AnneeDao anneeDao;
-
+    private  final VilleDao villeDao;
+    private final DemandeMapper demandeMapper;
+    private final OrdreArriveService ordreArrive;
     @Override
     public List<DetailsCandidatResponse> all() throws BusinessResourceException {
         log.info("AcademieServiceImp::all");
@@ -90,6 +96,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
             log.info("Ajout " + response.getAppreciation() + " effectué avec succés. <add>");
             dao.updateNoteBy(currentUser);
+            ordreArrive.updateOrderByVille();
             return response;
 
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -126,6 +133,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
         }
     }
 
+    @Transactional(readOnly = false)
     @Override
     public DetailsCandidatResponse note(DetailsCandidatNoteRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
@@ -138,6 +146,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("appreciation " + response.getAppreciation() + " effectuée avec succés. <appreciation>");
             dao.updateNote(detailsCandidatOptional);
+            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <appreciation>.");
@@ -150,7 +159,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             throw new BusinessResourceException("technical-error", "Erreur technique de  l'appreciation: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Transactional(readOnly = false)
     @Override
     public DetailsCandidatResponse malus(DetailsCandidatMalusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
@@ -163,6 +172,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
             dao.updateNote(detailsCandidatOptional);
+            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
@@ -175,7 +185,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Academie: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Transactional(readOnly = false)
     @Override
     public DetailsCandidatResponse bonus(DetailsCandidatBonusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
@@ -188,6 +198,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
             dao.updateNote(detailsCandidatOptional);
+            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
@@ -237,5 +248,69 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public Integer maxNoteByVille(String villeId) {
+        try {
+            Long myId = Long.valueOf(villeId.trim());
+            Ville ville = villeDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Ville avec id: " + villeId + " trouvé. <auditOneById>");
+            return dao.maxNote(ville);
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " +villeId+ " non autorisé. <auditOneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @Override
+    public void nonAffectable(Long candidatId) {
+        DetailsCandidat candidat = dao.findById(candidatId).orElse(null);
+
+        if (candidat != null) {
+            if (candidat.isAffectable()) {
+                try {
+                    candidat.setAffectable(!candidat.isAffectable());
+                    dao.save(candidat);
+                    log.info("Affectabilité avec l'ID " + candidatId + " changée avec succès.");
+                } catch (Exception e) {
+                    log.error("Erreur lors de la sauvegarde de l'état d'affectabilité pour l'ID " + candidatId, e);
+                }
+            } else {
+                log.warn("L'état d'affectabilité pour l'ID " + candidatId + " est déjà false. Aucun changement effectué.");
+            }
+        } else {
+            log.warn("Candidat avec l'ID " + candidatId + " non trouvé.");
+        }
+    }
+
+
+//    @Override
+//    public void updateOrderByVille() throws BusinessResourceException {
+//            log.info("DemandeServiceImp::updateOrderByVille");
+//            // Récupérer toutes les demandes avec les détails de chaque candidat
+//            List<Demande> all = demandeDao.findAll();
+//            // Regrouper les demandes par ville
+//            Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
+//                    .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
+//                            Collectors.mapping(demande -> demandeMapper.mapToResponse(demande,
+//                                    dao.detailsForUser(demande.getUser())), Collectors.toList())));
+//            // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
+//            groupedByVille.forEach((city, candidates) -> {
+//                candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());
+//                // Mettre à jour l'ordre d'arrivée
+//                int order = 1;
+//                for (DemandeDetailsCandidatResponse candidate : candidates) {
+//                    Demande demande = demandeDao.findById(candidate.getDemandeId()).orElse(null);
+//                    if (demande != null) {
+//                        demande.setOrdreArrivee(order++);
+//                        demandeDao.save(demande);
+//                    }
+//                }
+//            });
+//    }
 
 }
