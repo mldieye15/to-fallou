@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : lun. 15 jan. 2024 à 15:47
+-- Généré le : sam. 20 jan. 2024 à 12:50
 -- Version du serveur : 5.7.36
 -- Version de PHP : 7.4.26
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `academie` (
   `uti_modifie` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK91rjxy79526damtnj0m0csyo7` (`libelle_long`)
-) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `academie`
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `annee` (
   `encours` bit(1) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UKbepxf1dhd7se9eyssfvml2r0k` (`libelle_long`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `annee`
@@ -77,8 +77,10 @@ INSERT INTO `annee` (`id`, `date_creation`, `date_modification`, `libelle_long`,
 (6, '2023-12-05 13:43:24', '2023-12-05 14:01:50', '2020', NULL, NULL, b'0'),
 (7, '2023-12-05 13:43:37', '2023-12-05 14:01:49', '2012', NULL, NULL, b'0'),
 (8, '2023-12-05 13:43:47', '2024-01-03 13:16:00', '2022', NULL, NULL, b'0'),
-(9, '2023-12-05 13:43:55', '2024-01-04 09:57:17', '2023', NULL, NULL, b'1'),
-(11, '2024-01-04 09:44:19', '2024-01-04 09:57:16', '2024', NULL, NULL, b'0');
+(9, '2023-12-05 13:43:55', '2024-01-18 17:18:43', '2023', NULL, NULL, b'1'),
+(11, '2024-01-04 09:44:19', '2024-01-18 17:18:42', '2024', NULL, NULL, b'0'),
+(12, '2024-01-16 10:44:14', '2024-01-16 10:44:14', '2025', NULL, NULL, b'0'),
+(13, '2024-01-18 11:41:40', '2024-01-18 11:41:40', '2026', NULL, NULL, b'0');
 
 -- --------------------------------------------------------
 
@@ -102,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `centre` (
   UNIQUE KEY `UKcctnpevrwxaxu5dwvriqij23w` (`libelle_long`),
   KEY `FKbyy2eufmkuiwmcqg4fp7j2nng` (`type_centre_id`),
   KEY `FKp403erpfj282colmcnul3ffy2` (`ville_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `centre`
@@ -112,15 +114,16 @@ INSERT INTO `centre` (`id`, `date_creation`, `date_modification`, `libelle_court
 (1, '2023-12-18 15:34:42', '2023-12-18 15:34:42', 'LPA', 'LYCEE PARCELLE', 1, NULL, NULL, 1, 1),
 (2, '2023-12-18 15:35:13', '2023-12-18 15:35:13', 'CEM PA', 'CEM PARCELLE', 1, NULL, NULL, 3, 1),
 (3, '2023-12-18 15:35:37', '2023-12-18 15:35:37', 'CEM ML', 'CEM MODOU LO', 0, NULL, NULL, 3, 1),
-(4, '2023-12-18 15:36:08', '2023-12-18 15:36:08', 'LGW', 'LYCEE GUEDIAWAYE', 0, NULL, NULL, 1, 2),
+(4, '2023-12-18 15:36:08', '2023-12-18 15:36:08', 'LGW', 'LYCEE GUEDIAWAYE', 1, NULL, NULL, 1, 2),
 (5, '2023-12-18 15:36:49', '2023-12-18 15:36:49', 'CEM GU', 'CEM GUEDIAWAYE', 0, NULL, NULL, 3, 2),
-(6, '2023-12-19 11:02:19', '2023-12-19 11:02:19', 'LTT', 'LYCEE TOUBA TOUL', 0, NULL, NULL, 1, 3),
+(6, '2023-12-19 11:02:19', '2023-12-19 11:02:19', 'LTT', 'LYCEE TOUBA TOUL', 1, NULL, NULL, 1, 3),
 (7, '2023-12-19 16:52:00', '2023-12-19 16:52:00', 'LKH', 'LYCCE KHOMBOLE', 0, NULL, NULL, 3, 4),
 (8, '2023-12-26 15:18:19', '2023-12-26 15:18:19', 'LRF', 'LYCEE RAFANE', 0, NULL, NULL, 1, 6),
 (9, '2023-12-26 15:18:50', '2023-12-26 15:18:50', 'LBM', 'LYCEE BAMBEY', 0, NULL, NULL, 1, 5),
 (10, '2023-12-29 09:39:00', '2023-12-29 09:39:00', 'CEM TT', 'CEM TOUBA TOUL', 0, NULL, NULL, 3, 3),
 (11, '2023-12-29 10:44:56', '2023-12-29 10:44:56', 'CEM ND', 'CEM NDONDOL', 0, NULL, NULL, 1, 8),
-(12, '2023-12-29 13:17:04', '2023-12-29 13:17:04', 'LTV', 'LYCEE TIVAOUNE', 0, NULL, NULL, 1, 7);
+(12, '2023-12-29 13:17:04', '2023-12-29 13:17:04', 'LTV', 'LYCEE TIVAOUNE', 1, NULL, NULL, 1, 7),
+(13, '2024-01-18 10:51:37', '2024-01-18 10:51:37', 'ccc', 'cente1', 0, NULL, NULL, 3, 7);
 
 -- --------------------------------------------------------
 
@@ -140,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `codification` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UKe62jox46oumo4iv0xptmx7d5u` (`code`),
   UNIQUE KEY `UKgpak35cy9u1tdgxgksxo230x1` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `codification`
@@ -152,7 +155,9 @@ INSERT INTO `codification` (`id`, `code`, `date_creation`, `date_modification`, 
 (5, 'fallouthiaw12', '2023-12-14 14:28:03', '2023-12-14 14:28:03', 'fallouthiawoffice@gmail.com', NULL, NULL),
 (6, 'gueye12', '2023-12-14 14:28:27', '2023-12-14 14:28:27', 'gueyedaoudagueye5@gmail.com', NULL, NULL),
 (7, 'khabane12', '2023-12-14 14:28:44', '2023-12-14 14:28:44', 'khabaneoffice@gmail.com', NULL, NULL),
-(8, 'diouf12', '2023-12-14 14:29:12', '2023-12-14 14:29:12', 'diouffadel406@gmail.com', NULL, NULL);
+(8, 'diouf12', '2023-12-14 14:29:12', '2023-12-14 14:29:12', 'diouffadel406@gmail.com', NULL, NULL),
+(9, '1234567', '2024-01-18 10:33:54', '2024-01-18 10:33:54', 'fadel@diouf', NULL, NULL),
+(10, 'code123', '2024-01-18 15:38:42', '2024-01-18 15:38:42', 'dioufyama@yama', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -178,6 +183,8 @@ CREATE TABLE IF NOT EXISTS `demande` (
   `user_id` bigint(20) DEFAULT NULL,
   `ville_id` bigint(20) DEFAULT NULL,
   `date_confirmation_demande` datetime DEFAULT NULL,
+  `rang` int(11) DEFAULT NULL,
+  `total_demande` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKe043io443blc9ldrdibve9t2d` (`academie_id`),
   KEY `FK32aynyheqkxh4g0w1fropopkm` (`centre_id`),
@@ -185,19 +192,25 @@ CREATE TABLE IF NOT EXISTS `demande` (
   KEY `FKgqcexujohnq8070n4el8nau99` (`session_id`),
   KEY `FKe90uq675txdigms4t6lb9ky8l` (`user_id`),
   KEY `FK6p0u2mydherp2ogpat13cqi59` (`ville_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `demande`
 --
 
-INSERT INTO `demande` (`id`, `date_creation`, `date_demande`, `date_modification`, `date_rejet_demande`, `delais_de_validation`, `ordre_arrivee`, `uti_cree`, `uti_modifie`, `academie_id`, `centre_id`, `etat_demande_id`, `session_id`, `user_id`, `ville_id`, `date_confirmation_demande`) VALUES
-(1, '2024-01-10 12:43:08', '2024-01-10 12:43:08', '2024-01-10 12:43:08', NULL, NULL, NULL, NULL, NULL, 5, NULL, 1, 22, 26, 8, NULL),
-(2, '2024-01-10 12:43:08', '2024-01-12 13:05:59', '2024-01-12 13:05:59', NULL, NULL, NULL, NULL, NULL, 3, 2, 2, 22, 26, 1, NULL),
-(3, '2024-01-10 12:43:08', '2024-01-10 12:43:08', '2024-01-10 12:43:08', NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 22, 26, 3, NULL),
-(4, '2024-01-11 09:46:36', '2024-01-11 09:46:36', '2024-01-11 09:46:36', NULL, NULL, NULL, NULL, NULL, 5, NULL, 1, 22, 24, 8, NULL),
-(5, '2024-01-11 09:46:36', '2024-01-11 09:46:36', '2024-01-11 09:46:36', NULL, NULL, NULL, NULL, NULL, 1, NULL, 1, 22, 24, 4, NULL),
-(6, '2024-01-11 09:46:36', '2024-01-12 13:27:01', '2024-01-12 13:27:01', NULL, NULL, NULL, NULL, NULL, 3, 1, 2, 22, 24, 1, NULL);
+INSERT INTO `demande` (`id`, `date_creation`, `date_demande`, `date_modification`, `date_rejet_demande`, `delais_de_validation`, `ordre_arrivee`, `uti_cree`, `uti_modifie`, `academie_id`, `centre_id`, `etat_demande_id`, `session_id`, `user_id`, `ville_id`, `date_confirmation_demande`, `rang`, `total_demande`) VALUES
+(18, '2024-01-17 13:35:18', '2024-01-17 13:35:18', '2024-01-18 17:05:45', NULL, NULL, 1, NULL, NULL, 3, NULL, 1, 22, 25, 2, NULL, 1, 0),
+(17, '2024-01-17 13:35:18', '2024-01-19 15:47:20', '2024-01-19 15:47:20', NULL, NULL, 1, NULL, NULL, 3, NULL, 1, 22, 25, 1, NULL, NULL, 0),
+(16, '2024-01-17 13:35:18', '2024-01-17 13:35:18', '2024-01-18 10:46:02', NULL, NULL, 1, NULL, NULL, 1, NULL, 1, 22, 25, 3, NULL, NULL, 0),
+(15, '2024-01-17 13:34:40', '2024-01-17 13:34:40', '2024-01-18 17:05:45', NULL, NULL, 2, NULL, NULL, 3, NULL, 1, 22, 22, 2, NULL, 2, 0),
+(14, '2024-01-17 13:34:40', '2024-01-20 12:48:32', '2024-01-20 12:48:32', NULL, NULL, 2, NULL, NULL, 3, 2, 2, 22, 22, 1, NULL, 1, 0),
+(13, '2024-01-17 13:34:40', '2024-01-17 13:34:40', '2024-01-18 10:46:02', NULL, NULL, 2, NULL, NULL, 1, NULL, 1, 22, 22, 3, NULL, NULL, 0),
+(12, '2024-01-17 13:34:01', '2024-01-17 13:34:01', '2024-01-18 17:05:45', NULL, NULL, 4, NULL, NULL, 3, NULL, 1, 22, 24, 2, NULL, 3, 0),
+(11, '2024-01-17 13:34:01', '2024-01-17 13:34:01', '2024-01-18 17:05:45', NULL, NULL, 4, NULL, NULL, 3, NULL, 1, 22, 24, 1, NULL, 2, 0),
+(10, '2024-01-17 13:34:01', '2024-01-20 12:46:47', '2024-01-20 12:46:47', NULL, NULL, 1, NULL, NULL, 1, 12, 2, 22, 24, 7, NULL, 1, 0),
+(19, '2024-01-17 13:36:03', '2024-01-18 11:04:01', '2024-01-18 11:11:44', NULL, NULL, 3, NULL, NULL, 1, NULL, 1, 22, 27, 3, NULL, NULL, 0),
+(20, '2024-01-17 13:36:03', '2024-01-20 12:48:55', '2024-01-20 12:48:55', NULL, NULL, 3, NULL, NULL, 3, 1, 2, 22, 27, 1, NULL, NULL, 0),
+(21, '2024-01-17 13:36:03', '2024-01-20 12:35:15', '2024-01-20 12:35:15', NULL, NULL, 3, NULL, NULL, 3, NULL, 1, 22, 27, 2, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -223,18 +236,21 @@ CREATE TABLE IF NOT EXISTS `details_candidat` (
   `uti_modifie` bigint(20) DEFAULT NULL,
   `annee_id` bigint(20) DEFAULT NULL,
   `candidat_id` bigint(20) DEFAULT NULL,
+  `rang` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKncrg5enyx0yx5vvd26pv1gseg` (`annee_id`),
   KEY `FKpfo9kyj9kxj729syc21clam7s` (`candidat_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `details_candidat`
 --
 
-INSERT INTO `details_candidat` (`id`, `affectable`, `appreciation`, `bonus`, `date_creation`, `date_modification`, `malus`, `note`, `note_anciennete`, `note_etablissement_provenance`, `note_fonction`, `note_supervisseur`, `uti_cree`, `uti_modifie`, `annee_id`, `candidat_id`) VALUES
-(1, b'1', 'Bon travail', 5, '2024-01-10 12:43:08', '2024-01-15 11:13:05', 3, 92, 0, 50, 25, 15, NULL, NULL, 9, 26),
-(2, b'0', 'bonnn', 0, '2024-01-11 09:46:36', '2024-01-15 11:30:11', 3, 86, 0, 50, 25, 14, NULL, NULL, 9, 24);
+INSERT INTO `details_candidat` (`id`, `affectable`, `appreciation`, `bonus`, `date_creation`, `date_modification`, `malus`, `note`, `note_anciennete`, `note_etablissement_provenance`, `note_fonction`, `note_supervisseur`, `uti_cree`, `uti_modifie`, `annee_id`, `candidat_id`, `rang`) VALUES
+(6, b'0', NULL, 20, '2024-01-17 13:35:18', '2024-01-19 15:54:54', 5, 106, 0, 50, 25, 15, NULL, NULL, 9, 25, 1),
+(5, b'1', NULL, 0, '2024-01-17 13:34:40', '2024-01-19 19:53:39', 0, 100, 0, 50, 30, 16, NULL, NULL, 9, 22, 2),
+(4, b'1', NULL, 20, '2024-01-17 13:34:01', '2024-01-18 17:48:06', 20, 90, 0, 50, 25, 17, NULL, NULL, 9, 24, 1),
+(7, b'1', NULL, 0, '2024-01-17 13:36:03', '2024-01-19 15:50:07', 0, 92, 0, 50, 25, 14, NULL, NULL, 9, 27, NULL);
 
 --
 -- Déclencheurs `details_candidat`
@@ -242,10 +258,15 @@ INSERT INTO `details_candidat` (`id`, `affectable`, `appreciation`, `bonus`, `da
 DROP TRIGGER IF EXISTS `detailsCandidat_before_update`;
 DELIMITER $$
 CREATE TRIGGER `detailsCandidat_before_update` BEFORE UPDATE ON `details_candidat` FOR EACH ROW BEGIN
-    IF NEW.note_supervisseur >= 15 THEN
-        SET NEW.affectable = TRUE;
-    ELSE
-        SET NEW.affectable = FALSE;
+   IF NEW.note_supervisseur != OLD.note_supervisseur THEN
+        -- La colonne note_superviseur a été modifiée
+        IF NEW.note_supervisseur > 15 THEN
+            -- Si la note du superviseur est >= 15, définir affectable sur TRUE
+            SET NEW.affectable = TRUE;
+        ELSE
+            -- Si la note du superviseur est < 15, définir affectable sur FALSE
+            SET NEW.affectable = FALSE;
+        END IF;
     END IF;
 END
 $$
@@ -357,17 +378,22 @@ CREATE TABLE IF NOT EXISTS `jury` (
   `nom` varchar(255) NOT NULL,
   `session_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `UK7x1qqrcike743prq6n6mma4o3` (`numero`),
+  UNIQUE KEY `UK2mop8r1sx6ve9ctdil60snkxe` (`nom`),
   KEY `FK2vvwme6aly2aj8ns0tihl9ivh` (`centre_id`),
   KEY `FK2ct7cb7c4xpvrmjrlllv4i2h1` (`session_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=133 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=139 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `jury`
 --
 
 INSERT INTO `jury` (`id`, `date_creation`, `date_modification`, `numero`, `uti_cree`, `uti_modifie`, `centre_id`, `nom`, `session_id`) VALUES
-(131, '2024-01-03 14:40:23', '2024-01-03 14:42:23', '12334', NULL, NULL, 2, 'CEM PA002', 22),
-(132, '2024-01-12 13:21:41', '2024-01-12 13:21:41', '239000', NULL, NULL, 1, 'LPA001', 22);
+(132, '2024-01-12 13:21:41', '2024-01-12 13:21:41', '239000', NULL, NULL, 1, 'LPA001', 22),
+(133, '2024-01-16 11:37:01', '2024-01-16 11:37:01', '12335', NULL, NULL, 6, 'LTT001', 22),
+(135, '2024-01-16 13:06:26', '2024-01-16 13:06:26', '222222', NULL, NULL, 2, 'CEM PA003', 22),
+(137, '2024-01-18 11:20:40', '2024-01-18 11:20:40', '34567', NULL, NULL, 12, 'LTV001', 22),
+(138, '2024-01-18 17:19:05', '2024-01-18 17:19:05', '345678', NULL, NULL, 4, 'LGW001', 22);
 
 -- --------------------------------------------------------
 
@@ -381,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `refresh_token` (
   `created_date` datetime DEFAULT NULL,
   `token` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=188 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=221 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `refresh_token`
@@ -457,7 +483,7 @@ INSERT INTO `refresh_token` (`id`, `created_date`, `token`) VALUES
 (71, '2023-12-22 16:21:54', '24a941db-b2ee-4c28-969c-739c6771cd5a'),
 (72, '2023-12-22 16:35:59', '15fe53c7-1568-4ed3-a705-e25ceb489027'),
 (74, '2023-12-22 16:54:47', '9c339928-7150-40c1-a11e-11652fb96691'),
-(178, '2024-01-11 09:46:02', '6b4753b0-be0f-40af-988c-8a3aad41a21d'),
+(218, '2024-01-18 15:38:05', '1329fa06-0bd7-4597-b655-b2ac4e2c4ce6'),
 (77, '2023-12-22 17:06:40', '51a35a54-1b35-4b8e-ac64-db79a6592598'),
 (78, '2023-12-24 18:54:09', 'b22837e3-683f-4d48-8f4b-5b666de01c67'),
 (170, '2024-01-05 15:45:13', 'ebe87a30-a968-4eff-8d69-5d84637bc281'),
@@ -466,7 +492,10 @@ INSERT INTO `refresh_token` (`id`, `created_date`, `token`) VALUES
 (176, '2024-01-10 10:42:01', '40252331-6aac-4ccc-8aae-4d67aeea818a'),
 (179, '2024-01-11 10:36:17', '0b99a3b5-5286-4ac1-9743-066c112cb969'),
 (180, '2024-01-15 09:46:28', '2c565634-2d0e-4064-9ff4-eab729bcd112'),
-(187, '2024-01-15 11:41:35', 'fd49034c-b7c9-4634-83ab-120435ac3be0');
+(189, '2024-01-16 09:26:47', 'f7efdf79-11a5-4221-9c87-d4d7479d04e4'),
+(193, '2024-01-16 10:21:36', 'dc706d8c-cfdb-4381-a408-aecbe952fe2e'),
+(219, '2024-01-18 16:45:16', '123aa6d1-1099-477c-8bcb-461b69b9c380'),
+(220, '2024-01-19 15:35:11', '63808c01-59d6-48e9-8aca-73a448a4874a');
 
 -- --------------------------------------------------------
 
@@ -531,7 +560,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 
 INSERT INTO `session` (`id`, `date_cloture_depot_candidature`, `date_creation`, `date_debut`, `date_fin`, `date_modification`, `date_ouverture_depot_candidature`, `delais_validation`, `libelle_long`, `nombre_demande_autorise`, `uti_cree`, `uti_modifie`, `annee_id`, `type_session_id`, `candidature_ouvert`, `session_ouvert`) VALUES
 (19, '2024-01-29 00:00:00', '2023-11-29 14:03:41', '2023-11-01 00:00:00', '2024-12-10 00:00:00', '2024-01-10 10:43:42', '2023-11-05 00:00:00', 72, 'Session NORMALE 2023', 4, NULL, NULL, 9, 1, b'0', b'0'),
-(22, '2023-12-22 00:00:00', '2023-12-05 16:17:54', '2023-12-05 00:00:00', '2023-12-31 00:00:00', '2024-01-10 10:44:07', '2023-12-06 00:00:00', 72, 'Session NORMALE 2023', 3, NULL, NULL, 9, 1, b'1', b'1');
+(22, '2023-12-22 00:00:00', '2023-12-05 16:17:54', '2023-12-05 00:00:00', '2023-12-31 00:00:00', '2024-01-18 11:12:33', '2023-12-06 00:00:00', 72, 'Session NORMALE 2023', 3, NULL, NULL, 9, 1, b'0', b'1');
 
 -- --------------------------------------------------------
 
@@ -547,7 +576,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `user_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK2dylsfo39lgjyqml2tbe0b0ss` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `tokens`
@@ -579,7 +608,9 @@ INSERT INTO `tokens` (`id`, `expiry_date`, `token`, `user_id`) VALUES
 (23, NULL, '6a9bd5d2-7167-474e-af3c-7dfb5188479d', 35),
 (24, NULL, '964cbf4d-fa76-4bca-a4c7-860a49d0d793', 36),
 (25, NULL, 'a9d539ed-bbc0-41fd-8ba8-0ebfc4143986', 37),
-(26, NULL, '82e053cf-c6bb-4959-a359-6809956ca280', 38);
+(26, NULL, '82e053cf-c6bb-4959-a359-6809956ca280', 38),
+(27, NULL, '8f3073bc-171a-4328-91bf-a3e038a9665e', 39),
+(28, NULL, '7f86b7dc-129d-44f2-9c29-3e8e6850a590', 40);
 
 -- --------------------------------------------------------
 
@@ -707,7 +738,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `UK71vrxovabe8x9tom8xwefi3e7` (`code`),
   KEY `FKf82gw8kj6qhvoje3cqqcqby1g` (`etablissement_id`),
   KEY `FK8auunvta6y6b6d6afue2iyi4e` (`fonction_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=39 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `users`
@@ -719,12 +750,12 @@ INSERT INTO `users` (`id`, `account_non_expired`, `account_non_locked`, `ancienn
 (25, b'0', b'0', 2, 'fallouthiaw12', b'0', '2023-12-14 15:27:39', '2023-12-14 15:30:04', '2024-12-08 00:00:00', 'fallouthiawoffice@gmail.com', NULL, b'1', b'0', NULL, NULL, 'matricule3', '$2a$10$jPxnouZ3WrTOhhMRowH7MOxRZ2.vH0X5dc4RhZq52c4lgrRZ2OmUa', 'TESTN', 'fallouthiawoffice', '', 'masculin', '778901212', 'test4', NULL, NULL, 3, 10),
 (26, b'0', b'0', 2, 'gueye12', b'0', '2023-12-14 15:31:40', '2024-01-12 11:16:10', '2024-12-08 00:00:00', 'gueyedaoudagueye5@gmail.com', NULL, b'0', b'0', NULL, NULL, 'matricule4', '$2a$10$pPYUThOp5sfsNiqrPNQrKu/srab6VATHhR6B/fFRDxxReShqENTeK', 'gueye', 'gueyedaouda', NULL, 'masculin', '778901212', 'test5', NULL, NULL, 3, 10),
 (27, b'0', b'0', 2, 'khabane12', b'0', '2023-12-14 15:36:41', '2023-12-14 15:37:06', '2024-12-08 00:00:00', 'khabaneoffice@gmail.com', NULL, b'1', b'0', NULL, NULL, 'matricule5', '$2a$10$mZfQDwqBlveoZL0geIg4G.AKD2KI1ISc2nTGZHBPzfl1IsKp6l1Pq', 'TESTN', 'khabaneoffice', '', 'masculin', '778901212', 'test6', NULL, NULL, 3, 10),
-(33, b'0', b'0', NULL, NULL, b'0', '2024-01-09 15:52:48', '2024-01-15 13:59:43', '2024-12-08 00:00:00', 'falloudiarra5@gmail.com', NULL, b'1', b'0', NULL, NULL, 'matricule81', '$2a$10$EvdY6Cl94WH2eQv8vYsoYuJ1jPELj7i1lVvNczs6ITGihT.64ZTH.', 'DIOUF', 'Fallou', NULL, 'masculin', '778901212', 'planif1', NULL, NULL, NULL, NULL),
+(40, b'0', b'0', NULL, NULL, b'0', '2024-01-16 10:20:40', '2024-01-16 10:22:37', '2024-12-08 00:00:00', 'falloudiarra5@gmail.com', NULL, b'1', b'0', NULL, NULL, 'matriculepl1', '$2a$10$h5dt3T1CbHAdOE5OYsIv8.Mt.ebjESJjTsZmeRI7Ad6usNZ.rfFkC', 'DIOUF', 'fallou', NULL, 'masculin', '778901212', 'planif1', NULL, NULL, NULL, NULL),
 (34, b'0', b'0', NULL, NULL, b'0', '2024-01-15 09:46:52', '2024-01-15 09:47:46', '2024-12-08 00:00:00', 'diouffadel406@gmail.com', NULL, b'1', b'0', NULL, NULL, 'matriculePl', '$2a$10$NJObPIFiTX0kmnwOfFbPIeL81vrCitbKfOihpYSFvVsUwHvGmSJE.', 'DIOUF', 'fallou123', NULL, 'masculin', '778901212', 'sup1', NULL, NULL, NULL, NULL),
-(35, b'0', b'0', NULL, NULL, b'0', '2024-01-15 14:30:03', '2024-01-15 14:30:03', '2024-01-17 00:00:00', 'ndiayefatou@gmail.com', NULL, b'0', b'0', NULL, NULL, '1234Ndiaye', '$2a$10$rw95qk.DRPtXow0efnsUg.XbgoPrN.GKI8qxZnmyfA7tg945oMSli', 'ndiaye', 'Fatou', NULL, 'Femme', '78666666', 'admin1', NULL, NULL, NULL, NULL),
-(36, b'0', b'0', NULL, NULL, b'0', '2024-01-15 15:05:43', '2024-01-15 15:05:43', '2024-01-24 00:00:00', 'bala@ndiaye', NULL, b'0', b'0', NULL, NULL, 'mat123', '$2a$10$Tk7.GrdWMD8qbdmySUreHedrxq18QCl46w2J4A4lfn4K.lDv/Hyzi', 'ndiaye', 'bala', NULL, 'Homme', '1777777', 'planif2', NULL, NULL, NULL, NULL),
+(36, b'0', b'0', NULL, NULL, b'0', '2024-01-15 15:05:43', '2024-01-16 10:03:24', '2024-01-24 00:00:00', 'bala@ndiaye', NULL, b'0', b'0', NULL, NULL, 'mat123', '$2a$10$HY7Q079tdLMKQyIQB/50b.MnMUh3Di4PmC.8C55VOdLCJzjn5YTbK', 'ndiaye', 'bala', NULL, 'Homme', '775721212', 'planif2', NULL, NULL, NULL, NULL),
 (37, b'0', b'0', NULL, NULL, b'0', '2024-01-15 15:18:57', '2024-01-15 15:18:57', '2024-01-30 00:00:00', 'bala@ndiaye1', NULL, b'0', b'0', NULL, NULL, 'bala123', '$2a$10$lq5vZXnKlnmBhlThsFe2A.4nw7ZNFMO8TzfT19hkJqkt1BAz11dla', 'bala', 'ndiaye ndiaye', NULL, 'Homme', '66666666666', 'planif3', NULL, NULL, NULL, NULL),
-(38, b'0', b'0', NULL, NULL, b'0', '2024-01-15 15:35:25', '2024-01-15 15:35:25', '2024-01-31 00:00:00', 'tall@mariama', NULL, b'0', b'0', NULL, NULL, 'tall123', '$2a$10$luEG0uvBX9qBQM9waghdeOZcTVlSlfbx0SH.46FudCC2v5ok13KsW', 'tall', 'mariama', NULL, 'Femme', '77777', 'sup2', NULL, NULL, NULL, NULL);
+(38, b'0', b'0', NULL, NULL, b'0', '2024-01-15 15:35:25', '2024-01-15 15:35:25', '2024-01-31 00:00:00', 'tall@mariama', NULL, b'0', b'0', NULL, NULL, 'tall123', '$2a$10$luEG0uvBX9qBQM9waghdeOZcTVlSlfbx0SH.46FudCC2v5ok13KsW', 'tall', 'mariama', NULL, 'Femme', '77777', 'sup2', NULL, NULL, NULL, NULL),
+(41, b'0', b'0', 2, 'code123', b'0', '2024-01-18 16:03:51', '2024-01-18 16:04:20', '2024-01-25 00:00:00', 'dioufyama@yama', NULL, b'0', b'0', NULL, NULL, 'ccccc', '$2a$10$bzsw6/8e1tN1z88azsNprO.YUUPvMfQLJPu.Mcd0K0igMk5wnKgXS', 'paser', 'compte', NULL, 'Femme', 'cccc', 'ccccc', NULL, NULL, 4, 11);
 
 -- --------------------------------------------------------
 
@@ -753,7 +784,9 @@ INSERT INTO `users_roles` (`app_user_id`, `roles_id`) VALUES
 (33, 3),
 (25, 1),
 (35, 2),
-(36, 3);
+(36, 3),
+(39, 3),
+(40, 3);
 
 -- --------------------------------------------------------
 
@@ -772,6 +805,7 @@ CREATE TABLE IF NOT EXISTS `ville` (
   `uti_cree` bigint(20) DEFAULT NULL,
   `uti_modifie` bigint(20) DEFAULT NULL,
   `academie_id` bigint(20) DEFAULT NULL,
+  `total_demandes` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `FKcpcjuejqflsqqv087m59npy5d` (`academie_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
@@ -780,15 +814,15 @@ CREATE TABLE IF NOT EXISTS `ville` (
 -- Déchargement des données de la table `ville`
 --
 
-INSERT INTO `ville` (`id`, `date_creation`, `date_modification`, `libelle_court`, `libelle_long`, `total_jury`, `uti_cree`, `uti_modifie`, `academie_id`) VALUES
-(1, '2023-12-18 15:33:29', '2023-12-18 15:33:29', 'PA', 'PARCELLE', 2, NULL, NULL, 3),
-(2, '2023-12-18 15:33:52', '2023-12-18 15:33:52', 'GW', 'GUEDIAWAYE', 0, NULL, NULL, 3),
-(3, '2023-12-19 10:13:24', '2023-12-19 10:13:24', 'TT', 'TOUBA TOUL', 0, NULL, NULL, 1),
-(4, '2023-12-19 16:51:11', '2023-12-19 16:51:11', 'KH', 'KHOMBOLE', 0, NULL, NULL, 1),
-(5, '2023-12-26 15:17:12', '2023-12-26 15:17:12', 'BM', 'BAMBEY', 0, NULL, NULL, 5),
-(6, '2023-12-26 15:17:30', '2023-12-26 15:17:30', 'RF', 'REFANE', 0, NULL, NULL, 5),
-(7, '2023-12-27 10:53:17', '2023-12-27 10:53:17', 'TIV', 'TIVAOUNE', 0, NULL, NULL, 1),
-(8, '2023-12-29 10:44:21', '2023-12-29 10:44:21', 'ND', 'NDONDOL', 0, NULL, NULL, 5);
+INSERT INTO `ville` (`id`, `date_creation`, `date_modification`, `libelle_court`, `libelle_long`, `total_jury`, `uti_cree`, `uti_modifie`, `academie_id`, `total_demandes`) VALUES
+(1, '2023-12-18 15:33:29', '2023-12-18 15:33:29', 'PA', 'PARCELLE', 2, NULL, NULL, 3, 0),
+(2, '2023-12-18 15:33:52', '2023-12-18 15:33:52', 'GW', 'GUEDIAWAYE', 1, NULL, NULL, 3, 0),
+(3, '2023-12-19 10:13:24', '2023-12-19 10:13:24', 'TT', 'TOUBA TOUL', 1, NULL, NULL, 1, 0),
+(4, '2023-12-19 16:51:11', '2023-12-19 16:51:11', 'KH', 'KHOMBOLE', 0, NULL, NULL, 1, 0),
+(5, '2023-12-26 15:17:12', '2023-12-26 15:17:12', 'BM', 'BAMBEY', 0, NULL, NULL, 5, 0),
+(6, '2023-12-26 15:17:30', '2023-12-26 15:17:30', 'RF', 'REFANE', 0, NULL, NULL, 5, 0),
+(7, '2023-12-27 10:53:17', '2023-12-27 10:53:17', 'TIV', 'TIVAOUNE', 1, NULL, NULL, 1, 0),
+(8, '2023-12-29 10:44:21', '2023-12-29 10:44:21', 'ND', 'NDONDOL', 0, NULL, NULL, 5, 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

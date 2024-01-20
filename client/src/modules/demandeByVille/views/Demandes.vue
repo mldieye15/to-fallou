@@ -141,7 +141,7 @@ const redirectToVilles = () => {
 router.push({ name: 'demandeByVille-liste' });
 };
 const redirectToDemandes = (id) => {
-  router.push({ name: 'accepte-Demande', params: { id } });
+  router.push({ name: 'accepte-DemandeByVille', params: { id } });
 };
 </script>
 <style scoped>

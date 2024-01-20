@@ -27,8 +27,8 @@ const demandeByVilleRoutes = [{
         component: () => import( /* webpackChunkName: 'demande_edit */ './views/Edit.vue')
       },
       {
-        path: '/app/dashboard/demandes/accepte/:id',
-        name: 'accepte-Demande',
+        path: '/app/dashboard/demandesByVille/accepte/:id',
+        name: 'accepte-DemandeByVille',
         component: () => import( /* webpackChunkName: 'demande_edit */ './views/AccepteDemande.vue')
       }
     ]
