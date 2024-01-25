@@ -1,15 +1,15 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.ville.ville') }}</p>
+    <p class="text-h6">{{ $t('apps.forms.centre.centre') }}</p>
     
     <v-container class="my-5">
       <vue-good-table
         :columns="columns"
-        :rows="dataListeVille"
+        :rows="dataListeCentre"
         :pagination-options="{
           enabled: true,
           mode: 'pages',
-          perPageDropdown: [5, 10, 15,20, 30, 40, 50]
+          perPageDropdown: [10, 15,20, 30, 40, 50]
           }"
          :search-options="{
             enabled: true
@@ -46,7 +46,7 @@ import { storeToRefs } from "pinia";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
-import { useVilleStore } from "@/modules/ville/store";
+import { useCentreStore } from "@/modules/centre/store";
 import { useRouter } from "vue-router";
 
 
@@ -57,9 +57,9 @@ const i18n = useI18n();
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const villeStore = useVilleStore();
-const { dataListeVille, headerTable, loading,columns } = storeToRefs(villeStore);
-const { all, destroy } = villeStore;
+const centreStore = useCentreStore();
+const { dataListeCentre, headerTable, loading,columns } = storeToRefs(centreStore);
+const { all, destroy } = centreStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -71,7 +71,7 @@ onMounted(()=>{
 });
 
 const redirectToDemandes = (id) => {
-  router.push({ name: 'demandeByVille-demandes', params: { id } });
+  router.push({ name: 'demandeByCentre-demandes', params: { id } });
 };
 </script>
 <style scoped>

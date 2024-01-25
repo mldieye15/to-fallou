@@ -1,7 +1,7 @@
 <template>
       <v-container class="my-1" grid-list-xl>
         <v-row class="mb-0 mx-auto pa-0"  align="center">
-        <v-col cols="12" sm="4" md="3" >
+        <v-col cols="12" sm="4" md="4" >
           <v-text-field
             label="Underlined"
             placeholder="Placeholder"
@@ -11,14 +11,14 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col class="text-right" md="9" cols="auto">
-          <v-chip  @click.prevent="redirectToVilles()" class="ml-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-          <v-chip  @click.prevent="redirectToCentres()" class="ml-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
-          <v-chip  @click.prevent="redirectToAllDemandes ()" class="ml-1" variant="outlined" color="blue">Demandes archivées</v-chip>
-          <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
-          <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
-        </v-col>
         </v-row>
+        <ul class="list-unstyled d-flex mb-0 mx-auto pa-0" align="center">
+          <li v-for="session in dataListeSession" :key="session.id" class="mb-0" style="list-style-type: none;">
+            <v-chip @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="tonal" color="blue">
+              {{ session.libelleLong }}
+            </v-chip>
+          </li>
+        </ul>
         <div v-if="loading">Chargement en cours...</div>
         <div v-for="userEntry in paginatedData" :key="userEntry.userId">
       <div class="mb-2 mt-2"><h2>{{ userEntry.user }}</h2></div>
@@ -128,20 +128,20 @@ import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter } from "vue-router";
 
-const sessionStore= useSessionStore();
+
 const router = useRouter();
 const centreStore=useCentreStore();
-const {dataListeSession}=storeToRefs(sessionStore);
+const sessionStore = useSessionStore();
 const { dataListeByVille} = storeToRefs(centreStore);
-
+const {dataListeSession}=storeToRefs(sessionStore);
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
 const demandeStore = useDemandeStore();
-const { dataListeGroupedByUser,columns, headerTable, loading,etatCouleurs,dataListe } = storeToRefs(demandeStore);
-const { all, destroy,validerDemande,allGroupedByUser } = demandeStore;
+const { dataListe,columns, headerTable, loading,etatCouleurs } = storeToRefs(demandeStore);
+const { all, destroy,validerDemande } = demandeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -149,9 +149,8 @@ const searchValue = ref("");
 const dialog = ref(false);
 onMounted(()=>{
   all();
-  allGroupedByUser();
-  sessionStore.sessionsArchive();
-  console.log(dataListeGroupedByUser) // ajustez le nombre d'éléments par page selon vos besoins
+  sessionStore.all();
+  console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });
 const currentPage = ref(1);
 const onItemsPerPageChange = () => {
@@ -163,14 +162,14 @@ const selectedItemsPerPage = ref(5);
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * selectedItemsPerPage.value;
   const end = start + selectedItemsPerPage.value;
-  const dataList = dataListeGroupedByUser.value || [];
+  const dataList = dataListe.value || [];
   return dataList.slice(start, end);
 });
 const totalPages = computed(() => Math.ceil(
-  (dataListeGroupedByUser.value || []).length / selectedItemsPerPage.value));
+  (dataListe.value || []).length / selectedItemsPerPage.value));
   watch(() => selectedItemsPerPage.value, () => {
   currentPage.value = 1; 
-  allGroupedByUser();
+  all();
 });
 watch(() => currentPage.value, () => {
 });
@@ -178,20 +177,12 @@ const getPageClass = (pageNumber) => {
   return pageNumber === currentPage.value ? 'active-page' : '';
 }; 
 
-const redirectToVilles = () => {
-  router.push({ name: 'demandeByVille-liste' });
-};
-const redirectToCentres = () => {
-  router.push({ name: 'demandeByCentre-liste' });
+const redirectToSessions = (id) => {
+  router.push({ name: 'demandeBySession-demandes', params: { id } });
 };
 const redirectToDemandes = (id) => {
   router.push({ name: 'accepte-Demande', params: { id } });
 };
-const redirectToAllDemandes = () => {
-  const defaultSessionId = dataListeSession.value[0].id;
-  router.push({ name: 'demandeBySession-demandes',params: { id: defaultSessionId}});
-};
-
 </script>
 <style scoped>
 .v-text-field {

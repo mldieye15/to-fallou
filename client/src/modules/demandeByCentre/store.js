@@ -3,13 +3,13 @@ import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/demandes';
-const demandesByVille = modulesURL+'/demandeByVille';
+const demandesByCentre = modulesURL+'/demandeByCentre';
 const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const quotaAccepte=modulesURL+'/quotaAccepte';
 
-export const useDemandeByVilleStore = defineStore('demandeByVille', {
+export const useDemandeByCentreStore = defineStore('demandeByCentre', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
@@ -46,9 +46,9 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
 
   actions: {
     //  recupérer la liste des demandes et le mettre dans la tabel dataListe 
-    async demandeByVille(villeId) {
+    async demandeByCentre(CentreId) {
       try {
-        const response = await axios.get(`${demandesByVille}/${villeId}`);
+        const response = await axios.get(`${demandesByCentre}/${CentreId}`);
         if (response.status === 200) {
           let res = response.data;
           let formattedData = [];

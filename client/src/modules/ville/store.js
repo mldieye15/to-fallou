@@ -26,7 +26,7 @@ export const useVilleStore = defineStore('ville', {
       { label: 'LibelleLong', field: 'libelleLong',width: "200px",resizable: true},
       { label: 'Abreviation', field: 'libelleCourt',width: "100px",resizable: true },
       { label: 'Academie', field: 'academie',width: "100px",resizable: true },
-      { label: 'Nombre de Jury', field: 'totalJury',width: "100px" ,resizable: true},
+      { label: 'Nombre de Jury', field: 'totalJury',width: "150px" ,resizable: true},
       { label: 'Totale Demandes', field: 'totalDemandes',width: "120px",resizable: true},
     ],
   }),

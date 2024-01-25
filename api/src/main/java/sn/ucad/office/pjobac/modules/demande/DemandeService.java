@@ -12,10 +12,13 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public interface DemandeService {
-    public List<DemandeResponse> all() throws BusinessResourceException;
+//    public List<DemandeResponse> all() throws BusinessResourceException;
 //    List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException;
-    public List<DemandeDetailsCandidatResponse> demandeByVille(String villeId) throws BusinessResourceException;
+    public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessResourceException;
+    public List<DemandeDetailsCandidatResponse> demandeByVille(String villeId ) throws BusinessResourceException;
+    List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException;
+    public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
 
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;

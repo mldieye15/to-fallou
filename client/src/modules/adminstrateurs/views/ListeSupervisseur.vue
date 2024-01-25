@@ -66,20 +66,22 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useUtilisateurStore } from "../store";
+import { useAdminStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+
+const router = useRouter();
+
 const i18n = useI18n();
-const router =useRouter();
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const userStore = useUtilisateurStore();
-const { dataListeUtilisateur, columns, loading } = storeToRefs(userStore);
-const { supervisseur, destroy } = userStore;
+const adminStore = useAdminStore();
+const { dataListeUtilisateur, columns, loading } = storeToRefs(adminStore);
+const { supervisseur, destroy } = adminStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });

@@ -12,7 +12,7 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useUtilisateurStore } from "../store";
+import { useAdminStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -21,8 +21,8 @@ const { addNotification } = notificationStore;
 const instance = getCurrentInstance();
 const router = useRouter();
 
-const userStore = useUtilisateurStore();
-const { addAdmin } = userStore;
+const adminStore = useAdminStore();
+const { addAdmin } = adminStore;
 
 const inputForm= reactive({
   prenoms: "",

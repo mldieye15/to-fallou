@@ -22,7 +22,7 @@ const instance = getCurrentInstance();
 const router = useRouter();
 
 const userStore = useUtilisateurStore();
-const { add } = userStore;
+const { inscription } = userStore;
 
 const inputForm= reactive({
   prenoms: "",
@@ -41,7 +41,7 @@ const inputForm= reactive({
 });
 
 const handleSave = (payload) => {
-  add(payload).then( () => {
+  inscription(payload).then( () => {
     addNotification({
         show: true,
         text:  i18n.t('added'),

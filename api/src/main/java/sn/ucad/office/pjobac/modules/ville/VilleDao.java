@@ -19,14 +19,14 @@ public interface VilleDao extends JpaRepository<Ville, Long> {
     @Modifying
     @Query("UPDATE Ville v SET v.totalJury = :totalJury WHERE v.id = :villeId")
     void updateTotalJury(@Param("villeId") Long villeId, @Param("totalJury") int totalJury);
-    @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre.ville = :ville AND d.etatDemande.libelleLong = 'ACCEPTE'")
+    @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre.ville = :ville AND d.etatDemande.libelleLong = 'ACCEPTE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     int totalDemandeAccepteByVille(@Param("ville") Ville ville);
-    @Query("SELECT COUNT(d) FROM Demande d WHERE d.ville= :ville AND d.etatDemande.libelleLong='VALIDE'")
+    @Query("SELECT COUNT(d) FROM Demande d WHERE d.ville= :ville AND d.etatDemande.libelleLong='VALIDE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     int totalJuryAffecteByVille(@Param("ville") Ville ville);
     @Query("SELECT v FROM Ville v " +
             "WHERE v.academie = :academie " +
             "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie) " +
-            "AND v.totalJury > (SELECT COUNT(d) FROM Demande d WHERE d.ville = v AND d.etatDemande.libelleLong = 'VALIDE')")
+            "AND v.totalJury > (SELECT COUNT(d) FROM Demande d WHERE d.ville = v AND d.etatDemande.libelleLong = 'VALIDE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) ")
     List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academie") Academie academie);
 
 }

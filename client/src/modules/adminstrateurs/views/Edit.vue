@@ -14,7 +14,7 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useUtilisateurStore } from "../store";
+import { useAdminStore } from "../store";
 import FormEdit from "./FormEdit.vue";
 const i18n = useI18n();
 
@@ -25,9 +25,9 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const userStore = useUtilisateurStore();
-const { dataDetails, loading } = storeToRefs(userStore);
-const { one, modify } = userStore;
+const adminStore = useAdminStore();
+const { dataDetails, loading } = storeToRefs(adminStore);
+const { one, modify } = adminStore;
 
 const inputForm = reactive({
   prenoms: "",

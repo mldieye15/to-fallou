@@ -30,11 +30,21 @@ export const useCentreStore = defineStore('centre', {
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'nombre de Jury', value: 'nombreJury', align: 'start', sortable: true },
-      { text: 'TypeCentre', value: 'typeCentre', align: 'start', sortable: true },
+      { text: 'Type de Centre', value: 'typeCentre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
-    ]
+    ],
+    columns: [
+      { label: 'LibelleLong', field: 'libelleLong',width: "200px",resizable: true},
+      { label: 'Abreviation', field: 'libelleCourt',width: "100px",resizable: true},
+      {label: 'Type de Centre', field: 'typeCentre',width: "200px",resizable: true },
+      { label: 'Ville', field: 'ville',width: "150px" ,resizable: true},
+      { label: 'Academie', field: 'academie',width: "100px",resizable: true },
+      { label: 'Nombre de Jury', field: 'nombreJury',width: "150px" ,resizable: true},
+      { label: 'Totale Demandes', field: 'totalDemandes',width: "120px",resizable: true},
+      
+    ],
   }),
 
   getters: {

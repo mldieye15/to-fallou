@@ -143,7 +143,7 @@
 
 <script setup>
 import { reactive, getCurrentInstance,watchEffect,ref} from "vue";
-import { useUtilisateurStore } from "../store";
+import { useAdminStore } from "../store";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
@@ -153,7 +153,7 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 const instance = getCurrentInstance();
-const utilisateurStore= useUtilisateurStore();
+const adminStore= useAdminStore();
 const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
 const codeStore = useCodeStore();
@@ -209,7 +209,7 @@ const checkEmailExistence = async () => {
   emailErrorMessage.value = "";
   if (inputForm.email) {
     try {
-      const isAvailable = await utilisateurStore.checkEmailExistence(inputForm.email);
+      const isAvailable = await adminStore.checkEmailExistence(inputForm.email);
       console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
       if (!isAvailable) {
         emailError.value = true;
@@ -228,7 +228,7 @@ const checkUsernameExistence = async () => {
   usernameErrorMessage.value = "";
   if (inputForm.username) {
     try {
-      const isAvailable = await utilisateurStore.checkUsernameExistence(inputForm.username);
+      const isAvailable = await adminStore.checkUsernameExistence(inputForm.username);
       console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
       if (!isAvailable) {
         usernameError.value = true;
@@ -247,7 +247,7 @@ const checkMatriculeExistence = async () => {
   matriculeErrorMessage.value = "";
   if (inputForm.matricule) {
     try {
-      const isAvailable = await utilisateurStore.checkMatriculeExistence(inputForm.matricule);
+      const isAvailable = await adminStore.checkMatriculeExistence(inputForm.matricule);
       console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
       if (!isAvailable) {
         matriculeError.value = true;

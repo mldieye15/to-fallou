@@ -22,7 +22,7 @@
 
       <div  class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
         &nbsp;
-        <router-link :to="{name:'home'}" class="text-caption text-decoration-none text-blue font-italic">{{ $t('auth.forms.authentification.mdpoublie') }}</router-link>
+        <router-link :to="{name:'forgotPassword'}" class="text-caption text-decoration-none text-blue font-italic">{{ $t('auth.forms.authentification.mdpoublie') }}</router-link>
       </div>
       <v-text-field
         id="password"

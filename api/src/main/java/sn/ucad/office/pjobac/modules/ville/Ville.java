@@ -32,7 +32,8 @@ public class Ville {
     private int totalJury=0;
     @ManyToOne(fetch = FetchType.EAGER)
     private Academie academie;
-    private int totalDemandes;
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private int totalDemandes=0;
     @Column(nullable = true)
     private Long utiCree;
 

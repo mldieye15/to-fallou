@@ -19,7 +19,7 @@ const emailAvailability = modulesURL +'/email-availability';
 const usernameAvailability = modulesURL +'/username-availability';
 const matriculeAvailability = modulesURL +'/matricule-availability';
 
-export const useUtilisateurStore = defineStore('utilisateur', {
+export const useAdminStore = defineStore('admin', {
   state: () => ({
     dataListeUtilisateur: [],  //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,

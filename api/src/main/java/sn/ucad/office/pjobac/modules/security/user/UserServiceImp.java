@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
@@ -33,7 +34,7 @@ public class UserServiceImp implements UserService {
     private final UserMapper mapper;
     private final RoleService roleService;
     private final CodificationService codificationService;
-
+    final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Override
     public List<UserResponse> all() throws BusinessResourceException {
         log.info("Liste des users. <all>");
@@ -295,6 +296,18 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public Optional<AppUser> userByEmail(String email) throws BusinessResourceException {
+        try {
+            Optional<AppUser> response = dao.findByEmail(email);
+            log.info("User avec username: " + email + " trouvé. <userBy username>");
+            return response;
+        } catch (Exception ex) {
+            log.error("User by username: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("not-found", "Role avec nom: " + email+ " non trouvé(e).", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
     public void addRoleToUser(String username, String nom) throws BusinessResourceException {
         try {
             AppUser user = this.userByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + username + " trouve."));//.get();
@@ -379,6 +392,30 @@ public class UserServiceImp implements UserService {
         } catch (Exception ex) {
             log.error("Activation utilisateur: Une erreur inattandue est rencontree.");
             throw new BusinessResourceException("UpdateError", "Erreur technique d'activation d'un utilisateur: ", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public AppUser resetPassword(AppUser user, String newPassword) throws BusinessResourceException {
+        try {
+            if (user.getId() == null) {
+                log.warn("L'ID de l'utilisateur est nul. Impossible de réinitialiser le mot de passe. <resetPassword>");
+                throw new BusinessResourceException("NotFoundUser", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND);
+            }
+            String encodedPassword = passwordEncoder.encode(newPassword);
+            user.setMdpasse(encodedPassword);
+            AppUser result = dao.saveAndFlush(user);
+            log.info("Mot de passe de l'utilisateur" + user.getUsername() +   "reinitialisé:  avec succes. <maj>.");
+            return result;
+        } catch (NoSuchElementException e) {
+            log.warn("Aucun utilisateur avec  trouvé. <resetPassword>.");
+            throw new BusinessResourceException("NotFound", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND);
+        } catch (DataIntegrityViolationException e) {
+            log.error("Activation utilisateur: Une erreur technique est rencontree - donnee en doublon ou contrainte non respectée ");
+            throw new BusinessResourceException("SqlError", "Une erreur technique est rencontrée: donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("ResetPassword: Une erreur inattandue est rencontree.");
+            throw new BusinessResourceException("UpdateError", "Erreur technique de reset du Password: ", HttpStatus.BAD_REQUEST);
         }
     }
 

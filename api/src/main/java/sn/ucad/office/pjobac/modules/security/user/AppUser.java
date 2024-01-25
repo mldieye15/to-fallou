@@ -98,7 +98,7 @@ public class AppUser {
 
     @Column(nullable = true)
     private LocalDateTime joinDate = LocalDateTime.now();
-
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<AppRole> roles = new ArrayList<>();
 

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.demande.dto.DemandeDetailsCandidatResponse;
 import sn.ucad.office.pjobac.modules.session.dto.SessionAudit;
 import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 import sn.ucad.office.pjobac.modules.session.dto.SessionResponse;
@@ -18,9 +19,7 @@ import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,12 +33,25 @@ public class SessionServiceImp implements SessionService {
     public List<SessionResponse> all() throws BusinessResourceException {
         log.info("SessionServiceImp::all");
         List<Session> all = dao.findAll();
+        all.sort(Comparator.comparing(Session::getId, Comparator.reverseOrder()));
         List<SessionResponse> response;
         response = all.stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
+    @Override
+    public List<SessionResponse> sessionsArchive() throws BusinessResourceException {
+        log.info("SessionServiceImp::all");
+        List<Session> all = dao.sessionsArchive();
+        all.sort(Comparator.comparing(Session::getId, Comparator.reverseOrder()));
+        List<SessionResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
     @Override
     public List<SessionResponse> allActiveSessions() throws BusinessResourceException {
         log.info("SessionServiceImp::all");

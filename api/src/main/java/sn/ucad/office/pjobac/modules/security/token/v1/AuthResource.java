@@ -5,8 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.security.refresh.dto.RefreshTokenRequest;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
+import sn.ucad.office.pjobac.modules.security.token.VerificationToken;
 import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
 import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
@@ -78,6 +80,38 @@ public class AuthResource {
     public ResponseEntity<UserDetailsResponse> getCurrentUserDetails() {
         UserDetailsResponse userDetailsResponse = service.getCurrentUserDetails();
         return ResponseEntity.ok(userDetailsResponse );
+    }
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> requestPasswordReset(@RequestParam String email) {
+        try {
+            service.requestPasswordReset(email);
+            return ResponseEntity.ok("Demande de réinitialisation de mot de passe réussie. Veuillez vérifier votre e-mail.");
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la demande de réinitialisation de mot de passe.");
+        }
+    }
+    @PostMapping("/new-password")
+    public ResponseEntity<String> resetPassword(@RequestParam String token, @RequestParam String newPassword) {
+        try {
+            service.resetPassword(token, newPassword);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/resetWithToken")
+    public ResponseEntity<String> resetPasswordWithToken(@RequestBody VerificationToken verificationToken,
+                                                         @RequestParam String newPassword) {
+        try {
+            service.fetchUserWithToken(verificationToken, newPassword);
+            return ResponseEntity.ok("Mot de passe réinitialisé avec succès");
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+        }
     }
 }
 

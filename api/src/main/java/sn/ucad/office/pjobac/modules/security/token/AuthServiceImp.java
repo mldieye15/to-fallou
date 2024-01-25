@@ -20,6 +20,7 @@ import sn.ucad.office.pjobac.modules.security.mail.MailService;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.modules.security.refresh.RefreshTokenService;
 import sn.ucad.office.pjobac.modules.security.refresh.dto.RefreshTokenRequest;
+import sn.ucad.office.pjobac.modules.security.role.AppRole;
 import sn.ucad.office.pjobac.modules.security.role.RoleService;
 import sn.ucad.office.pjobac.modules.security.token.dto.AuthenticationResponse;
 import sn.ucad.office.pjobac.modules.security.token.dto.LoginRequest;
@@ -30,6 +31,7 @@ import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.JwtProvider;
 
+import javax.management.relation.RoleNotFoundException;
 import java.time.Instant;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -62,7 +64,11 @@ public class AuthServiceImp implements AuthService {
                     AppConstants.MESS_ACTIV_COMPTE_CONTENT +
                             AppConstants.LIEN_ACTIV_COMPTE+"/"+token
             ));
-            userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
+//            userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
+            RoleToUserRequest roleRequest = new RoleToUserRequest();
+            roleRequest.setUsername(request.getUsername());
+            roleRequest.setRole("ROLE_USER");
+            userService.addRoleToUser(roleRequest);
             UserResponse response;
             response = mapper.toEntiteResponse(entity);
             //  Activation automatique à enlever une fois le probl
@@ -91,7 +97,10 @@ public class AuthServiceImp implements AuthService {
                     AppConstants.MESS_ACTIV_COMPTE_CONTENT +
                             AppConstants.LIEN_ACTIV_COMPTE+"/"+token
             ));
-            userService.addRoleToUser(entity.getUsername(), "ROLE_ADMIN");
+            RoleToUserRequest roleRequest = new RoleToUserRequest();
+            roleRequest.setUsername(request.getUsername());
+            roleRequest.setRole("ROLE_ADMIN");
+            userService.addRoleToUser(roleRequest);
             AdminResponse response;
             response = mapper.userToAdminResponse(entity);
             //  Activation automatique à enlever une fois le probl
@@ -120,7 +129,10 @@ public class AuthServiceImp implements AuthService {
                     AppConstants.MESS_ACTIV_COMPTE_CONTENT +
                             AppConstants.LIEN_ACTIV_COMPTE+"/"+token
             ));
-            userService.addRoleToUser(entity.getUsername(), "ROLE_PLANIFICATEUR");
+            RoleToUserRequest roleRequest = new RoleToUserRequest();
+            roleRequest.setUsername(request.getUsername());
+            roleRequest.setRole("ROLE_PLANIFICATEUR");
+            userService.addRoleToUser(roleRequest);
             AdminResponse response;
             response = mapper.userToAdminResponse(entity);
             //  Activation automatique à enlever une fois le probl
@@ -149,7 +161,10 @@ public class AuthServiceImp implements AuthService {
                     AppConstants.MESS_ACTIV_COMPTE_CONTENT +
                             AppConstants.LIEN_ACTIV_COMPTE+"/"+token
             ));
-            userService.addRoleToUser(entity.getUsername(), "ROLE_SUPERVISSEUR");
+            RoleToUserRequest roleRequest = new RoleToUserRequest();
+            roleRequest.setUsername(request.getUsername());
+            roleRequest.setRole("ROLE_SUPERVISSEUR");
+            userService.addRoleToUser(roleRequest);
             AdminResponse response;
             response = mapper.userToAdminResponse(entity);
             //  Activation automatique à enlever une fois le probl
@@ -186,12 +201,10 @@ public class AuthServiceImp implements AuthService {
             throw new BusinessResourceException("NotFoundToken", "Aucun utilisateur ne correspond à ce token: "+token);
         }
     }
-
     @Override
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         try {
             String username = verificationToken.getUser().getUsername();
-
             Optional<AppUser> user = userService.userByUsername(username);
             if(user.get().getId() == null){
                 log.warn("Aucun utilisateur trouve avec ce token <fetchUserAndEnable>");
@@ -304,6 +317,60 @@ public class AuthServiceImp implements AuthService {
 
     @Override
     public void removeRoleFromUser(String username, String roleName) throws BusinessResourceException {
+
+    }
+
+    @Override
+    public void requestPasswordReset(String email) throws BusinessResourceException, InterruptedException {
+        Optional<AppUser> entity = userService.userByEmail(email);
+        AppUser user = entity.orElseThrow(() -> new BusinessResourceException("UserNotFound", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND));
+        String resetToken = verifTokenService.genVerifToken(user);
+        mailService.sendMail(new NotificationEmail(
+                AppConstants.MESS_RESET_PASSWORD_CONTENT,
+                email,
+                AppConstants.MESS_RESET_PASSWORD_CONTENT +
+                        AppConstants.LIEN_RESET_PASSWORD+"/"+resetToken
+        ));
+    }
+
+    @Override
+    public void fetchUserWithToken(VerificationToken verificationToken, String newPassword) throws BusinessResourceException {
+        try {
+            String email = verificationToken.getUser().getEmail();
+            Optional<AppUser> user = userService.userByEmail(email);
+            if(user.get().getId() == null){
+                log.warn("Aucun utilisateur trouve avec ce token <fetchUserWithToken>");
+                throw new BusinessResourceException("NotFoundUserByToken", "Aucun utilisateur trouve avec le token.", HttpStatus.NOT_ACCEPTABLE);
+            }
+            userService.resetPassword(user.get(), newPassword);
+            log.info("Mot de passe de  "+user.get().getEmail()+" modifier avec succes. <fetchUserWithToken>");
+        } catch (NoSuchElementException e) {
+            log.warn("Aucun utilisateur trouve avec ce token. <fetchUserAndEnable>.");
+            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur avec trouve.", HttpStatus.NOT_ACCEPTABLE);
+        } catch (BusinessResourceException e) {
+            log.error("Activation utilisateur: Une erreur inattandue est rencontrée. <fetchUserWithToken>");
+            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur ne correspond à ce token.", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword) throws BusinessResourceException {
+        try {
+            Optional<VerificationToken> verificationToken = verifTokenService.findByToken(token);
+            log.info("T {} ", verificationToken);
+            if(verificationToken.get().getId() == null){
+                log.warn("Aucun utilisateur avec " + token + " trouvé. <resetPassword>");
+                throw new BusinessResourceException("InvalidToken", "Aucun utilisateur trouvé avec ce token", HttpStatus.NOT_ACCEPTABLE);
+            }
+            log.info("Token trouve et rejet en cours. <resetPassword>");
+            this.fetchUserWithToken(verificationToken.get(),newPassword);
+        } catch (NoSuchElementException e) {
+            log.warn("Aucun utilisateur trouve avec le token: " + token + ". <resetPassword>.");
+            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur avec le token trouve.", HttpStatus.NOT_FOUND);
+        } catch (BusinessResourceException e) {
+            log.error("Verification token: Une erreur inatteandue est rencontrée.");
+            throw new BusinessResourceException("NotFoundToken", "Aucun utilisateur ne correspond à ce token: "+token);
+        }
 
     }
 }

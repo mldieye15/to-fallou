@@ -4,11 +4,14 @@ import axios from '@/plugins/axios.js'
 const  loginURL = '/auth/v1/connexion';
 const  lougoutURL = '/auth/v1/deconnexion';
 const  refreshtokenURL = '/auth/v1/refresh-token';
-
+const  resetPasswordURL = '/auth/v1/reset-password';
+const newPasswordURL= '/auth/v1/new-password';
 export const useUserStore = defineStore('user', {
 
   state: () => ({
     isLoggedIn: false,
+    successMessage: null,
+    errorMessage: null,
     /*userDetails: {
       email: '',
       prenoms: '',
@@ -51,7 +54,6 @@ export const useUserStore = defineStore('user', {
       try {
         //`${loginURL}`
         await axios.post(loginURL, payload)
-
         .then((response) => {
           if(response.status === 200 && response.data.authenticationToken){
             localStorage.setItem('token', response.data.authenticationToken);
@@ -164,7 +166,27 @@ export const useUserStore = defineStore('user', {
       this.user = null;
       this.refreshToken = "";
       this.username = "";
-    }
+    },
+    async resetPassword(email) {
+      try {
+        await axios.post(`${resetPasswordURL}?email=${email}`);
+        this.successMessage = 'Demande de réinitialisation de mot de passe réussie. Veuillez vérifier votre e-mail.';
+        console.log('Réinitialisation de mot de passe réussie');
+      } catch (error) {
+        console.error('Erreur lors de la réinitialisation de mot de passe', error);
+      }
+    },
+    async newPassword(token, newPassword) {
+      try {
+        // Appel direct à resetPassword avec le token
+        await axios.post(`${newPasswordURL}?token=${token}&newPassword=${newPassword}`);
+        console.log('Mot de passe réinitialisé avec succès');
+        return 'Mot de passe réinitialisé avec succès';
+      } catch (error) {
+        console.error('Erreur lors de la réinitialisation de mot de passe', error);
+        throw error;
+      }
+    },
   }
 })
 

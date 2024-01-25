@@ -5,6 +5,8 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/users';
+const adminURL = '/auth/v1';
+const inscription =adminURL +'/inscription';
 const all= modulesURL+'/all';
 const admins= modulesURL+'/admins';
 const users= modulesURL+'/users';
@@ -230,9 +232,9 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       }
     },
     //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
-    async add(payload) {
+    async inscription(payload) {
       try {
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${inscription}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

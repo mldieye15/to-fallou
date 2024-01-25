@@ -46,13 +46,13 @@ public class DemandeResource {
             return new ResponseEntity<>(e.getMessage(), e.getStatus());
         }
     }
-    @GetMapping("/all")
-    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<DemandeResponse>> all(){
-        List<DemandeResponse> response = service.all();
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @GetMapping("/all")
+//    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<List<DemandeResponse>> all(){
+//        List<DemandeResponse> response = service.all();
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 //    @GetMapping("/withAffectable")
 //    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
 //    @ResponseStatus(HttpStatus.OK)
@@ -74,11 +74,32 @@ public class DemandeResource {
         Map<Long, List<DemandeDetailsCandidatResponse>> response = service.allGroupedByUser();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/all")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<Long, List<DemandeDetailsCandidatResponse>>> all() {
+        Map<Long, List<DemandeDetailsCandidatResponse>> response = service.all();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/demandeByVille/{villeId}")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity <List<DemandeDetailsCandidatResponse>> demandeByVille(@PathVariable("villeId") String villeId) {
          List<DemandeDetailsCandidatResponse> response = service.demandeByVille(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/demandeByCentre/{centreId}")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity <List<DemandeDetailsCandidatResponse>> demandeByCentre(@PathVariable("centreId") String centreId) {
+        List<DemandeDetailsCandidatResponse> response = service.demandeByCentre(centreId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/demandeBySession/{sessionId}")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<Long, List<DemandeDetailsCandidatResponse>>> demandeBySession(@PathVariable("sessionId") String sessionId) {
+        Map<Long, List<DemandeDetailsCandidatResponse>> response = service.demandeBySession(sessionId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")

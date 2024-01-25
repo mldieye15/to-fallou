@@ -18,6 +18,7 @@ import userRoutes from '@/modules/user/routes';
 import candidatRoutes from '@/modules/candidat/routes';
 import adminRoutes from '@/modules/adminstrateurs/routes';
 import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
+import demandeByCentreRoutes from '@/modules/demandeByCentre/routes';
 const routes = [
   {
     path: '/',
@@ -84,7 +85,7 @@ const routes = [
         }
       },
       {
-        path: 'reset-password',
+        path: 'reset-password/:token',
         name: 'resetPassword',
         component: () => import(/* webpackChunkName: "resetPassword" */ '@/views/auth/ResetPassword.vue'),
         meta: {
@@ -184,6 +185,7 @@ const routes = [
   ...candidatRoutes,
   ...adminRoutes,
   ...demandeByVilleRoutes,
+  ...demandeByCentreRoutes,
 ]
 
 const router = createRouter({

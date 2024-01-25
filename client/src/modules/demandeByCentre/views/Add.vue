@@ -12,7 +12,7 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useAdminStore } from "../store";
+import { useDemandeStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -21,29 +21,25 @@ const { addNotification } = notificationStore;
 const instance = getCurrentInstance();
 const router = useRouter();
 
-const adminStore = useAdminStore();
-const { addSupervisseur } = adminStore;
+const demandeStore = useDemandeStore();
+const { add } = demandeStore;
 
 const inputForm= reactive({
-  prenoms: "",
-  nom: "",
-  matricule: "",
-  dateNaiss:null,
-  email: "",
-  username: "",
-  mdpasse: "",
-  sexe: "",
-  telephone: "",
+  session: null,
+  ville: null,
+  academie: null,
+  
+
 });
 
 const handleSave = (payload) => {
-  addSupervisseur(payload).then( () => {
+  add(payload).then( () => {
     addNotification({
         show: true,
         text:  i18n.t('added'),
         color: 'blue'
       });
-    router.push( { name: 'liste-supervisseur'});
+    router.push( { name: 'demande-liste'});
   });
 }
 

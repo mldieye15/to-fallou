@@ -40,6 +40,13 @@ public class SessionResource {
         List<SessionResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/sessionsArchive")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<SessionResponse>> sessionsArchive(){
+        List<SessionResponse> response = service.sessionsArchive();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/sessionsOuvertes")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

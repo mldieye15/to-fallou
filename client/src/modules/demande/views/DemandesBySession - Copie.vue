@@ -1,25 +1,27 @@
 <template>
   <v-container class="my-1" grid-list-xl>
     <v-row class="mb-0 mx-auto pa-0"  align="center">
-    <v-spacer></v-spacer>
-    <v-col class="text-right" md="8" cols="auto">
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
-      <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
-      <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
+    <v-col cols="12" sm="4" md="4" >
+      <v-text-field
+        label="Underlined"
+        placeholder="Placeholder"
+        variant="underlined"
+        append-inner-icon="mdi-magnify"
+        v-model="searchValue"
+      ></v-text-field>
     </v-col>
+    <v-spacer></v-spacer>
     </v-row>
+    <ul class="list-unstyled d-flex mb-4 mx-auto pa-0" align="center">
+          <li v-for="session in dataListeSession" :key="session.id" class="mb-0" style="list-style-type: none;">
+            <v-chip @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="tonal" color="blue">
+              {{ session.libelleLong }}
+            </v-chip>
+          </li>
+    </ul>
   <vue-good-table
     :columns="columns"
     :rows="dataListe"
-    :pagination-options="{
-          enabled: true,
-          mode: 'pages',
-          perPageDropdown: [5, 10, 15,20, 30, 40, 50]
-          }"
-         :search-options="{
-            enabled: true
-          }" 
     > 
     <template #table-row="props">
       <span v-if="props.column.field == 'affectable'">
@@ -60,7 +62,7 @@
             </v-btn>
         </div>
         <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
-          <v-btn   variant="flat" color="green" size="small">
+          <v-btn  cursor:not-allowed  variant="flat" color="green" size="small">
               dèja Affecté
             </v-btn>
         </div>
@@ -68,7 +70,8 @@
           <v-btn  variant="flat" color="red" size="small">
              quota atteint
             </v-btn>
-          </div>
+        </div>
+
         </div> 
       </div>
     </template>
@@ -77,7 +80,8 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import { useDemandeByVilleStore } from "../store";
+import { useDemandeStore } from "../store";
+import { useSessionStore } from "@/modules/session/store";
 import { onMounted, reactive, ref,computed } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useCentreStore } from "@/modules/centre/store";
@@ -89,6 +93,7 @@ import { useRouter,useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const centreStore=useCentreStore();
+const sessionStore = useSessionStore();
 const { dataListeByVille} = storeToRefs(centreStore);
 
 const i18n = useI18n();
@@ -96,16 +101,24 @@ const i18n = useI18n();
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const demandeByVilleStore = useDemandeByVilleStore();
-const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByVilleStore);
-const { demandeByVille } = demandeByVilleStore;
+const demandeStore = useDemandeStore();
+const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeStore);
+const {dataListeSession}= storeToRefs(sessionStore);
+const { demandeBySession } = demandeStore;
 
+const liste = reactive({ items: [] });
+const headers = reactive({ items: [] });
+const searchValue = ref("");
 const dialog = ref(false);
 onMounted(()=>{
-const villeId=route.params.id;
-demandeByVille(villeId)
-console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
+const sessionId=route.params.id;
+demandeBySession(sessionId)
+sessionStore.sessionsArchive();
+console.log(dataListe) 
 });
+const redirectToSessions = (id) => {
+  router.push({ name: 'demandeBySession-demandes', params: { id } });
+};
 // const currentPage = ref(1);
 // const onItemsPerPageChange = () => {
 // currentPage.value = 1; // Réinitialisez la page actuelle lorsque le nombre d'éléments par page change

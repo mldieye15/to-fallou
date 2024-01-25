@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
@@ -24,6 +25,8 @@ import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
+import sn.ucad.office.pjobac.modules.session.Session;
+import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -37,25 +40,26 @@ import java.util.stream.Collectors;
 public class DemandeServiceImp implements DemandeService {
     private final DemandeMapper mapper;
     private final DemandeDao dao;
+    private  final CentreDao centreDao;
     private final EtatDemandeServiceImp service;
     private  final MailService mailService;
-    private final CentreDao centreDao;
+    private final SessionDao sessionDao;
     private final VilleDao villeDao;
     private final AuthService authService;
     private final UserDao userDao;
     private final DetailsCandidatService candidatService;
     private final DetailsCandidatDao candidatDao;
 
-    @Override
-    public List<DemandeResponse> all() throws BusinessResourceException {
-        log.info("DemandeServiceImp::all");
-        List<Demande> all = dao.findAll();
-        List<DemandeResponse> response;
-        response = all.stream()
-                .map(mapper::toEntiteResponse)
-                .collect(Collectors.toList());
-        return response;
-    }
+//    @Override
+//    public List<DemandeResponse> all() throws BusinessResourceException {
+//        log.info("DemandeServiceImp::all");
+//        List<Demande> all = dao.findAll();
+//        List<DemandeResponse> response;
+//        response = all.stream()
+//                .map(mapper::toEntiteResponse)
+//                .collect(Collectors.toList());
+//        return response;
+//    }
 
 //    @Override
 //    public List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException {
@@ -65,15 +69,29 @@ public class DemandeServiceImp implements DemandeService {
 //                .map(mapper::mapToResponse)
 //                .collect(Collectors.toList());
 //    }
+@Override
+public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessResourceException {
+    log.info("DemandeServiceImp::allGroupedByUser");
+    List<Demande> all = dao.findAll();
+    Map<Long, List<DemandeDetailsCandidatResponse>> response;
+    response = all.stream()
+            .collect(Collectors.groupingBy(demande -> demande.getUser().getId(),
+                    Collectors.mapping( demande -> {
+                        DetailsCandidat detailsCandidat= candidatDao.detailsForUser(demande.getUser());
+                        return  mapper.mapToResponse(demande,detailsCandidat);
+                    }, Collectors.toList())));
+
+    return response;
+}
     @Override
     public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException {
         log.info("DemandeServiceImp::allGroupedByUser");
-        List<Demande> all = dao.findAll();
+        List<Demande> all = dao.demandeBySession();
         Map<Long, List<DemandeDetailsCandidatResponse>> response;
         response = all.stream()
                 .collect(Collectors.groupingBy(demande -> demande.getUser().getId(),
                         Collectors.mapping( demande -> {
-                                    DetailsCandidat detailsCandidat= candidatDao.detailsForUser(demande.getUser());
+                                    DetailsCandidat detailsCandidat= candidatDao.detailsForUserAndSession(demande.getUser());
                                     return  mapper.mapToResponse(demande,detailsCandidat);
                                 }, Collectors.toList())));
 
@@ -92,7 +110,7 @@ public class DemandeServiceImp implements DemandeService {
         List<DemandeDetailsCandidatResponse> response;
         response = all.stream()
                 .map(demande -> {
-                    DetailsCandidat detailsCandidat = candidatDao.detailsForUser(demande.getUser());
+                    DetailsCandidat detailsCandidat = candidatDao.detailsForUserAndSession(demande.getUser());
                     DemandeDetailsCandidatResponse demandeResponse;
                     demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
                     return demandeResponse;
@@ -102,7 +120,47 @@ public class DemandeServiceImp implements DemandeService {
         return response;
     }
 
-
+    @Override
+    public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException {
+        log.info("DemandeServiceImp::demandeByCentre");
+        Long myId = Long.valueOf(centreId.trim());
+        Centre centre = centreDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "Aucun Centre avec " + centreId + " trouvé.", HttpStatus.NOT_FOUND)
+                );
+        // Récupérer toutes les demandes par centre
+        List<Demande> all = dao.demandeByCentre(centre);
+        List<DemandeDetailsCandidatResponse> response;
+        response = all.stream()
+                .map(demande -> {
+                    DetailsCandidat detailsCandidat = candidatDao.detailsForUserAndSession(demande.getUser());
+                    DemandeDetailsCandidatResponse demandeResponse;
+                    demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
+                    return demandeResponse;
+                })
+                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getOrdreArrivee))
+                .collect(Collectors.toList());
+        return response;
+    }
+    @Override
+    public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException {
+        log.info("DemandeServiceImp::demandeBySession");
+        Long myId = Long.valueOf(sessionId.trim());
+        Session session = sessionDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "Aucun Session avec " + sessionId + " trouvé.", HttpStatus.NOT_FOUND)
+                );
+        // Récupérer toutes les demandes par ville
+        List<Demande> all = dao.demandeBySession(session);
+        Map<Long, List<DemandeDetailsCandidatResponse>> response;
+        response = all.stream()
+                .collect(Collectors.groupingBy(demande -> demande.getUser().getId(),
+                        Collectors.mapping( demande -> {
+                            DetailsCandidat detailsCandidat= candidatDao.detailsForUserAndSession(demande.getUser());
+                            return  mapper.mapToResponse(demande,detailsCandidat);
+                        }, Collectors.toList())));
+        return response;
+    }
     @Override
     public List<DemandeResponse> allForUser() throws BusinessResourceException {
         try {

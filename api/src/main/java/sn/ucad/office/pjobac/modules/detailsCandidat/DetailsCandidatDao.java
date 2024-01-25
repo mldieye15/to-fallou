@@ -24,6 +24,8 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
     void updateNote(@Param("detailsCandidat") DetailsCandidat detailsCandidat);
     @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.candidat = :user")
     DetailsCandidat detailsForUser(@Param("user") AppUser user);
+    @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.candidat = :user AND dc.annee.encours = true")
+    DetailsCandidat detailsForUserAndSession(@Param("user") AppUser user);
     @Query("SELECT MAX(dc.note) " +
             "FROM Demande d " +
             "JOIN DetailsCandidat dc ON dc.candidat = d.user " +

@@ -14,13 +14,15 @@ public class AppConstants {
     //  *************************************************
     // constants pour les formats horaires
     public static final String MESS_ACTIV_COMPTE_OBJET = "Activation compte";
+    public static final String MESS_RESET_PASSWORD_OBJET = "Réinitialisation de mot de passe";
     public static final String MESS_ACTIV_COMPTE_CONTENT = "Bienvenue sur la plATFORME  pjobac, merci de cliquer sur le lien ci-dessous pour activer votre compte.";
+    public static final String MESS_RESET_PASSWORD_CONTENT = "Bienvenue sur la plATFORME  pjobac,cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe.";
     public static final String MESS_ACTIV_COMPTE_FIN = "Bonne réception.";
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     // liens
     public static final String LIEN_ACTIV_COMPTE = "http://localhost:8201/pjobac/api/auth/v1/verif-token";
-
+    public static final String LIEN_RESET_PASSWORD = "http://localhost:3000/auth/reset-password";
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     //  Page

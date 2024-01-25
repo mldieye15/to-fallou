@@ -12,6 +12,16 @@ const demandeRoutes = [{
             component: () => import( /* webpackChunkName: 'demande_liste' */ './views/Liste.vue')
       },
       {
+        path: '/app/dashboard/demandes/all',
+        name: 'all-demande-liste',
+        component: () => import( /* webpackChunkName: 'demande_liste' */ './views/ListeTotalDemande.vue')
+     },
+     {
+      path: '/app/dashboard/demandes/all/:id',
+      name: 'demandeBySession-demandes',
+      component: () => import( /* webpackChunkName: 'demande_details' */ './views/DemandesBySession.vue'),
+    },
+      {
         path: '/app/dashboard/demandes/:id',
         name: 'demande-details',
         component: () => import( /* webpackChunkName: 'demande_details' */ './views/Details.vue'),

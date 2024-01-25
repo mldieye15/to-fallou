@@ -22,5 +22,8 @@ public interface AuthService {
     public void deleteRefreshToken(String token) throws BusinessResourceException;
     public void addRoleToUser(RoleToUserRequest request) throws BusinessResourceException;
     public void removeRoleFromUser(String username, String roleName)throws BusinessResourceException;
+    public void requestPasswordReset(String email) throws BusinessResourceException, InterruptedException;
+    public void fetchUserWithToken(VerificationToken verificationToken, String newPassword)throws BusinessResourceException;
+    public void resetPassword(String token, String newPassword)throws BusinessResourceException;
 
 }

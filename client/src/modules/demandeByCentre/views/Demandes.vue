@@ -4,7 +4,7 @@
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
       <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
+      <v-chip  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
       <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
       <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
     </v-col>
@@ -15,7 +15,7 @@
     :pagination-options="{
           enabled: true,
           mode: 'pages',
-          perPageDropdown: [5, 10, 15,20, 30, 40, 50]
+          perPageDropdown: [10, 15,20, 30, 40, 50]
           }"
          :search-options="{
             enabled: true
@@ -77,7 +77,7 @@
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
-import { useDemandeByVilleStore } from "../store";
+import { useDemandeByCentreStore } from "../store";
 import { onMounted, reactive, ref,computed } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useCentreStore } from "@/modules/centre/store";
@@ -89,21 +89,21 @@ import { useRouter,useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const centreStore=useCentreStore();
-const { dataListeByVille} = storeToRefs(centreStore);
+const { dataListeByCentre} = storeToRefs(centreStore);
 
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const demandeByVilleStore = useDemandeByVilleStore();
-const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByVilleStore);
-const { demandeByVille } = demandeByVilleStore;
+const demandeByCentreStore = useDemandeByCentreStore();
+const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByCentreStore);
+const { demandeByCentre } = demandeByCentreStore;
 
 const dialog = ref(false);
 onMounted(()=>{
-const villeId=route.params.id;
-demandeByVille(villeId)
+const CentreId=route.params.id;
+demandeByCentre(CentreId)
 console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });
 // const currentPage = ref(1);
@@ -131,11 +131,14 @@ console.log(dataListe) // ajustez le nombre d'éléments par page selon vos beso
 // return pageNumber === currentPage.value ? 'active-page' : '';
 // }; 
 
+const redirectToCentres = () => {
+router.push({ name: 'demandeByCentre-liste' });
+};
 const redirectToVilles = () => {
 router.push({ name: 'demandeByVille-liste' });
 };
 const redirectToDemandes = (id) => {
-  router.push({ name: 'accepte-DemandeByVille', params: { id } });
+  router.push({ name: 'affecter-DemandeByCentre', params: { id } });
 };
 </script>
 <style scoped>

@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface SessionService {
     public List<SessionResponse> all() throws BusinessResourceException;
-
+    public List<SessionResponse> sessionsArchive() throws BusinessResourceException;
     public List<SessionResponse> allActiveSessions() throws BusinessResourceException;
     public SimplePage<SessionResponse> all(Pageable pageable) throws BusinessResourceException;
 

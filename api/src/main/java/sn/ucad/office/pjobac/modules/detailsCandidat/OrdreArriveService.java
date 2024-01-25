@@ -35,12 +35,12 @@ public class OrdreArriveService {
     public void updateOrderByVille() throws BusinessResourceException {
         log.info("DemandeServiceImp::updateOrderByVille");
         // Récupérer toutes les demandes avec les détails de chaque candidat
-        List<Demande> all = demandeDao.findAll();
+        List<Demande> all = demandeDao.demandeBySession();
         // Regrouper les demandes par ville
         Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
                 .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
                         Collectors.mapping(demande -> demandeMapper.mapToResponse(demande,
-                                dao.detailsForUser(demande.getUser())), Collectors.toList())));
+                                dao.detailsForUserAndSession(demande.getUser())), Collectors.toList())));
         // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
         groupedByVille.forEach((city, candidates) -> {
             candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());
@@ -54,7 +54,6 @@ public class OrdreArriveService {
                 }
             }
         });
-
     }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateRangByVille() throws BusinessResourceException {
@@ -65,7 +64,7 @@ public class OrdreArriveService {
         Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
                 .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
                         Collectors.mapping(demande -> demandeMapper.mapToResponse(demande,
-                                dao.detailsForUser(demande.getUser())), Collectors.toList())));
+                                dao.detailsForUserAndSession(demande.getUser())), Collectors.toList())));
         // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
         groupedByVille.forEach((city, candidates) -> {
             candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());

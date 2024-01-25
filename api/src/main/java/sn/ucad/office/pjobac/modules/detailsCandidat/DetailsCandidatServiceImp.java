@@ -94,11 +94,10 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             one.setAnnee(annee);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
-            log.info("Ajout " + response.getAppreciation() + " effectué avec succés. <add>");
+            log.info("Ajout " + response.getCandidat().getPrenoms() + " effectué avec succés. <add>");
             dao.updateNoteBy(currentUser);
             ordreArrive.updateOrderByVille();
             return response;
-
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de creation Academie: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
