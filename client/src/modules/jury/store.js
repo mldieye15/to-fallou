@@ -5,7 +5,8 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/jurys';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
-const numeroAvailability=modulesURL+'/numero-availability';
+const juryByCentre = modulesURL+'/by-centre';
+const nomAvailability=modulesURL+'/nom-availability';
 export const useJuryStore = defineStore('jury', {
   state: () => ({
     dataListeJury: [],  //  List des données à afficher pour la table
@@ -68,6 +69,35 @@ export const useJuryStore = defineStore('jury', {
         this.error = error
       } finally {
         this.loading = false
+      }
+    },
+    async jurysBycentre(centre) {
+      try {
+        // Ajouter une vérification pour s'assurer que centre est un nombre non nul
+        if (typeof centre === 'number' && !isNaN(centre)) {
+          await axios.get(`${juryByCentre}/${centre}`)
+            .then((response) => {
+              if (response.status === 200) {
+                let res = response.data.map((element) => {
+                  let centreLabel = element.centre ? element.centre.libelleLong : null;
+                  return {
+                    id: element.id,
+                    nom: element.nom,
+                    numero: element.numero,
+                    centre: centreLabel
+                  };
+                });
+                this.dataListeJury= res;
+              }
+            });
+        } else {
+          console.error("La valeur de jury est invalide. La requête n'a pas été effectuée.");
+        }
+      } catch (error) {
+        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
       }
     },
     //  recupérer les informations d'un jury par son ide et le mettre dans la tabel dataDetails
@@ -137,14 +167,25 @@ export const useJuryStore = defineStore('jury', {
         this.loading = false
       }
     },
-    async checkNumeroExistence(numero) {
+    async checkNomExistence(nom) {
       try {
-        const response = await axios.get(`${numeroAvailability}?numero=${numero}`);
+        const response = await axios.get(`${nomAvailability}?nom=${nom}`);
         console.log("Réponse de juryAvailability :", response);
         response.data=response.data.isAvailable;
         return true;
       } catch (error) {
         console.error("Erreur lors de la vérification du jury :", error);
+        return false;
+      }
+    },
+    async checkJuryExistence(nom) {
+      try {
+        const response = await axios.get(`${nomAvailability}?nom=${nom}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
         return false;
       }
     },

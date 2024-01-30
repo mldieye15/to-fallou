@@ -132,6 +132,13 @@ public class DemandeResource {
         DemandeResponse response = service.accepterDemande(accepter, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PutMapping(value = "/affecter/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DemandeResponse> affecterJury(@PathVariable(value="id") String id,
+                                                        @RequestBody @Valid DemandeAffecterJury affecter) {
+        DemandeResponse response = service.affecterJury(affecter, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @PutMapping("/valider/{userId}")
     public ResponseEntity<DemandeResponse> validerDemande(@PathVariable("userId") String userId) {
         try {

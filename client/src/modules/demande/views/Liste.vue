@@ -69,6 +69,11 @@
               dèja Affecté
             </v-btn>
         </div>
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'VALIDE' || props.row.etatDemande === 'REJETE'">
+          <v-btn  variant="flat" color="green-darken-4" size="small">
+            dèja validé
+            </v-btn>
+        </div>
         <div class="actions-wrapper" v-else>
           <v-btn  variant="flat" color="red" size="small">
              quota atteint

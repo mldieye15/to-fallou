@@ -21,6 +21,7 @@
       >
       <input type="hidden" :v-model="inputForm.session">
     </v-text-field>
+    
 
       <v-text-field
         prepend-inner-icon="mdi-alpha-a-circle"
@@ -33,30 +34,29 @@
         readonly
       >
       <input type="hidden" :v-model="inputForm.ville">
-    </v-text-field>
-
-      <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="academie"
-        density="compact"
-        :label="$t('apps.forms.academie.nom')"
-        color="balck"
-        v-model="inputForm.academieName"
-        variant="solo"
-        readonly
-      >
-      <input type="hidden" :v-model="inputForm.academie">
-    </v-text-field>
-    <v-select
+    </v-text-field> 
+    <v-text-field
         prepend-inner-icon="mdi-alpha-a-circle"
         name="centre"
         density="compact"
+        :label="$t('apps.forms.centre.nom')"
         color="balck"
-        v-model="inputForm.centre"
+        v-model="inputForm.centreName"
         variant="solo"
-        :items="dataListeByVille"
+        readonly
+      >
+      <input type="hidden" :v-model="inputForm.centre">
+    </v-text-field>
+    <v-select
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="jury"
+        density="compact"
+        color="balck"
+        v-model="inputForm.jury"
+        variant="solo"
+        :items="dataListeJury"
         persistent-hint
-        item-title="libelleLong"
+        item-title="numero"
         item-value="id"
       >
     </v-select>
@@ -75,21 +75,20 @@
   import { useVilleStore } from "@/modules/ville/store";
   import { useAcademieStore } from "@/modules/academie/store";
   import { useSessionStore } from "@/modules/session/store";
+  import { useJuryStore } from "@/modules/jury/store";
   import { useI18n } from "vue-i18n";
   
-  import { useDemandeByVilleStore } from "../store";
+  import { useDemandeByCentreStore } from "../store";
   const i18n = useI18n();
   
   const notificationStore = useNotificationStore();
   const { addNotification } = notificationStore;
 
   const villeStore = useVilleStore();
-const {dataListeVille} = storeToRefs(villeStore);
-
+const juryStore= useJuryStore();
+const {dataListeJury}=storeToRefs(juryStore);
 const academieStore = useAcademieStore();
-const { dataListe } = storeToRefs(academieStore);
 const sesssionStore=useSessionStore();
-const { dataListeSession } = storeToRefs(sesssionStore);
 const centreStore=useCentreStore();
 const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   
@@ -97,18 +96,20 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   const router = useRouter();
   const route = useRoute();
   
-  const demandeStore = useDemandeByVilleStore();
+  const demandeStore = useDemandeByCentreStore();
   const { dataDetails, loading } = storeToRefs(demandeStore);
-  const { one, modify,accepterDemande } = demandeStore;
+  const { one, modify,affecterJury } = demandeStore;
   
   const inputForm = reactive({
     villeName:"",
     sessionName:"",
     academieName:"",
+    centreName:"",
     session:null,
     ville:null,
     academie:null,
     centre:null,
+    jury:null,
   });
   const handleSave = () => {
   const payload = {
@@ -116,14 +117,15 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     ville: inputForm.ville,
     academie: inputForm.academie,
     centre: inputForm.centre,
+    jury: inputForm.jury,
   };
-  accepterDemande(route.params.id, payload).then(() => {
+  affecterJury(route.params.id, payload).then(() => {
     addNotification({
       show: true,
       text:  i18n.t('updated'),
       color: 'blue',
     });
-    router.push({ name: 'demandeByVille-demandes' });
+    router.push({ name: 'demandeByCentre-demandes' });
   });
 };
   onMounted(()=>{
@@ -131,16 +133,18 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
       inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,
       inputForm.academie = dataDetails.value.academie?dataDetails.value.academie.id:null,
       inputForm.ville = dataDetails.value.ville?dataDetails.value.ville.id:null,
+      inputForm.centre = dataDetails.value.centre?dataDetails.value.centre.id:null,
       inputForm.villeName=dataDetails.value.ville.libelleLong,
       inputForm.academieName=dataDetails.value.academie.libelleLong,
       inputForm.sessionName=dataDetails.value.session.libelleLong
+      inputForm.centreName=dataDetails.value.centre.libelleLong
       villeStore.all();
       academieStore.all();
       sesssionStore.all();
       centreStore.all();
-      const villeId=dataDetails.value.ville.id;
-      console.log(villeId)
-      centreStore.centresByVille(villeId);
+      const centreId=dataDetails.value.centre.id;
+      console.log("Centre:",centreId)
+      juryStore.jurysBycentre(centreId);
     });
   });
   

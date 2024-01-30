@@ -7,6 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.jury.Jury;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.ville.Ville;
@@ -36,6 +37,8 @@ public class Demande {
     private Session session;
     @ManyToOne
     private Centre centre;
+    @OneToOne
+    private Jury jury;
     @ManyToOne
     private EtatDemande etatDemande;
     private Integer ordreArrivee;

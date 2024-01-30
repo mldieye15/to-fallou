@@ -25,6 +25,7 @@ public class DemandeResponse {
     private Centre centre;
     private EtatDemande etatDemande;
     private AppUser user;
+    private Jury jury;
     private LocalDateTime dateDemande;
     private Integer rang;
 

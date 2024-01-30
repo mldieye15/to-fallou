@@ -4,7 +4,7 @@
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
       <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
+      <v-chip  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
       <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
       <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
     </v-col>
@@ -65,7 +65,7 @@
             </v-btn>
         </div>
         <div class="actions-wrapper" v-else>
-          <v-btn  variant="flat" color="red" size="small">
+          <v-btn  variant="flat" color="red-accent-4" size="small">
              quota atteint
             </v-btn>
           </div>
@@ -134,6 +134,9 @@ console.log(dataListe) // ajustez le nombre d'éléments par page selon vos beso
 const redirectToVilles = () => {
 router.push({ name: 'demandeByVille-liste' });
 };
+const redirectToCentres = () => {
+router.push({ name: 'demandeByCentre-liste' });
+};
 const redirectToDemandes = (id) => {
   router.push({ name: 'accepte-DemandeByVille', params: { id } });
 };
@@ -152,4 +155,3 @@ max-width: 85px;
 background-color: green;
 }
 </style>
-

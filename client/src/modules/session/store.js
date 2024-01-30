@@ -259,6 +259,10 @@ export const useSessionStore = defineStore('session', {
         this.loading = false
       }
     },
+    getAnneBySessionId(id) {
+      const session = this.dataListeSession.find(item => item.id === id);
+      return session ? session.annee: '';
+    },
     //  ajouter une session
     async add(payload) {
       try {

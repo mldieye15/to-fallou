@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
+import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
@@ -41,7 +42,11 @@ public class JuryResource {
         List<JuryResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping(value = "/by-centre/{centreId}")
+    public ResponseEntity<List<JuryResponse>> juryNonAffecterByCentre(@PathVariable String centreId) {
+        List<JuryResponse> response = service.juryNonAffecterByCentre(centreId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<JuryResponse>> one(@PathVariable(value = "id") String id) {
         Optional<JuryResponse> response = service.oneById(id);
@@ -68,10 +73,10 @@ public class JuryResource {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/numero-availability")
-    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String numero) {
+    @GetMapping("/nom-availability")
+    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String nom) {
         try {
-            service.verifyJuryUnique(numero);
+            service.verifyJuryUnique(nom);
             return ResponseEntity.ok(true);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.ok(false);

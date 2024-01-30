@@ -1,10 +1,11 @@
 // Utilities
 import { defineStore } from 'pinia';
 import axios from '@/plugins/axios.js'
+import { id } from 'date-fns/locale';
 
 const  modulesURL = '/v1/demandes';
 const demandesByCentre = modulesURL+'/demandeByCentre';
-const accepter=modulesURL+'/accepter';
+const affecter=modulesURL+'/affecter';
 const valider=modulesURL+'/valider';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const quotaAccepte=modulesURL+'/quotaAccepte';
@@ -28,7 +29,7 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
       { label: 'Session', field: 'session',width: "200px",resizable: true },
       { label: 'Academie', field: 'academie',width: "200px",resizable: true },
       { label: 'Centre d/ecrit', field: 'centre',width: "200px" ,resizable: true},
-      // { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
+      { label: 'Jury', field: 'jury',width: "100px",resizable: true},
       { label: 'Points', field: 'note',width: "100px",resizable: true },
       { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
       { label: 'Ordre Arrivee', field: 'ordreArrivee',width: "140px",resizable: true},
@@ -61,8 +62,10 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
             let nomLabel = element.user ? element.user.prenoms : null;
             let idLabel = element.user ? element.user.id : null;
             let idLabelVille = element.ville ? element.ville.id : null;
+            let idLabelJury = element.jury ? element.jury.id : null;
             let affectableLabel = element.affectable ? 'OUI' : 'NON';
             let centreLabel = element.centre ? element.centre.libelleLong : null;
+            let juryLabel = element.jury ? element.jury.numero : null;
             let hasAccepted = await this.hasAcceptedDemande(idLabel) ? 'OUI' : 'NON';
             let quotaAccept = await this.quotaAccepteVille(idLabelVille) ? 'OUI' : 'NON';
     
@@ -73,8 +76,10 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
               ordreArrivee: element.ordreArrivee,
               rang: element.rang,
               affectable: affectableLabel,
+              juryId:idLabelJury,
               ville: villeLabel,
               academie: academieLabel,
+              jury:juryLabel,
               session: sessionLabel,
               etatDemande: etatLabel,
               user: nomLabel,
@@ -111,11 +116,11 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
         this.loading = false
       }
     },
-    async accepterDemande(id, payload) {
+    async affecterJury(id, payload) {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${accepter}/${id}`, payload)
+        await axios.put(`${affecter}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

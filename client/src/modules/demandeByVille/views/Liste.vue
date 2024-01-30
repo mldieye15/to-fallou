@@ -18,8 +18,6 @@
         >    
         <template #table-row="props">
           <div v-if="props.column.field === 'totalDemandes'">
-            <router-link :to="{ name: 'admin-details', params: { id: props.row.id } }"> 
-            </router-link>
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
               Voir demandes
               <div class="ml-3">

@@ -11,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
+import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
+import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
@@ -56,6 +59,21 @@ public class JuryServiceImp implements JuryService {
         );
     }
 
+    @Override
+    public List<JuryResponse> juryNonAffecterByCentre(String centreId) throws BusinessResourceException {
+        Long myId= Long.valueOf(centreId.trim());
+        Centre centre;
+        centre=centreDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " +centreId));
+        List<Jury> juries=dao.juryNonAffecterByCentre(centre);
+        List<JuryResponse> response;
+        response= juries.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        System.out.println("Centre ID: " + centre.getId());
+        System.out.println("Nombre de jury non affecte : " + juries.size());
+        return response;
+    }
     @Override
     @Transactional(readOnly = false)
     public Optional<JuryResponse> oneById(String id) throws NumberFormatException, BusinessResourceException {
@@ -189,9 +207,9 @@ public class JuryServiceImp implements JuryService {
     }
 
     @Override
-    public void verifyJuryUnique(String numero) throws BusinessResourceException {
-        if(dao.findByNumero(numero).isPresent()){
-            throw new ResourceAlreadyExists("Le numero existe déjà.");
+    public void verifyJuryUnique(String nom) throws BusinessResourceException {
+        if(dao.findByNom(nom).isPresent()){
+            throw new ResourceAlreadyExists("Le numero existe déjà pour cette annee.");
         }
     }
 

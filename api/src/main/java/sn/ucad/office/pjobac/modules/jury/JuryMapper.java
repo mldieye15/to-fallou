@@ -27,7 +27,7 @@ public interface JuryMapper {
     JuryAudit toEntiteAudit(Jury jury, Long auteurName, Long modifName);
 
     // request to entity anne
-    @Mapping(target ="nom",source =".",qualifiedByName="juryNom")
+    @Mapping(target = "nom", source = ".", qualifiedByName = "formatNom")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
     @Mapping(source = "request.session", target = "session",qualifiedByName = "getSessionById")
     Jury requestToEntity(JuryRequest request);
@@ -40,7 +40,7 @@ public interface JuryMapper {
 
     // request to existing entity
     //@Mapping(source = "user", target = "utiModifie")
-    @Mapping(target ="nom",source =".",qualifiedByName="juryNom")
+    @Mapping(target = "nom", source = ".", qualifiedByName = "formatNom")
     @Mapping(source = "request.centre", target = "centre",qualifiedByName = "getCentreById")
     @Mapping(source = "request.session", target = "session",qualifiedByName = "getSessionById")
     Jury requestToEntiteUp(@MappingTarget Jury entity, JuryRequest request);

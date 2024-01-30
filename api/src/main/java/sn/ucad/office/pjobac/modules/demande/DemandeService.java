@@ -17,7 +17,7 @@ public interface DemandeService {
     public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessResourceException;
     public List<DemandeDetailsCandidatResponse> demandeByVille(String villeId ) throws BusinessResourceException;
-    List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException;
+     public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
 
@@ -30,6 +30,7 @@ public interface DemandeService {
 
     public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DemandeResponse affecterJury(DemandeAffecterJury req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse validerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 
     public String del(String id) throws NumberFormatException, BusinessResourceException;

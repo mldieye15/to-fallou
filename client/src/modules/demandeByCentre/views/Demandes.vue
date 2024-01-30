@@ -22,12 +22,12 @@
           }" 
     > 
     <template #table-row="props">
-      <span v-if="props.column.field == 'affectable'">
+      <!-- <span v-if="props.column.field == 'affectable'">
         <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
              :color="props.row.affectable=== 'OUI' ? 'green' : 'red'" text variant="tonal">
           {{ props.row.affectable}}
       </v-chip>
-      </span>
+      </span> -->
       <span v-if="props.column.field == 'etatDemande'">
          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[props.row.etatDemande]" variant="tonal">
         <span>{{ props.row.etatDemande }}</span>
@@ -38,38 +38,24 @@
           {{ props.row.ordreArrivee}}
       </v-chip>
       </span>
-      <span v-if="props.column.field == 'rang'">
-        <v-chip color="cyan"  size="small" variant="flat" >
-          {{ props.row.rang}}
-       </v-chip>
-      </span>
       <div v-if="props.column.field === 'actions'">
-        <div class="actions-wrapper"
-         v-if="props.row.etatDemande === 'EN ATTENTE' &&
-          props.row.quota === 'OUI' && 
-          props.row.hasAcceptedDemande === 'NON'&&
-          props.row.affectable === 'OUI'">
+        <div class="actions-wrapper" v-if="props.row.etatDemande === 'VALIDE'">
+          <div v-if="props.row.jury===null">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
               Affecté
             </v-btn>
-        </div>
-        <div v-else>
-          <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-          <v-btn  variant="flat" color="red-darken-4" size="small">
-              NON AFFECTABLE
-            </v-btn>
-        </div>
-        <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
+          </div>
+          <div class="actions-wrapper" v-else>
           <v-btn   variant="flat" color="green" size="small">
               dèja Affecté
             </v-btn>
         </div>
+        </div>
         <div class="actions-wrapper" v-else>
-          <v-btn  variant="flat" color="red" size="small">
-             quota atteint
+          <v-btn   variant="flat" color="red" size="small">
+              Pas valider
             </v-btn>
-          </div>
-        </div> 
+        </div>
       </div>
     </template>
   </vue-good-table>

@@ -11,6 +11,7 @@ import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.session.Session;
+import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 
 import java.util.*;
 
@@ -71,6 +72,17 @@ public class JuryMapperUtil {
                 return String.format("%s%03d", libelleCourt, newNumber);
 
             }
+        }
+        return null;
+    }
+    @Named("formatNom")
+    public String formatNom(JuryRequest request) {
+        if (request.getSession() != null && request.getNumero() != null) {
+            String session=request.getSession();
+            String numero=request.getNumero();
+            String annee;
+            annee = getSessionById(session).getAnnee().getLibelleLong();
+            return "Jury N° " +numero+ " de " + annee;
         }
         return null;
     }

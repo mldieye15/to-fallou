@@ -16,9 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "jury"
-        , uniqueConstraints ={
-                            @UniqueConstraint(columnNames = "numero"),
-                            @UniqueConstraint(columnNames ="nom" )
+        , uniqueConstraints ={@UniqueConstraint(columnNames ="nom")
 }
 )
 public class Jury {

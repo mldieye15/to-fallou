@@ -25,7 +25,7 @@ public interface VilleDao extends JpaRepository<Ville, Long> {
     int totalJuryAffecteByVille(@Param("ville") Ville ville);
     @Query("SELECT v FROM Ville v " +
             "WHERE v.academie = :academie " +
-            "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie) " +
+            "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) " +
             "AND v.totalJury > (SELECT COUNT(d) FROM Demande d WHERE d.ville = v AND d.etatDemande.libelleLong = 'VALIDE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) ")
     List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academie") Academie academie);
 

@@ -57,7 +57,7 @@ public class CentreServiceImp implements CentreService {
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         System.out.println("Ville ID: " + ville.getId());
-        System.out.println("Nombre de centres sans demande : " + centres.size());
+        System.out.println("Nombre de centres sans quota atteint : " + centres.size());
         return response;
     }
 //    @Override

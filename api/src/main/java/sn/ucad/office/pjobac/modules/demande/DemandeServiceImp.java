@@ -395,6 +395,28 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
     }
 
     @Override
+    public DemandeResponse affecterJury(DemandeAffecterJury req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            Demande oneBrute = mapper.affecterJuryToEntiteUp(demandeOptional, req);
+            DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            log.info("Demande " + response.getId() + " affecter avec succés. <accepterDemande>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + demandeId+ " non autorisé. <accepterDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + demandeId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error("Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique d'acceptation d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public DemandeResponse validerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {

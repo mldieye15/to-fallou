@@ -27,7 +27,7 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     List<Centre> findCentresSansDemandeParVille(@Param("ville") Ville ville);
     @Query("SELECT c FROM Centre c " +
             "WHERE c.ville = :ville " +
-            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong = 'ACCEPTE')")
+            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong = 'ACCEPTE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true))")
     List<Centre> findCentresQuotaNonAtteintParVille(@Param("ville") Ville ville);
 
 }

@@ -7,6 +7,7 @@ import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
+import sn.ucad.office.pjobac.modules.jury.Jury;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.ville.Ville;
@@ -23,6 +24,7 @@ public class DemandeDetailsCandidatResponse{
     private Session session;
     private Centre centre;
     private EtatDemande etatDemande;
+    private Jury jury;
     private Integer ordreArrivee;
     private LocalDateTime dateDemande;
     private LocalDateTime dateRejetDemande;

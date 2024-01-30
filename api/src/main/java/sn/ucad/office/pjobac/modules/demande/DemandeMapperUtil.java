@@ -16,6 +16,8 @@ import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeMapper;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeService;
+import sn.ucad.office.pjobac.modules.jury.Jury;
+import sn.ucad.office.pjobac.modules.jury.JuryDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
@@ -40,7 +42,7 @@ public class DemandeMapperUtil {
     private final VilleDao villeDao;
     private final AcademieDao academieDao;
     private final SessionDao sessionDao;
-    private final UserDao userDao;
+    private final JuryDao juryDao;
     private  final CentreDao centreDao;
     private  final AuthService authService;
 
@@ -123,6 +125,21 @@ public class DemandeMapperUtil {
         } catch (NumberFormatException e) {
             log.warn("Paramétre id {} non autorisé. <DemandeMapperUtil::getSessionById>.", sessionId);
             throw new BusinessResourceException("not-valid-param", "Paramétre " + sessionId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @Named("getJuryById")
+    Jury getJuryById(String juryId) throws NumberFormatException {
+        try {
+            Long myId = Long.valueOf(juryId.trim());
+            Jury response;
+            response = juryDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune jury avec " +juryId + " trouvée.", HttpStatus.NOT_FOUND)
+                    );
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id {} non autorisé. <DemandeMapperUtil::getJuryById>.", juryId);
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + juryId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
 }

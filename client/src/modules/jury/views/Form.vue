@@ -49,12 +49,23 @@
         :rules="[rules.required,rules.validateNombre]"
         v-model="inputForm.numero"
         variant="solo"
-        @blur="checkNumeroExistence"
       >
       </v-text-field>
-      <div v-if="numeroError" class="error-message">{{ numeroErrorMessage }}</div>
-
-      <v-btn block class="mt-4 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-text-field
+        id="nom"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        name="nom"
+        density="compact"
+        :label="$t('apps.forms.jury.nom')"
+        color="balck"
+        v-model="nomJury"
+        variant="solo"
+        readonly
+        @blur="checkNomExistence"
+      >
+      </v-text-field>
+      <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
+      <v-btn block class="mt-8 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -62,7 +73,7 @@
 
 <script setup>
 import { reactive, getCurrentInstance } from "vue";
-import { onMounted,ref,watchEffect } from "vue"
+import { onMounted,ref,watchEffect,computed } from "vue"
 import { storeToRefs } from "pinia";
 import { useCentreStore } from "@/modules/centre/store";
 import { useSessionStore } from "@/modules/session/store";
@@ -79,12 +90,30 @@ const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   validateNombre: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide de demandes autorises.',
 });
-const numeroError = ref(false);
-const numeroErrorMessage = ref("");
+const nomError = ref(false);
+const nomErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
-watchEffect(() => {
-  isSubmitDisabled.value = numeroError.value 
-});
+const checkNomExistence = async () => {
+  nomError.value = false;
+  nomErrorMessage.value = "";
+  console.log('Vérification avant la condition (nomJury) :', nomJury);
+  if (nomJury.value) {
+    console.log('Vérification dans la condition (nomJury) :', nomJury);
+    try {
+      const isAvailable = await juryStore.checkNomExistence(nomJury.value);
+      console.log("Résultat de la vérification du nom (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        nomError.value = true;
+        nomErrorMessage.value = "Ce nom  est déjà utilisé.";
+        console.log('nomErrorMessage:', nomErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du nom :", error);
+      nomError.value = true;
+      nomErrorMessage.value = "Erreur lors de la vérification du nom. Veuillez réessayer.";
+    }
+  }
+};
 
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
@@ -92,25 +121,23 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-const checkNumeroExistence = async () => {
-  numeroError.value = false;
-  numeroErrorMessage.value = "";
-  if (inputForm.numero) {
-    try {
-      const isAvailable = await juryStore.checkNumeroExistence(inputForm.numero);
-      console.log("Résultat de la vérification du numero (isAvailable) :", isAvailable);
-      if (!isAvailable) {
-        numeroError.value = true;
-        numeroErrorMessage.value = "Ce numero  est déjà utilisé.";
-        console.log('numeroErrorMessage:', numeroErrorMessage);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du numero :", error);
-      numeroError.value = true;
-      numeroErrorMessage.value = "Erreur lors de la vérification du numero. Veuillez réessayer.";
-    }
-  }
+// const nomJury = computed(() => {
+//   const numero = inputForm.numero;
+//   const session = inputForm.session;
+//   const nomLabel = sessionStore.getAnneBySessionId(session);
+//   return `Jury N° ${numero} de ${nomLabel}`.trim();
+// });
+const getNomJury = () => {
+  const numero = inputForm.numero;
+  const session = inputForm.session;
+  const nomLabel = sessionStore.getAnneBySessionId(session);
+  return `Jury N° ${numero} de ${nomLabel}`.trim();
 };
+const nomJury = ref(getNomJury());
+watchEffect(() => {
+  isSubmitDisabled.value = nomError.value; 
+  nomJury.value = getNomJury();
+});
 
 const handleSave = () => {
   if(!isSubmitDisabled.value){

@@ -19,6 +19,7 @@ public interface DemandeMapper {
     @Mapping(source = "demande.academie", target = "academie")
     @Mapping(source = "demande.etatDemande", target = "etatDemande")
     @Mapping(source = "demande.centre", target = "centre")
+    @Mapping(source = "demande.jury", target = "jury")
     @Mapping(source = "demande.dateDemande", target = "dateDemande")
     @Mapping(source = "demande.dateRejetDemande", target = "dateRejetDemande")
     @Mapping(source = "demande.dateConfirmationDemande", target = "dateConfirmationDemande")
@@ -56,6 +57,14 @@ public interface DemandeMapper {
     @Mapping(target = "session", source = "accepteRequest.session",qualifiedByName = "getSessionById")
     @Mapping(target = "centre", source = "accepteRequest.centre",qualifiedByName = "getCentreById")
     Demande accepterToEntiteUp(@MappingTarget Demande entity, DemandeAccepter accepteRequest );
+
+    @Mapping(target = "ville",source = "affecterJuryRequest.ville", qualifiedByName = "getVilleById")
+    @Mapping(target = "academie",source = "affecterJuryRequest.academie" ,qualifiedByName = "getAcademieById")
+    @Mapping(target = "session", source = "affecterJuryRequest.session",qualifiedByName = "getSessionById")
+    @Mapping(target = "centre", source = "affecterJuryRequest.centre",qualifiedByName = "getCentreById")
+    @Mapping(target = "jury", source = "affecterJuryRequest.jury",qualifiedByName = "getJuryById")
+    Demande affecterJuryToEntiteUp(@MappingTarget Demande entity, DemandeAffecterJury affecterJuryRequest );
+
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
 

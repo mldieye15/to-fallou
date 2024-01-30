@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
 
+import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
@@ -17,6 +18,7 @@ public interface JuryService {
     public List<JuryResponse> all() throws BusinessResourceException;
 
     public SimplePage<JuryResponse> all(Pageable pageable) throws BusinessResourceException;
+    public List<JuryResponse> juryNonAffecterByCentre(String centreId) throws BusinessResourceException;
 
     public Optional<JuryResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
 
