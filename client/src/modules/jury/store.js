@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/jurys';
 const all= modulesURL+'/all';
+const allBySession= modulesURL+'/allBySession';
 const add = modulesURL+'/';
 const juryByCentre = modulesURL+'/by-centre';
 const nomAvailability=modulesURL+'/nom-availability';
@@ -27,6 +28,7 @@ export const useJuryStore = defineStore('jury', {
     headerTable: [
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Numero', value: 'numero', align: 'start', sortable: true },
+      { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Centre', value: 'centre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
@@ -48,6 +50,7 @@ export const useJuryStore = defineStore('jury', {
 
             let res = response.data.map( (element) => {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
+              let sessionLabel = element.session ? element.session.libelleLong : null;
               let villeLabel =element.centre&& element.centre.ville ? element.centre.ville.libelleLong :null;
               let academieLabel =element.centre&& element.centre.ville.academie ? element.centre.ville.academie.libelleLong : null;
               return {
@@ -56,7 +59,41 @@ export const useJuryStore = defineStore('jury', {
                 nom:element.nom,
                 centre: centreLabel,
                 ville: villeLabel,
-                academie: academieLabel
+                academie: academieLabel,
+                session: sessionLabel
+              };
+             
+            });
+
+            this.dataListeJury = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allBySession() {
+      try {
+        await axios.get(`${allBySession}`) 
+        .then((response) => {
+          if(response.status === 200){
+
+            let res = response.data.map( (element) => {
+              let centreLabel = element.centre ? element.centre.libelleLong : null;
+              let sessionLabel = element.session ? element.session.libelleLong : null;
+              let villeLabel =element.centre&& element.centre.ville ? element.centre.ville.libelleLong :null;
+              let academieLabel =element.centre&& element.centre.ville.academie ? element.centre.ville.academie.libelleLong : null;
+              return {
+                id:element.id, 
+                numero: element.numero,
+                nom:element.nom,
+                centre: centreLabel,
+                ville: villeLabel,
+                academie: academieLabel,
+                session: sessionLabel
               };
              
             });

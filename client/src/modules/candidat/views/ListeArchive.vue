@@ -14,7 +14,7 @@
           ></v-text-field>
         </v-col>
         <v-col class="text-right" md="8" cols="auto">
-          <v-btn @click.prevent="redirectToArchives()" class="ma-0" variant="outlined" color="cyan-darken-1">candidats Archivés </v-btn>
+          <v-btn @click.prevent="redirectToCandidat()" class="ma-0" variant="outlined" color="cyan-darken-1">candidats session en cours</v-btn>
         </v-col>
       </v-row>
       <EasyDataTable
@@ -38,15 +38,7 @@
           </div>
         </template>
         <template #item-actions="item">
-          <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
-            <v-btn  variant="tonal" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
-              Appreciation
-            </v-btn>
-            <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
-              Details
-            </v-btn>
-          </div>
-          <div v-else>
+          <div class="actions-wrapper">
             <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn>
@@ -74,7 +66,7 @@ const { addNotification } = notificationStore;
 
 const candidatStore = useCandidatStore();
 const { dataListeCandidat, headerTable, loading } = storeToRefs(candidatStore);
-const { all, destroy,allBySession } = candidatStore;
+const { all, destroy } = candidatStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -86,12 +78,12 @@ const redirectToDetails = (id) => {
 const redirectToAppreciation = (id) => {
   router.push({ name: 'candidat-appreciation', params: { id } });
 };
-const redirectToArchives = () => {
-  router.push({ name: 'candidat-liste-archive'});
+const redirectToCandidat = () => {
+  router.push({ name: 'candidat-liste'});
 };
 
 onMounted(()=>{
-  allBySession();
+  all();
 });
 let role= localStorage.getItem('role');
 </script>
@@ -103,7 +95,7 @@ let role= localStorage.getItem('role');
   background-color: white;
 }
 .actions-wrapper {
-  width: 220px;
+  width: 80px;
 }
 .etablissement-wrapper{
  width: 240px; 

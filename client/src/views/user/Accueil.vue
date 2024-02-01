@@ -23,20 +23,21 @@
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
             </p>
-            <div class="actions-wrapper" v-if="demande.etatDemande==='OBSOLETE'" >
-           <v-btn class="mt-4" color="green">
-            <router-link  :to="{ name: 'edit', params: { id: demande.id } }" > <v-icon small flat color="green">mdi-pencil</v-icon>modifier</router-link>
-           </v-btn>
-              
+            <div class="actions-wrapper" v-if="demande.candidatureOuvert==='OUI'" >
+              <div v-if="demande.etatDemande==='OBSOLETE' || demande.etatDemande==='EN ATTENTE'">
+             <v-btn  variant="flat" color="orange" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
+              modifier
+             </v-btn>
+              </div>
+             
           </div>
             <div v-if="demande.etatDemande==='ACCEPTE'" class="mt-4">
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-                <v-chip :style="{ 'font-size': '15px', 'height': '25px' }" color="green" variant="tonal">
-                  <v-btn variant="text"  class="text" v-bind="props">
-                 valider
-                </v-btn>
-                </v-chip>
+
+                  <v-btn variant="flat" color="green" size="small" v-bind="props">
+                   valider
+                  </v-btn>
               </template>
               <template v-slot:default="{ isActive }">
                 <v-card>
@@ -113,8 +114,11 @@ import Snackbar from '@/components/core/Snackbar.vue';
 import { useSessionStore } from "@/modules/session/store";
 import { useDemandeStore } from '@/modules/demande/store';
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
 
+
+const router = useRouter();
 const appStore = useAppStore();
 const sessionStore = useSessionStore();
 const {dataListeSession}= storeToRefs(sessionStore);
@@ -151,7 +155,9 @@ onMounted(()=>{
   sessionStore.enCoursSession();
   demandeStore.allForUser();
 });
-
+const redirectToEditDemande = (id) => {
+  router.push({ name: 'edit', params: { id } });
+};
 </script>
 <style>
 .session-row {

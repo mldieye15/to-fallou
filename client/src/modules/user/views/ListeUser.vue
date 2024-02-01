@@ -3,13 +3,19 @@
     <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
     
     <v-container class="my-5">
+      <v-col md="12" cols="auto">
+        <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
+          <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
+          <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>
+          <v-btn @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="cyan-darken-1">Utilisateurs </v-btn>
+        </v-col>
       <vue-good-table
         :columns="columns"
         :rows="dataListeUtilisateur"
         :pagination-options="{
           enabled: true,
           mode: 'pages',
-          perPageDropdown: [2,5, 10, 15,20, 30, 40, 50]
+          perPageDropdown: [5, 10, 15,20, 30, 40, 50]
           }"
          :search-options="{
             enabled: true
@@ -67,6 +73,9 @@ import { useUtilisateurStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const i18n = useI18n();
 
@@ -97,6 +106,18 @@ const del = (id) => {
       all();
   });
 }
+const redirectToPlanificateurs = () => {
+  router.push({ name: 'liste-planificateur' });
+};
+const redirectToSupervisseurs = () => {
+  router.push({ name: 'liste-supervisseur'});
+};
+const redirectToAdmins = () => {
+  router.push({ name: 'liste-admin'});
+};
+const redirectToUsers = () => {
+  router.push({ name: 'liste-user'});
+};
 </script>
 <style scoped>
 .v-text-field {

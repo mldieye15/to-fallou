@@ -6,6 +6,7 @@ import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/detailsCandidats';
 const all= modulesURL+'/all';
+const allBySession= modulesURL+'/allBySession';
 const note= modulesURL+'/note';
 const bonus= modulesURL+'/bonus';
 const malus= modulesURL+'/malus';
@@ -50,6 +51,49 @@ export const useCandidatStore = defineStore('candidat', {
     async all() {
       try {
         await axios.get(`${all}`) 
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let fonctionLabel = element.candidat.fonction? element.candidat.fonction.libelleLong:null;
+              let etablissementLabel = element.candidat.etablissement? element.candidat.etablissement.libelleLong:null;
+              let nomLabel = element.candidat? element.candidat.nom:null;
+              let matriculeLabel = element.candidat? element.candidat.matricule:null;
+              let dateNaissLabel = element.candidat? element.candidat.dateNaiss:null;
+              // let emailLabel = element.candidat? element.candidat.email:null;
+              let sexeLabel = element.candidat? element.candidat.sexe:null;
+              let telephoneLabel = element.candidat? element.candidat.telephone:null;
+              let prenomsLabel = element.candidat? element.candidat.prenoms:null;
+              let affectableLabel = element.affectable? 'OUI':'NON';
+              return{
+              id:element.id, 
+              affectable: affectableLabel,
+              nom: nomLabel,
+              prenoms: prenomsLabel,
+              matricule: matriculeLabel,
+              dateNaiss: this.formatDate(dateNaissLabel),
+              // email: emailLabel,
+              sexe: sexeLabel,
+              telephone: telephoneLabel,
+              fonction: fonctionLabel,
+              etablissement: etablissementLabel,
+              }
+              
+            })
+
+            this.dataListeCandidat = res;
+            console.log(this.dataListeCandidat);
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allBySession() {
+      try {
+        await axios.get(`${allBySession}`) 
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {

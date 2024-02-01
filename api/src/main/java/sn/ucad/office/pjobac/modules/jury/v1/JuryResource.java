@@ -42,6 +42,13 @@ public class JuryResource {
         List<JuryResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allBySession")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<JuryResponse>> allBySession(){
+        List<JuryResponse> response = service.allBySession();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/by-centre/{centreId}")
     public ResponseEntity<List<JuryResponse>> juryNonAffecterByCentre(@PathVariable String centreId) {
         List<JuryResponse> response = service.juryNonAffecterByCentre(centreId);

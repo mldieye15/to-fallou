@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public interface DetailsCandidatService {
     public List<DetailsCandidatResponse> all() throws BusinessResourceException;
-
+    public List<DetailsCandidatResponse> allBySession() throws BusinessResourceException;
     public SimplePage<DetailsCandidatResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<DetailsCandidatResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;

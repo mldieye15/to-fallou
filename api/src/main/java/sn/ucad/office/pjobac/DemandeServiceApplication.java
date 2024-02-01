@@ -12,13 +12,11 @@ import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
 
 @SpringBootApplication
-public class DemandeServiceApplication {
+public class DemandeServiceApplication  {
 
     public static void main(String[] args) {
         SpringApplication.run(DemandeServiceApplication.class, args);
     }
-
-
     @Bean
     CommandLineRunner run(RoleService roleService, UserService userService, AuthService authService){
         return args -> {

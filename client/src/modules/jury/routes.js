@@ -12,6 +12,11 @@ const juryRoutes = [{
             component: () => import( /* webpackChunkName: 'jury_liste' */ './views/Liste.vue')
       },
       {
+        path: '/app/dashboard/jurys/archives/',
+        name: 'jury-liste-archive',
+        component: () => import( /* webpackChunkName: 'jury_liste' */ './views/ListeArchive.vue')
+  },
+      {
         path: '/app/dashboard/jurys/:id',
         name: 'jury-details',
         component: () => import( /* webpackChunkName: 'jury_details' */ './views/Details.vue'),

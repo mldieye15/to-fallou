@@ -17,7 +17,8 @@ public interface JuryDao extends JpaRepository<Jury, Long> {
             "WHERE j.centre = :centre AND j.session.annee.encours = true " +
             "AND NOT EXISTS (SELECT d FROM Demande d WHERE d.jury.id = j.id)")
     List<Jury> juryNonAffecterByCentre(@Param("centre") Centre centre);
-
+    @Query("SELECT j FROM Jury j WHERE j.session.annee.encours = true ")
+    List<Jury> juryByEncours();
 
 
 }

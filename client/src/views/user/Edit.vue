@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"
@@ -8,7 +8,8 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
+    <div v-if="inputForm.etatDemande==='OBSOLETE' || inputForm.etatDemande==='EN ATTENTE'">
+      <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="session"
@@ -55,6 +56,14 @@
       ></v-select>
       <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
+    </div>
+    <div v-else>
+      <h2>
+        <p class="error-message">
+          imposible de modifier cette demande
+        </p>
+      </h2>
+  </div>
     </v-card>
   </div>
 </template> 
@@ -96,6 +105,7 @@ const { dataListeSession } = storeToRefs(sesssionStore);
     session:null,
     ville:null,
     academie:null,
+    etatDemande:null,
   });
   
   const handleSave = () => {
@@ -129,6 +139,7 @@ const demandeId = ref(route.params.id);
   onMounted(()=>{
     one(route.params.id ).then( () => {
       inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,
+      inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       villeStore.all();
       academieStore.availableAcademiesForUser(demandeId.value);
       sesssionStore.all();
@@ -138,3 +149,9 @@ const demandeId = ref(route.params.id);
   
   
   </script>
+  <style>
+  .error-message {
+    color: red; /* ou toute autre couleur de votre choix */
+    margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+  }
+  </style>

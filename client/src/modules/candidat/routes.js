@@ -12,6 +12,11 @@ const candidatRoutes = [{
             component: () => import( /* webpackChunkName: 'candidat_liste' */ './views/Liste.vue')
       },
       {
+        path: '/app/dashboard/candidats/archives',
+        name: 'candidat-liste-archive',
+        component: () => import( /* webpackChunkName: 'candidat_liste' */ './views/ListeArchive.vue')
+      },
+      {
         path: '/app/dashboard/candidats/:id',
         name: 'candidat-details',
         component: () => import( /* webpackChunkName: 'candidat_details' */ './views/Details.vue'),

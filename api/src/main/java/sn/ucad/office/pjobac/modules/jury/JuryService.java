@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface JuryService {
     public List<JuryResponse> all() throws BusinessResourceException;
-
+    public List<JuryResponse> allBySession() throws BusinessResourceException;
     public SimplePage<JuryResponse> all(Pageable pageable) throws BusinessResourceException;
     public List<JuryResponse> juryNonAffecterByCentre(String centreId) throws BusinessResourceException;
 

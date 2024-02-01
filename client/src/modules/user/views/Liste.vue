@@ -15,10 +15,10 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right" md="8" cols="auto">
-          <v-chip  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="blue">Planificateurs</v-chip>
-          <v-chip @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="blue">Supervisseurs </v-chip>
-          <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
-          <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip>
+          <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
+          <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
+          <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>
+          <v-btn @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="cyan-darken-1">Utilisateurs </v-btn>
         </v-col>
         
       </v-row>

@@ -8,9 +8,10 @@ spring:
     banner-mode: off
     allow-circular-references: true
   datasource:
-    url: jdbc:mysql://localhost:3306/office?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mariadb://localhost:3306/office #?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: ""
+    driver-class-name: org.mariadb.jdbc.Driver
       # thes 2 lines are used for productin
     #tomcat:
     #test-while-idle: true
@@ -18,11 +19,11 @@ spring:
   jpa:
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL5Dialect
+        dialect: org.hibernate.dialect.MariaDB103Dialect
     show-sql: true
     hibernate:
       ddl-auto: update
-      dialect: org.hibernate.dialect.MySQL8Dialect
+      dialect: org.hibernate.dialect.MariaDB103Dialect
       format_sql: true
   thymeleaf:
     enabled: true

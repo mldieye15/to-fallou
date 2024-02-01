@@ -48,6 +48,17 @@ public class JuryServiceImp implements JuryService {
     }
 
     @Override
+    public List<JuryResponse> allBySession() throws BusinessResourceException {
+        log.info("JuryServiceImp::all");
+        List<Jury> all = dao.juryByEncours();
+        List<JuryResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
     public SimplePage<JuryResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des jurys avec pagination. <all>");
         final Page<Jury> page = dao.findAll(pageable);

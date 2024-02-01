@@ -382,7 +382,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                     + oneBrute.getCentre().getLibelleLong()
                     +"vous avec " + oneBrute.getSession().getDelaisValidation()+ "pour le valider");
             mailService.sendMail(notificationEmail);
-            log.info("Demande " + response.getId() + " accepetée avec succés. <accepterDemande>");
+            log.info("Demande" + response.getId() + " accepetée avec succés. <accepterDemande>");
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + demandeId+ " non autorisé. <accepterDemande>.");

@@ -22,7 +22,7 @@
           </v-btn>
         </v-col>
         <v-col class="text-right" cols="auto">
-          <v-btn @click.prevent="redirectToArchives()" class="ma-0" variant="outlined" color="cyan-darken-1">jurys Archivés </v-btn>
+          <v-btn @click.prevent="redirectToJurys()" class="ma-0" variant="outlined" color="cyan-darken-1">jurys Session en cours </v-btn>
         </v-col>
       </v-row>
       <EasyDataTable
@@ -80,7 +80,7 @@ const { addNotification } = notificationStore;
 
 const juryStore = useJuryStore();
 const { dataListeJury, headerTable, loading } = storeToRefs(juryStore);
-const { all, destroy,allBySession } = juryStore;
+const { all, destroy } = juryStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -88,7 +88,7 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  allBySession();
+  all();
 });
 
 const del = (id) => {
@@ -102,8 +102,8 @@ const del = (id) => {
       all();
   });
 }
-const redirectToArchives = () => {
-  router.push({ name: 'jury-liste-archive'});
+const redirectToJurys = () => {
+  router.push({ name: 'jury-liste'});
 };
 </script>
 <style scoped>

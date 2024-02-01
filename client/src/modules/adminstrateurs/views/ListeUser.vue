@@ -97,6 +97,18 @@ const del = (id) => {
       all();
   });
 }
+const redirectToPlanificateurs = () => {
+  router.push({ name: 'liste-planificateur' });
+};
+const redirectToSupervisseurs = () => {
+  router.push({ name: 'liste-supervisseur'});
+};
+const redirectToAdmins = () => {
+  router.push({ name: 'liste-admin'});
+};
+const redirectToUsers = () => {
+  router.push({ name: 'liste-user'});
+};
 </script>
 <style scoped>
 .v-text-field {

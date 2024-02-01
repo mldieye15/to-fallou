@@ -44,7 +44,13 @@ public class DetailsCandidatResource {
         List<DetailsCandidatResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping("/allBySession")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DetailsCandidatResponse>> allBySession(){
+        List<DetailsCandidatResponse> response = service.allBySession();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<DetailsCandidatResponse>> one(@PathVariable(value = "id") String id) {
         Optional<DetailsCandidatResponse> response = service.oneById(id);

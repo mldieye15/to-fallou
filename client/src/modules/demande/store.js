@@ -32,6 +32,7 @@ export const useDemandeStore = defineStore('demande', {
     columns: [
       { label: 'Ville', field: 'ville',width: "200px",resizable: true},
       { label: 'Session', field: 'session',width: "200px",resizable: true },
+      { label: 'Encours', field: 'encours',width: "200px",resizable: true },
       { label: 'Academie', field: 'academie',width: "200px",resizable: true },
       { label: 'Centre d/ecrit', field: 'centre',width: "200px" ,resizable: true},
       // { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
@@ -105,10 +106,12 @@ export const useDemandeStore = defineStore('demande', {
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let sessionLabel = element.session ? element.session.libelleLong:null;
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
+              let sessionLabelEncours =element.session.candidatureOuvert?'OUI' : 'NON';
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
                 id:element.id, 
+                candidatureOuvert:sessionLabelEncours,
                 ville: villeLabel,
                 academie:academieLabel,
                 session:sessionLabel,
@@ -269,6 +272,7 @@ export const useDemandeStore = defineStore('demande', {
               let sessionLabel = element.session ? element.session.libelleLong : null;
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
               let nomLabel = element.user ? element.user.prenoms : null;
+              let sessionLabelEncours =element.session.sessionOuvert?'OUI' : 'NON';
               let idLabel = element.user ? element.user.id : null;
               let idLabelVille = element.ville ? element.ville.id : null;
               let affectableLabel= element.affectable? 'OUI' : 'NON';
@@ -279,6 +283,7 @@ export const useDemandeStore = defineStore('demande', {
               return {
                 id: element.demandeId,
                 nom: element.nom,
+                encours:sessionLabelEncours,
                 note: element.note,
                 ordreArrivee:element.ordreArrivee,
                 rang: element.rang,

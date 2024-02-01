@@ -35,4 +35,6 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
 
     @Query("SELECT dc FROM DetailsCandidat dc INNER JOIN Demande d WHERE d.ville = :ville")
     List<DetailsCandidat> findByVille(@Param("ville") Ville ville);
+    @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.annee.encours = true")
+    List<DetailsCandidat> findByEncours();
 }

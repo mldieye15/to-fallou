@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="inputForm.etatDemande==='EN ATTENTE' && inputForm.etatUser===false">
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"
@@ -99,7 +99,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   
   const demandeStore = useDemandeStore();
   const { dataDetails, loading } = storeToRefs(demandeStore);
-  const { one, modify,accepterDemande } = demandeStore;
+  const { one, modify,accepterDemande,hasAcceptedDemande } = demandeStore;
   
   const inputForm = reactive({
     villeName:"",
@@ -109,6 +109,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     ville:null,
     academie:null,
     centre:null,
+    etatDemande:null, 
   });
   const handleSave = () => {
   const payload = {
@@ -126,25 +127,34 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     router.push({ name: 'demande-liste' });
   });
 };
-  onMounted(()=>{
-    one(route.params.id ).then( () => {
-      inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,
-      inputForm.academie = dataDetails.value.academie?dataDetails.value.academie.id:null,
-      inputForm.ville = dataDetails.value.ville?dataDetails.value.ville.id:null,
-      inputForm.villeName=dataDetails.value.ville.libelleLong,
-      inputForm.academieName=dataDetails.value.academie.libelleLong,
-      inputForm.sessionName=dataDetails.value.session.libelleLong
-      villeStore.all();
-      academieStore.all();
-      sesssionStore.all();
-      centreStore.all();
-      const villeId=dataDetails.value.ville.id;
-      console.log(villeId)
-      centreStore.centresByVille(villeId);
+onMounted(() => {
+  one(route.params.id ).then(() => {
+    inputForm.session = dataDetails.value.session ? dataDetails.value.session.id : null;
+    inputForm.academie = dataDetails.value.academie ? dataDetails.value.academie.id : null;
+    inputForm.ville = dataDetails.value.ville ? dataDetails.value.ville.id : null;
+    inputForm.etatDemande = dataDetails.value.etatDemande ? dataDetails.value.etatDemande.libelleLong : null;
+    inputForm.villeName = dataDetails.value.ville.libelleLong;
+    inputForm.academieName = dataDetails.value.academie.libelleLong;
+    inputForm.sessionName = dataDetails.value.session.libelleLong;
+    
+    villeStore.all();
+    academieStore.all();
+    sesssionStore.all();
+    centreStore.all();
+
+    const villeId = dataDetails.value.ville.id;
+    const userId = dataDetails.value.user.id;
+    
+    console.log(villeId);
+    console.log("user", userId);
+
+    centreStore.centresByVille(villeId);
+
+    hasAcceptedDemande(userId).then((etatUser) => {
+      inputForm.etatUser = etatUser;
+      console.log("etat des demande", inputForm.etatUser);
     });
   });
-  
-  
-  
+});
   </script>
   

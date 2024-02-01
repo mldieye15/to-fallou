@@ -49,6 +49,16 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     }
 
     @Override
+    public List<DetailsCandidatResponse> allBySession() throws BusinessResourceException {
+        log.info("AcademieServiceImp::all");
+        List<DetailsCandidat> all = dao.findByEncours();
+        List<DetailsCandidatResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+    @Override
     public SimplePage<DetailsCandidatResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Annees avec pagination. <all>");
         final Page<DetailsCandidat> page = dao.findAll(pageable);

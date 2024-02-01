@@ -28,7 +28,6 @@ const inputForm= reactive({
   centre: null,
   numero:'',
   session: null,
-  nom: '',
 });
 
 const handleSave = (payload) => {

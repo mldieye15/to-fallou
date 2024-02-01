@@ -3,6 +3,12 @@
     <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
     
     <v-container class="my-5">
+      <v-col md="12" cols="auto">
+        <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
+          <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
+          <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>
+          <v-btn @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="cyan-darken-1">Utilisateurs </v-btn>
+        </v-col>
       <vue-good-table
         :columns="columns"
         :rows="dataListeUtilisateur"
@@ -17,7 +23,7 @@
            
         > 
         <template #table-actions>
-          <v-chip  @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="blue"> Ajouter</v-chip>
+          <v-btn  @click.prevent="redirectToAddSupervisseur()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
          </template>  
         <template >
           <div v-if="props.column.field === 'actions'">
@@ -103,8 +109,20 @@ const del = (id) => {
       supervisseur();
   });
 }
-const redirectToSupervisseurs= () => {
+const redirectToAddSupervisseur= () => {
   router.push({ name: 'supervisseur-add'});
+};
+const redirectToPlanificateurs = () => {
+  router.push({ name: 'liste-planificateur' });
+};
+const redirectToSupervisseurs = () => {
+  router.push({ name: 'liste-supervisseur'});
+};
+const redirectToAdmins = () => {
+  router.push({ name: 'liste-admin'});
+};
+const redirectToUsers = () => {
+  router.push({ name: 'liste-user'});
 };
 </script>
 <style scoped>

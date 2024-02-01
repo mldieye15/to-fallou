@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="inputForm.etatDemande==='VALIDE' && juryForm.juryId===null">
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"
@@ -99,7 +99,9 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   const demandeStore = useDemandeByCentreStore();
   const { dataDetails, loading } = storeToRefs(demandeStore);
   const { one, modify,affecterJury } = demandeStore;
-  
+  const juryForm = reactive({
+  juryId: null
+});
   const inputForm = reactive({
     villeName:"",
     sessionName:"",
@@ -110,6 +112,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     academie:null,
     centre:null,
     jury:null,
+    etatDemande:null,
   });
   const handleSave = () => {
   const payload = {
@@ -134,10 +137,12 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
       inputForm.academie = dataDetails.value.academie?dataDetails.value.academie.id:null,
       inputForm.ville = dataDetails.value.ville?dataDetails.value.ville.id:null,
       inputForm.centre = dataDetails.value.centre?dataDetails.value.centre.id:null,
+      inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       inputForm.villeName=dataDetails.value.ville.libelleLong,
       inputForm.academieName=dataDetails.value.academie.libelleLong,
       inputForm.sessionName=dataDetails.value.session.libelleLong
       inputForm.centreName=dataDetails.value.centre.libelleLong
+      juryForm.juryId = dataDetails.value.jury?dataDetails.value.jury.id:null
       villeStore.all();
       academieStore.all();
       sesssionStore.all();
@@ -145,6 +150,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
       const centreId=dataDetails.value.centre.id;
       console.log("Centre:",centreId)
       juryStore.jurysBycentre(centreId);
+      console.log("jurys:",jury)
     });
   });
   
