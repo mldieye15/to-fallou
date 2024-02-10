@@ -48,6 +48,10 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     boolean hasAcceptedDemande(@Param("user") AppUser user);
     @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='EN ATTENTE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     List<Demande> demandePending();
+    @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='ACCEPTE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
+    List<Demande> demandeAccepter();
+    @Query("SELECT d FROM Demande d WHERE d.ville = :ville  AND d.etatDemande.libelleLong='OBSOLETE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
+    List<Demande> demandeObseleteByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.ville = :ville AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
     List<Demande> demandeByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.centre = :centre AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )

@@ -81,7 +81,5 @@ const redirectToDemandes = (id) => {
 .v-text-field:hover {
   background-color: white;
 }
-.actions-wrapper {
-  width: 120px;
-}
+
 </style>

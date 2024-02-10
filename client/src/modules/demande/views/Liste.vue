@@ -12,11 +12,9 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right" md="9" cols="auto">
-          <v-chip  @click.prevent="redirectToVilles()" class="ml-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-          <v-chip  @click.prevent="redirectToCentres()" class="ml-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
-          <v-chip  @click.prevent="redirectToAllDemandes ()" class="ml-1" variant="outlined" color="blue">Demandes archivées</v-chip>
-          <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
-          <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
+          <v-btn  @click.prevent="redirectToVilles()" class="ma-0" variant="outlined" color="cyan-darken-1">Demandes par ville</v-btn>
+          <v-btn @click.prevent="redirectToCentres()" class="ma-0" variant="outlined" color="cyan-darken-1">Demandes par centre </v-btn>
+          <v-btn  @click.prevent="redirectToAllDemandes()" class="ma-0" variant="outlined" color="cyan-darken-1"> Demandes archivées</v-btn>
         </v-col>
         </v-row>
         <div v-if="loading">Chargement en cours...</div>

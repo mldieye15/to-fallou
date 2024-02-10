@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "detailsCandidat"
-        //, uniqueConstraints = @UniqueConstraint(columnNames={"libelle", "sigle"})
+        ,uniqueConstraints = @UniqueConstraint(columnNames= "numeroCandidat")
 )
 public class DetailsCandidat{
     @Id
@@ -36,6 +36,7 @@ public class DetailsCandidat{
     private int noteFonction;
     private int noteEtablissementProvenance;
     private int noteAnciennete;
+    private String numeroCandidat;
     @Column(columnDefinition = "INT DEFAULT 0")
     private int note = 0;
     @Column(columnDefinition = "INT DEFAULT 0")

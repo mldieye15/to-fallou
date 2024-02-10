@@ -4,7 +4,7 @@
     
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-0"  align="center">
-        <v-col cols="12" sm="4" md="4" >
+        <v-col cols="12" sm="4" md="3" >
           <v-text-field
             label="Underlined"
             placeholder="Placeholder"
@@ -14,7 +14,7 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col class="text-right" md="8" cols="auto">
+        <v-col class="text-right" md="9" cols="auto">
           <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
           <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
           <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>

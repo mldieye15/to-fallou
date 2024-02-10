@@ -10,4 +10,5 @@ import lombok.ToString;
 @ToString
 public class DetailsCandidatRequest {
     private String appreciation;
+    private String numeroCandidat;
 }

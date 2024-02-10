@@ -21,8 +21,8 @@ public class AppConstants {
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     // liens
-    public static final String LIEN_ACTIV_COMPTE = "http://localhost:8201/pjobac/api/auth/v1/verif-token";
-    public static final String LIEN_RESET_PASSWORD = "http://localhost:3000/auth/reset-password";
+    public static final String LIEN_ACTIV_COMPTE = "http://172.16.1.7:82/auth/verif-token";
+    public static final String LIEN_RESET_PASSWORD = "http://172.16.1.7:82/auth/reset-password";
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     //  Page

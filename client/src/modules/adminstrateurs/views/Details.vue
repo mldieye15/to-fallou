@@ -64,7 +64,7 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
-              <v-card class="custom-card">
+              <!-- <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
@@ -77,7 +77,7 @@
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
-              </v-card>
+              </v-card> -->
               <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
@@ -155,43 +155,37 @@ const inputForm = reactive({
   prenoms: "",
   nom: "",
   matricule: "",
-  dateNaiss:null,
+  // dateNaiss:null,
   email: "",
   username: "",
   mdpasse: "",
   sexe: "",
   code: "",
   telephone: "",
-  anciennete: "",
-  fonction: null,
-  etablissement: null,
 });
-function formatDateForInput(date) {
-  const formattedDate = format(new Date(date), 'dd-MM-yyyy', { locale: fr });
-  return formattedDate;
-}
-watchEffect(() => {
-  if (
-  inputForm.dateNaiss
-  ) {
-    inputForm.dateNaiss=formatDateForInput(inputForm.dateNaiss);
-  }
-});
+// function formatDateForInput(date) {
+//   const formattedDate = format(new Date(date), 'dd-MM-yyyy', { locale: fr });
+//   return formattedDate;
+// }
+// watchEffect(() => {
+//   if (
+//   inputForm.dateNaiss
+//   ) {
+//     inputForm.dateNaiss=formatDateForInput(inputForm.dateNaiss);
+//   }
+// });
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.prenoms = dataDetails.value.prenoms,
     inputForm.nom = dataDetails.value.nom,
     inputForm.matricule = dataDetails.value.matricule,
-    inputForm.dateNaiss = dataDetails.value.dateNaiss,
+    // inputForm.dateNaiss = dataDetails.value.dateNaiss,
     inputForm.email = dataDetails.value.email,
     inputForm.username = dataDetails.value.username,
     inputForm.mdpasse = dataDetails.value.mdpasse
     inputForm.sexe = dataDetails.value.sexe,
     inputForm.code = dataDetails.value.code,
-    inputForm.telephone = dataDetails.value.telephone,
-    inputForm.anciennete = dataDetails.value.anciennete,
-    inputForm.fonction=dataDetails.value.fonction.libelleLong,
-    inputForm.etablissement=dataDetails.value.etablissement.libelleLong    
+    inputForm.telephone = dataDetails.value.telephone
   });
 });
 

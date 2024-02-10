@@ -34,4 +34,5 @@ public interface DetailsCandidatService {
 //    public void updateOrderByVille() throws BusinessResourceException;
    Integer maxNoteByVille(String villeId);
     public void nonAffectable(Long candidatId);
+   public boolean userHasAlreadyApplied(String userId);
 }

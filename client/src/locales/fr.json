@@ -98,7 +98,8 @@
             },
             "jury":{
                 "jury":"Jurys",
-                "numero":"Numéro du jury"
+                "numero":"Numéro du jury",
+                "nom":"Nom du jury"
             },
             "annee":{
                 "annee":"Annees",

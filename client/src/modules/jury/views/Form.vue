@@ -130,8 +130,10 @@ const { inputForm, actionSubmit } = defineProps({
 const getNomJury = () => {
   const numero = inputForm.numero;
   const session = inputForm.session;
+  const centre=inputForm.centre;
+  const labelCentre=centreStore.getCentreById(centre);
   const nomLabel = sessionStore.getAnneBySessionId(session);
-  return `Jury N° ${numero} de ${nomLabel}`.trim();
+  return `JURY${numero}${labelCentre}${nomLabel}`.trim();
 };
 const nomJury = ref(getNomJury());
 watchEffect(() => {

@@ -20,7 +20,7 @@ public interface UserService {
     AdminResponse addAdmin(AdminRequest request) throws BusinessResourceException;
     AdminResponse addSupervisseur(AdminRequest request) throws BusinessResourceException;
     AdminResponse addPlanificateur(AdminRequest request) throws BusinessResourceException;
-    UserResponse maj(UserRequest request, String id)  throws NumberFormatException, BusinessResourceException;
+    UserResponse maj(UserEditRequest request, String id)  throws NumberFormatException, BusinessResourceException;
     AdminResponse majAdmin(AdminEditRequest request, String id)  throws NumberFormatException, BusinessResourceException;
     public String del(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<UserAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;

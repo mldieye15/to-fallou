@@ -21,7 +21,7 @@ public class UserResponse {
     private String matricule;
     private String prenoms;
     private String nom;
-    private Date dateNaiss;
+//    private Date dateNaiss;
     private String email;
     private String username;
     private String mdpasse;

@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 const  loginURL = '/auth/v1/connexion';
 const  lougoutURL = '/auth/v1/deconnexion';
 const  refreshtokenURL = '/auth/v1/refresh-token';
+const verifyTokenURL = '/auth/v1/verif-token';
 const  resetPasswordURL = '/auth/v1/reset-password';
 const newPasswordURL= '/auth/v1/new-password';
 export const useUserStore = defineStore('user', {
@@ -184,6 +185,16 @@ export const useUserStore = defineStore('user', {
         return 'Mot de passe réinitialisé avec succès';
       } catch (error) {
         console.error('Erreur lors de la réinitialisation de mot de passe', error);
+        throw error;
+      }
+    },
+    async verifyToken(token) {
+      try {
+        await axios.get(`${verifyTokenURL}/${token}`);
+        console.log('Activation du compte effectuée avec succès.');
+        return 'Activation du compte effectuée avec succès.';
+      } catch (error) {
+        console.error('Erreur lors de la vérification du token :', error);
         throw error;
       }
     },

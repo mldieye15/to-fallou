@@ -20,6 +20,7 @@ public interface DemandeService {
      public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
+    List<DemandeResponse> demandeObseleteByVille(String villeId) throws BusinessResourceException;
 
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;
 

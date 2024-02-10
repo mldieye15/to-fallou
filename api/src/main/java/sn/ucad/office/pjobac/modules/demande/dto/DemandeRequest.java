@@ -15,5 +15,5 @@ public class DemandeRequest {
     private String academie;
     private String ville;
     private String session;
-    private LocalDateTime dateDemande=LocalDateTime.now();
+    private LocalDateTime dateDemande;
 }

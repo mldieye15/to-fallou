@@ -21,23 +21,23 @@ public interface UserMapper {
     // transform the PJO request to entity
     //@Mapping(source = "request.dateNaissance", target = "dateNaissance", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
-    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+//    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.matricule", target = "matricule")
     @Mapping(source = "request.fonction", target = "fonction ", qualifiedByName = "getFonctionById")
     @Mapping(source ="request.etablissement", target = "etablissement", qualifiedByName = "getEtablissementById")
     AppUser requestToEntity(UserRequest request);
 
-    @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
-    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+//    @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
+//    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     @Mapping(source = "request.matricule", target = "matricule")
     @Mapping(source = "request.fonction", target = "fonction ", qualifiedByName = "getFonctionById")
     @Mapping(source ="request.etablissement", target = "etablissement", qualifiedByName = "getEtablissementById")
-    AppUser requestToEntiteUp(@MappingTarget AppUser user, UserRequest request);
+    AppUser requestToEntiteUp(@MappingTarget AppUser user, UserEditRequest request);
     AdminResponse userToAdminResponse(AppUser user);
     @Mapping(source = "request.mdpasse", target = "mdpasse", qualifiedByName = "encodeMdp")
-    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+//    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     AppUser adminRequestToUser(AdminRequest request);
-    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
+//    @Mapping(source = "request.dateNaiss", target = "dateNaiss", qualifiedByName = "formatStringToDate")
     AppUser adminRequestToUserUp(@MappingTarget AppUser user,AdminEditRequest request);
 
 

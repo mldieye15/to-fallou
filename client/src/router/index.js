@@ -19,6 +19,7 @@ import candidatRoutes from '@/modules/candidat/routes';
 import adminRoutes from '@/modules/adminstrateurs/routes';
 import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
 import demandeByCentreRoutes from '@/modules/demandeByCentre/routes';
+import middlewares from '@/middlewares';
 const routes = [
   {
     path: '/',
@@ -93,9 +94,25 @@ const routes = [
         }
       },
       {
+        path: 'verif-token/:token',
+        name: 'verifToken',
+        component: () => import(/* webpackChunkName: "resetPassword" */ '@/views/auth/VerifToken.vue'),
+        meta: {
+          middleware: [ Middleware.guest]
+        }
+      },
+      {
         path: 'active-compte',
         name: 'activeCompte',
         component: () => import(/* webpackChunkName: "activeCompte" */ '@/views/auth/ActiveCompte.vue'),
+        meta: {
+          middleware: [ Middleware.guest]
+        }
+      },
+      {
+        path: 'accessDenied',
+        name: 'access-denied',
+        component: () => import(/* webpackChunkName: "activeCompte" */ '@/views/auth/AccessDenied.vue'),
         meta: {
           middleware: [ Middleware.guest]
         }
@@ -112,7 +129,7 @@ const routes = [
               component: () =>
                   import ( /* webpackChunkName: "dashboard" */ '@/views/app/Dashboard.vue'),
               meta: {
-                  middleware: [Middleware.auth]
+                  middleware: [Middleware.authSupAdmin]
               }
           },
           {
@@ -136,7 +153,7 @@ const routes = [
             component: () =>
                 import ( /* webpackChunkName: "dashboard" */ '@/views/user/Accueil.vue'),
             meta: {
-                middleware: [Middleware.auth]
+                middleware: [Middleware.authUser]
             }
         },
         {
@@ -145,7 +162,7 @@ const routes = [
           component: () =>
               import ( /* webpackChunkName: "dashboard" */ '@/views/user/Demande.vue'),
           meta: {
-              middleware: [Middleware.auth]
+              middleware: [Middleware.authUser]
           }
       },
       {
@@ -154,7 +171,7 @@ const routes = [
         component: () =>
             import ( /* webpackChunkName: "dashboard" */ '@/views/user/Edit.vue'),
         meta: {
-            middleware: [Middleware.auth]
+            middleware: [Middleware.authUser]
         }
     },
         {
@@ -163,7 +180,7 @@ const routes = [
           component: () =>
               import ( /* webpackChunkName: "profile" */ '@/views/auth/Profile.vue'),
           meta: {
-              middleware: [Middleware.auth]
+              middleware: [Middleware.authUser]
           }
         },
     ]
@@ -187,7 +204,6 @@ const routes = [
   ...demandeByVilleRoutes,
   ...demandeByCentreRoutes,
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   linkActiveClass: 'active-link',

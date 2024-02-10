@@ -13,7 +13,7 @@ public class AdminRequest {
     private String matricule;
     private String prenoms;
     private String nom;
-    private String dateNaiss;
+//    private String dateNaiss;
     private String email;
     private String username;
     private String mdpasse;

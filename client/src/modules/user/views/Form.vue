@@ -38,23 +38,7 @@
       </v-col>
        
     </v-row>
-    <v-row style="height: 15vh">
-        <v-col>
-      <v-text-field 
-        id="matricule"
-        prepend-inner-icon="mdi-card-account-details"
-        name="matricule"
-        density="compact"
-        :label="$t('apps.forms.user.matricule')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.matricule"
-        variant="solo" 
-        @blur="checkMatriculeExistence"
-    >
-    </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
-      </v-col>
+    <!-- <v-row style="height: 15vh">
       <v-col>
         <v-text-field
         id="dateNaiss"
@@ -69,7 +53,7 @@
         type="date"
       ></v-text-field>
       </v-col> 
-    </v-row>
+    </v-row> -->
     <v-row style="height: 15vh">
       <v-col>
         <v-text-field
@@ -100,21 +84,9 @@
         variant="solo"
       ></v-text-field>
       </v-col>
+      
     </v-row >
       <v-row style="height: 15vh">
-        <v-col>
-          <v-text-field
-        id="telephone"
-        prepend-inner-icon="mdi-phone"
-        name="telephone"
-        density="compact"
-        :label="$t('apps.forms.user.telephone')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.telephone"
-        variant="solo"
-      ></v-text-field>
-        </v-col>
         <v-col>
         <v-text-field
         id="email"
@@ -131,6 +103,22 @@
     </v-text-field>
     <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       </v-col> 
+      <v-col>
+      <v-text-field 
+        id="matricule"
+        prepend-inner-icon="mdi-card-account-details"
+        name="matricule"
+        density="compact"
+        :label="$t('apps.forms.user.matricule')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.matricule"
+        variant="solo" 
+        @blur="checkMatriculeExistence"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
       </v-row>
       
       <v-row >
@@ -166,7 +154,7 @@
 
       </v-row>
       <v-row style="height: 15vh">
-        <v-col>
+        <!-- <v-col>
           <v-text-field
         id="anciennete"
         prepend-inner-icon="mdi-timer"
@@ -178,7 +166,7 @@
         v-model="inputForm.anciennete"
         variant="solo"
       ></v-text-field>
-        </v-col>
+        </v-col> -->
         <v-col>
           <v-select
         prepend-inner-icon="mdi-briefcase"
@@ -212,6 +200,19 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
+        </v-col>
+        <v-col>
+          <v-text-field
+        id="telephone"
+        prepend-inner-icon="mdi-phone"
+        name="telephone"
+        density="compact"
+        :label="$t('apps.forms.user.telephone')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.telephone"
+        variant="solo"
+      ></v-text-field>
         </v-col>
       </v-row>
       <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 

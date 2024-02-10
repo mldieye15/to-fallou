@@ -23,6 +23,7 @@ import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
+import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
@@ -39,12 +40,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class DemandeMapperUtil {
+    private final AuthService authService;
     private final VilleDao villeDao;
     private final AcademieDao academieDao;
     private final SessionDao sessionDao;
     private final JuryDao juryDao;
     private  final CentreDao centreDao;
-    private  final AuthService authService;
+
 
     @Named("getVilleById")
     Ville getVilleById(String villeId) throws NumberFormatException {
@@ -142,5 +144,20 @@ public class DemandeMapperUtil {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + juryId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
+//    @Named("formatNumero")
+//    public String formatNumero(DemandeRequest request) {
+//        if (request.getAcademie() != null && request.getVille() != null && request.getSession()!=null)  {
+//            String academie=request.getAcademie();
+//            String ville=request.getVille();
+//            String session= request.getSession();
+//            String academieId =getAcademieById(academie).getId().toString();
+//            String villeId=getVilleById(ville).getId().toString();
+//            String annee=getSessionById(session).getAnnee().getLibelleLong();
+//            String userId= authService.getCurrentUser().getId().toString();
+//            String nom=authService.getCurrentUser().getNom();
+//            return "N° " + "A0"+academieId+"V00"+villeId+userId+nom+annee;
+//        }
+//        return null;
+//    }
 }
 

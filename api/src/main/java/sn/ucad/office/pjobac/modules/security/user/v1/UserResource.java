@@ -84,7 +84,7 @@ public class UserResource {
     @PutMapping(value = "/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<UserResponse> maj(@PathVariable(value="id") String id,
-                                            @RequestBody @Valid UserRequest request) {
+                                            @RequestBody @Valid UserEditRequest request) {
         UserResponse response = service.maj(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

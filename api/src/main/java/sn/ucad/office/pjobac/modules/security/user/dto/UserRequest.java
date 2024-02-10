@@ -17,18 +17,16 @@ public class UserRequest {
     private String matricule;
     private String prenoms;
     private String nom;
-    private String  dateNaiss;
+//    private String  dateNaiss;
     private String email;
     private String username;
     private String mdpasse;
     private String profileImageUrl;
     private String sexe;
     private String telephone;
-    private Integer anciennete;
+//    private Integer anciennete;
     private String fonction;
     private String etablissement;
     private String code;
-    private boolean isEnabled;
-    private boolean isLocked;
 
 }

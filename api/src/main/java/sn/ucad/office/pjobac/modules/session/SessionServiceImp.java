@@ -248,5 +248,4 @@ public class SessionServiceImp implements SessionService {
                 .collect(Collectors.toList());
         return responses;
     }
-
 }

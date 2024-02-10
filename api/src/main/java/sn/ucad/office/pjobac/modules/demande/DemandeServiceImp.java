@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
@@ -22,6 +23,7 @@ import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
 import sn.ucad.office.pjobac.modules.security.mail.MailService;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
+import sn.ucad.office.pjobac.modules.security.mail.NotificationEmailHtml;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
@@ -29,8 +31,12 @@ import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
+import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
+import sn.ucad.office.pjobac.utils.FileUtil;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,6 +55,7 @@ public class DemandeServiceImp implements DemandeService {
     private final UserDao userDao;
     private final DetailsCandidatService candidatService;
     private final DetailsCandidatDao candidatDao;
+    private final  NotificationObseleteDemande notificationObselete;
 
 //    @Override
 //    public List<DemandeResponse> all() throws BusinessResourceException {
@@ -180,6 +187,20 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
             throw new BusinessResourceException("technical-error", "Erreur technique lors de la récupération des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public List<DemandeResponse> demandeObseleteByVille(String villeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(villeId.trim());
+        Ville ville;
+        ville=villeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Ville non trouvée pour l'ID : " + villeId));
+        List<Demande> demandes=dao.demandeObseleteByVille(ville);
+        List<DemandeResponse> response;
+        response= demandes.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
     @Override
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Demandes avec pagination. <all>");
@@ -231,25 +252,32 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
     @Override
     public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException {
         try {
-            List<Demande> demandes = req.stream()
-                    .map(request -> {
-                        Demande demande = mapper.requestToEntity(request);
-                        AppUser currentUser = authService.getCurrentUser();
-                        demande.setUser(currentUser);
-                        Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
-                        EtatDemande etatParDefaut = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
-                        demande.setEtatDemande(etatParDefaut);
-                        return demande;
-                    })
-                    .collect(Collectors.toList());
+            String currentUserId = authService.getCurrentUser().getId().toString();
+            if (candidatService.userHasAlreadyApplied(currentUserId)) {
+                throw new BusinessResourceException("already-applied", "L'utilisateur a déjà candidaté.", HttpStatus.BAD_REQUEST);
+            }else {
+                List<Demande> demandes = req.stream()
+                        .map(request -> {
+                            Demande demande = mapper.requestToEntity(request);
+                            AppUser currentUser = authService.getCurrentUser();
+                            demande.setUser(currentUser);
+                            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
+                            EtatDemande etatParDefaut = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+                            demande.setEtatDemande(etatParDefaut);
+                            return demande;
+                        })
+                        .collect(Collectors.toList());
 
-            List<DemandeResponse> responses = dao.saveAll(demandes).stream()
-                    .map(mapper::toEntiteResponse)
-                    .collect(Collectors.toList());
-            DetailsCandidatRequest detailsRequest = new DetailsCandidatRequest();
-            candidatService.add(detailsRequest);
-            log.info("Ajout des demandes effectué avec succès. <addAll>");
-            return responses;
+                List<DemandeResponse> responses = dao.saveAll(demandes).stream()
+                        .map(mapper::toEntiteResponse)
+                        .collect(Collectors.toList());
+                DetailsCandidatRequest detailsRequest = new DetailsCandidatRequest();
+                candidatService.add(detailsRequest);
+                log.info("Ajout des demandes effectué avec succès. <addAll>");
+                return responses;
+
+            }
+
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de création Demande: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
@@ -258,8 +286,6 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
             throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Demande.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
     @Override
     @Transactional(readOnly = false)
     public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
@@ -373,15 +399,26 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
             Optional<EtatDemande> optionalEtat = service.findByLibelleLong("ACCEPTE");
             EtatDemande etatAccepter= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
             oneBrute.setEtatDemande(etatAccepter);
-
+            int delaisValidation;
+            delaisValidation = oneBrute.getSession().getDelaisValidation();
+            LocalDateTime dateRejet = LocalDateTime.now().plusHours(delaisValidation);
+            oneBrute.setDateRejetDemande(dateRejet);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-            NotificationEmail notificationEmail= new NotificationEmail();
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
+            String formattedDateTime = oneBrute.dateRejetDemande.format(formatter);
             notificationEmail.setSubject("Mail d'acceptation");
             notificationEmail.setRecipient(oneBrute.getUser().getEmail());
-            notificationEmail.setBody("Votre demande a ete accepté au centre d' écrit du "
-                    + oneBrute.getCentre().getLibelleLong()
-                    +"vous avec " + oneBrute.getSession().getDelaisValidation()+ "pour le valider");
-            mailService.sendMail(notificationEmail);
+            notificationEmail.setTemplateName("notificationAccepter.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", oneBrute.getUser().getPrenoms());
+            emailVariables.put("nom", oneBrute.getUser().getNom());
+            emailVariables.put("dateRejetDemande", formattedDateTime);
+            emailVariables.put("academie", oneBrute.getVille().getAcademie().getLibelleLong());
+            emailVariables.put("ville", oneBrute.getVille().getLibelleLong());
+            emailVariables.put("centre", oneBrute.getCentre().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
             log.info("Demande" + response.getId() + " accepetée avec succés. <accepterDemande>");
             return response;
         } catch (NumberFormatException e) {
@@ -436,16 +473,22 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                 log.info("Calcule du quota: {}", quota);
                 if (quota == 0) {
                     demandeObseleteByVille(demandeOptional.getVille().getId());
+                    notificationObselete.notification(demandeOptional.getVille().getId().toString());
                 }
 
-            NotificationEmail notificationEmail= new NotificationEmail();
-            notificationEmail.setSubject("Mail d'acceptation");
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation");
             notificationEmail.setRecipient(demandeOptional.getUser().getEmail());
-            notificationEmail.setBody("Bravo vous etes president d'un jury dans le centre d' écrit du "
-                    + demandeOptional.getCentre().getLibelleLong()
-                    );
-            mailService.sendMail(notificationEmail);
-
+            notificationEmail.setTemplateName("notificationValider.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demandeOptional.getUser().getPrenoms());
+            emailVariables.put("nom", demandeOptional.getUser().getNom());
+            emailVariables.put("session", demandeOptional.getSession().getLibelleLong());
+            emailVariables.put("academie", demandeOptional.getVille().getAcademie().getLibelleLong());
+            emailVariables.put("ville", demandeOptional.getVille().getLibelleLong());
+            emailVariables.put("centre", demandeOptional.getCentre().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
             log.info("Demande " + response.getId() + " validée avec succès. <validerDemande>");
             return response;
         } catch (NumberFormatException e) {

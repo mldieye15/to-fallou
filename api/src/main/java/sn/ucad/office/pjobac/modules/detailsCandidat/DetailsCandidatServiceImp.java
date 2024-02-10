@@ -13,11 +13,11 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.annee.AnneeDao;
-import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.demande.DemandeMapper;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.*;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -36,6 +36,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     private final AnneeDao anneeDao;
     private  final VilleDao villeDao;
     private final DemandeMapper demandeMapper;
+    private final UserDao userDao;
     private final OrdreArriveService ordreArrive;
     @Override
     public List<DetailsCandidatResponse> all() throws BusinessResourceException {
@@ -98,10 +99,12 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             Annee annee= anneeDao.findByEncoursTrue();
             int noteFonction= currentUser.getFonction().getNombrePoint();
             int noteEtablissementProvenance=currentUser.getEtablissement().getTypeEtablissement().getNombrePoint();
+            String numeroCandidat = "N°" + currentUser.getNom() + currentUser.getId() +"AN"+annee.getLibelleLong();
             one.setCandidat(currentUser);
             one.setNoteEtablissementProvenance(noteEtablissementProvenance);
             one.setNoteFonction(noteFonction);
             one.setAnnee(annee);
+            one.setNumeroCandidat(numeroCandidat);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
             log.info("Ajout " + response.getCandidat().getPrenoms() + " effectué avec succés. <add>");
@@ -296,7 +299,15 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
         }
     }
 
-
+    @Override
+    public boolean userHasAlreadyApplied(String userId) {
+            Long myId = Long.valueOf(userId.trim());
+            AppUser entity = userDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "User avec " + userId + " non trouvé(e).", HttpStatus.NOT_FOUND)
+                    );
+        return dao.findByCandidatId(entity).isPresent();
+    }
 //    @Override
 //    public void updateOrderByVille() throws BusinessResourceException {
 //            log.info("DemandeServiceImp::updateOrderByVille");

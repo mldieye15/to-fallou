@@ -77,12 +77,13 @@ public class JuryMapperUtil {
     }
     @Named("formatNom")
     public String formatNom(JuryRequest request) {
-        if (request.getSession() != null && request.getNumero() != null) {
+        if (request.getSession() != null && request.getNumero() != null&& request.getCentre()!=null)  {
             String session=request.getSession();
+            String centre=request.getCentre();
             String numero=request.getNumero();
-            String annee;
-            annee = getSessionById(session).getAnnee().getLibelleLong();
-            return "Jury N° " +numero+ " de " + annee;
+            String annee = getSessionById(session).getAnnee().getLibelleLong();
+            String libelleCourt=getCentreById(centre).getLibelleCourt();
+            return "JURY"+numero+libelleCourt+annee;
         }
         return null;
     }

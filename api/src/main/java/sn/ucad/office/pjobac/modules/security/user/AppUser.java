@@ -62,8 +62,8 @@ public class AppUser {
     @Column(unique = true)
     private String code;
 
-    @NotNull
-    private Date dateNaiss;
+//    @NotNull
+//    private Date dateNaiss;
 
     @NotNull
     @Size(min=5, max=100, message="Email doit etre comprise entre 5 et 100 cracteres")

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <FormEdit :inputForm="inputForm" :actionSubmit="handleSave" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import { useI18n } from "vue-i18n";
 //  
 import FormVue from "./Form.vue";
 import { useUtilisateurStore } from "../store";
+import FormEdit from "./FormEdit.vue";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -31,10 +32,10 @@ const inputForm = reactive({
   prenoms: "",
   nom: "",
   matricule: "",
-  dateNaiss:null,
+  // dateNaiss:null,
   email: "",
   username: "",
-  mdpasse: "",
+  // mdpasse: "",
   sexe: "",
   code: "",
   telephone: "",
@@ -59,14 +60,14 @@ onMounted(()=>{
     inputForm.prenoms = dataDetails.value.prenoms,
     inputForm.nom = dataDetails.value.nom,
     inputForm.matricule = dataDetails.value.matricule,
-    inputForm.dateNaiss = dataDetails.value.dateNaiss,
+    // inputForm.dateNaiss = dataDetails.value.dateNaiss,
     inputForm.email = dataDetails.value.email,
     inputForm.username = dataDetails.value.username,
     inputForm.mdpasse = dataDetails.value.mdpasse
     inputForm.sexe = dataDetails.value.sexe,
     inputForm.code = dataDetails.value.code,
     inputForm.telephone = dataDetails.value.telephone,
-    inputForm.anciennete = dataDetails.value.anciennete
+    // inputForm.anciennete = dataDetails.value.anciennete
 
     inputForm.fonction=dataDetails.value.fonction?dataDetails.value.fonction.id:null,
     inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null

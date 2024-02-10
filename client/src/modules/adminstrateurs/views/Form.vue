@@ -55,7 +55,7 @@
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
-      <v-col>
+      <!-- <v-col>
         <v-text-field
         id="dateNaiss"
         prepend-inner-icon="mdi-calendar"
@@ -68,6 +68,21 @@
         variant="solo"
         type="date"
       ></v-text-field>
+      </v-col> -->
+      <v-col>
+        <v-select
+        id="sexe"
+        prepend-inner-icon="mdi-gender-male-female"
+        name="sexe"
+        density="compact"
+        :label="$t('apps.forms.user.sexe')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.sexe"
+        variant="solo"
+        :items="['Homme', 'Femme']"
+      >
+    </v-select>
       </v-col> 
     </v-row>
     <v-row style="height: 15vh">
@@ -100,21 +115,6 @@
         v-model="inputForm.mdpasse"
         variant="solo"
       ></v-text-field>
-      </v-col>
-      <v-col>
-        <v-select
-        id="sexe"
-        prepend-inner-icon="mdi-gender-male-female"
-        name="sexe"
-        density="compact"
-        :label="$t('apps.forms.user.sexe')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.sexe"
-        variant="solo"
-        :items="['Homme', 'Femme']"
-      >
-    </v-select>
       </v-col>
     </v-row >
       <v-row style="height: 15vh">

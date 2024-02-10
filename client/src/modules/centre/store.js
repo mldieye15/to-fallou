@@ -194,6 +194,10 @@ export const useCentreStore = defineStore('centre', {
         return false;
       }
     },
+    getCentreById(id) {
+      const centre = this.dataListeCentre.find(item => item.id === id);
+      return centre ? centre.libelleCourt: '';
+    },
   },
   
 })

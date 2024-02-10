@@ -64,7 +64,7 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
-              <v-card class="custom-card">
+              <!-- <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
@@ -77,7 +77,7 @@
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
-              </v-card>
+              </v-card> -->
               <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>

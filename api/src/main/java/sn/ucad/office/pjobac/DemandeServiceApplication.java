@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import sn.ucad.office.pjobac.modules.security.role.RoleService;
 import sn.ucad.office.pjobac.modules.security.role.dto.RoleRequest;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
@@ -12,6 +13,7 @@ import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
 
 @SpringBootApplication
+@EnableScheduling
 public class DemandeServiceApplication  {
 
     public static void main(String[] args) {

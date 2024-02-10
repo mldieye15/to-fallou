@@ -9,6 +9,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
 @Service
@@ -18,6 +20,7 @@ public class MailService {
 
     private final JavaMailSender mailSender;
     private final InscriptionContentBuilder builderService;
+    private final SpringTemplateEngine templateEngine;
 
 
     @Async//("threadPoolTaskExecutor")
@@ -41,5 +44,26 @@ public class MailService {
             throw new BusinessResourceException("SendMessError", "Erreur d'envoi du message.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+    @Async
+    public void sendHtmlEmail(NotificationEmailHtml notificationEmail) throws MailException, InterruptedException {
+        MimeMessagePreparator messagePreparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+            messageHelper.setFrom("cheikhtidianethioune98@gmail.com");
+            messageHelper.setTo(notificationEmail.getRecipient());
+            messageHelper.setSubject(notificationEmail.getSubject());
+
+            Context context = new Context();
+            context.setVariables(notificationEmail.getEmailVariables());
+            String htmlContent = templateEngine.process(notificationEmail.getTemplateName(), context);
+            messageHelper.setText(htmlContent, true);
+        };
+        try {
+            mailSender.send(messagePreparator);
+            log.info("Email de notification envoyé avec succès.");
+        } catch (MailException ex) {
+            log.error("Erreur lors de l'envoi de l'email de notification : " + ex.getMessage());
+            throw new BusinessResourceException("SendMessError", "Erreur d'envoi du message.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

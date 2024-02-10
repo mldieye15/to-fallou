@@ -47,7 +47,7 @@ const handleSave = (payload) => {
         text:  i18n.t('added'),
         color: 'blue'
       });
-    router.push( { name: 'user-liste',});
+    router.push( { name: 'login',});
   });
 }
 

@@ -10,6 +10,7 @@ import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -37,4 +38,6 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
     List<DetailsCandidat> findByVille(@Param("ville") Ville ville);
     @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.annee.encours = true")
     List<DetailsCandidat> findByEncours();
+    @Query("SELECT dc FROM DetailsCandidat dc WHERE dc.candidat = :user AND dc.annee.encours = true")
+    Optional<DetailsCandidat> findByCandidatId(@Param("user") AppUser user);
 }

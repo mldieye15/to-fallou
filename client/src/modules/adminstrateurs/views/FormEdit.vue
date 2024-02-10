@@ -55,7 +55,7 @@
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
-      <v-col>
+      <!-- <v-col>
         <v-text-field
         id="dateNaiss"
         prepend-inner-icon="mdi-calendar"
@@ -68,7 +68,7 @@
         variant="solo"
         type="date"
       ></v-text-field>
-      </v-col> 
+      </v-col>  -->
     </v-row>
     <v-row style="height: 15vh">
       <v-col>
