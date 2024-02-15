@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.ville.VilleService;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
@@ -78,6 +79,24 @@ public class VilleResource {
     public ResponseEntity<Void> del(@PathVariable(value="id") String id) {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @GetMapping("/libelle-availability")
+    public ResponseEntity<Boolean> checkVilleAvailability(@RequestParam String libelleLong) {
+        try {
+            service.verifyVilleUnique(libelleLong);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/code-availability")
+    public ResponseEntity<Boolean> checkCodeAvailability(@RequestParam String libelleCourt) {
+        try {
+            service.verifyUniqueLibelleCourt(libelleCourt);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
     }
 }
 

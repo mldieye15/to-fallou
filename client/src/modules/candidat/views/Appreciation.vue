@@ -30,7 +30,7 @@
         v-model="inputForm.appreciation"
         variant="solo"
       ></v-textarea>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>

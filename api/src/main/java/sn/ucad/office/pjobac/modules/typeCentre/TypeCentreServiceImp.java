@@ -154,7 +154,8 @@ public class TypeCentreServiceImp implements TypeCentreService {
 
     @Override
     public void verifyLibelleUnique(String libelleLong) throws BusinessResourceException {
-        if (dao.findByLibelleLong(libelleLong).isPresent()){
+        String normalizedLibelleLong = libelleLong.replaceAll("\\s+", " ").trim();
+        if (dao.findByLibelleLong(normalizedLibelleLong ).isPresent()){
             throw new ResourceAlreadyExists("Ce type de centre est deja existe déjà");
         }
 

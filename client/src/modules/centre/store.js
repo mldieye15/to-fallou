@@ -7,6 +7,7 @@ const all = modulesURL+'/all';
 const add = modulesURL+'/';
 const centreByville = modulesURL+'/by-ville';
 const libelleAvailability = modulesURL +'/libelle-availability';
+const codeAvailability = modulesURL +'/code-availability';
 
 export const useCentreStore = defineStore('centre', {
   state: () => ({
@@ -29,7 +30,7 @@ export const useCentreStore = defineStore('centre', {
     headerTable: [
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
-      { text: 'nombre de Jury', value: 'nombreJury', align: 'start', sortable: true },
+      { text: 'nombre de Jurys', value: 'nombreJury', align: 'start', sortable: true },
       { text: 'Type de Centre', value: 'typeCentre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
@@ -37,11 +38,11 @@ export const useCentreStore = defineStore('centre', {
     ],
     columns: [
       { label: 'LibelleLong', field: 'libelleLong',width: "200px",resizable: true},
-      { label: 'Abreviation', field: 'libelleCourt',width: "100px",resizable: true},
+      { label: 'Abreviation', field: 'libelleCourt',width: "120px",resizable: true},
       {label: 'Type de Centre', field: 'typeCentre',width: "200px",resizable: true },
       { label: 'Ville', field: 'ville',width: "150px" ,resizable: true},
-      { label: 'Academie', field: 'academie',width: "100px",resizable: true },
-      { label: 'Nombre de Jury', field: 'nombreJury',width: "150px" ,resizable: true},
+      { label: 'Academie', field: 'academie',width: "150px",resizable: true },
+      { label: 'Nombre de Jurys', field: 'nombreJury',width: "160px" ,resizable: true},
       { label: 'Totale Demandes', field: 'totalDemandes',width: "120px",resizable: true},
       
     ],
@@ -187,6 +188,17 @@ export const useCentreStore = defineStore('centre', {
       try {
         const response = await axios.get(`${libelleAvailability}?libelleLong=${libelleLong}`);
         console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkCodeExistence(libelleCourt) {
+      try {
+        const response = await axios.get(`${codeAvailability}?libelleCourt=${libelleCourt}`);
+        console.log("Réponse de CodeAvailability :", response);
         response.data=response.data.isAvailable;
         return true;
       } catch (error) {

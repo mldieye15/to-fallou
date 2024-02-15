@@ -35,7 +35,7 @@
         "side": {},
         "forms":{
             "authentification": {
-                "titre": "Auhentifciation",
+                "titre": "Auhentification",
                 "username": "Nom d'utilisateur",
                 "mdp": "Mot de passe",
                 "mdpoublie": "Mot de passe oublié?",
@@ -77,6 +77,7 @@
             "nouveau": "Nouveau",
             "nouvelle": "Nouvelle",
             "ajouter": "Ajouter",
+            "valider": "Valider",
             "enregistrer": "Enregister",
             "delteTitle": "Supression",
             "delteMessage": "Voulez-vous vraiment supprimer l'enregistremnet?",
@@ -87,42 +88,42 @@
             "non": "Non",
             "annuler": "Annuler",
             "academie": {
-                "academie": "Académies",
-                "nom": "Nom de l'académie",
-                "abreviation":"Son abreviation"
+                "academie": "Académie",
+                "nom": "Académie",
+                "abreviation":"Abreviation"
             },
             "ville": {
-                "ville": "Villes",
-                "nom": "Nom de la ville",
-                "abreviation":"Son abreviation"
+                "ville": "Ville",
+                "nom": "Ville",
+                "abreviation":"Abreviation"
             },
             "jury":{
-                "jury":"Jurys",
+                "jury":"Jury",
                 "numero":"Numéro du jury",
                 "nom":"Nom du jury"
             },
             "annee":{
-                "annee":"Annees",
+                "annee":"Année",
                 "libelle":"Libelle de l'annee"
             },
             "centre":{
-                "centre":"centres",
-                "nom":"Nom du centre",
-                "abreviation":"Son abreviation",
-                "nombreJury":"nombre de Jury"
+                "centre":"Centre",
+                "nom":"Centre",
+                "abreviation":"Abreviation",
+                "nombreJury":"nombre de Jurys"
             },
             "etablissement":{
-                "etablissement":"etablissements",
-                "nom":"Nom de l'etablissement",
-                "abreviation":"Son abreviation"
+                "etablissement":"Etablissements",
+                "nom":"Etablissement",
+                "abreviation":"Abreviation"
             },
             "typeEtablissement":{
                 "typeEtablissement":"Type d'etablissement",
-                "nom":"Nom du type de l'etablissement",
-                "abreviation":"Son abreviation"
+                "nom":"Type de l'etablissement",
+                "abreviation":"Abreviation"
             },
             "session":{
-                "session":"session",
+                "session":"Session",
                 "nom":"libellé de la session",
                 "dateDebut":"Date de début",
                 "dateFin":"Date de fin",
@@ -134,7 +135,7 @@
 
             },
             "user":{
-                "user":"utilisateur",
+                "user":"Utilisateur",
                 "prenoms": "prenoms",
                 "nom": "nom",
                 "matricule": "matricule",
@@ -149,24 +150,24 @@
             },
 
             "typeCentre":{
-                "typeCentre":"type du Centre",
-                "nom":"Nom du type de centre",
-                "abreviation":"Son abreviation"
+                "typeCentre":"Type du Centre",
+                "nom":"Type de centre",
+                "abreviation":"Abreviation"
             },
             "demande":{
-                "demande":"demande",
+                "demande":"Demande",
                 "nom":"Nom de la demande",
                 "choix":"Choix N°"
             },
             "fonction":{
-                "fonction":"fonction",
-                "nom":"nom de la fonction",
-                "abreviation":"Son abreviation",
+                "fonction":"Fonction",
+                "nom":"Fonction",
+                "abreviation":"Abreviation",
                 "nombrePoint":"Nombre de point"
             },
             "typeSession":{
                 "typeSession":"type de la session",
-                "nom":" nom type de la Session"
+                "nom":" Type de la Session"
             },
             "codification":{
                 "codification":"Codifications",
@@ -174,7 +175,7 @@
                 "code":"le code"
             },
             "candidat":{
-                "candidat":"Candidats",
+                "candidat":"Candidat",
                 "note":"note du supervisseur",
                 "bonus":"Bonus",
                 "malus":"Malus",

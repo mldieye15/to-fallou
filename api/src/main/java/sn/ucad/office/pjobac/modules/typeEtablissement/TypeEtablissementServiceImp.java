@@ -153,7 +153,8 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
 
     @Override
     public void verifyTypeEtablissementUnique(String libelleLong) throws BusinessResourceException {
-        if(dao.findByLibelleLong(libelleLong).isPresent()){
+        String normalizedLibelleLong = libelleLong.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleLong(normalizedLibelleLong ).isPresent()){
             throw new ResourceAlreadyExists("Le nom du typeEtablissement   existe déjà.");
         }
 

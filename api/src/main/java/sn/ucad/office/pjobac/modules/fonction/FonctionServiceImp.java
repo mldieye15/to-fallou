@@ -153,7 +153,8 @@ public class FonctionServiceImp implements FonctionService {
 
     @Override
     public void verifyFonctionUnique(String libelleLong) throws BusinessResourceException {
-        if(dao.findByLibelleLong(libelleLong).isPresent()){
+        String normalizedLibelleLong = libelleLong.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleLong(normalizedLibelleLong).isPresent()){
             throw new ResourceAlreadyExists("L' annee existe déjà.");
         }
 

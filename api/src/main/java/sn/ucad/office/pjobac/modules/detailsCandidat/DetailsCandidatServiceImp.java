@@ -155,6 +155,13 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             DetailsCandidat oneBrute = mapper.requestNoteToEntiteUp(detailsCandidatOptional, req);
+//            int note= oneBrute.getNote();
+//            if(note > 15){
+//                oneBrute.setAffectable(true);
+//            }
+//            else {
+//                oneBrute.setAffectable(false);
+//            }
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("appreciation " + response.getAppreciation() + " effectuée avec succés. <appreciation>");
             dao.updateNote(detailsCandidatOptional);

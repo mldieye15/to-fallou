@@ -1,4 +1,5 @@
 <template>
+  <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
       <v-container class="my-1" grid-list-xl>
         <v-row class="mb-0 mx-auto pa-0"  align="center">
         <v-col cols="12" sm="4" md="3" >
@@ -46,40 +47,47 @@
               {{ props.row.rang}}
            </v-chip>
           </span>
-          <div v-if="props.column.field === 'actions'">
+        <div v-if="props.column.field === 'actions'">
         <div class="actions-wrapper"
-         v-if="props.row.etatDemande === 'EN ATTENTE' &&
+         v-if="props.row.etatDemande === 'en attente' &&
           props.row.quota === 'OUI' && 
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
               Affecté
             </v-btn>
-        </div>
+         </div>
+         <div class="actions-wrapper"
+         v-else-if="props.row.etatDemande === 'déclinée' &&
+          props.row.quota === 'OUI' && 
+          props.row.hasAcceptedDemande === 'NON'&&
+          props.row.affectable === 'OUI'">
+            <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              réaffecté
+            </v-btn>
+         </div>
         <div v-else>
           <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-          <v-btn  variant="flat" color="red-darken-4" size="small">
+          <v-chip  variant="flat" color="red-darken-4" size="small">
               NON AFFECTABLE
-            </v-btn>
+            </v-chip>
         </div>
         <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
-          <v-btn  variant="flat" color="green" size="small">
-              dèja Affecté
-            </v-btn>
+          <v-chip  variant="flat" color="grey" size="small">
+            DÉJÀ ACCEPTÉE
+            </v-chip>
         </div>
-        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'VALIDE' || props.row.etatDemande === 'REJETE'">
-          <v-btn  variant="flat" color="green-darken-4" size="small">
-            dèja validé
-            </v-btn>
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée' || props.row.etatDemande === 'rejetée'">
+          <v-chip  variant="flat" color="green-darken-4" size="small">
+            DÉJÀ AFFECTÉ
+            </v-chip>
         </div>
         <div class="actions-wrapper" v-else>
-          <v-btn  variant="flat" color="red" size="small">
-             quota atteint
-            </v-btn>
+          <v-chip  variant="flat" color="red" size="small">
+             QUOTA ATTEINT
+            </v-chip>
         </div>
-
-        </div>
-        
+        </div>  
       </div>
         </template>
       </vue-good-table>

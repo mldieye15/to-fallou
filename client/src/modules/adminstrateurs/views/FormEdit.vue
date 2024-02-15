@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="submit" ref="userForm">
-      <v-row style="height: 15vh">
+      <v-row style="height: 16vh">
         <v-col>
       <v-text-field 
         id="prenoms"
@@ -38,7 +38,7 @@
       </v-col>
        
     </v-row>
-    <v-row style="height: 15vh">
+    <v-row style="height: 16vh">
         <v-col>
       <v-text-field 
         id="matricule"
@@ -50,7 +50,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
-        @input="checkMatriculeExistence"
+        @input="onMatriculeInput"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -70,7 +70,7 @@
       ></v-text-field>
       </v-col>  -->
     </v-row>
-    <v-row style="height: 15vh">
+    <v-row style="height: 16vh">
       <v-col>
         <v-text-field
         id="username"
@@ -82,7 +82,7 @@
         :rules="[rules.required]"
         v-model="inputForm.username"
         variant="solo" 
-        @input="checkUsernameExistence"   
+        @input="onUsernameInput" 
       >
     </v-text-field> 
     
@@ -104,7 +104,7 @@
     </v-select>
       </v-col>
     </v-row >
-      <v-row style="height: 15vh">
+      <v-row style="height: 16vh">
         <v-col>
           <v-text-field
         id="telephone"
@@ -129,13 +129,13 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
-        @input="checkEmailExistence"
+        @input="onEmailInput"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message ma-1">{{ emailErrorMessage }}</div>
       </v-col> 
       </v-row>
-      <v-btn block class="mt-8 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-8 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -269,6 +269,39 @@ watchEffect(() => {
 function formatDateForInput(date) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
   return formattedDate;
+};
+const onEmailInput = () => {
+  // Vérifie s'il y a des espaces dans l'email
+  if (/\s/.test(inputForm.email)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    emailError.value = true;
+    emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence de l'email
+    checkEmailExistence();
+  }
+};
+const onMatriculeInput = () => {
+  // Vérifie s'il y a des espaces dans le matricule
+  if (/\s/.test(inputForm.matricule)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    matriculeError.value = true;
+    matriculeErrorMessage.value = "Le matricule ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence du matricule
+    checkMatriculeExistence();
+  }
+};
+const onUsernameInput = () => {
+  // Vérifie s'il y a des espaces dans le nom d'utilisateur
+  if (/\s/.test(inputForm.username)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    usernameError.value = true;
+    usernameErrorMessage.value = "Le nom d'utilisateur ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
+    checkUsernameExistence();
+  }
 };
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);

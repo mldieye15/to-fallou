@@ -19,7 +19,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.email"
         variant="solo"
-        @blur="checkEmailExistence"
+        @blur="onEmailInput"
        >
         </v-text-field>
         <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
@@ -33,12 +33,12 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
         variant="solo"
-        @blur="checkCodeExistence"
+        @blur="onCodeInput"
        >
         </v-text-field>
         <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -98,6 +98,28 @@ const checkCodeExistence = async () => {
       codeError.value = true;
       codeErrorMessage.value = "Erreur lors de la vérification du code. Veuillez réessayer.";
     }
+  }
+};
+const onEmailInput = () => {
+  // Vérifie s'il y a des espaces dans l'email
+  if (/\s/.test(inputForm.email)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    emailError.value = true;
+    emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence de l'email
+    checkEmailExistence();
+  }
+};
+const onCodeInput = () => {
+  // Vérifie s'il y a des espaces dans l'code
+  if (/\s/.test(inputForm.code)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    codeError.value = true;
+    codeErrorMessage.value = "Le code ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence du code
+    checkCodeExistence();
   }
 };
 

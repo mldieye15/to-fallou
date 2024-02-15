@@ -1,5 +1,5 @@
 <template>
-  <div v-if="inputForm.etatDemande==='EN ATTENTE' && inputForm.etatUser===false">
+  <div v-if="inputForm.etatDemande==='en attente' ||inputForm.etatDemande==='déclinée' && inputForm.etatUser===false">
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"
@@ -118,7 +118,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     academie: inputForm.academie,
     centre: inputForm.centre,
   };
-  accepterDemande(route.params.id_demande, payload).then(() => {
+  accepterDemande(route.params.id, payload).then(() => {
     addNotification({
       show: true,
       text:  i18n.t('updated'),
@@ -128,7 +128,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   });
 };
 onMounted(() => {
-  one(route.params.id_demande ).then(() => {
+  one(route.params.id ).then(() => {
     inputForm.session = dataDetails.value.session ? dataDetails.value.session.id : null;
     inputForm.academie = dataDetails.value.academie ? dataDetails.value.academie.id : null;
     inputForm.ville = dataDetails.value.ville ? dataDetails.value.ville.id : null;

@@ -180,8 +180,18 @@ public class AcademieServiceImp implements AcademieService {
 
     @Override
     public void verifyAcademieUnique(String libelleLong) throws BusinessResourceException {
-        if(dao.findByLibelleLong(libelleLong).isPresent()){
+        String normalizedLibelleLong = libelleLong.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleLong(normalizedLibelleLong).isPresent()){
             throw new ResourceAlreadyExists("Le nom de l' academie   existe déjà.");
+        }
+
+    }
+
+    @Override
+    public void verifyUniqueLibelleCourt(String libelleCourt) throws BusinessResourceException {
+        String normalizedLibelleCourt = libelleCourt.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleCourt(normalizedLibelleCourt).isPresent()){
+            throw new ResourceAlreadyExists("Le code de l' academie   existe déjà.");
         }
 
     }

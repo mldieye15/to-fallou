@@ -153,7 +153,7 @@
        <div v-if="dateClotureError" class="error-message">{{ dateClotureErrorMessage }}</div>
         </v-col>
       </v-row>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>

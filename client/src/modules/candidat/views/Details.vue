@@ -74,10 +74,10 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Date de Naissance:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Code:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.dateNaiss }}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ inputForm.code }}</v-list-item-subtitle>
                     </v-col>
                   </v-row>
                 </v-list-item-content>
@@ -88,7 +88,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom du candidat:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Nom d'utilisateur:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.username }}</v-list-item-subtitle>
@@ -169,7 +169,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Annee:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Année:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.annee}}</v-list-item-subtitle>
@@ -211,7 +211,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Note d' anciennete:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Ancienneté:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteAnciennete }}</v-list-item-subtitle>
@@ -242,7 +242,7 @@
                       <v-list-item-title class="font-weight-bold"> Note du Supervisseur:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm. noteSupervisseur}}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ inputForm.noteSupervisseur}}</v-list-item-subtitle>
                     </v-col>
                   </v-row>
                 </v-list-item-content>
@@ -281,7 +281,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold"> Note Total:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold"> Score:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.note }}</v-list-item-subtitle>
@@ -338,7 +338,7 @@ const inputForm = reactive({
   prenoms: "",
   nom: "",
   matricule: "",
-  dateNaiss:null,
+  code:"",
   email: "",
   username: "",
   mdpasse: "",
@@ -357,23 +357,12 @@ const inputForm = reactive({
   fonction: null,
   etablissement: null,
 });
-function formatDateForInput(date) {
-  const formattedDate = format(new Date(date), 'dd-MM-yyyy', { locale: fr });
-  return formattedDate;
-}
-watchEffect(() => {
-  if (
-  inputForm.dateNaiss
-  ) {
-    inputForm.dateNaiss=formatDateForInput(inputForm.dateNaiss);
-  }
-});
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.prenoms = dataDetails.value.candidat.prenoms,
     inputForm.nom = dataDetails.value.candidat.nom,
     inputForm.matricule = dataDetails.value.candidat.matricule,
-    inputForm.dateNaiss = dataDetails.value.candidat.dateNaiss,
+    inputForm.code = dataDetails.value.candidat.code,
     inputForm.email = dataDetails.value.candidat.email,
     inputForm.username = dataDetails.value.candidat.username,
     inputForm.mdpasse = dataDetails.value.candidat.mdpasse

@@ -10,19 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
-import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidat;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatDao;
 import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
+import sn.ucad.office.pjobac.modules.detailsCandidat.OrdreArriveService;
 import sn.ucad.office.pjobac.modules.detailsCandidat.dto.DetailsCandidatRequest;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
-import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemandeServiceImp;
 import sn.ucad.office.pjobac.modules.security.mail.MailService;
-import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmailHtml;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
@@ -31,8 +29,6 @@ import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
-import sn.ucad.office.pjobac.utils.FileUtil;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.time.LocalDateTime;
@@ -56,6 +52,7 @@ public class DemandeServiceImp implements DemandeService {
     private final DetailsCandidatService candidatService;
     private final DetailsCandidatDao candidatDao;
     private final  NotificationObseleteDemande notificationObselete;
+    private final OrdreArriveService ordreArrive;
 
 //    @Override
 //    public List<DemandeResponse> all() throws BusinessResourceException {
@@ -261,7 +258,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                             Demande demande = mapper.requestToEntity(request);
                             AppUser currentUser = authService.getCurrentUser();
                             demande.setUser(currentUser);
-                            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
+                            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("en attente");
                             EtatDemande etatParDefaut = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
                             demande.setEtatDemande(etatParDefaut);
                             return demande;
@@ -296,11 +293,12 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                             () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             Demande oneBrute = mapper.requestToEntiteUp(demandeOptional, req);
-            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("en attente");
             EtatDemande etatParDefaut = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
                 oneBrute.setEtatDemande(etatParDefaut);
 
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            ordreArrive.updateOrderByVille();
             log.info("Mise à jour " + response.getId() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {
@@ -364,17 +362,17 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
     }
     @Override
     public void demandeObseleteByVille(Long villeId) throws NumberFormatException, BusinessResourceException {
-        Optional<EtatDemande> optionalObselete = service.findByLibelleLong("OBSOLETE");
+        Optional<EtatDemande> optionalObselete = service.findByLibelleLong("obsolète");
         EtatDemande etatObsolete = optionalObselete.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
-        Optional<EtatDemande> optionalEtat = service.findByLibelleLong("EN ATTENTE");
+        Optional<EtatDemande> optionalEtat = service.findByLibelleLong("en attente");
         EtatDemande etatEnAttente = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
         dao.demandeObselete(villeId, etatObsolete, etatEnAttente);
     }
     @Override
     public void rejeterDemande(Long userId) throws NumberFormatException, BusinessResourceException {
-        Optional<EtatDemande> optionalEtat = service.findByLibelleLong("VALIDE");
+        Optional<EtatDemande> optionalEtat = service.findByLibelleLong("validée");
         EtatDemande valider = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
-        Optional<EtatDemande> optionalRejeter= service.findByLibelleLong("REJETE");
+        Optional<EtatDemande> optionalRejeter= service.findByLibelleLong("rejetée");
         EtatDemande rejeteEtat = optionalRejeter.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
         dao.rejeterDemande(userId, rejeteEtat ,valider);
     }
@@ -396,7 +394,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                             () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             Demande oneBrute = mapper.accepterToEntiteUp(demandeOptional, req);
-            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("ACCEPTE");
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("acceptée");
             EtatDemande etatAccepter= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
             oneBrute.setEtatDemande(etatAccepter);
             int delaisValidation;
@@ -460,7 +458,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
             Long myId = Long.valueOf(demandeId.trim());
             Demande demandeOptional = dao.findById(myId)
                     .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun Demande avec l'ID " + demandeId + " trouvé.", HttpStatus.NOT_FOUND));
-            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("VALIDE");
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("validée");
             EtatDemande etatValide= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
 
             demandeOptional.setEtatDemande(etatValide);

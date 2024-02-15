@@ -13,7 +13,7 @@ import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.UserRequest;
 
 @SpringBootApplication
-@EnableScheduling
+//@EnableScheduling
 public class DemandeServiceApplication  {
 
     public static void main(String[] args) {

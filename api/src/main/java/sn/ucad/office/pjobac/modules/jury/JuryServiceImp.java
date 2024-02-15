@@ -216,7 +216,6 @@ public class JuryServiceImp implements JuryService {
         villeDao.updateTotalJury(villeId,totalJury);
 
     }
-
     @Override
     public void verifyJuryUnique(String nom) throws BusinessResourceException {
         if(dao.findByNom(nom).isPresent()){

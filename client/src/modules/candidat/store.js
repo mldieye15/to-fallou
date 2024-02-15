@@ -31,7 +31,7 @@ export const useCandidatStore = defineStore('candidat', {
       { text: 'Prenoms', value: 'prenoms', align: 'start', sortable: true },
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
-      { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
+      { text: 'Code', value: 'code', align: 'start', sortable: true },
       // { text: 'Email', value: 'email', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
@@ -58,7 +58,7 @@ export const useCandidatStore = defineStore('candidat', {
               let etablissementLabel = element.candidat.etablissement? element.candidat.etablissement.libelleLong:null;
               let nomLabel = element.candidat? element.candidat.nom:null;
               let matriculeLabel = element.candidat? element.candidat.matricule:null;
-              let dateNaissLabel = element.candidat? element.candidat.dateNaiss:null;
+              let codeLabel = element.candidat? element.candidat.code:null;
               // let emailLabel = element.candidat? element.candidat.email:null;
               let sexeLabel = element.candidat? element.candidat.sexe:null;
               let telephoneLabel = element.candidat? element.candidat.telephone:null;
@@ -70,8 +70,7 @@ export const useCandidatStore = defineStore('candidat', {
               nom: nomLabel,
               prenoms: prenomsLabel,
               matricule: matriculeLabel,
-              dateNaiss: this.formatDate(dateNaissLabel),
-              // email: emailLabel,
+              code: codeLabel,
               sexe: sexeLabel,
               telephone: telephoneLabel,
               fonction: fonctionLabel,
@@ -101,7 +100,7 @@ export const useCandidatStore = defineStore('candidat', {
               let etablissementLabel = element.candidat.etablissement? element.candidat.etablissement.libelleLong:null;
               let nomLabel = element.candidat? element.candidat.nom:null;
               let matriculeLabel = element.candidat? element.candidat.matricule:null;
-              let dateNaissLabel = element.candidat? element.candidat.dateNaiss:null;
+              // let dateNaissLabel = element.candidat? element.candidat.dateNaiss:null;
               // let emailLabel = element.candidat? element.candidat.email:null;
               let sexeLabel = element.candidat? element.candidat.sexe:null;
               let telephoneLabel = element.candidat? element.candidat.telephone:null;
@@ -113,7 +112,7 @@ export const useCandidatStore = defineStore('candidat', {
               nom: nomLabel,
               prenoms: prenomsLabel,
               matricule: matriculeLabel,
-              dateNaiss: this.formatDate(dateNaissLabel),
+              // dateNaiss: this.formatDate(dateNaissLabel),
               // email: emailLabel,
               sexe: sexeLabel,
               telephone: telephoneLabel,

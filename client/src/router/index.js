@@ -129,7 +129,7 @@ const routes = [
               component: () =>
                   import ( /* webpackChunkName: "dashboard" */ '@/views/app/Dashboard.vue'),
               meta: {
-                  middleware: [Middleware.authSupAdmin]
+                  middleware: [Middleware.auth]
               }
           },
           {
@@ -153,7 +153,7 @@ const routes = [
             component: () =>
                 import ( /* webpackChunkName: "dashboard" */ '@/views/user/Accueil.vue'),
             meta: {
-                middleware: [Middleware.authUser]
+                middleware: [Middleware.auth]
             }
         },
         {
@@ -162,7 +162,7 @@ const routes = [
           component: () =>
               import ( /* webpackChunkName: "dashboard" */ '@/views/user/Demande.vue'),
           meta: {
-              middleware: [Middleware.authUser]
+              middleware: [Middleware.auth]
           }
       },
       {
@@ -171,7 +171,7 @@ const routes = [
         component: () =>
             import ( /* webpackChunkName: "dashboard" */ '@/views/user/Edit.vue'),
         meta: {
-            middleware: [Middleware.authUser]
+            middleware: [Middleware.auth]
         }
     },
         {
@@ -180,7 +180,7 @@ const routes = [
           component: () =>
               import ( /* webpackChunkName: "profile" */ '@/views/auth/Profile.vue'),
           meta: {
-              middleware: [Middleware.authUser]
+              middleware: [Middleware.auth]
           }
         },
     ]

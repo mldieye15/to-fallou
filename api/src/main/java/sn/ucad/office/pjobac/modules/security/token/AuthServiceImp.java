@@ -326,13 +326,12 @@ public class AuthServiceImp implements AuthService {
         AppUser user = entity.orElseThrow(() -> new BusinessResourceException("UserNotFound", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND));
         String resetToken = verifTokenService.genVerifToken(user);
         mailService.sendMail(new NotificationEmail(
-                AppConstants.MESS_RESET_PASSWORD_CONTENT,
+                AppConstants.MESS_RESET_PASSWORD_OBJET,
                 email,
                 AppConstants.MESS_RESET_PASSWORD_CONTENT +
                         AppConstants.LIEN_RESET_PASSWORD+"/"+resetToken
         ));
     }
-
     @Override
     public void fetchUserWithToken(VerificationToken verificationToken, String newPassword) throws BusinessResourceException {
         try {

@@ -11,33 +11,33 @@ const typeEtablissementRoutes = [{
             path: '',
             name: 'typeEtablissement-liste',
             component: () => import( /* webpackChunkName: 'typeEtablissement_liste' */ './views/Liste.vue'),
-            meta: {
-              middleware: [Middleware.auth]
-          }
+          //   meta: {
+          //     middleware: [Middleware.auth]
+          // }
       },
       {
         path: '/app/dashboard/typeEtablissements/:id',
         name: 'typeEtablissement-details',
         component: () => import( /* webpackChunkName: 'typeEtablissement_details' */ './views/Details.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/typeEtablissements/add',
         name: 'typeEtablissement-add',
         component: () => import( /* webpackChunkName: 'typeEtablissement_add' */ './views/Add.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/typeEtablissements/edit/:id',
         name: 'typeEtablissement-edit',
         component: () => import( /* webpackChunkName: 'typeEtablissement_edit */ './views/Edit.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       }
     ]
 }];

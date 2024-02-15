@@ -26,7 +26,7 @@ public class DemandeSchedulerService {
     private final EtatDemandeService service;
     private final MailService mailService;
 
-    @Scheduled(fixedRate = 600000) // exécute toutes les 10 minutes (en millisecondes)
+//    @Scheduled(fixedRate = 600000) // exécute toutes les 10 minutes (en millisecondes)
     public void verifierEtMettreAJourDemandes() throws InterruptedException {
         List<Demande> demandes = dao.demandeAccepter();
         for (Demande demande : demandes) {

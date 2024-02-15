@@ -46,7 +46,7 @@
         variant="solo"
       ></v-text-field>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>

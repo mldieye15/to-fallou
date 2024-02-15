@@ -24,17 +24,18 @@
               </v-chip>
             </p>
             <div class="actions-wrapper" v-if="demande.candidatureOuvert==='OUI'" >
-              <div v-if="demande.etatDemande==='OBSOLETE' || demande.etatDemande==='EN ATTENTE'">
-             <v-btn  variant="flat" color="orange" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
+              <div v-if="demande.etatDemande==='obsolète' || demande.etatDemande==='en attente'">
+                <div class="demandes"> Veillez cliquer sur le button en bleu pour modifier votre demande</div>
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
               modifier
              </v-btn>
               </div>
              
           </div>
-            <div v-if="demande.etatDemande==='ACCEPTE'" class="mt-4">
+            <div v-if="demande.etatDemande==='acceptée'" class="mt-4">
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-
+                 <div class="demandes"> Veillez cliquer sur le button en vert pour valider votre demande</div>
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
                    valider
                   </v-btn>
@@ -141,11 +142,11 @@ const copyrightName = import.meta.env.VITE_APP_COPYRIGHT;
 
 const valider = (id) => {
   validerDemande(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('valider'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('valider'),
+    //     color: 'blue'
+    //   });
       dialog.value=false;
       all();
   });
@@ -183,4 +184,8 @@ const redirectToEditDemande = (id) => {
     border: 1px solid #ccc;
     padding: 8px; /* Ajustez le remplissage selon vos préférences */
   }
+  .demandes{
+    color: red; 
+  }
+  
 </style>

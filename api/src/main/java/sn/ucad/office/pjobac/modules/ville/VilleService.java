@@ -24,5 +24,7 @@ public interface VilleService {
     public VilleResponse maj(VilleRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public String del(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<VilleAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
+    void verifyVilleUnique(String libelleLong)throws  BusinessResourceException;
+    void verifyUniqueLibelleCourt(String libelleCourt)throws  BusinessResourceException;
 
 }

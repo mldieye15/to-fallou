@@ -33,9 +33,11 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleCourt"
         variant="solo"
+        @blur="onCodeInput"
       ></v-text-field>
+      <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -54,9 +56,11 @@ const rules = reactive({
 });
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
+const codeError = ref(false);
+const codeErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
 watchEffect(() => {
-  isSubmitDisabled.value = libelleError.value
+  isSubmitDisabled.value = libelleError.value||codeError.value
 });
 const checkLibelleExistence = async () => {
   libelleError.value = false;
@@ -77,7 +81,36 @@ const checkLibelleExistence = async () => {
     }
   }
 };
-
+const checkCodeExistence = async () => {
+  codeError.value = false;
+  codeErrorMessage.value = "";
+  if (inputForm.libelleCourt) {
+    try {
+      const isAvailable = await academieStore.checkCodeExistence(inputForm.libelleCourt);
+      console.log("Résultat de la vérification du code (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        codeError.value = true;
+        codeErrorMessage.value = "le code de cette academie   existe deja.";
+        console.log('codeErrorMessage:', codeErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du code :", error);
+      codeError.value = true;
+      codeErrorMessage.value = "Erreur lors de la vérification du code. Veuillez réessayer.";
+    }
+  }
+};
+const onCodeInput = () => {
+  // Vérifie s'il y a des espaces dans le matricule
+  if (/\s/.test(inputForm.libelleCourt)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    codeError.value = true;
+    codeErrorMessage.value = "Le code de l'academie ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence du matricule
+    checkCodeExistence ();
+  }
+};
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {

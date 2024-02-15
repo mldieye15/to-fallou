@@ -1,10 +1,11 @@
 <template>
+  <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
   <v-container class="my-1" grid-list-xl>
     <v-row class="mb-0 mx-auto pa-0"  align="center">
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-      <v-chip  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
+      <v-btn  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="cyan-darken-1">Demandes par ville</v-btn>
+      <v-btn  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="cyan-darken-1">Demandes par centre</v-btn>
       <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
       <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
     </v-col>
@@ -22,56 +23,72 @@
           }" 
     > 
     <template #table-row="props">
-      <span v-if="props.column.field == 'affectable'">
-        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
-             :color="props.row.affectable=== 'OUI' ? 'green' : 'red'" text variant="tonal">
-          {{ props.row.affectable}}
-      </v-chip>
-      </span>
-      <span v-if="props.column.field == 'etatDemande'">
-         <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[props.row.etatDemande]" variant="tonal">
-        <span>{{ props.row.etatDemande }}</span>
-      </v-chip>
-      </span>
-      <span v-if="props.column.field == 'ordreArrivee'">
-        <v-chip color="pink"  size="small" variant="flat" >
-          {{ props.row.ordreArrivee}}
-      </v-chip>
-      </span>
-      <span v-if="props.column.field == 'rang'">
-        <v-chip color="cyan"  size="small" variant="flat" >
-          {{ props.row.rang}}
-       </v-chip>
-      </span>
-      <div v-if="props.column.field === 'actions'">
-        <div class="actions-wrapper"
-         v-if="props.row.etatDemande === 'EN ATTENTE' &&
+          <span v-if="props.column.field == 'affectable'">
+            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+                 :color="props.row.affectable=== 'OUI' ? 'green' : 'red'" text variant="tonal">
+              {{ props.row.affectable}}
+          </v-chip>
+          </span>
+          <span v-if="props.column.field == 'etatDemande'">
+             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[props.row.etatDemande]" variant="tonal">
+            <span>{{ props.row.etatDemande }}</span>
+          </v-chip>
+          </span>
+          <span v-if="props.column.field == 'ordreArrivee'">
+            <v-chip color="pink"  size="small" variant="flat" >
+              {{ props.row.ordreArrivee}}
+          </v-chip>
+          </span>
+          <span v-if="props.column.field == 'rang'">
+            <v-chip color="cyan"  size="small" variant="flat" >
+              {{ props.row.rang}}
+           </v-chip>
+          </span>
+          <div v-if="props.column.field === 'actions'">
+            <div class="actions-wrapper"
+         v-if="props.row.etatDemande === 'en attente' &&
           props.row.quota === 'OUI' && 
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
               Affecté
             </v-btn>
-        </div>
+         </div>
+         <div class="actions-wrapper"
+         v-else-if="props.row.etatDemande === 'déclinée' &&
+          props.row.quota === 'OUI' && 
+          props.row.hasAcceptedDemande === 'NON'&&
+          props.row.affectable === 'OUI'">
+            <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              réaffecté
+            </v-btn>
+         </div>
         <div v-else>
           <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-          <v-btn  variant="flat" color="red-darken-4" size="small">
+          <v-chip  variant="flat" color="red-darken-4" size="small">
               NON AFFECTABLE
-            </v-btn>
+            </v-chip>
         </div>
         <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
-          <v-btn   variant="flat" color="green" size="small">
-              dèja Affecté
-            </v-btn>
+          <v-chip  variant="flat" color="grey" size="small">
+            DÉJÀ ACCEPTÉE
+            </v-chip>
+        </div>
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée' || props.row.etatDemande === 'rejetée'">
+          <v-chip  variant="flat" color="green-darken-4" size="small">
+            DÉJÀ AFFECTÉ
+            </v-chip>
         </div>
         <div class="actions-wrapper" v-else>
-          <v-btn  variant="flat" color="red-accent-4" size="small">
-             quota atteint
-            </v-btn>
-          </div>
-        </div> 
+          <v-chip  variant="flat" color="red" size="small">
+             QUOTA ATTEINT
+            </v-chip>
+        </div>
+
+        </div>
+        
       </div>
-    </template>
+        </template>
   </vue-good-table>
   </v-container>
 </template>

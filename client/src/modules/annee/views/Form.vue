@@ -19,12 +19,12 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
         variant="solo"
-        @blur="checkLibelleExistence"
+        @blur="onLibelleInput"
       >
     </v-text-field>
     <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -73,6 +73,17 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
+const onLibelleInput = () => {
+  // Vérifie s'il y a des espaces dans l'Libelle
+  if (/\s/.test(inputForm.libelleLong)) {
+    // Si des espaces sont trouvés, affiche un message d'erreur
+    libelleError.value = true;
+    libelleErrorMessage.value = "Le libelle de l'année ne doit pas contenir d'espaces.";
+  } else {
+    // Sinon, effectue la vérification normale de l'existence de l'email
+    checkLibelleExistence(); 
+  }
+};
 
 const handleSave = () => {
   if(instance.refs.anneeForm.validate && !isSubmitDisabled.value){

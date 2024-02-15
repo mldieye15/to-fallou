@@ -17,6 +17,7 @@ import java.util.Optional;
 @Repository
 public interface AcademieDao extends JpaRepository<Academie, Long> {
     Optional <Academie> findByLibelleLong(String libelleLong);
+    Optional <Academie> findByLibelleCourt(String libelleCourt);
     @Query(value = "select a.libelle_long as libelleLong, a.libelle_court, v.libelle_long  from  academies a  join villes v  on a.id=v.id",  nativeQuery = true)
     List <AcademieVille> academieWithVille();
     @Query("SELECT a FROM Academie a WHERE a.id NOT IN (SELECT d.academie.id FROM Demande d WHERE d.user = :user AND d <> :demande GROUP BY d.academie.id HAVING COUNT(d.academie.id) >= 2)")

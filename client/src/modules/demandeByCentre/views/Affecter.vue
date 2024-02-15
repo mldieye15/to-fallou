@@ -1,5 +1,5 @@
 <template>
-  <div v-if="inputForm.etatDemande==='VALIDE' && juryForm.juryId===null">
+  <div v-if="inputForm.etatDemande==='validée' && juryForm.juryId===null">
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"

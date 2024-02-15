@@ -11,42 +11,42 @@ const userRoutes = [{
             path: '',
             name: 'user-liste',
             component: () => import( /* webpackChunkName: 'user_liste' */ './views/Liste.vue'),
-            meta: {
-              middleware: [Middleware.auth]
-          }
+          //   meta: {
+          //     middleware: [Middleware.auth]
+          // }
             
       },
       {
         path: 'users',
         name: 'liste-user',
         component: () => import( /* webpackChunkName: 'user_liste' */ './views/ListeUser.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/users/:id',
         name: 'user-details',
         component: () => import( /* webpackChunkName: 'user_details' */ './views/Details.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/users/add',
         name: 'user-add',
         component: () => import( /* webpackChunkName: 'user_add' */ './views/Add.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/users/edit/:id',
         name: 'user-edit',
         component: () => import( /* webpackChunkName: 'user_edit */ './views/Edit.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       }
     ]
 }];

@@ -11,33 +11,33 @@ const centreRoutes = [{
             path: '',
             name: 'centre-liste',
             component: () => import( /* webpackChunkName: 'centre_liste' */ './views/Liste.vue'),
-            meta: {
-              middleware: [Middleware.auth]
-          }
+          //   meta: {
+          //     middleware: [Middleware.auth]
+          // }
       },
       {
         path: '/app/dashboard/centres/:id',
         name: 'centre-details',
         component: () => import( /* webpackChunkName: 'centre_details' */ './views/Details.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/centres/add',
         name: 'centre-add',
         component: () => import( /* webpackChunkName: 'centre_add' */ './views/Add.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       },
       {
         path: '/app/dashboard/centres/edit/:id',
         name: 'centre-edit',
         component: () => import( /* webpackChunkName: 'centre_edit */ './views/Edit.vue'),
-        meta: {
-          middleware: [Middleware.auth]
-      }
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
       }
     ]
 }];

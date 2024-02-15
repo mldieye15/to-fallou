@@ -83,5 +83,14 @@ public class CentreResource {
             return ResponseEntity.ok(false);
         }
     }
+    @GetMapping("/code-availability")
+    public ResponseEntity<Boolean> checkCodeAvailability(@RequestParam String libelleCourt) {
+        try {
+            service.verifyUniqueLibelleCourt(libelleCourt);
+            return ResponseEntity.ok(true);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
 }
 

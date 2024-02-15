@@ -1,5 +1,5 @@
 <template>
-  <div v-if="inputForm.etatDemande==='EN ATTENTE' && inputForm.etatUser===false">
+  <div v-if="inputForm.etatDemande==='en attente'|| inputForm.etatDemande==='déclinée' && inputForm.etatUser===false ">
     <v-card
       class="mx-auto pa-12 pb-8 mt-5"
       elevation="8"

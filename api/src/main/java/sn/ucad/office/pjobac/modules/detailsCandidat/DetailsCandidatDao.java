@@ -30,7 +30,7 @@ public interface DetailsCandidatDao extends JpaRepository<DetailsCandidat, Long>
     @Query("SELECT MAX(dc.note) " +
             "FROM Demande d " +
             "JOIN DetailsCandidat dc ON dc.candidat = d.user " +
-            "WHERE d.etatDemande.libelleLong = 'EN ATTENTE' " +
+            "WHERE d.etatDemande.libelleLong = 'en attente' " +
             "AND d.ville = :ville")
     Integer maxNote(@Param("ville") Ville ville);
 

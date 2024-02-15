@@ -1,10 +1,11 @@
 <template>
+  <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
   <v-container class="my-1" grid-list-xl>
     <v-row class="mb-0 mx-auto pa-0"  align="center">
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
-      <v-chip  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par ville</v-chip>
-      <v-chip  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="blue">Traitement des demandes par centre</v-chip>
+      <v-btn  @click.prevent="redirectToVilles()" class="ma-1" variant="outlined" color="cyan-darken-1">Demandes par ville</v-btn>
+      <v-btn  @click.prevent="redirectToCentres()" class="ma-1" variant="outlined" color="cyan-darken-1">Demandes par centre</v-btn>
       <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
       <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
     </v-col>
@@ -39,22 +40,22 @@
       </v-chip>
       </span>
       <div v-if="props.column.field === 'actions'">
-        <div class="actions-wrapper" v-if="props.row.etatDemande === 'VALIDE'">
+        <div class="actions-wrapper" v-if="props.row.etatDemande === 'validée'">
           <div v-if="props.row.jury===null">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
               Affecté
             </v-btn>
           </div>
           <div class="actions-wrapper" v-else>
-          <v-btn   variant="flat" color="green" size="small">
-              dèja Affecté
-            </v-btn>
+          <v-chip   variant="flat" color="green" size="small">
+            DÉJÀ AFFECTÉ
+            </v-chip>
         </div>
         </div>
         <div class="actions-wrapper" v-else>
-          <v-btn   variant="flat" color="red" size="small">
-              Pas valider
-            </v-btn>
+          <v-chip   variant="flat" color="red" size="small">
+              PAS VALIDÉE
+            </v-chip>
         </div>
       </div>
     </template>

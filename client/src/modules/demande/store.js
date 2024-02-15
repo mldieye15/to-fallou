@@ -22,23 +22,24 @@ export const useDemandeStore = defineStore('demande', {
     loading: true,
     hasAcceptedDemande: false,  //  utilisé pour le chargement
     etatCouleurs: {
-      'ACCEPTE': 'orange',
-      'EN ATTENTE': 'purple',
-      'REJETE': 'red',
-      'VALIDE': 'green',
-      'OBSOLETE':'yellow',
+      'acceptée': 'orange',
+      'en attente': 'purple',
+      'rejetée': 'red',
+      'validée': 'green',
+      'obsolète':'amber',
+      'déclinée':'blue-grey'
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
     columns: [
-      { label: 'Ville', field: 'ville',width: "200px",resizable: true},
       { label: 'Session', field: 'session',width: "200px",resizable: true },
-      { label: 'Encours', field: 'encours',width: "200px",resizable: true },
+      // { label: 'Encours', field: 'encours',width: "200px",resizable: true },
       { label: 'Academie', field: 'academie',width: "200px",resizable: true },
-      { label: 'Centre d/ecrit', field: 'centre',width: "200px" ,resizable: true},
+      { label: 'Ville', field: 'ville',width: "200px",resizable: true},
+      { label: "Centre d'écrit", field: "centre",width: "200px" ,resizable: true},
       // { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
-      { label: 'Points', field: 'note',width: "100px",resizable: true },
+      { label: 'Score', field: 'note',width: "100px",resizable: true },
       { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
-      { label: 'Ordre Arrivee', field: 'ordreArrivee',width: "150px",resizable: true},
+      { label: "Ordre d'Arrivée", field: 'ordreArrivee',width: "150px",resizable: true},
       // { label: 'Rang', field: 'rang',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions',width: "100px",resizable: true }
       // Ajoutez d'autres colonnes selon vos besoins

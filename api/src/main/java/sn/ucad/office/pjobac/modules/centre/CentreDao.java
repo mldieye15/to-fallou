@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface CentreDao extends JpaRepository<Centre, Long> {
     Optional<Centre> findByLibelleLong(String libelleLong);
+    Optional<Centre> findByLibelleCourt(String libelleCourt);
     @Query("SELECT COUNT(j) FROM Jury j WHERE j.centre.id = :centreId AND j.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     int totalJuryByCentre(@Param("centreId") Long centreId);
     @Query("SELECT MAX(CAST(j.numero AS int)) FROM Jury j WHERE j.centre.id = :centreId")
@@ -27,7 +28,7 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     List<Centre> findCentresSansDemandeParVille(@Param("ville") Ville ville);
     @Query("SELECT c FROM Centre c " +
             "WHERE c.ville = :ville " +
-            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong = 'ACCEPTE' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true))")
+            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong ='acceptée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true))")
     List<Centre> findCentresQuotaNonAtteintParVille(@Param("ville") Ville ville);
 
 }

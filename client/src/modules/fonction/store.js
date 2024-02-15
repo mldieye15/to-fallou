@@ -27,7 +27,7 @@ export const useFonctionStore = defineStore('fonction', {
     headerTable: [
       { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'Abreviation', value: 'libelleCourt', sortable: true },
-      { text: 'Nombre de point', value: 'nombrePoint', sortable: true },
+      { text: 'Nombre de points', value: 'nombrePoint', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),

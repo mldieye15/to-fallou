@@ -65,7 +65,7 @@
       >
       </v-text-field>
       <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
-      <v-btn block class="mt-8 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-8 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.ajouter') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -88,7 +88,7 @@ const{dataListeSession}=storeToRefs(sessionStore);
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
-  validateNombre: v => /^[0-9]+$/.test(v) || 'Veuillez entrer un nombre valide de demandes autorises.',
+  validateNombre: v => /^[0-9]+$/.test(v) && !/\s/.test(v) || 'Veuillez entrer un numero de jury valide.',
 });
 const nomError = ref(false);
 const nomErrorMessage = ref("");

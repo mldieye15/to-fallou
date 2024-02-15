@@ -14,7 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "academie"
-        , uniqueConstraints = @UniqueConstraint(columnNames="libelleLong")
+        , uniqueConstraints = {
+                              @UniqueConstraint(columnNames="libelleLong"),
+                              @UniqueConstraint(columnNames="libelleCourt")
+
+}
 )
 public class Academie {
     @Id

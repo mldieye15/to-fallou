@@ -28,4 +28,5 @@ public interface CentreService {
 
     public Optional<CentreAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyCentreUnique(String libelleLong)throws  BusinessResourceException;
+    void verifyUniqueLibelleCourt(String libelleCourt)throws  BusinessResourceException;
 }

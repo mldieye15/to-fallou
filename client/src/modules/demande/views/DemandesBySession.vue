@@ -54,13 +54,19 @@
       </span> -->
       <div v-if="props.column.field === 'actions'">
     <div class="actions-wrapper"
-     v-if="props.row.etatDemande === 'EN ATTENTE' &&
-      props.row.quota === 'OUI' && 
+     v-if="props.row.quota === 'OUI' && 
       props.row.hasAcceptedDemande === 'NON'&&
       props.row.affectable === 'OUI'">
-        <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+      <div v-if="props.row.etatDemande === 'en attente'">
+        <v-btn  variant="flat" color="teal" size="small" class="">
           Affecté
         </v-btn>
+      </div>
+      <div v-if="props.row.etatDemande === 'déclinée'" >
+        <v-btn  variant="flat" color="teal" size="small" class="">
+          réaffecté
+        </v-btn> 
+      </div>
     </div>
     <div v-else>
       <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
@@ -78,9 +84,7 @@
          quota atteint
         </v-btn>
     </div>
-
     </div>
-    
   </div>
     </template>
   </vue-good-table>

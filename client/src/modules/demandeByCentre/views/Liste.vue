@@ -29,9 +29,9 @@
               </div>
             </v-btn>
           </div> 
-          <div v-if="props.column.field === 'totalJury'">
+          <div v-if="props.column.field === 'nombreJury'">
               <v-chip color="light-blue-darken-4"  size="small" variant="outlined" >
-              {{ props.row.totalJury}}
+              {{ props.row.nombreJury}}
             </v-chip>
           </div>
         </template>

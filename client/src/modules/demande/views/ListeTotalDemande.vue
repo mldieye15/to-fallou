@@ -50,7 +50,7 @@
           </span>
           <div v-if="props.column.field === 'actions'">
         <div class="actions-wrapper"
-         v-if="props.row.etatDemande === 'EN ATTENTE' &&
+         v-if="props.row.etatDemande === 'en attente' &&
           props.row.quota === 'OUI' && 
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
