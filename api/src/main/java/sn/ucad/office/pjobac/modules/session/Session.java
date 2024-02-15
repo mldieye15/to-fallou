@@ -55,7 +55,7 @@ public class Session {
     private TypeSession typeSession;
 
     private  boolean sessionOuvert=false;
-
+    private  boolean modification;
     private  boolean candidatureOuvert=false;
     @Column(nullable = true)
     private Long utiCree;

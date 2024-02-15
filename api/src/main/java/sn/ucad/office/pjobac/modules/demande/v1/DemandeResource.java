@@ -88,6 +88,13 @@ public class DemandeResource {
          List<DemandeDetailsCandidatResponse> response = service.demandeByVille(villeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allObsolete")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity <List<DemandeDetailsCandidatResponse>> allObsolete() {
+        List<DemandeDetailsCandidatResponse> response = service.allObsolete();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/demandeByCentre/{centreId}")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

@@ -31,13 +31,18 @@
         rows-per-page="5"
       >
       <template #item-sessionOuvert="item">
-          <v-chip  @click="toggleSessionState(item)" :color="item.sessionOuvert === 'ouverte' ? 'green' : 'red'" text variant="tonal">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleSessionState(item)" :color="item.sessionOuvert === 'ouverte' ? 'green' : 'red'" text variant="flat" size="small">
               {{ item.sessionOuvert}}
           </v-chip>
       </template>
       <template #item-candidatureOuvert="item">
-        <v-chip @click="toggleCandidatureState(item)" :color="item.candidatureOuvert === 'ouverte' ? 'green' : 'red'" text>
+        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleCandidatureState(item)" :color="item.candidatureOuvert === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
         {{ item.candidatureOuvert }}
+      </v-chip>
+      </template>
+      <template #item-modification="item">
+        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleModificationState(item)" :color="item.modification === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
+        {{ item.modification }}
       </v-chip>
       </template>
         <template #item-actions="item">
@@ -104,6 +109,19 @@ const toggleCandidatureState = (item) => {
   // Inverser l'état candidatureOuvert
   if (item.sessionOuvert=== 'ouverte'){
     sessionStore.toggleCandidatureState(item.id);
+  }else{
+    addNotification({
+      show: true,
+      text: "Impossible d'ouvrir les candidatures, la session est fermée.",
+      color: 'red'
+    });
+  }
+  
+};
+const toggleModificationState = (item) => {
+  // Inverser l'état candidatureOuvert
+  if (item.sessionOuvert=== 'ouverte'){
+    sessionStore.toggleModificationState(item.id);
   }else{
     addNotification({
       show: true,

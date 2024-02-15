@@ -33,7 +33,7 @@ public class NotificationObseleteDemande {
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
             notificationEmail.setSubject("Mail d'Obsoléte");
             notificationEmail.setRecipient(demande.getUser().getEmail());
-            notificationEmail.setTemplateName("NotificationObsolete.html"); // Ajoutez le nom du modèle Thymeleaf
+            notificationEmail.setTemplateName("notificationObsolet.html"); // Ajoutez le nom du modèle Thymeleaf
             Map<String, Object> emailVariables = new HashMap<>();
             emailVariables.put("prenoms", demande.getUser().getPrenoms());
             emailVariables.put("nom", demande.getUser().getNom());
@@ -41,8 +41,23 @@ public class NotificationObseleteDemande {
             emailVariables.put("ville", demande.getVille().getLibelleLong());
             notificationEmail.setEmailVariables(emailVariables);
             mailService.sendHtmlEmail(notificationEmail);
-
         }
-
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void notificationUpdate() throws InterruptedException{
+        List<Demande> demandes = dao.allDemandeObselete();
+        for (Demande demande : demandes) {
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail d'Obsoléte");
+            notificationEmail.setRecipient(demande.getUser().getEmail());
+            notificationEmail.setTemplateName("notificationUpdateObsolete.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demande.getUser().getPrenoms());
+            emailVariables.put("nom", demande.getUser().getNom());
+            emailVariables.put("academie", demande.getVille().getAcademie().getLibelleLong());
+            emailVariables.put("ville", demande.getVille().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
+        }
     }
 }

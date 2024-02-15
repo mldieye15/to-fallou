@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.demande.NotificationObseleteDemande;
 import sn.ucad.office.pjobac.modules.demande.dto.DemandeDetailsCandidatResponse;
 import sn.ucad.office.pjobac.modules.session.dto.SessionAudit;
 import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class SessionServiceImp implements SessionService {
     private final SessionMapper mapper;
     private final SessionDao dao;
+    private final NotificationObseleteDemande obseleteDemande;
 
     @Override
     public List<SessionResponse> all() throws BusinessResourceException {
@@ -194,6 +196,7 @@ public class SessionServiceImp implements SessionService {
             log.info("État de la session avec l'ID " + sessionId + " changer avec succès.");
             if (!session.isSessionOuvert()) {
                 session.setCandidatureOuvert(false);
+                session.setModification(false);
                 dao.save(session);
                 log.info("Candidature de la session avec l'ID " + sessionId + " fermée avec succès.");
             }
@@ -218,6 +221,25 @@ public class SessionServiceImp implements SessionService {
         } else {
             log.warn("Session avec l'ID " + sessionId + " non trouvée.");
         }
+    }
+
+    @Override
+    @Transactional
+    public void changerEtatModification(Long sessionId) throws InterruptedException {
+        Session session = dao.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session avec l'ID " + sessionId + " non trouvée."));
+        boolean etatPrecedent = session.isModification();
+        // Inverser l'état actuel de la session
+        boolean nouvelEtat = !etatPrecedent;
+        session.setModification(nouvelEtat);
+        dao.save(session);
+        // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
+        if (!etatPrecedent && (obseleteDemande != null)) {
+                obseleteDemande.notificationUpdate();
+
+        }
+        // Journaliser le changement d'état
+        log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
     }
     @Override
     public List<SessionResponse> findEnCoursSession()throws BusinessResourceException {

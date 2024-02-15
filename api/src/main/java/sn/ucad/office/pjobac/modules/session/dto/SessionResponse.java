@@ -26,4 +26,5 @@ public class SessionResponse {
     private TypeSession typeSession;
     private  boolean sessionOuvert;
     private  boolean candidatureOuvert;
+    private  boolean modification;
 }

@@ -52,6 +52,8 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     List<Demande> demandeAccepter();
     @Query("SELECT d FROM Demande d WHERE d.ville = :ville  AND d.etatDemande.libelleLong='obsolète' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
     List<Demande> demandeObseleteByVille(@Param("ville")Ville ville);
+    @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='obsolète' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
+    List<Demande> allDemandeObselete();
     @Query("SELECT d FROM Demande d WHERE d.ville = :ville AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
     List<Demande> demandeByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.centre = :centre AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )

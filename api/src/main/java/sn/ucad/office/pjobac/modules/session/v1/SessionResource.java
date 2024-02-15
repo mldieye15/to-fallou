@@ -105,6 +105,11 @@ public class SessionResource {
             service.changerEtatCandidature(sessionId);
             return ResponseEntity.ok().build();
         }
+    @PutMapping("/{sessionId}/etatModification")
+    public ResponseEntity<Void> etatModification(@PathVariable Long sessionId) throws InterruptedException {
+        service.changerEtatModification(sessionId);
+        return ResponseEntity.ok().build();
+    }
 
 }
 

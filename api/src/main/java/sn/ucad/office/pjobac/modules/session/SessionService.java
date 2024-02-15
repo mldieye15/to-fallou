@@ -30,6 +30,7 @@ public interface SessionService {
     void changerEtatSession(Long sessionId);
 
     void changerEtatCandidature(Long sessionId);
+    void changerEtatModification(Long sessionId) throws InterruptedException;
     List<SessionResponse> findEnCoursSession()throws BusinessResourceException;
 
     List<SessionResponse> findSessionsOuvertes()throws BusinessResourceException;

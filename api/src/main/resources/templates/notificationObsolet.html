@@ -9,27 +9,26 @@
 <div>
     <div style="width:435pt; margin: 0 auto; background-color: #fefefe; padding: 20px; border-radius: 10px;">
         <img src="/logo_office.png" alt="Logo" style="width: 580px; height: 100px;" />
-        <p style="font-size: 25.5pt; color: #0a0a0a; margin-bottom: 7.5pt;">Bonjour <span th:text="${prenoms}"></span> <span th:text="${nom}"></span>,</p>
-        <p style="font-size: 13.5pt; color: #0a0a0a; margin-bottom: 7.5pt;">Votre demande a été Acceptée.</p>
+        <p style="font-size: 25.5pt; color: #0a0a0a; margin-bottom: 7.5pt;">Bonjour  <span th:text="${prenoms}"></span> <span th:text="${nom}"></span>,</p>
+        <p style="font-size: 13.5pt; color: #0a0a0a; margin-bottom: 7.5pt;">Votre demande  est obsoléte.
+            Tous les jurys disponibles dans la ville de <span th:text="${ville}"></span> ont été attribués.
+        </p>
         <p style="font-size: 12pt; color: #0a0a0a; margin-bottom: 7.5pt;">
             <strong>
-                Merci de vous connecter à votre compte pour confirmer l'affectation avant le <span th:text="${dateRejetDemande}"></span>.<br>
-                Passé ce délai, votre demande sera remise en compétition.
+                Un mail vous sera envoyé dans les meilleurs délais pour choisir une autre ville.
             </strong>
-
         </p>
         <div class="card" style= " border: 1px solid #ccc; padding: 20px;width: 92%;">
             <div style="width: 200pt; display: flex; justify-content: space-between;">
-<!--                <div >-->
-<!--                    <p style="font-size: 12pt; color: #0a0a0a; margin-bottom: 0pt;"><strong>Etat de la demande:</strong></p>-->
-<!--                </div>-->
-<!--                <div style=" background-color: #ffa500; color: #ffffff; border-radius: 20px; width: 40%; height:35px; margin-top: 9px;">-->
-<!--                    <p style="font-size: 12pt;margin: 9px;">Acceptée</p>-->
-<!--                </div>-->
+                <div >
+                    <p style="font-size: 12pt; color: #0a0a0a; margin-bottom: 0pt;"><strong>Etat de la demande:</strong></p>
+                </div>
+                <div style=" background-color: #000000; color: #ffffff; border-radius: 20px; width: 40%; height:35px; margin-top: 9px;">
+                    <p style="font-size: 12pt;margin: 9px;">Obsoléte</p>
+                </div>
             </div>
-            <p style="margin-bottom: 12pt;"> <strong>Académie:</strong> <span th:text="${academie}"></span></p>
+            <p style="margin-bottom: 12pt;"><strong>Académie:</strong><span th:text="${academie}"></span></p>
             <p style="margin-bottom: 12pt;"><strong>Ville: </strong><span th:text="${ville}"></span></p>
-            <p style="margin-bottom: 12pt;"><strong>Centre d'écrit d'affectation:</strong><span th:text="${centre}"></span></p>
 
 
         </div>
@@ -45,5 +44,7 @@
         <p style="font-size: 12pt; text-align: center; margin-top: 8pt;"><strong>Téléphone:</strong> 33 824 19 29<br><strong>Email:</strong> <a href="mailto:serviceplanification.offbac@ucad.edu.sn" style="color: #2199e8; text-decoration: none;">serviceplanification.offbac@ucad.edu.sn</a><br><strong>Site internet:</strong> <a href="http://officedubac.sn/" style="color: #2199e8; text-decoration: none;">www.officedubac.sn</a></p>
     </div>
 </div>
+
+
 </body>
 </html>

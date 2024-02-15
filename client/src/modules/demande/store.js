@@ -108,11 +108,13 @@ export const useDemandeStore = defineStore('demande', {
               let sessionLabel = element.session ? element.session.libelleLong:null;
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
               let sessionLabelEncours =element.session.candidatureOuvert?'OUI' : 'NON';
+              let sessionLabelModification =element.session.modification?'OUI' : 'NON';
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
                 id:element.id, 
                 candidatureOuvert:sessionLabelEncours,
+                modification:sessionLabelModification,
                 ville: villeLabel,
                 academie:academieLabel,
                 session:sessionLabel,

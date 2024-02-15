@@ -23,19 +23,22 @@
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
             </p>
-            <div class="actions-wrapper" v-if="demande.candidatureOuvert==='OUI'" >
-              <div v-if="demande.etatDemande==='obsolète' || demande.etatDemande==='en attente'">
-                <div class="demandes"> Veillez cliquer sur le button en bleu pour modifier votre demande</div>
+            <div class="actions-wrapper" v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'" >
+                <div class="demandes"> Veuillez cliquer sur le bouton bleu pour modifier votre demande</div>
              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
               modifier
-             </v-btn>
-              </div>
-             
+             </v-btn>   
+          </div>
+          <div class="actions-wrapper" v-else-if="demande.candidatureOuvert==='OUI' && demande.etatDemande==='en attente'" >
+                <div class="demandes"> Veuillez cliquer sur le bouton bleu pour modifier votre demande</div>
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
+              modifier
+             </v-btn>   
           </div>
             <div v-if="demande.etatDemande==='acceptée'" class="mt-4">
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-                 <div class="demandes"> Veillez cliquer sur le button en vert pour valider votre demande</div>
+                 <div class="demandes"> Veuillez cliquer sur le bouton vert pour valider votre demande</div>
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
                    valider
                   </v-btn>

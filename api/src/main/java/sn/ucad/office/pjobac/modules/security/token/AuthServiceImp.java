@@ -18,6 +18,7 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.security.mail.MailService;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
+import sn.ucad.office.pjobac.modules.security.mail.NotificationEmailHtml;
 import sn.ucad.office.pjobac.modules.security.refresh.RefreshTokenService;
 import sn.ucad.office.pjobac.modules.security.refresh.dto.RefreshTokenRequest;
 import sn.ucad.office.pjobac.modules.security.role.AppRole;
@@ -33,9 +34,7 @@ import sn.ucad.office.pjobac.utils.JwtProvider;
 
 import javax.management.relation.RoleNotFoundException;
 import java.time.Instant;
-import java.util.Locale;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -58,12 +57,23 @@ public class AuthServiceImp implements AuthService {
             log.info("Debug 001-generation verifcation token:  "+entity.toString());
             //  generation token
             String token = verifTokenService.genVerifToken(entity);
-            mailService.sendMail(new NotificationEmail(
-                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
-                    entity.getEmail(),
-                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
-                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
-            ));
+//            mailService.sendMail(new NotificationEmail(
+//                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+//                    entity.getEmail(),
+//                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+//                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+//            ));
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setRecipient(entity.getEmail());
+            notificationEmail.setTemplateName("validationCompte.html");
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenom", entity.getPrenoms());
+            emailVariables.put("nom", entity.getNom());
+            emailVariables.put("lien", AppConstants.LIEN_ACTIV_COMPTE+"/"+token);
+            notificationEmail.setEmailVariables(emailVariables);
+
+            mailService.sendHtmlEmail(notificationEmail);
 //            userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
             RoleToUserRequest roleRequest = new RoleToUserRequest();
             roleRequest.setUsername(request.getUsername());
@@ -91,12 +101,23 @@ public class AuthServiceImp implements AuthService {
             log.info("Debug 001-generation verifcation token:  "+entity.toString());
             //  generation token
             String token = verifTokenService.genVerifToken(entity);
-            mailService.sendMail(new NotificationEmail(
-                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
-                    entity.getEmail(),
-                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
-                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
-            ));
+//            mailService.sendMail(new NotificationEmail(
+//                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+//                    entity.getEmail(),
+//                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+//                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+//            ));
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setRecipient(entity.getEmail());
+            notificationEmail.setTemplateName("validationCompte.html");
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenom", entity.getPrenoms());
+            emailVariables.put("nom", entity.getNom());
+            emailVariables.put("lien", AppConstants.LIEN_ACTIV_COMPTE+"/"+token);
+            notificationEmail.setEmailVariables(emailVariables);
+
+            mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
             roleRequest.setUsername(request.getUsername());
             roleRequest.setRole("ROLE_ADMIN");
@@ -123,12 +144,23 @@ public class AuthServiceImp implements AuthService {
             log.info("Debug 001-generation verifcation token:  "+entity.toString());
             //  generation token
             String token = verifTokenService.genVerifToken(entity);
-            mailService.sendMail(new NotificationEmail(
-                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
-                    entity.getEmail(),
-                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
-                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
-            ));
+//            mailService.sendMail(new NotificationEmail(
+//                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+//                    entity.getEmail(),
+//                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+//                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+//            ));
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setRecipient(entity.getEmail());
+            notificationEmail.setTemplateName("validationCompte.html");
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenom", entity.getPrenoms());
+            emailVariables.put("nom", entity.getNom());
+            emailVariables.put("lien", AppConstants.LIEN_ACTIV_COMPTE+"/"+token);
+            notificationEmail.setEmailVariables(emailVariables);
+
+            mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
             roleRequest.setUsername(request.getUsername());
             roleRequest.setRole("ROLE_PLANIFICATEUR");
@@ -155,12 +187,23 @@ public class AuthServiceImp implements AuthService {
             log.info("Debug 001-generation verifcation token:  "+entity.toString());
             //  generation token
             String token = verifTokenService.genVerifToken(entity);
-            mailService.sendMail(new NotificationEmail(
-                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
-                    entity.getEmail(),
-                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
-                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
-            ));
+//            mailService.sendMail(new NotificationEmail(
+//                    AppConstants.MESS_ACTIV_COMPTE_OBJET,
+//                    entity.getEmail(),
+//                    AppConstants.MESS_ACTIV_COMPTE_CONTENT +
+//                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
+//            ));
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setRecipient(entity.getEmail());
+            notificationEmail.setTemplateName("validationCompte.html");
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenom", entity.getPrenoms());
+            emailVariables.put("nom", entity.getNom());
+            emailVariables.put("lien", AppConstants.LIEN_ACTIV_COMPTE+"/"+token);
+            notificationEmail.setEmailVariables(emailVariables);
+
+            mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
             roleRequest.setUsername(request.getUsername());
             roleRequest.setRole("ROLE_SUPERVISSEUR");
@@ -325,12 +368,17 @@ public class AuthServiceImp implements AuthService {
         Optional<AppUser> entity = userService.userByEmail(email);
         AppUser user = entity.orElseThrow(() -> new BusinessResourceException("UserNotFound", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND));
         String resetToken = verifTokenService.genVerifToken(user);
-        mailService.sendMail(new NotificationEmail(
-                AppConstants.MESS_RESET_PASSWORD_OBJET,
-                email,
-                AppConstants.MESS_RESET_PASSWORD_CONTENT +
-                        AppConstants.LIEN_RESET_PASSWORD+"/"+resetToken
-        ));
+        NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+        notificationEmail.setSubject("Mail de réinitialisation");
+        notificationEmail.setRecipient(user.getEmail());
+        notificationEmail.setTemplateName("reinitialisationMpd.html");
+        Map<String, Object> emailVariables = new HashMap<>();
+        emailVariables.put("prenom", user.getPrenoms());
+        emailVariables.put("nom", user.getNom());
+        emailVariables.put("lien", AppConstants.LIEN_RESET_PASSWORD+"/"+resetToken);
+        notificationEmail.setEmailVariables(emailVariables);
+
+        mailService.sendHtmlEmail(notificationEmail);
     }
     @Override
     public void fetchUserWithToken(VerificationToken verificationToken, String newPassword) throws BusinessResourceException {

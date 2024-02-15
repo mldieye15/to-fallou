@@ -123,7 +123,22 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                 .collect(Collectors.toList());
         return response;
     }
+    @Override
+    public List<DemandeDetailsCandidatResponse> allObsolete() throws BusinessResourceException {
 
+        List<Demande> all = dao.allDemandeObselete();
+        List<DemandeDetailsCandidatResponse> response;
+        response = all.stream()
+                .map(demande -> {
+                    DetailsCandidat detailsCandidat = candidatDao.detailsForUserAndSession(demande.getUser());
+                    DemandeDetailsCandidatResponse demandeResponse;
+                    demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
+                    return demandeResponse;
+                })
+                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getOrdreArrivee))
+                .collect(Collectors.toList());
+        return response;
+    }
     @Override
     public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException {
         log.info("DemandeServiceImp::demandeByCentre");

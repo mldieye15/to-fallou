@@ -37,6 +37,7 @@ export const useSessionStore = defineStore('session', {
       { text: 'Etat Session', value: 'sessionOuvert', align: 'start', sortable: true },
       { text: 'Nombre Demande Autorise', value: 'nombreDemandeAutorise', align: 'start', sortable: true },
       { text: 'Delais Validation', value: 'delaisValidation', align: 'start', sortable: true },
+      { text: 'Modification', value: 'modification', align: 'start', sortable: true },
       { text: 'Date Ouverture Depot Candidature', value: 'dateOuvertureDepotCandidature', align: 'start', sortable: true },
       { text: 'Date Cloture Depot Candidature', value: 'dateClotureDepotCandidature', align: 'start', sortable: true },
       { text: 'Candidature', value: 'candidatureOuvert', align: 'start', sortable: true },
@@ -62,12 +63,14 @@ export const useSessionStore = defineStore('session', {
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
               let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
               let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 sessionOuvert:sessionOuvertLabel,
                 candidatureOuvert:candidatureOuvertLabel,
+                modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -100,12 +103,14 @@ export const useSessionStore = defineStore('session', {
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
               let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
               let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 sessionOuvert:sessionOuvertLabel,
                 candidatureOuvert:candidatureOuvertLabel,
+                modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -138,12 +143,14 @@ export const useSessionStore = defineStore('session', {
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
               let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
               let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 sessionOuvert:sessionOuvertLabel,
                 candidatureOuvert:candidatureOuvertLabel,
+                modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -175,12 +182,14 @@ export const useSessionStore = defineStore('session', {
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
               let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
               let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 sessionOuvert:sessionOuvertLabel,
                 candidatureOuvert:candidatureOuvertLabel,
+                modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -212,12 +221,14 @@ export const useSessionStore = defineStore('session', {
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
               let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
               let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 sessionOuvert:sessionOuvertLabel,
                 candidatureOuvert:candidatureOuvertLabel,
+                modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -346,8 +357,21 @@ export const useSessionStore = defineStore('session', {
       } finally {
         this.loading = false;
       }
+    },
+    async toggleModificationState(id){
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/etatModification`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     }
-
   },
   
 })
