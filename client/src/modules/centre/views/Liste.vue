@@ -40,7 +40,7 @@
           <div class="actions-wrapper">
             <router-link :to="{ name: 'centre-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
             <router-link :to="{ name: 'centre-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+            <v-dialog  v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>
@@ -92,6 +92,15 @@ const listeVille = reactive({ items: [] });
 const headers = reactive({ items: [] });
 const searchValue = ref("");
 const dialog = ref(false);
+console.log('Valeur de dialog avant d\'ouvrir le modal :', dialog.value);
+
+// Après avoir ouvert le modal
+dialog.value = true;
+console.log('Valeur de dialog après avoir ouvert le modal :', dialog.value);
+
+// Après avoir fermé le modal
+dialog.value = false;
+console.log('Valeur de dialog après avoir fermé le modal :', dialog.value);
 
 onMounted(()=>{
   all(); 
@@ -119,5 +128,12 @@ const del = (id) => {
 
 .actions-wrapper {
   width: 120px;
+}
+.v-dialog__content {
+  position: fixed; /* Ou relative ou absolue, selon le contexte */
+  top: 50%; /* Centrez verticalement */
+  left: 50%; /* Centrez horizontalement */
+  transform: translate(-50%, -50%);
+  z-index: 9999; /* Assurez-vous que le modal s'affiche au-dessus du reste du contenu */
 }
 </style>

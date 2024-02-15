@@ -25,23 +25,12 @@
         <template #table-actions>
           <v-btn  @click.prevent="redirectToAddSupervisseur()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
          </template>  
-        <template >
-          <div v-if="props.column.field === 'actions'">
-            <div class="actions-wrapper">
-              <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
-                <router-link :to="{ name: 'accepte-Demande', params: { id: props.row.id } }">
-                  <v-icon small flat color="green">mdi-check</v-icon> Accepte
-                </router-link>
-              </v-chip>
-            </div>
-          </div>
-        </template>
         <template #table-row="props">
           <div v-if="props.column.field === 'actions'">
             <div class="actions-wrapper">
             <router-link :to="{ name: 'admin-details', params: { id: props.row.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
             <router-link :to="{ name: 'admin-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+            <v-dialog  v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>

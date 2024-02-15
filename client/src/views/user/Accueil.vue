@@ -36,7 +36,7 @@
              </v-btn>   
           </div>
             <div v-if="demande.etatDemande==='acceptée'" class="mt-4">
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+            <v-dialog v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                  <div class="demandes"> Veuillez cliquer sur le bouton vert pour valider votre demande</div>
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
@@ -151,7 +151,6 @@ const valider = (id) => {
     //     color: 'blue'
     //   });
       dialog.value=false;
-      all();
   });
 }
 onMounted(()=>{

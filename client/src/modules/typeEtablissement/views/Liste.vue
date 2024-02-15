@@ -33,7 +33,7 @@
           <div class="actions-wrapper">
             <router-link :to="{ name: 'typeEtablissement-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
             <router-link :to="{ name: 'typeEtablissement-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
-            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+            <v-dialog  v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>
