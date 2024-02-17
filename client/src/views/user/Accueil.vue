@@ -131,12 +131,13 @@ const {dataListeForUser,etatCouleurs,}= storeToRefs(demandeStore);
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 const { removeNotification } = notificationStore;
-const {validerDemande } = demandeStore;
+const {validerDemande,allForUser } = demandeStore;
 
 const userStore = useUserStore();
 //const { notifications, modules, fonctionnalites } = storeToRefs(userStore);
 const { changeLoggedIn } = useUserStore();
 const i18n = useI18n();
+const dialog = ref(false);
 
 
 //  nom de l'application défin au niveau du fihcier .env
@@ -151,6 +152,7 @@ const valider = (id) => {
     //     color: 'blue'
     //   });
       dialog.value=false;
+      allForUser();
   });
 }
 onMounted(()=>{
