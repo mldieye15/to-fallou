@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <div v-if="inputForm.etatDemande==='obsolète' || inputForm.etatDemande==='en attente'">
-      <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
+      <v-form @submit.prevent="handleSave" ref="demandeForm" :value="formValid">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="session"
@@ -55,7 +55,10 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </div>
     <div v-else>
@@ -79,6 +82,18 @@
   import { useSessionStore } from "@/modules/session/store";
   import { useI18n } from "vue-i18n";
   import { useDemandeStore } from '@/modules/demande/store';
+  import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
+
+
+
+     
+
+const redirectToListe = () => {
+  router.push({ name: 'accueil'});
+};
 
 
   const i18n = useI18n();
@@ -116,11 +131,12 @@ const { dataListeSession } = storeToRefs(sesssionStore);
     academie: inputForm.academie,
   };
   modify(route.params.id, payload).then(() => {
-    addNotification({
-      show: true,
-      text:  i18n.t('updated'),
-      color: 'blue',
-    });
+    // addNotification({
+    //   show: true,
+    //   text:  i18n.t('updated'),
+    //   color: 'blue',
+    // });
+    toast.success(i18n.t('updated'));
     router.push({ name: 'accueil' });
   });
 };

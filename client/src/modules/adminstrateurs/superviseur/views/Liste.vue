@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
+    <p class="text-h6">{{ $t('apps.forms.user.sup') }}</p>
     
     <v-container class="my-5">
       <v-col md="12" cols="auto">
@@ -23,13 +23,13 @@
            
         > 
         <template #table-actions>
-          <v-btn  @click.prevent="redirectToAddSupervisseur()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
+          <v-btn  @click.prevent="redirectToAdd()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
          </template>  
         <template #table-row="props">
           <div v-if="props.column.field === 'actions'">
             <div class="actions-wrapper">
-            <router-link :to="{ name: 'admin-details', params: { id: props.row.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
-            <router-link :to="{ name: 'admin-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
+            <router-link :to="{ name: 'sup-details', params: { id: props.row.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
+            <router-link :to="{ name: 'sup-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
             <v-dialog  v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
@@ -61,12 +61,15 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification';
 
+
+const toast= useToast();
 const router = useRouter();
 
 const i18n = useI18n();
@@ -89,32 +92,33 @@ onMounted(()=>{
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
       supervisseur();
   });
 }
-const redirectToAddSupervisseur= () => {
-  router.push({ name: 'supervisseur-add'});
+const redirectToAdd= () => {
+  router.push({ name: 'sup-add'});
 };
 const redirectToPlanificateurs = () => {
-  router.push({ name: 'liste-planificateur' });
+  router.push({ name: 'planif-liste' });
 };
 const redirectToSupervisseurs = () => {
-  router.push({ name: 'liste-supervisseur'});
+  router.push({ name: 'sup-liste'});
 };
 const redirectToAdmins = () => {
-  router.push({ name: 'liste-admin'});
+  router.push({ name: 'admin-liste'});
 };
 const redirectToUsers = () => {
-  router.push({ name: 'liste-user'});
+  router.push({ name: 'user-liste'});
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
   background-color: white;
 }
@@ -124,4 +128,9 @@ const redirectToUsers = () => {
 .etablissement-wrapper{
  width: 110px; 
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 14px;
+  width: auto;
+  }
 </style>

@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('auth.forms.authentification.titre') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="loginForm" :value="formValid">
+    <v-form @keyup.enter="handleLogin" ref="loginForm">
       <v-text-field
         density="compact"
         prepend-inner-icon="mdi-account"
@@ -66,6 +66,10 @@ import { useNotificationStore } from "@/store/notification";
 import { useUserStore } from "@/store/user";
 import axios from '@/plugins/axios.js'
 import { useI18n } from "vue-i18n";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 
 //
 const instance = getCurrentInstance();
@@ -106,11 +110,13 @@ const handleLogin = () => {
       } else {
         router.push({ name: 'dashboard' });
       }
-      addNotification({
-        show: true,
-        text:  i18n.t('welcome')+' '+name,
-        color: 'black'
-      });
+      // addNotification({
+      //   show: true,
+      //   text:  i18n.t('welcome')+' '+name,
+      //   color: 'black'
+      // });
+      toast.success(i18n.t('welcome')+' '+name);
+
     });
   }
 }

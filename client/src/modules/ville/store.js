@@ -24,11 +24,12 @@ export const useVilleStore = defineStore('ville', {
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
-      { label: 'LibelleLong', field: 'libelleLong',width: "200px",resizable: true},
-      { label: 'Abreviation', field: 'libelleCourt',width: "100px",resizable: true },
-      { label: 'Academie', field: 'academie',width: "100px",resizable: true },
-      { label: 'Nombre de Jurys', field: 'totalJury',width: "150px" ,resizable: true},
-      { label: 'Totale Demandes', field: 'totalDemandes',width: "120px",resizable: true},
+      { label: 'LibelleLong', field: 'libelleLong'},
+      { label: 'Abreviation', field: 'libelleCourt' },
+      { label: 'Academie', field: 'academie'},
+      { label: 'Nombre de Jurys', field: 'totalJury'},
+      { label: 'Rapport', field: 'rapport'},
+      { label: 'Totale Demandes', field: 'totalDemandes'},
     ],
   }),
 
@@ -54,6 +55,7 @@ export const useVilleStore = defineStore('ville', {
             libelleCourt: element.libelleCourt,
             totalJury: element.totalJury,
             totalDemandes: element.totalDemandes,
+            rapport: element.rapportJuryDemande,
             academie: academieLabel,
             academieId:academieIdLabel,
 

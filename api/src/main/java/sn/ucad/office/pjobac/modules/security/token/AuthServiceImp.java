@@ -64,7 +64,7 @@ public class AuthServiceImp implements AuthService {
 //                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
 //            ));
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setSubject("Activation du compte");
             notificationEmail.setRecipient(entity.getEmail());
             notificationEmail.setTemplateName("validationCompte.html");
             Map<String, Object> emailVariables = new HashMap<>();
@@ -108,7 +108,7 @@ public class AuthServiceImp implements AuthService {
 //                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
 //            ));
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setSubject("Activation du compte");
             notificationEmail.setRecipient(entity.getEmail());
             notificationEmail.setTemplateName("validationCompte.html");
             Map<String, Object> emailVariables = new HashMap<>();
@@ -151,7 +151,7 @@ public class AuthServiceImp implements AuthService {
 //                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
 //            ));
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setSubject("Activation du compte");
             notificationEmail.setRecipient(entity.getEmail());
             notificationEmail.setTemplateName("validationCompte.html");
             Map<String, Object> emailVariables = new HashMap<>();
@@ -194,7 +194,7 @@ public class AuthServiceImp implements AuthService {
 //                            AppConstants.LIEN_ACTIV_COMPTE+"/"+token
 //            ));
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail de validation compte");
+            notificationEmail.setSubject("Activation du compte");
             notificationEmail.setRecipient(entity.getEmail());
             notificationEmail.setTemplateName("validationCompte.html");
             Map<String, Object> emailVariables = new HashMap<>();
@@ -369,7 +369,7 @@ public class AuthServiceImp implements AuthService {
         AppUser user = entity.orElseThrow(() -> new BusinessResourceException("UserNotFound", "Utilisateur non trouvé.", HttpStatus.NOT_FOUND));
         String resetToken = verifTokenService.genVerifToken(user);
         NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-        notificationEmail.setSubject("Mail de réinitialisation");
+        notificationEmail.setSubject("Réinitialiser le mot de passe");
         notificationEmail.setRecipient(user.getEmail());
         notificationEmail.setTemplateName("reinitialisationMpd.html");
         Map<String, Object> emailVariables = new HashMap<>();

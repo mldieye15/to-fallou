@@ -61,6 +61,9 @@
     </template>
   </vue-good-table>
   </v-container>
+  <div class="d-flex justify-end">
+  <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+</div>
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
@@ -72,7 +75,9 @@ import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter,useRoute } from "vue-router";
 
-
+const redirectToListe = () => {
+    router.push({ name: 'demande-liste'});
+  };
 const router = useRouter();
 const route = useRoute();
 const centreStore=useCentreStore();
@@ -128,7 +133,7 @@ const redirectToDemandes = (id) => {
   router.push({ name: 'affecter-DemandeByCentre', params: { id } });
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
 background-color: white;
 }
@@ -141,5 +146,10 @@ max-width: 85px;
 .active-page {
 background-color: green;
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 14px;
+  width: auto;
+  }
 </style>
 

@@ -141,6 +141,9 @@
       </v-col>
     </v-row>
   </v-container>
+<div class="d-flex justify-end">
+  <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+</div>
 </template>
 
 <script setup>
@@ -195,6 +198,9 @@ function formatDateForInput(date) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
   return formattedDate;
 }
+const redirectToListe = () => {
+  router.push({ name: 'session-liste'});
+};
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,

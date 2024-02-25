@@ -9,6 +9,10 @@ import { reactive, getCurrentInstance } from "vue";
 import { useRouter } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 
 //  
 import FormVue from "./Form.vue";
@@ -32,11 +36,12 @@ const inputForm= reactive({
 
 const handleSave = (payload) => {
   add(payload).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('added'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('added'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('added'));
     router.push( { name: 'typeEtablissement-liste'});
   });
 }

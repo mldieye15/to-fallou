@@ -39,6 +39,9 @@
     </v-container>
     
   </div>
+  <div class="d-flex justify-end">
+  <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+ </div> 
 </template>
 
 <script setup>
@@ -53,6 +56,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const i18n = useI18n();
+const redirectToListe = () => {
+    router.push({ name: 'demande-liste'});
+  };
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
@@ -74,12 +80,17 @@ const redirectToDemandes = (id) => {
   router.push({ name: 'demandeByCentre-demandes', params: { id } });
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
   background-color: white;
 }
 .v-text-field:hover {
   background-color: white;
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 13px;
+  width: auto;
+  }
 
 </style>

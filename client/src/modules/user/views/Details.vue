@@ -182,6 +182,9 @@
       </v-col>
     </v-row>
   </v-container>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToUsers"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+      </div>
 </template>
 
 <script setup>
@@ -206,7 +209,9 @@ const route = useRoute();
 const userStore = useUtilisateurStore();
 const { dataDetails, loading } = storeToRefs(userStore);
 const { one, modify } = userStore;
-
+const redirectToUsers = () => {
+  router.push({ name: 'user-liste'});
+};
 const inputForm = reactive({
   prenoms: "",
   nom: "",

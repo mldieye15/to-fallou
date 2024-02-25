@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="demandeForm" :value="formValid">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="session"

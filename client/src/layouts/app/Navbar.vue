@@ -116,6 +116,14 @@ const defaultSideBarItems = reactive({ items: [
       "icon": "mdi-view-dashboard",
       "route": "dashboard"
   },
+  {
+    "id": 14,
+    "title": "Codifications",
+    "translate": "codification",
+    "code": "codification",
+    "icon": "mdi-school",
+    "route": "codification-liste"
+  },
   
   {
       "id": 1,
@@ -229,14 +237,6 @@ const defaultSideBarItems = reactive({ items: [
     "icon": "mdi-clock ",
     "route": "typeSession-liste"
   },
-  {
-    "id": 14,
-    "title": "Codifications",
-    "translate": "codification",
-    "code": "codification",
-    "icon": "mdi-school",
-    "route": "codification-liste"
-  },
   // {
   //     "id": 3,
   //     "title": "Ville",
@@ -284,11 +284,11 @@ const handleLogout = () => {
   console.log("handleLogout clicked");
   logout().then( () => {
       router.push( { name: 'login'});
-      addNotification({
-        show: true,
-        text:  i18n.t('welcome')+' '+user.fullname,
-        color: 'black'
-      });
+      // addNotification({
+      //   show: true,
+      //   text:  i18n.t('welcome')+' '+user.fullname,
+      //   color: 'black'
+      // });
     });
 }
 

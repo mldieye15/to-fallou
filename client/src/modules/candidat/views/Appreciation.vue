@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.candidat.candidat') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="candidatForm">
+    <v-form @submit.prevent="handleSave" ref="candidatForm">
       <v-text-field 
         id="noteSupervisseur"
         prepend-inner-icon="mdi-account"
@@ -30,7 +30,11 @@
         v-model="inputForm.appreciation"
         variant="solo"
       ></v-textarea>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -42,6 +46,10 @@ import { useRouter, useRoute } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useCandidatStore } from "../store";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -62,20 +70,25 @@ const inputForm = reactive({
 noteSupervisseur:"",
 appreciation:"",
 });
-const handleSave = () => {
+const handleSave = (event) => {
+  event.preventDefault();
   const payload = {
     noteSupervisseur: inputForm.noteSupervisseur,
     appreciation: inputForm.appreciation,
   };
 appreciation(route.params.id, payload).then( () => {
-  addNotification({
-      show: true,
-      text:  i18n.t('noter'),
-      color: 'blue'
-    });
+  // addNotification({
+  //     show: true,
+  //     text:  i18n.t('noter'),
+  //     color: 'blue'
+  //   });
+  toast.success(i18n.t('note'));
   router.push( { name: 'candidat-liste'});
 });
 }
+const redirectToListe = () => {
+  router.push({ name: 'candidat-liste'});
+};
 onMounted(()=>{
 one(route.params.id ).then( () => {
   inputForm.noteSupervisseur = dataDetails.value.noteSupervisseur,

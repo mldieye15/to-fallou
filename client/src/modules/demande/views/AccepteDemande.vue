@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="demandeForm">
       <v-text-field
         prepend-inner-icon="mdi-alpha-a-circle"
         name="session"
@@ -60,8 +60,10 @@
         item-value="id"
       >
     </v-select>
-
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+     <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div> 
     </v-form>
     </v-card>
   </div>
@@ -78,6 +80,13 @@
   import { useI18n } from "vue-i18n";
   
   import { useDemandeStore } from "../store";
+  import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
+const redirectToListe = () => {
+  router.push({ name: 'demande-liste'});
+};
   const i18n = useI18n();
   
   const notificationStore = useNotificationStore();
@@ -119,11 +128,12 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     centre: inputForm.centre,
   };
   accepterDemande(route.params.id, payload).then(() => {
-    addNotification({
-      show: true,
-      text:  i18n.t('updated'),
-      color: 'blue',
-    });
+    // addNotification({
+    //   show: true,
+    //   text:  i18n.t('updated'),
+    //   color: 'blue',
+    // });
+    toast.success(i18n.t('accepted'));
     router.push({ name: 'demande-liste' });
   });
 };

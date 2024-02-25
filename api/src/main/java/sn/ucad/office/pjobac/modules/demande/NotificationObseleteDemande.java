@@ -31,7 +31,7 @@ public class NotificationObseleteDemande {
         List<Demande> demandes = dao.demandeObseleteByVille(ville);
         for (Demande demande : demandes) {
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail d'Obsoléte");
+            notificationEmail.setSubject("Demande obsolète");
             notificationEmail.setRecipient(demande.getUser().getEmail());
             notificationEmail.setTemplateName("notificationObsolet.html"); // Ajoutez le nom du modèle Thymeleaf
             Map<String, Object> emailVariables = new HashMap<>();
@@ -48,7 +48,7 @@ public class NotificationObseleteDemande {
         List<Demande> demandes = dao.allDemandeObselete();
         for (Demande demande : demandes) {
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            notificationEmail.setSubject("Mail d'Obsoléte");
+            notificationEmail.setSubject("Demande à modifier");
             notificationEmail.setRecipient(demande.getUser().getEmail());
             notificationEmail.setTemplateName("notificationUpdateObsolete.html"); // Ajoutez le nom du modèle Thymeleaf
             Map<String, Object> emailVariables = new HashMap<>();

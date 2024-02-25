@@ -11,9 +11,9 @@ export const useNotificationStore = defineStore('notification', {
   },
 
   actions: {
-    addNotification(payload) {
-      this.notifications.push(payload);;
-    },
+    // addNotification(payload) {
+    //   this.notifications.push(payload);;
+    // },
 
     removeNotification(payload) {
       this.notifications[payload].show = false;

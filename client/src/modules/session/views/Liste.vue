@@ -83,6 +83,12 @@ import { useSessionStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
+
+
 
 const i18n = useI18n();
 
@@ -104,11 +110,13 @@ onMounted(()=>{
 const toggleSessionState = (item) => {
   // Inverser l'état sessionOuvert
   sessionStore.toggleSessionState(item.id);
+  all();
 };
 const toggleCandidatureState = (item) => {
   // Inverser l'état candidatureOuvert
   if (item.sessionOuvert=== 'ouverte'){
     sessionStore.toggleCandidatureState(item.id);
+    all();
   }else{
     addNotification({
       show: true,
@@ -122,6 +130,7 @@ const toggleModificationState = (item) => {
   // Inverser l'état candidatureOuvert
   if (item.sessionOuvert=== 'ouverte'){
     sessionStore.toggleModificationState(item.id);
+    all();
   }else{
     addNotification({
       show: true,
@@ -133,11 +142,12 @@ const toggleModificationState = (item) => {
 };
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
       all();
   });

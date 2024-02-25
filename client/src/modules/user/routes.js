@@ -17,14 +17,6 @@ const userRoutes = [{
             
       },
       {
-        path: 'users',
-        name: 'liste-user',
-        component: () => import( /* webpackChunkName: 'user_liste' */ './views/ListeUser.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
-      },
-      {
         path: '/app/dashboard/users/:id',
         name: 'user-details',
         component: () => import( /* webpackChunkName: 'user_details' */ './views/Details.vue'),

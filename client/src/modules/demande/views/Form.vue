@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="demandeForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="demandeForm">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="session"
@@ -69,7 +69,10 @@
       >
     </v-select>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -83,6 +86,12 @@ import { useVilleStore } from "@/modules/ville/store";
 import { useAcademieStore } from "@/modules/academie/store";
 import { useCentreStore } from "@/modules/centre/store";
 import { useSessionStore } from "@/modules/session/store";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+const redirectToListe = () => {
+  router.push({ name: 'typeEtablissement-liste'});
+};
 
 const instance = getCurrentInstance();
 

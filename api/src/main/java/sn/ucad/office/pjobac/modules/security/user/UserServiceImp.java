@@ -80,16 +80,15 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public List<AdminResponse> user() throws BusinessResourceException {
+    public List<UserResponse> user() throws BusinessResourceException {
             log.info("Liste des supervisseurs. <all>");
             List<AppUser> users = dao.userRole();
-            List<AdminResponse> response;
+            List<UserResponse> response;
             response = users.stream()
-                    .map(mapper::userToAdminResponse)
+                    .map(mapper::toEntiteResponse)
                     .collect(Collectors.toList());
             return response;
     }
-
     @Override
     public SimplePage<UserResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des users avec pagination. <all>");

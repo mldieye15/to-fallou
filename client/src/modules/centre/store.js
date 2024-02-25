@@ -37,13 +37,13 @@ export const useCentreStore = defineStore('centre', {
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
-      { label: 'LibelleLong', field: 'libelleLong',width: "200px",resizable: true},
-      { label: 'Abreviation', field: 'libelleCourt',width: "120px",resizable: true},
-      {label: 'Type de Centre', field: 'typeCentre',width: "200px",resizable: true },
-      { label: 'Ville', field: 'ville',width: "150px" ,resizable: true},
-      { label: 'Academie', field: 'academie',width: "150px",resizable: true },
-      { label: 'Nombre de Jurys', field: 'nombreJury',width: "160px" ,resizable: true},
-      { label: 'Totale Demandes', field: 'totalDemandes',width: "120px",resizable: true},
+      { label: 'LibelleLong', field: 'libelleLong'},
+      { label: 'Abreviation', field: 'libelleCourt'},
+      {label: 'Type de Centre', field: 'typeCentre' },
+      { label: 'Ville', field: 'ville'},
+      { label: 'Academie', field: 'academie' },
+      { label: 'Nombre de Jurys', field: 'nombreJury'},
+      { label: 'Totale Demandes', field: 'totalDemandes'},
       
     ],
   }),

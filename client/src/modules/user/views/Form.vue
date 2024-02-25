@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="userForm">
+    <v-form @submit.prevent="handleSave" ref="userForm">
       <v-row style="height: 16vh">
         <v-col>
       <v-text-field 
@@ -242,7 +242,9 @@ import { useEtablissementStore } from "@/modules/etablissement/store";
 import { useCodeStore } from "@/store/codification";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
 const fonctionStore = useFonctionStore();

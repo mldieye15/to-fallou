@@ -2,7 +2,7 @@ import Middleware from '@/middlewares'
 const AppLayout = () => import(/* webpackChunkName: 'app-layout' */ "@/layouts/app/Default");
 //const userDetails = () => import( /* webpackChunkName: 'user__details' */ './views/Details.vue');
 
-const adminRoutes = [{
+const administrateurRoutes = [{
     path: '/app/dashboard/administrateurs',
     component: AppLayout,
     children: [
@@ -72,4 +72,4 @@ const adminRoutes = [{
       }
     ]
 }];
-export default adminRoutes;
+export default administrateurRoutes;

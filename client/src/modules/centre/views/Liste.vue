@@ -63,9 +63,8 @@
           </div>
         </template>
       </EasyDataTable>
-    </v-container>
-    
-  </div>
+    </v-container> 
+  </div>    
 </template>
 
 <script setup>
@@ -75,6 +74,10 @@ import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import  { useVilleStore } from "../../ville/store"
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 //     recupération liste des villes
 const villeStore = useVilleStore(); 
                         
@@ -108,11 +111,12 @@ onMounted(()=>{
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
       all();
   });

@@ -68,6 +68,10 @@ import { useAcademieStore } from "../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 
 const i18n = useI18n();
 
@@ -89,11 +93,12 @@ onMounted(()=>{
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
       all();
   });
@@ -108,5 +113,8 @@ const del = (id) => {
 }
 .container {
   width: 50%; /* Ajustez la largeur en pourcentage ou en pixels selon vos besoins */
+}
+.actions-wrapper {
+  width: 120px;
 }
 </style>

@@ -20,10 +20,20 @@
         </v-row>
         <div v-if="loading">Chargement en cours...</div>
         <div v-for="userEntry in paginatedData" :key="userEntry.userId">
-      <div class="mb-2 mt-2"><h2>{{ userEntry.user }}</h2></div>
+      <div class="mb-2 mt-2">
+        <v-row>
+          <v-col cols="6" class="pr-0">
+            <h2>{{ userEntry.user }}:{{ userEntry.code }}</h2> 
+          </v-col>
+          <v-col cols="6" class="pl-0">
+          
+          </v-col>
+        </v-row>
+</div>
       <vue-good-table
         :columns="columns"
         :rows="userEntry.demandes"
+        :resizable="true"
         > 
         <template #table-row="props">
           <span v-if="props.column.field == 'affectable'">
@@ -204,7 +214,7 @@ const redirectToAllDemandes = () => {
 };
 
 </script>
-<style scoped>
+<style>
 .v-text-field {
   background-color: white;
 }
@@ -217,4 +227,11 @@ const redirectToAllDemandes = () => {
   .active-page {
   background-color: green;
   }
+  .vgt-table td,
+  .vgt-table th {
+  font-size: 12px;
+  padding: 4px;
+  width: auto;
+  }
 </style>
+

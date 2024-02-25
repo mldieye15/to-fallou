@@ -43,6 +43,9 @@
       </v-col>
     </v-row>
   </v-container>
+  <div class="d-flex justify-end">
+        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToAcademies()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+      </div>
 </template>
 
 <script setup>
@@ -51,6 +54,7 @@ import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from "vue-i18n";
 import { useAcademieStore } from "../store";
+
 const i18n = useI18n();
 
 const academieStore= useAcademieStore()
@@ -60,7 +64,9 @@ const route = useRoute();
 
 const { dataDetails, loading } = storeToRefs(academieStore);
 const { one, } = academieStore;
-
+const redirectToAcademies = () => {
+  router.push({ name: 'academie-liste'});
+};
 const inputForm = reactive({
   libelleLong:'',
   libelleCourt: '',

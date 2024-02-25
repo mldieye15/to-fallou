@@ -28,10 +28,10 @@ spring:
   thymeleaf:
     enabled: true
   mail:
-    host: smtp.gmail.com
+    host: smtp.office365.com
     port: 587
-    username: cheikhtidianethioune98@gmail.com #noreply@gmail.com
-    password: yyiwkprpktsbsybv #6zd4WoS6 #qsuhivbkeyhxaivp
+    username: pjbac@ucad.edu.sn #noreply@gmail.com
+    password: Kun36683 #6zd4WoS6 #qsuhivbkeyhxaivp
     default-encoding: UTF-8
     properties:
       mail:

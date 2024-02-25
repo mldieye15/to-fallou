@@ -34,7 +34,11 @@ public class CentreResource {
         SimplePage<CentreResponse>  response = service.all(pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
+    @GetMapping(value = "/centre/{villeId}")
+    public ResponseEntity<List<CentreResponse>> allAvecQuota(@PathVariable String villeId) {
+        List<CentreResponse> response = service.allAvecQuota(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/all")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

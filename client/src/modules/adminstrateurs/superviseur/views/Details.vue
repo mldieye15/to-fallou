@@ -124,8 +124,11 @@
           </v-card-text>
         </v-card>
       </v-col>
-    </v-row>
+    </v-row>     
   </v-container>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToUsers"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+      </div>
 </template>
 
 <script setup>
@@ -137,7 +140,7 @@ import { useI18n } from "vue-i18n";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -150,7 +153,9 @@ const route = useRoute();
 const adminStore = useAdminStore();
 const { dataDetails, loading } = storeToRefs(adminStore);
 const { one, modify } = adminStore;
-
+const redirectToUsers = () => {
+  router.push({ name: 'sup-liste'});
+};
 const inputForm = reactive({
   prenoms: "",
   nom: "",

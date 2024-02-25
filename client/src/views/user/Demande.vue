@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.demande.demande') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="demandeForm" v-model="formValid">
+    <v-form @submit.prevent="handleSave" ref="demandeForm" v-model="formValid">
       <div v-for="(inputForm,index) in requests" :key="index">
        <v-chip color="green" class="mt-3 mb-2"><h3>Choix N°{{ index+1 }}</h3></v-chip> 
       <v-text-field
@@ -57,7 +57,10 @@
       ></v-select>
     </div>  
     </v-form>
-    <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.ajouter') }}</v-btn>
+    <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-card>
     
   </div>
@@ -74,8 +77,10 @@ import { useDemandeStore } from "@/modules/demande/store";
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 
+const toast= useToast();
 const instance = getCurrentInstance();
 
 const villeStore = useVilleStore();
@@ -88,6 +93,9 @@ const { dataListeSession,dataDetails} = storeToRefs(sessionStore);
 const route = useRoute();
 const router=useRouter();
 const {one}=sessionStore;
+const redirectToListe = () => {
+  router.push({ name: 'accueil'});
+};
 
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
@@ -109,11 +117,12 @@ const handleSave = () => {
   console.log("Payload transformé:", payload);
     add(payload)
       .then(() => {
-        addNotification({
-          show: true,
-          text: i18n.t('added'),
-          color: 'blue'
-        });
+        // addNotification({
+        //   show: true,
+        //   text: i18n.t('added'),
+        //   color: 'blue'
+        // });
+        toast.success(i18n.t('added'));
         router.push({ name: 'accueil' });
       })
   };

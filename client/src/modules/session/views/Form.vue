@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.session.session') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="sessionForm" v-model="formValid">
+    <v-form @keyup.enter="handleSave" ref="sessionForm">
       <v-row class="reduce-margin">
         <v-col>
           <v-text-field
@@ -153,7 +153,10 @@
        <div v-if="dateClotureError" class="error-message">{{ dateClotureErrorMessage }}</div>
         </v-col>
       </v-row>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.valider') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -167,6 +170,8 @@ import { useAnneeStore } from "@/modules/annee/store";
 import { useTypeSessionStore } from "@/modules/typeSession/store";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const instance = getCurrentInstance();
 
@@ -188,6 +193,9 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
+const redirectToListe = () => {
+  router.push({ name: 'session-liste'});
+};
 const dateDebutError = ref(false);
 const dateDebutErrorMessage = ref("");
 const dateOuvertureError = ref(false);

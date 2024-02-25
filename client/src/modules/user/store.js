@@ -38,7 +38,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       { text: 'Prenoms', value: 'prenoms', align: 'start', sortable: true },
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
-      // { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
+      { text: 'Code', value: 'code', align: 'start', sortable: true },
       { text: 'Email', value: 'email', align: 'start', sortable: true },
       { text: 'Username', value: 'username', align: 'start', sortable: true },
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },

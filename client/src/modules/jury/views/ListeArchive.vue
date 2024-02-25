@@ -71,6 +71,11 @@ import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
+
 const router = useRouter();
 
 const i18n = useI18n();
@@ -93,11 +98,12 @@ onMounted(()=>{
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
       all();
   });
@@ -112,5 +118,8 @@ const redirectToJurys = () => {
 }
 .v-text-field:hover {
   background-color: white;
+}
+.actions-wrapper {
+  width: 120px;
 }
 </style>

@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="userForm">
+    <v-form @submit.prevent="handleSave" ref="userForm">
       <v-row style="height: 16vh">
         <v-col>
       <v-text-field 
@@ -219,7 +219,10 @@
         <div v-if="codeError" class="error-message">{{ codeErrorMessage }}
       </div>
        </p>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+       <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToUsers">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -235,6 +238,9 @@ import { useEtablissementStore } from "@/modules/etablissement/store";
 import { useCodeStore } from "@/store/codification";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
@@ -387,6 +393,9 @@ const onUsernameInput = () => {
     // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
     checkUsernameExistence();
   }
+};
+const redirectToUsers = () => {
+  router.push({ name: 'user-liste'});
 };
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);

@@ -13,7 +13,7 @@ public interface UserService {
     public List<AdminResponse> admin() throws BusinessResourceException;
     public List<AdminResponse> planificateur() throws BusinessResourceException;
     public List<AdminResponse> supervisseur() throws BusinessResourceException;
-    public List<AdminResponse> user() throws BusinessResourceException;
+    public List<UserResponse> user() throws BusinessResourceException;
     public SimplePage<UserResponse> all(Pageable pageable) throws BusinessResourceException;
     public Optional<UserResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
     UserResponse add(UserRequest request) throws BusinessResourceException;

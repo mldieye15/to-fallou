@@ -12,7 +12,6 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
-import sn.ucad.office.pjobac.modules.demande.Demande;
 import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
@@ -22,11 +21,11 @@ import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -45,15 +44,22 @@ public class VilleServiceImp implements VilleService {
         response = all.stream()
                 .map(ville -> {
                     int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille
+                    int nombreJurys = ville.getTotalJury(); // Obtenez le nombre de jurys de l'objet Ville
+
+                    // Calculer le rapport
+                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+                    rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
+
                     VilleResponse villeResponse = mapper.toEntiteResponse(ville);
                     villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
+                    villeResponse.setRapportJuryDemande(rapport); // Ajout du rapport dans l'objet VilleResponse
                     return villeResponse;
                 })
+                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed()) // Ordonner les villes par rapport de façon décroissante
                 .collect(Collectors.toList());
 
         return response;
     }
-
     @Override
     public List<VilleResponse> getVilleByAcademie(String idAcademie) throws BusinessResourceException {
         Long myId= Long.valueOf(idAcademie.trim());
@@ -107,12 +113,24 @@ public class VilleServiceImp implements VilleService {
                             () -> new BusinessResourceException("not-found", "Aucun Ville avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<VilleResponse> response;
-            response = Optional.ofNullable(mapper.toEntiteResponse(one));
-            return response;
+            // Récupérer le total des demandes pour cette ville spécifique
+            int totalDemandes = demandeDao.totalDemandeByVille(one);
+
+            int nombreJurys = one.getTotalJury();
+                // Calculer le rapport
+                double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+                rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demande
+                // Créer le VilleResponse en incluant le total des demandes et le rapport
+                VilleResponse villeResponse = mapper.toEntiteResponse(one);
+                villeResponse.setTotalDemandes(totalDemandes);
+                villeResponse.setRapportJuryDemande(rapport);
+                Optional<VilleResponse> response;
+                response = Optional.of(villeResponse);
+                return response;
+                // Si le total des demandes est zéro, renvoyer une valeur par défaut pour le rapport
         } catch (NumberFormatException e) {
-            log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
-            throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+            log.warn("Paramètre id " + id + " non autorisé. <oneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
 

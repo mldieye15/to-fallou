@@ -14,6 +14,12 @@ import { useI18n } from "vue-i18n";
 //  
 import FormVue from "./Form.vue";
 import { useFonctionStore } from "../store";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
+
+
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -33,11 +39,12 @@ const inputForm= reactive({
 
 const handleSave = (payload) => {
   add(payload).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('added'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('added'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('added'));
     router.push( { name: 'fonction-liste'});
   });
 }

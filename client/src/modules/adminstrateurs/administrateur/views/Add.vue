@@ -9,11 +9,15 @@ import { reactive, getCurrentInstance } from "vue";
 import { useRouter } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+import { useToast } from 'vue-toastification';
 
+
+const toast= useToast();
 //  
 import FormVue from "./Form.vue";
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 const i18n = useI18n();
+
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
@@ -38,12 +42,13 @@ const inputForm= reactive({
 
 const handleSave = (payload) => {
   addAdmin(payload).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('added'),
-        color: 'blue'
-      });
-    router.push( { name: 'liste-admin'});
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('added'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('added'));
+    router.push( { name: 'admin-liste'});
   });
 }
 

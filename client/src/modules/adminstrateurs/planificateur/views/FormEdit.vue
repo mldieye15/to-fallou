@@ -6,9 +6,9 @@
       max-width="900"
       rounded="lg"
     >
-    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.planif') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="userForm">
+    <v-form @submit.prevent="handleSave" ref="userForm">
       <v-row style="height: 16vh">
         <v-col>
       <v-text-field 
@@ -50,7 +50,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
-        @blur="onMatriculeInput"
+        @input="onMatriculeInput"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -68,7 +68,26 @@
         variant="solo"
         type="date"
       ></v-text-field>
-      </v-col> -->
+      </v-col>  -->
+    </v-row>
+    <v-row style="height: 16vh">
+      <v-col>
+        <v-text-field
+        id="username"
+        prepend-inner-icon="mdi-account-circle"
+        name="username"
+        density="compact"
+        :label="$t('apps.forms.user.username')"
+        color="balck"
+        :rules="[rules.required]"
+        v-model="inputForm.username"
+        variant="solo" 
+        @input="onUsernameInput" 
+      >
+    </v-text-field> 
+    
+    <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
+      </v-col>
       <v-col>
         <v-select
         id="sexe"
@@ -83,38 +102,6 @@
         :items="['Homme', 'Femme']"
       >
     </v-select>
-      </v-col> 
-    </v-row>
-    <v-row style="height: 16vh">
-      <v-col>
-        <v-text-field
-        id="username"
-        prepend-inner-icon="mdi-account-circle"
-        name="username"
-        density="compact"
-        :label="$t('apps.forms.user.username')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.username"
-        variant="solo" 
-        @blur="onUsernameInput"  
-      >
-    </v-text-field> 
-    
-    <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
-      </v-col>
-      <v-col>
-        <v-text-field
-        id="mdpasse"
-        prepend-inner-icon="mdi-lock"
-        name="mdpasse"
-        density="compact"
-        :label="$t('apps.forms.user.mdpasse')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.mdpasse"
-        variant="solo"
-      ></v-text-field>
       </v-col>
     </v-row >
       <v-row style="height: 16vh">
@@ -142,13 +129,16 @@
         :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
-        @blur="onEmailInput"
+        @input="onEmailInput"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message ma-1">{{ emailErrorMessage }}</div>
       </v-col> 
       </v-row>
-      <v-btn block class="mt-8 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.ajouter') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToUsers">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -156,7 +146,7 @@
 
 <script setup>
 import { reactive, getCurrentInstance,watchEffect,ref} from "vue";
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
@@ -164,6 +154,9 @@ import { useEtablissementStore } from "@/modules/etablissement/store";
 import { useCodeStore } from "@/store/codification";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const instance = getCurrentInstance();
 const adminStore= useAdminStore();
@@ -242,16 +235,16 @@ const checkUsernameExistence = async () => {
   if (inputForm.username) {
     try {
       const isAvailable = await adminStore.checkUsernameExistence(inputForm.username);
-      console.log("Résultat de la vérification du nom d'admin (isAvailable) :", isAvailable);
+      console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
       if (!isAvailable) {
         usernameError.value = true;
-        usernameErrorMessage.value = "Ce nom d'admin est déjà utilisé.";
+        usernameErrorMessage.value = "Ce nom d'utilisateur est déjà utilisé.";
         console.log('usernameErrorMessage:', usernameErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du nom d'admin :", error);
+      console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
       usernameError.value = true;
-      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'admin. Veuillez réessayer.";
+      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'utilisateur. Veuillez réessayer.";
     }
   }
 };
@@ -291,7 +284,7 @@ const onEmailInput = () => {
     emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence de l'email
-    checkEmailExistence(); 
+    checkEmailExistence();
   }
 };
 const onMatriculeInput = () => {
@@ -315,6 +308,9 @@ const onUsernameInput = () => {
     // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
     checkUsernameExistence();
   }
+};
+const redirectToUsers = () => {
+  router.push({ name: 'planif-liste'});
 };
 const handleSave = () => {
   console.log("isSubmitDisabled:", isSubmitDisabled.value);

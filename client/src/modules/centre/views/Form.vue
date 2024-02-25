@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.centre.centre') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="centreForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="centreForm" >
       <v-text-field
         id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
@@ -19,7 +19,8 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
         variant="solo"
-        @blur="checkLibelleExistence"
+        @blur="onLibelleInput"
+        @keyup.enter="onLibelleInput"
       >
       </v-text-field>
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
@@ -35,6 +36,7 @@
         v-model="inputForm.libelleCourt"
         variant="solo"
         @blur="onCodeInput"
+        @keyup.enter="onCodeInput"
       ></v-text-field>
       <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
        <v-select
@@ -68,7 +70,10 @@
               item-value="id"
         ></v-select>
       
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+        <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -81,6 +86,8 @@ import { storeToRefs } from "pinia";
 import { useCentreStore } from "../store";
 import { useVilleStore } from "@/modules/ville/store";
 import { useTypeCentreStore } from "@/modules/typeCentre/store";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 
 const instance = getCurrentInstance();
@@ -153,13 +160,18 @@ const onCodeInput = () => {
     checkCodeExistence ();
   }
 };
+const onLibelleInput = () => { 
+    checkLibelleExistence ();
+};
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {
     type: Function,
   }
 });
-
+const redirectToListe = () => {
+  router.push({ name: 'centre-liste'});
+};
 const handleSave = () => {
   if(instance.refs.centreForm.validate  && !isSubmitDisabled.value){
     actionSubmit(inputForm);

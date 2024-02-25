@@ -27,7 +27,7 @@ public class MailService {
     public void sendMail(NotificationEmail notificationEmail) throws MailException, InterruptedException {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
-            messageHelper.setFrom("cheikhtidianethioune98@gmail.com");
+            messageHelper.setFrom("pjbac@ucad.edu.sn");
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
             messageHelper.setText(notificationEmail.getBody());
@@ -49,7 +49,7 @@ public class MailService {
     public void sendHtmlEmail(NotificationEmailHtml notificationEmail) throws MailException, InterruptedException {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-            messageHelper.setFrom("cheikhtidianethioune98@gmail.com");
+            messageHelper.setFrom("pjbac@ucad.edu.sn");
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
 

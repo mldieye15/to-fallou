@@ -1,15 +1,14 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.user.user') }}</p>
+    <p class="text-h6">{{ $t('apps.forms.user.admin') }}</p>
     
     <v-container class="my-5">
-        <v-col md="12" cols="auto">
-          <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
+      <v-col md="12" cols="auto">
+        <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
           <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
           <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>
           <v-btn @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="cyan-darken-1">Utilisateurs </v-btn>
         </v-col>
-  
       <vue-good-table
         :columns="columns"
         :rows="dataListeUtilisateur"
@@ -22,21 +21,10 @@
             enabled: true
           }" 
            
-        > 
+        >  
         <template #table-actions>
-          <v-btn  @click.prevent="redirectToAddPlanificateur()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
-         </template>
-        <template >
-          <div v-if="props.column.field === 'actions'">
-            <div class="actions-wrapper">
-              <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" color="green" variant="tonal">
-                <router-link :to="{ name: 'accepte-Demande', params: { id: props.row.id } }">
-                  <v-icon small flat color="green">mdi-check</v-icon> Accepte
-                </router-link>
-              </v-chip>
-            </div>
-          </div>
-        </template>
+          <v-btn  @click.prevent="redirectToAdd()" class="ma-0" variant="flat" color="cyan-darken-1"> Ajouter</v-btn>
+         </template>  
         <template #table-row="props">
           <div v-if="props.column.field === 'actions'">
             <div class="actions-wrapper">
@@ -73,21 +61,24 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-const router = useRouter();
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 
 const i18n = useI18n();
-
+const router = useRouter();
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
 const adminStore = useAdminStore();
 const { dataListeUtilisateur, columns, loading } = storeToRefs(adminStore);
-const { planificateur, destroy } = adminStore;
+const { admin, destroy } = adminStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -95,34 +86,35 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  planificateur();
+  admin();
 });
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
-      planificateur();
+      admin();
   });
 }
-const redirectToAddPlanificateur= () => {
-  router.push({ name: 'planificateur-add'});
+const redirectToAdd= () => {
+  router.push({ name: 'admin-add'});
 };
 const redirectToPlanificateurs = () => {
-  router.push({ name: 'liste-planificateur' });
+  router.push({ name: 'planif-liste' });
 };
 const redirectToSupervisseurs = () => {
-  router.push({ name: 'liste-supervisseur'});
+  router.push({ name: 'sup-liste'});
 };
 const redirectToAdmins = () => {
-  router.push({ name: 'liste-admin'});
+  router.push({ name: 'admin-liste'});
 };
 const redirectToUsers = () => {
-  router.push({ name: 'liste-user'});
+  router.push({ name: 'user-liste'});
 };
 </script>
 <style scoped>

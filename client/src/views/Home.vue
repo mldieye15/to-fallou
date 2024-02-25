@@ -31,8 +31,7 @@
         </v-col>
       </v-row>
       <v-row no-gutters class="w-100 px-12 mb-3 pb-10 justify-between">
-        <v-col cols="4">
-          <v-flex xs12 sm8 md4>
+        <!-- <v-col cols="3">
             <v-card elevation="10">
               <v-img
                 :src="dir"
@@ -43,21 +42,25 @@
                 max-width="500"
               ></v-img>
             </v-card>
-          </v-flex>
-        </v-col>
-        <v-col cols="8" justify-end>
-          <v-flex xs12 sm8 md4>
-            <h1 class="font-weight-bold mt-3 text-center">
-              Mot du Directeur
-            </h1>
-            <p class="subheading font-weight-regular pa-12 text-black">
-              Bonjour à chacun.e <br>
-              C'est un grand honneur pour moi, d'assumer depuis le 1er xxx 2018, les fonctions de Directeur de l'Office du Baccalauréat.
-              <br>Le Président de la République son excellence Monsieur Makcy SALL, en lien avec le Ministére de l'enseignement supérieur de la recherche et de l'innovation a choisi de me faire confiance pour assurer l'organisation du baccalauréat sénégalise et grantir tous les pré-requis nécessaire à cette derniére.
-              <br>C'est avec grand plaisir que j'accueille la mission qui m'est confiée et par la même occasion vous souhaiter la bienvenue dans notre plateforme de gestion des présidents de jury.
-              <br><span class="text-caption">Professeur Socé NDIAYE / Directeur de l'Office du baccalauréat</span>
-            </p>
-          </v-flex>
+        </v-col> -->
+        <v-col cols="10" justify-end class="ma-5">
+          <div class="ml-10">
+          <p class="mb-2"><strong>Responsabilités du Président de Jury :</strong></p>
+          <ul>
+            <li>Disposer d’un ordinateur portable ayant un système d’exploitation compatible avec le logiciel d’organisation de l’examen du baccalauréat</li>
+            <li>Avoir des aptitudes liées à l’utilisation d’un ordinateur portable, d’un logiciel de traitement de texte, d’un tableur, l’impression de documents, et la transmission de documents par Internet</li>
+            <li>Connaître le logiciel d’organisation de l’examen du baccalauréat</li>
+            <li>Coopérer avec le superviseur des présidents de jury</li>
+            <li>Respecter l’éthique et la déontologie de l’office du baccalauréat</li>
+          </ul>
+          <p class="mb-2 mt-3"><strong>Mission Pédagogique et Administrative :</strong></p>
+          <ul>
+            <li>Garantir l’impartialité des débats et l’égalité de traitement des candidats</li>
+            <li>Réguler harmonieusement l’ensemble des documents pédagogique et administratif du jury</li>
+            <li>Garantir qu’aucune erreur matérielle n’est commise dans les différentes opérations qui incombent au jury</li>
+            <li>Garantir la souveraineté et le secret des délibérations</li>
+          </ul>
+        </div>
         </v-col>
       </v-row>
       <v-row no-gutters class=" w-100 px-12 mb-3 pb-10 flex-sm-row">

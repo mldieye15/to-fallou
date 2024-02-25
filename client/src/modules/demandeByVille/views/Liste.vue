@@ -19,7 +19,7 @@
         <template #table-row="props">
           <div v-if="props.column.field === 'totalDemandes'">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
-              Voir demandes
+              Demandes
               <div class="ml-3">
                 <p color="teal"  size="small" variant="outlined" >
               ( {{ props.row.totalDemandes}})
@@ -28,15 +28,24 @@
             </v-btn>
           </div> 
           <div v-if="props.column.field === 'totalJury'">
-              <v-chip color="light-blue-darken-4"  size="small" variant="outlined" >
+              <v-chip color="light-blue-darken-4"  size="small" variant="flat" >
               {{ props.row.totalJury}}
             </v-chip>
+          </div>
+          <div v-if="props.column.field === 'rapport'">
+            <div :class="{ 'square-chip': true, 'red-chip': props.row.rapport === 0, 'green-chip': props.row.rapport > 0 }">
+                <span :class="{ 'red-text': props.row.rapport === 0, 'green-text': props.row.rapport > 0 }">{{ props.row.rapport }}</span>
+            </div>
+
           </div>
         </template>
       </vue-good-table>
     </v-container>
     
   </div>
+  <div class="d-flex justify-end">
+  <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+</div>
 </template>
 
 <script setup>
@@ -51,6 +60,9 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const i18n = useI18n();
+const redirectToListe = () => {
+    router.push({ name: 'demande-liste'});
+  };
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
@@ -72,7 +84,7 @@ const redirectToDemandes = (id) => {
   router.push({ name: 'demandeByVille-demandes', params: { id } });
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
   background-color: white;
 }
@@ -82,4 +94,32 @@ const redirectToDemandes = (id) => {
 .actions-wrapper {
   width: 120px;
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 14px;
+  width: auto;
+  }
+  .square-chip {
+    display: inline-block;
+    width: 30px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+.red-chip {
+    background-color: red;
+}
+
+.green-chip {
+    background-color: #00C853;
+}
+.red-text {
+    color: white; /* Couleur du texte pour le rapport 0 */
+}
+.green-text {
+    color: black; /* Couleur du texte pour le rapport supérieur à 0 */
+}
+
 </style>

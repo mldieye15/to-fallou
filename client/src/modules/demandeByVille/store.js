@@ -25,16 +25,18 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
     columns: [
-      { label: 'Nom et Prenoms', field: 'user',width: "200px",resizable: true},
-      { label: 'Session', field: 'session',width: "200px",resizable: true },
-      { label: 'Academie', field: 'academie',width: "200px",resizable: true },
-      { label: "Centre d'ecrit", field: 'centre',width: "200px" ,resizable: true},
-      // { label: 'Jury', field: 'jury',width: "100px",resizable: true},
-      { label: 'Score', field: 'note',width: "100px",resizable: true },
-      { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
-      { label: "Ordre d'Arrivee", field: 'ordreArrivee',width: "140px",resizable: true},
+      { label: 'Prenoms', field: 'prenoms'},
+      { label: 'Nom', field: 'nom'},
+      { label: 'Code', field: 'code'},
+      // { label: 'Session', field: 'session' },
+      // { label: 'Academie', field: 'academie' },
+      { label: "Centre d'ecrit", field: 'centre'},
+      // { label: 'Jury', field: 'jury'},
+      { label: 'Score', field: 'note' },
+      { label: 'Statut', field: 'etatDemande'},
+      { label: "Ordre d'Arrivee", field: 'ordreArrivee'},
       // { label: 'Rang', field: 'rang',width: "120px",resizable: true},
-      { label: 'Actions', field: 'actions',width: "100px",resizable: true }
+      { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
   }),
@@ -59,7 +61,9 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
             let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
             let sessionLabel = element.session ? element.session.libelleLong : null;
             let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
-            let nomLabel = element.user ? element.user.prenoms : null;
+            let nomLabel = element.user ? element.user.nom : null;
+            let PrenomsLabel = element.user ? element.user.prenoms : null;
+            let codeLabel = element.user ? element.user.code : null;
             let idLabel = element.user ? element.user.id : null;
             let idLabelVille = element.ville ? element.ville.id : null;
             let affectableLabel = element.affectable ? 'OUI' : 'NON';
@@ -78,7 +82,9 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               academie: academieLabel,
               session: sessionLabel,
               etatDemande: etatLabel,
-              user: nomLabel,
+              nom: nomLabel,
+              prenoms: PrenomsLabel,
+              code: codeLabel,
               centre: centreLabel,
               userId: idLabel,
               villeId: idLabelVille,

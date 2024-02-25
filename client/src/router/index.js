@@ -16,7 +16,9 @@ import typeSessionRoutes from '@/modules/typeSession/routes';
 import codificationRoutes from '@/modules/codifiction/routes';
 import userRoutes from '@/modules/user/routes';
 import candidatRoutes from '@/modules/candidat/routes';
-import adminRoutes from '@/modules/adminstrateurs/routes';
+import adminRoutes from '@/modules/adminstrateurs/administrateur/routes';
+import planifRoutes from '@/modules/adminstrateurs/planificateur/routes';
+import supRoutes from '@/modules/adminstrateurs/superviseur/routes';
 import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
 import demandeByCentreRoutes from '@/modules/demandeByCentre/routes';
 import middlewares from '@/middlewares';
@@ -203,6 +205,8 @@ const routes = [
   ...adminRoutes,
   ...demandeByVilleRoutes,
   ...demandeByCentreRoutes,
+  ...planifRoutes,
+  ...supRoutes,
 ]
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

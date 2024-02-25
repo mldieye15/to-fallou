@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.ville.ville') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="villeForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="villeForm" :value="formValid">
       <v-text-field
         id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
@@ -52,7 +52,10 @@
         item-value="id"
       ></v-select>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -64,6 +67,8 @@ import { storeToRefs } from "pinia";
 import { useAcademieStore } from "@/modules/academie/store";
 import { useVilleStore } from "../store";
 import { onMounted } from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const instance = getCurrentInstance();
 const academieStore = useAcademieStore();
@@ -100,6 +105,9 @@ const checkLibelleExistence = async () => {
       libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
     }
   }
+};
+const redirectToListe = () => {
+  router.push({ name: 'ville-liste'});
 };
 const checkCodeExistence = async () => {
   codeError.value = false;

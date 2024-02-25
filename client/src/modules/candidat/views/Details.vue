@@ -310,6 +310,9 @@
       </v-col>
     </v-row>
   </v-container>
+  <div class="d-flex justify-end">
+        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+      </div>
 </template>
 <script setup>
 import { reactive, getCurrentInstance, onMounted, watchEffect} from "vue";
@@ -333,6 +336,9 @@ const route = useRoute();
 const userStore = useCandidatStore();
 const { dataDetails, loading } = storeToRefs(userStore);
 const { one, modify } = userStore;
+const redirectToListe = () => {
+  router.push({ name: 'candidat-liste'});
+};
 
 const inputForm = reactive({
   prenoms: "",

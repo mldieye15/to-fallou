@@ -85,7 +85,7 @@ const { addNotification } = notificationStore;
 
 const userStore = useUtilisateurStore();
 const { dataListeUtilisateur, headerTable, loading } = storeToRefs(userStore);
-const { all, destroy } = userStore;
+const { all, destroy,user } = userStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -93,31 +93,32 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  all();
+  user();
 });
 
 const del = (id) => {
   destroy(id).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('deleted'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
       dialog.value=false;
-      all();
+      user();
   });
 }
 const redirectToPlanificateurs = () => {
-  router.push({ name: 'liste-planificateur' });
+  router.push({ name: 'planif-liste' });
 };
 const redirectToSupervisseurs = () => {
-  router.push({ name: 'liste-supervisseur'});
+  router.push({ name: 'sup-liste'});
 };
 const redirectToAdmins = () => {
-  router.push({ name: 'liste-admin'});
+  router.push({ name: 'admin-liste'});
 };
 const redirectToUsers = () => {
-  router.push({ name: 'liste-user'});
+  router.push({ name: 'user-liste'});
 };
 </script>
 <style scoped>

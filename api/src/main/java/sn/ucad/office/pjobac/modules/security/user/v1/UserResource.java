@@ -44,8 +44,8 @@ public class UserResource {
     @GetMapping("/users")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<AdminResponse>> user(){
-        List<AdminResponse> response = service.user();
+    public ResponseEntity<List<UserResponse>> user(){
+        List<UserResponse> response = service.user();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/admins")

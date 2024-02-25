@@ -1,6 +1,10 @@
 <template>
-  <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
   <v-container class="my-1" grid-list-xl>
+    <p class="mt-1">Ville <v-chip class="ml-2" color="green" variant="flat" size="x-small" > {{ inputForm.libelleLong }}</v-chip></p>
+    <p class="mt-1">Academie <v-chip class="ml-2" color="indigo" variant="flat" size="x-small"> {{ inputForm.academie }}</v-chip></p>
+    <p class="mt-1">Nombre de jurys <v-chip class="ml-2" color="cyan" variant="flat" size="x-small">{{ inputForm.totalJury }} </v-chip></p>
+    <p class="mt-1">Nombre de demandes <v-chip class="ml-2" color="orange-darken-4" variant="flat" size="x-small">{{ inputForm.totalDemandes }} </v-chip></p>
+    <p class="mt-1">rapport  <v-chip class="ml-2" color="yellow-accent-4" variant="flat" size="x-small">{{ inputForm.rapport }} </v-chip></p>
     <v-row class="mb-0 mx-auto pa-0"  align="center">
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
@@ -91,6 +95,9 @@
         </template>
   </vue-good-table>
   </v-container>
+  <div class="d-flex justify-end">
+  <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+</div>
 </template>
 <script setup>
 import { storeToRefs } from "pinia";
@@ -98,6 +105,7 @@ import { useDemandeByVilleStore } from "../store";
 import { onMounted, reactive, ref,computed } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useCentreStore } from "@/modules/centre/store";
+import { useVilleStore } from "@/modules/ville/store";
 import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter,useRoute } from "vue-router";
@@ -105,6 +113,9 @@ import { useRouter,useRoute } from "vue-router";
 
 const router = useRouter();
 const route = useRoute();
+const redirectToListe = () => {
+    router.push({ name: 'demande-liste'});
+  };
 const centreStore=useCentreStore();
 const { dataListeByVille} = storeToRefs(centreStore);
 
@@ -112,15 +123,33 @@ const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
-
+const villeStore=useVilleStore();
 const demandeByVilleStore = useDemandeByVilleStore();
 const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByVilleStore);
 const { demandeByVille } = demandeByVilleStore;
+const {one}=villeStore;
+const { dataDetails } = storeToRefs(villeStore);
+const inputForm = reactive({
+  libelleLong:'',
+  libelleCourt: '',
+  academie:null,
+  totalJury:null,
+  totalDemandes:null,
+  rapport:null,
+});
 
 const dialog = ref(false);
 onMounted(()=>{
 const villeId=route.params.id;
 demandeByVille(villeId)
+one(villeId ).then( () => {
+    inputForm.libelleLong = dataDetails.value.libelleLong,
+    inputForm.libelleCourt = dataDetails.value.libelleCourt,
+    inputForm.academie=dataDetails.value.academie.libelleLong,
+    inputForm.totalJury=dataDetails.value.totalJury,
+    inputForm.totalDemandes=dataDetails.value.totalDemandes,
+    inputForm.rapport=dataDetails.value.rapportJuryDemande
+  });
 console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });
 // const currentPage = ref(1);
@@ -158,7 +187,7 @@ const redirectToDemandes = (id) => {
   router.push({ name: 'accepte-DemandeByVille', params: { id } });
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
 background-color: white;
 }
@@ -171,4 +200,9 @@ max-width: 85px;
 .active-page {
 background-color: green;
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 14px;
+  width: auto;
+  }
 </style>

@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.etablissement.etablissement') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="etablissementForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="etablissementForm" :value="formValid">
       <v-text-field
         id="libelleLong"
         prepend-inner-icon="mdi-alpha-a-circle"
@@ -62,7 +62,10 @@
         item-value="id"
       ></v-select>
 
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -74,6 +77,13 @@ import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useTypeEtablissementStore } from "@/modules/typeEtablissement/store";
 import { useVilleStore } from "@/modules/ville/store";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
+    
+const redirectToListe = () => {
+  router.push({ name: 'etablissement-liste'});
+};
 
 const instance = getCurrentInstance();
 const typeEtablissementStore = useTypeEtablissementStore();

@@ -5,8 +5,11 @@
     "allrightreserved": "Tous droits réservés",
     "close": "Fermer",
     "added": "Ajout effectué avec succés!",
+    "valided":"Demande validée avec succés! ",
+    "accepted":"Demande acceptée avec succés! ",
     "updated": "Modification effectué!",
     "deleted": "Supression effectué!",
+    "note": "Note ajoutée avec succés!",
     "apple": "pas de pommes | une pomme | {count} pommes",
     "public": {
         "nav": {
@@ -80,13 +83,14 @@
             "valider": "Valider",
             "enregistrer": "Enregister",
             "delteTitle": "Supression",
-            "delteMessage": "Voulez-vous vraiment supprimer l'enregistremnet?",
+            "delteMessage": "Voulez-vous vraiment supprimer l'enregistrement?",
             "validerMessage": "Voulez-vous vraiment valider cette demande?",
             "addTitle": "Ajout",
             "modifTitle": "Modification",
             "oui": "Oui",
             "non": "Non",
             "annuler": "Annuler",
+            "retour": "Retour",
             "academie": {
                 "academie": "Académie",
                 "nom": "Académie",
@@ -136,6 +140,9 @@
             },
             "user":{
                 "user":"Utilisateur",
+                "admin":"Administrateur",
+                "planif":"Planificateur",
+                "sup":"Supervisseur",
                 "prenoms": "prenoms",
                 "nom": "nom",
                 "matricule": "matricule",

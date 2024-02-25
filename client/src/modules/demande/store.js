@@ -31,17 +31,17 @@ export const useDemandeStore = defineStore('demande', {
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
     columns: [
-      { label: 'Session', field: 'session',width: "200px",resizable: true },
-      // { label: 'Encours', field: 'encours',width: "200px",resizable: true },
-      { label: 'Academie', field: 'academie',width: "200px",resizable: true },
-      { label: 'Ville', field: 'ville',width: "200px",resizable: true},
-      { label: "Centre d'écrit", field: "centre",width: "200px" ,resizable: true},
-      // { label: 'Affectable', field: 'affectable',width: "100px",resizable: true},
-      { label: 'Score', field: 'note',width: "100px",resizable: true },
-      { label: 'Statut', field: 'etatDemande',width: "200px",resizable: true},
-      { label: "Ordre d'Arrivée", field: 'ordreArrivee',width: "150px",resizable: true},
-      // { label: 'Rang', field: 'rang',width: "120px",resizable: true},
-      { label: 'Actions', field: 'actions',width: "100px",resizable: true }
+      { label: 'Session', field: 'session',sortable: true },
+      // { label: 'Encours', field: 'encours',width: "auto",sortable: true },
+      { label: 'Academie', field: 'academie',sortable: true },
+      { label: 'Ville', field: 'ville',sortable: true},
+      { label: "Centre d'écrit", field: "centre",sortable: true},
+      // { label: 'Affectable', field: 'affectable',width: "100px",sortable: true},
+      { label: 'Score', field: 'note',sortable: true },
+      { label: 'Statut', field: 'etatDemande',sortable: true},
+      { label: "Ordre d'Arrivée", field: 'ordreArrivee',sortable: true},
+      // { label: 'Rang', field: 'rang',width: "120px",sortable: true},
+      { label: 'Actions', field: 'actions',sortable: true }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
   }),
@@ -267,8 +267,8 @@ export const useDemandeStore = defineStore('demande', {
       
           const promises = Object.keys(res).map(async (userId) => {
             const user = res[userId][0].user;
-            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null; 
-            
+            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}`: null; 
+            const codeLabel = user ? `${user.code}` : null;
             const demandes = await Promise.all(res[userId].map(async (element) => {
               let villeLabel = element.ville ? element.ville.libelleLong : null;
               let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
@@ -306,6 +306,7 @@ export const useDemandeStore = defineStore('demande', {
       
             formattedData.push({
               user: nomPrenomLabel,
+              code:codeLabel,
               userId: userId,
               demandes: demandes,
             });

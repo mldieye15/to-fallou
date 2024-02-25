@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.jury.jury') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="juryForm" v-model="formValid">
+    <v-form @submit.prevent="handleSave" ref="juryForm">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
         name="centre"
@@ -65,7 +65,10 @@
       >
       </v-text-field>
       <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
-      <v-btn block class="mt-8 mb-8" size="large" color="primary" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.ajouter') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -78,6 +81,8 @@ import { storeToRefs } from "pinia";
 import { useCentreStore } from "@/modules/centre/store";
 import { useSessionStore } from "@/modules/session/store";
 import { useJuryStore } from "../store";
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const instance = getCurrentInstance();
 const juryStore=useJuryStore();
@@ -114,7 +119,9 @@ const checkNomExistence = async () => {
     }
   }
 };
-
+const redirectToListe = () => {
+  router.push({ name: 'jury-liste'});
+};
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {

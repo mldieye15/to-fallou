@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.fonction.fonction') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="submit" ref="fonctionForm" :value="formValid">
+    <v-form @submit.prevent="handleSave" ref="fonctionForm">
       <v-text-field
         id="libelleLong"
         prepend-inner-icon="mdi-human-male-board"
@@ -45,8 +45,10 @@
         v-model="inputForm.nombrePoint"
         variant="solo"
       ></v-text-field>
-
-      <v-btn block class="mt-2 mb-8" size="large" color="primary" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>    
     </v-form>
     </v-card>
   </div>
@@ -55,6 +57,11 @@
 <script setup>
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { useFonctionStore } from "../store";
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const redirectToListe = () => {
+  router.push({ name: 'fonction-liste'});
+};
 
 const instance = getCurrentInstance();
 const fonctionStore = useFonctionStore();

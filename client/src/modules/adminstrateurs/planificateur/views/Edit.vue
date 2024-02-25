@@ -14,8 +14,12 @@ import { useI18n } from "vue-i18n";
 
 //  
 import FormVue from "./Form.vue";
-import { useAdminStore } from "../store";
+import { useAdminStore } from "../../store";
 import FormEdit from "./FormEdit.vue";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -43,12 +47,13 @@ const inputForm = reactive({
 
 const handleSave = (payload) => {
   modify(route.params.id, payload).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('updated'),
-        color: 'blue'
-      });
-    router.push( { name: 'liste-planificateur'});
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('updated'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('updated'));
+    router.push( { name: 'planif-liste'});
   });
 }
 

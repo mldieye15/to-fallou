@@ -32,6 +32,8 @@ import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -414,13 +416,14 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
             oneBrute.setEtatDemande(etatAccepter);
             int delaisValidation;
             delaisValidation = oneBrute.getSession().getDelaisValidation();
-            LocalDateTime dateRejet = LocalDateTime.now().plusHours(delaisValidation);
+            LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC).plusHours(delaisValidation);
             oneBrute.setDateRejetDemande(dateRejet);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
-            String formattedDateTime = oneBrute.dateRejetDemande.format(formatter);
-            notificationEmail.setSubject("Mail d'acceptation");
+            ZonedDateTime zonedDateTime = oneBrute.getDateRejetDemande().atZone(ZoneOffset.UTC);
+            String formattedDateTime = zonedDateTime.format(formatter) + " UTC";
+            notificationEmail.setSubject("Demande à valider");
             notificationEmail.setRecipient(oneBrute.getUser().getEmail());
             notificationEmail.setTemplateName("notificationAccepter.html"); // Ajoutez le nom du modèle Thymeleaf
             Map<String, Object> emailVariables = new HashMap<>();
