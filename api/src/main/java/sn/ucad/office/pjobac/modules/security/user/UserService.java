@@ -24,9 +24,9 @@ public interface UserService {
     AdminResponse majAdmin(AdminEditRequest request, String id)  throws NumberFormatException, BusinessResourceException;
     public String del(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<UserAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
-    public Optional<AppUser> userByUsername(String username) throws BusinessResourceException;
+//    public Optional<AppUser> userByUsername(String username) throws BusinessResourceException;
     public Optional<AppUser> userByEmail(String email) throws BusinessResourceException;
-    void addRoleToUser(String username, String nom) throws BusinessResourceException;
+    void addRoleToUser(String email, String nom) throws BusinessResourceException;
     void addRoleToUser(RoleToUserRequest request) throws BusinessResourceException;
     AppUser addForAuthService(UserRequest request) throws BusinessResourceException;
     AppUser addAdminForAuthService(AdminRequest request) throws BusinessResourceException;
@@ -35,5 +35,5 @@ public interface UserService {
     void verifyMatriculeUnique(String matricule) throws BusinessResourceException;
 
     void verifyEmailUnique(String email)throws  BusinessResourceException;
-    void verifyUsernamelUnique(String username)throws  BusinessResourceException;
+//    void verifyUsernamelUnique(String username)throws  BusinessResourceException;
 }

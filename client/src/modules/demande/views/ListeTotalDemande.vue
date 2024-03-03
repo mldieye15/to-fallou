@@ -184,7 +184,7 @@ const redirectToDemandes = (id) => {
   router.push({ name: 'accepte-Demande', params: { id } });
 };
 </script>
-<style scoped>
+<style>
 .v-text-field {
   background-color: white;
 }
@@ -196,5 +196,11 @@ const redirectToDemandes = (id) => {
   }
   .active-page {
   background-color: green;
+  }
+  .vgt-table td,
+  .vgt-table th {
+  font-size: 12px;
+  padding: 4px;
+  width: auto;
   }
 </style>

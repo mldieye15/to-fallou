@@ -76,7 +76,7 @@ public class AuthServiceImp implements AuthService {
             mailService.sendHtmlEmail(notificationEmail);
 //            userService.addRoleToUser(entity.getUsername(), "ROLE_USER");
             RoleToUserRequest roleRequest = new RoleToUserRequest();
-            roleRequest.setUsername(request.getUsername());
+            roleRequest.setEmail(request.getEmail());
             roleRequest.setRole("ROLE_USER");
             userService.addRoleToUser(roleRequest);
             UserResponse response;
@@ -119,7 +119,7 @@ public class AuthServiceImp implements AuthService {
 
             mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
-            roleRequest.setUsername(request.getUsername());
+            roleRequest.setEmail(request.getEmail());
             roleRequest.setRole("ROLE_ADMIN");
             userService.addRoleToUser(roleRequest);
             AdminResponse response;
@@ -162,7 +162,7 @@ public class AuthServiceImp implements AuthService {
 
             mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
-            roleRequest.setUsername(request.getUsername());
+            roleRequest.setEmail(request.getEmail());
             roleRequest.setRole("ROLE_PLANIFICATEUR");
             userService.addRoleToUser(roleRequest);
             AdminResponse response;
@@ -205,7 +205,7 @@ public class AuthServiceImp implements AuthService {
 
             mailService.sendHtmlEmail(notificationEmail);
             RoleToUserRequest roleRequest = new RoleToUserRequest();
-            roleRequest.setUsername(request.getUsername());
+            roleRequest.setEmail(request.getEmail());
             roleRequest.setRole("ROLE_SUPERVISSEUR");
             userService.addRoleToUser(roleRequest);
             AdminResponse response;
@@ -247,14 +247,14 @@ public class AuthServiceImp implements AuthService {
     @Override
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         try {
-            String username = verificationToken.getUser().getUsername();
-            Optional<AppUser> user = userService.userByUsername(username);
+            String email = verificationToken.getUser().getEmail();
+            Optional<AppUser> user = userService.userByEmail(email);
             if(user.get().getId() == null){
                 log.warn("Aucun utilisateur trouve avec ce token <fetchUserAndEnable>");
                 throw new BusinessResourceException("NotFoundUserByToken", "Aucun utilisateur trouve avec le token.", HttpStatus.NOT_ACCEPTABLE);
             }
             userService.activeUser(user.get(), true);
-            log.info("Utilisateur "+user.get().getUsername()+" active avec succes. <fetchUserAndEnable>");
+            log.info("Utilisateur "+user.get().getEmail()+" active avec succes. <fetchUserAndEnable>");
         } catch (NoSuchElementException e) {
             log.warn("Aucun utilisateur trouve avec ce token. <fetchUserAndEnable>.");
             throw new BusinessResourceException("NotValidToken", "Aucun utilisateur avec trouve.", HttpStatus.NOT_ACCEPTABLE);
@@ -272,14 +272,14 @@ public class AuthServiceImp implements AuthService {
         }
         Object principal = authentication.getPrincipal();
         if (principal instanceof User user) {
-            String username = user.getUsername();
-            return userService.userByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + username + " trouvé."));
+            String email = user.getUsername();
+            return userService.userByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + email + " trouvé."));
         } else {
             // Le principal est probablement de type String (nom d'utilisateur) ou autre objet
-            String username = principal.toString();
-            return userService.userByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + username + " trouvé."));
+            String email = principal.toString();
+            return userService.userByEmail(email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec le nom d'utilisateur: " + email + " trouvé."));
         }
     }
     @Override
@@ -287,7 +287,7 @@ public class AuthServiceImp implements AuthService {
         AppUser user = getCurrentUser();
         return UserDetailsResponse.builder()
                 .userId(user.getId())  // Utilisez la méthode getId() ou le champ correspondant de votre classe AppUser
-                .username(user.getUsername())
+                .email(user.getEmail())
                 .nom(user.getNom())
                 .build();
     }
@@ -296,7 +296,7 @@ public class AuthServiceImp implements AuthService {
     public AuthenticationResponse login(LoginRequest request) {
         log.warn("Login request: {} <login>", request.toString());
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.getUsername(), request.getPassword()
+                request.getEmail(), request.getPassword()
         ));
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
@@ -307,7 +307,7 @@ public class AuthServiceImp implements AuthService {
                 .orElse("");
 
         //  recuperation fullname et photo profile
-        Optional<AppUser> userBis = userService.userByUsername(request.getUsername());
+        Optional<AppUser> userBis = userService.userByEmail(request.getEmail());
         String fullName = "";
         String photo = "";
         String initiale = "";
@@ -321,7 +321,7 @@ public class AuthServiceImp implements AuthService {
                 .authenticationToken(token)
                 .refreshToken(refreshTokenService.generateRefreshToken().getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
-                .username(request.getUsername())
+                .email(request.getEmail())
                 .fullname(fullName)
                 .photo(photo)
                 .initiale(initiale)
@@ -339,12 +339,12 @@ public class AuthServiceImp implements AuthService {
     @Override
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) throws BusinessResourceException {
         refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getEmail());
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenRequest.getRefreshToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtexpirationtime()))
-                .username(refreshTokenRequest.getUsername())
+                .email(refreshTokenRequest.getEmail())
                 .build();
     }
     @Override

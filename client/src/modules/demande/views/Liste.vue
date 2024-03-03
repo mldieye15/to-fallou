@@ -211,6 +211,7 @@ const redirectToDemandes = (id) => {
 const redirectToAllDemandes = () => {
   const defaultSessionId = dataListeSession.value[0].id;
   router.push({ name: 'demandeBySession-demandes',params: { id: defaultSessionId}});
+  console.log(dataListeSession.value[0].id);
 };
 
 </script>

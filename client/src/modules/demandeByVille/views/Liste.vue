@@ -9,7 +9,7 @@
         :pagination-options="{
           enabled: true,
           mode: 'pages',
-          perPageDropdown: [5, 10, 15,20, 30, 40, 50]
+          perPageDropdown: [10, 15,20, 30, 40, 50]
           }"
          :search-options="{
             enabled: true
@@ -18,14 +18,19 @@
         >    
         <template #table-row="props">
           <div v-if="props.column.field === 'totalDemandes'">
-            <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
-              Demandes
+            <div v-if="props.row.quota===0">
+              <v-icon class="mr-1" color="teal-darken-4" style="font-size: 25px;">mdi-checkbox-marked-circle-outline</v-icon> Terminée
+            </div>
+            <div v-else>
+              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              Planifié
               <div class="ml-3">
-                <p color="teal"  size="small" variant="outlined" >
+                <p color="light-blue-darken-4"  size="small" variant="outlined" >
               ( {{ props.row.totalDemandes}})
               </p>
               </div>
             </v-btn>
+            </div>
           </div> 
           <div v-if="props.column.field === 'totalJury'">
               <v-chip color="light-blue-darken-4"  size="small" variant="flat" >

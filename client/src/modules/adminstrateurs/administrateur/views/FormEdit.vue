@@ -38,8 +38,9 @@
       </v-col>
        
     </v-row>
+
     <v-row style="height: 16vh">
-        <v-col>
+      <v-col>
       <v-text-field 
         id="matricule"
         prepend-inner-icon="mdi-card-account-details"
@@ -54,39 +55,6 @@
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
-      </v-col>
-      <!-- <v-col>
-        <v-text-field
-        id="dateNaiss"
-        prepend-inner-icon="mdi-calendar"
-        name="dateNaiss"
-        density="compact"
-        :label="$t('apps.forms.user.dateNaiss')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.dateNaiss"
-        variant="solo"
-        type="date"
-      ></v-text-field>
-      </v-col>  -->
-    </v-row>
-    <v-row style="height: 16vh">
-      <v-col>
-        <v-text-field
-        id="username"
-        prepend-inner-icon="mdi-account-circle"
-        name="username"
-        density="compact"
-        :label="$t('apps.forms.user.username')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.username"
-        variant="solo" 
-        @input="onUsernameInput" 
-      >
-    </v-text-field> 
-    
-    <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
       </v-col>
       <v-col>
         <v-select

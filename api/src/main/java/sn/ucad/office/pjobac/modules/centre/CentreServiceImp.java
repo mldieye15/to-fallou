@@ -14,16 +14,19 @@ import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreAudit;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
+import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 @Service
 @Slf4j
@@ -33,15 +36,28 @@ public class CentreServiceImp implements CentreService {
     private final CentreDao dao;
     private final VilleDao villeDao;
     private final JuryService juryService;
-
+    private  final DemandeDao demandeDao;
     @Override
     public List<CentreResponse> all() throws BusinessResourceException {
         log.info("CentreServiceImp::all");
         List<Centre> all = dao.findAll();
         List<CentreResponse> response;
         response = all.stream()
-                .map(mapper::toEntiteResponse)
+                .map(centre -> {
+                    int totalAffected= demandeDao.totalAffectedByCentre(centre);
+                    int totalJuryAffected= demandeDao.totalAffectedJuryByCentre(centre);
+                    int nombreJurys= centre.getNombreJury();
+
+                    CentreResponse centreResponse= mapper.toEntiteResponse(centre);
+                    if (nombreJurys==totalJuryAffected){
+                        centreResponse.setPlanification(true);
+                    }
+                    centreResponse.setNombreAffected(totalAffected);
+                    return  centreResponse;
+                })
+                .sorted(Comparator.comparing((CentreResponse::isPlanification)))
                 .collect(Collectors.toList());
+
         return response;
     }
 
@@ -113,9 +129,15 @@ public class CentreServiceImp implements CentreService {
                     );
             log.info("Centre avec id: " + id + " trouvé. <oneById>");
             int nombreJury = juryService.countJuryByCentre(myId);
+            int totalAffected= demandeDao.totalAffectedByCentre(one);
             one.setNombreJury(nombreJury);
+            CentreResponse centreResponse= mapper.toEntiteResponse(one);
+            if(nombreJury==totalAffected){
+                centreResponse.setPlanification(true);
+            }
+            centreResponse.setNombreAffected(totalAffected);
             Optional<CentreResponse> response;
-            response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            response = Optional.of(centreResponse);
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");

@@ -22,13 +22,13 @@ import java.util.Optional;
 public class UserDetailsServiceimpl implements UserDetailsService {
     private final UserService userService;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<AppUser> userOptional = userService.userByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<AppUser> userOptional = userService.userByEmail(email);
         AppUser user = userOptional
                 .orElseThrow(() -> new UsernameNotFoundException("No user " +
-                        "Found with username : " + username));
+                        "Found with username : " + email));
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user);
-        return new User(user.getUsername(),
+        return new User(user.getEmail(),
                 user.getMdpasse(),
                 user.isEnabled(), true, true,
                 true, authorities); // /*getAuthorities(user)*/

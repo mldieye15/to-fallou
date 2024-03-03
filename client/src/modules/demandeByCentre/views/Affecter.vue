@@ -131,6 +131,9 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     centre: inputForm.centre,
     jury: inputForm.jury,
   };
+  const redirectToCentreAfterAffected = (centreId) => {
+    router.push({ name: 'demandeByCentre-demandes', params: { id: centreId } });
+};
   affecterJury(route.params.id, payload).then(() => {
     // addNotification({
     //   show: true,
@@ -138,7 +141,8 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     //   color: 'blue',
     // });
     toast.success(i18n.t('valided'));
-    router.push({ name: 'demandeByCentre-demandes' });
+    redirectToCentreAfterAffected(inputForm.centre)
+    // router.push({ name: 'demandeByCentre-demandes' });
   });
 };
   onMounted(()=>{

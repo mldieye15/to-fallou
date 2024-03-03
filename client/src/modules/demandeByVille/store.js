@@ -34,7 +34,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       // { label: 'Jury', field: 'jury'},
       { label: 'Score', field: 'note' },
       { label: 'Statut', field: 'etatDemande'},
-      { label: "Ordre d'Arrivee", field: 'ordreArrivee'},
+      { label: "Classement", field: 'ordreArrivee'},
       // { label: 'Rang', field: 'rang',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins

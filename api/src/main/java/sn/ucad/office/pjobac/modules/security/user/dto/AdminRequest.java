@@ -15,7 +15,7 @@ public class AdminRequest {
     private String nom;
 //    private String dateNaiss;
     private String email;
-    private String username;
+//    private String username;
     private String mdpasse;
     private String profileImageUrl;
     private String sexe;

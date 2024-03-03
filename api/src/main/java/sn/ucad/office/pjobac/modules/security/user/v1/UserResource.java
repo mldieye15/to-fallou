@@ -119,15 +119,15 @@ public class UserResource {
             return ResponseEntity.ok(false);
         }
     }
-    @GetMapping("/username-availability")
-    public ResponseEntity<Boolean> verifyUsernamelUnique(@RequestParam String username) {
-        try {
-            service.verifyUsernamelUnique(username);
-            return ResponseEntity.ok(true);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.ok(false);
-        }
-    }
+//    @GetMapping("/username-availability")
+//    public ResponseEntity<Boolean> verifyUsernamelUnique(@RequestParam String username) {
+//        try {
+//            service.verifyUsernamelUnique(username);
+//            return ResponseEntity.ok(true);
+//        } catch (ResourceNotFoundException e) {
+//            return ResponseEntity.ok(false);
+//        }
+//    }
 }
 
 

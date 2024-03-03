@@ -15,7 +15,7 @@ public class AdminEditRequest {
     private String nom;
 //    private String dateNaiss;
     private String email;
-    private String username;
+//    private String username;
     private String profileImageUrl;
     private String sexe;
     private String telephone;

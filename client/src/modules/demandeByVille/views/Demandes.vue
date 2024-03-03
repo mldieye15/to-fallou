@@ -4,7 +4,15 @@
     <p class="mt-1">Academie <v-chip class="ml-2" color="indigo" variant="flat" size="x-small"> {{ inputForm.academie }}</v-chip></p>
     <p class="mt-1">Nombre de jurys <v-chip class="ml-2" color="cyan" variant="flat" size="x-small">{{ inputForm.totalJury }} </v-chip></p>
     <p class="mt-1">Nombre de demandes <v-chip class="ml-2" color="orange-darken-4" variant="flat" size="x-small">{{ inputForm.totalDemandes }} </v-chip></p>
-    <p class="mt-1">rapport  <v-chip class="ml-2" color="yellow-accent-4" variant="flat" size="x-small">{{ inputForm.rapport }} </v-chip></p>
+    <p class="mt-1">Rapport  <v-chip class="ml-2" color="yellow-accent-4" variant="flat" size="x-small">{{ inputForm.rapport }} </v-chip></p>
+    <p class="mt-1">Quota  
+        <template v-if="inputForm.quota === 0">
+            <v-chip class="ml-2" color="red-darken-4" variant="flat" size="x-small">ATTEINT</v-chip>
+        </template>
+        <template v-else>
+            <v-chip class="ml-2" color="light-blue-accent-4" variant="flat" size="x-small">{{ inputForm.quota }}</v-chip>
+        </template>
+    </p>
     <v-row class="mb-0 mx-auto pa-0"  align="center">
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
@@ -136,6 +144,7 @@ const inputForm = reactive({
   totalJury:null,
   totalDemandes:null,
   rapport:null,
+  quota:null,
 });
 
 const dialog = ref(false);
@@ -148,7 +157,8 @@ one(villeId ).then( () => {
     inputForm.academie=dataDetails.value.academie.libelleLong,
     inputForm.totalJury=dataDetails.value.totalJury,
     inputForm.totalDemandes=dataDetails.value.totalDemandes,
-    inputForm.rapport=dataDetails.value.rapportJuryDemande
+    inputForm.rapport=dataDetails.value.rapportJuryDemande,
+    inputForm.quota=dataDetails.value.quota
   });
 console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });

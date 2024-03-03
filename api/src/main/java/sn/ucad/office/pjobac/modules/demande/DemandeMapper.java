@@ -23,7 +23,7 @@ public interface DemandeMapper {
     @Mapping(source = "demande.dateDemande", target = "dateDemande")
     @Mapping(source = "demande.dateRejetDemande", target = "dateRejetDemande")
     @Mapping(source = "demande.dateConfirmationDemande", target = "dateConfirmationDemande")
-    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
+//    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
     @Mapping(source = "detailsCandidat.id", target = "detailsCandidatId")
     @Mapping(source = "detailsCandidat.affectable", target = "affectable")
     @Mapping(source = "detailsCandidat.note", target = "note")

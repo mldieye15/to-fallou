@@ -5,6 +5,7 @@ import { id } from 'date-fns/locale';
 
 const  modulesURL = '/v1/demandes';
 const demandesByCentre = modulesURL+'/demandeByCentre';
+const recap=modulesURL+'/recap';
 const affecter=modulesURL+'/affecter';
 const valider=modulesURL+'/valider';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
@@ -25,15 +26,24 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
       'déclinée':'blue-grey'
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
+      headerTable: [
+        { text: 'Jury', value: 'jury', align: 'start', sortable: true },
+        { text: "Centre d'écrit", value: 'centre', align: 'start', sortable: true },
+        { text: 'Ville', value: 'ville', align: 'start', sortable: true },
+        { text: 'Prenom', value: 'prenoms', align: 'start', sortable: true },
+        { text: 'Nom', value: 'nom', align: 'start', sortable: true },
+        { text: 'Code', value: 'code', align: 'start', sortable: true },
+      ],
     columns: [
-      { label: 'Nom et Prenoms', field: 'user'},
-      { label: 'Session', field: 'session' },
-      { label: 'Academie', field: 'academie' },
-      { label: "Centre d'ecrit", field: 'centre'},
+      { label: 'Prenoms', field: 'prenoms' },
+      { label: 'Nom', field: 'nom'},
+      // { label: 'Session', field: 'session' },
+      // { label: 'Academie', field: 'academie' },
+      // { label: "Centre d'ecrit", field: 'centre'},
       { label: 'Jury', field: 'jury'},
       { label: 'Score', field: 'note' },
       { label: 'Statut', field: 'etatDemande'},
-      { label: "Ordre d'Arrivee", field: 'ordreArrivee'},
+      { label: "Classement", field: 'ordreArrivee'},
       // { label: 'Rang', field: 'rang',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
@@ -60,7 +70,8 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
             let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
             let sessionLabel = element.session ? element.session.libelleLong : null;
             let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
-            let nomLabel = element.user ? element.user.prenoms : null;
+            let nomLabel = element.user ? element.user.nom : null;
+            let prenomsLabel = element.user ? element.user.prenoms : null;
             let idLabel = element.user ? element.user.id : null;
             let idLabelVille = element.ville ? element.ville.id : null;
             let idLabelJury = element.jury ? element.jury.id : null;
@@ -72,7 +83,6 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
     
             return {
               id: element.demandeId,
-              nom: element.nom,
               note: element.note,
               ordreArrivee: element.ordreArrivee,
               rang: element.rang,
@@ -83,7 +93,8 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
               jury:juryLabel,
               session: sessionLabel,
               etatDemande: etatLabel,
-              user: nomLabel,
+              nom: nomLabel,
+              prenoms:prenomsLabel,
               centre: centreLabel,
               userId: idLabel,
               villeId: idLabelVille,
@@ -100,6 +111,39 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
         this.error = error;
       } finally {
         this.loading = false;
+      }
+    },
+    async recap() {
+      try {
+        await axios.get(`${recap}`) 
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let juryLabel = element.jury? element.jury.numero:null;
+              let prenomLabel =element.user? element.user.prenoms:null;
+              let nomLabel =element.user? element.user.nom:null;
+              let codeLabel =element.user? element.user.code:null;
+              let centreLabel = element.centre ? element.centre.libelleLong:null;
+              return{
+              id:element.id, 
+              jury: juryLabel,
+              prenoms: prenomLabel,
+              nom: nomLabel,
+              code:codeLabel,
+              centre:centreLabel,
+              ville: villeLabel,
+              }
+            })
+
+            this.dataListe = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
       }
     }, 
     async one(demande) {

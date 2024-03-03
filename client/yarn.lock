@@ -408,6 +408,11 @@ delayed-stream@~1.0.0:
   resolved "https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz"
   integrity sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==
 
+downloadjs@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.npmjs.org/downloadjs/-/downloadjs-1.4.7.tgz"
+  integrity sha512-LN1gO7+u9xjU5oEScGFKvXhYf7Y/empUIIEAGBs1LzUq/rg5duiDrkuH5A2lQGd5jfMOb9X9usDa2oVXwJ0U/Q==
+
 entities@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/entities/-/entities-4.5.0.tgz"
@@ -516,6 +521,11 @@ fastq@^1.6.0:
   integrity sha512-wBrocU2LCXXa+lWBt8RoIRD89Fi8OdABODa/kEnyeyjS5aZO5/GNvI5sEINADqP/h8M29UHTHUb53sUu5Ihqdw==
   dependencies:
     reusify "^1.0.4"
+
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.npmjs.org/file-saver/-/file-saver-2.0.5.tgz"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
 
 fill-range@^7.0.1:
   version "7.0.1"
@@ -948,6 +958,15 @@ vue-i18n@*, vue-i18n@^9.0.0, vue-i18n@9:
     "@intlify/vue-devtools" "9.2.2"
     "@vue/devtools-api" "^6.2.1"
 
+vue-json-excel3@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.npmjs.org/vue-json-excel3/-/vue-json-excel3-1.0.19.tgz"
+  integrity sha512-ZRRO6Qoo+sO9k43P7jdO2wZuFgHEKkXWSEBeUTYPhR8CFpIQ4Cxz16XhI+o6eIm9+0XjNK/Y3RYYXAtMOHQKzA==
+  dependencies:
+    downloadjs "^1.4.7"
+    file-saver "^2.0.5"
+    xlsx "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
+
 vue-router@^4.0.0:
   version "4.2.2"
   resolved "https://registry.npmjs.org/vue-router/-/vue-router-4.2.2.tgz"
@@ -1002,6 +1021,11 @@ word-wrap@~1.2.3:
   version "1.2.3"
   resolved "https://registry.npmjs.org/word-wrap/-/word-wrap-1.2.3.tgz"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+
+"xlsx@https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz":
+  version "0.20.0"
+  resolved "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
+  integrity sha512-adg5edVTkXXGTnb0iWrc3Z47ViGgwmD47yx6VfSCZhfdKPtHcElYGs48OtcO4nwOu90Pjz5mmyl0HLcvbSRYTQ==
 
 yaml-eslint-parser@^0.3.2:
   version "0.3.2"

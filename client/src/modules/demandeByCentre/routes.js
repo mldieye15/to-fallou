@@ -15,10 +15,19 @@ const demandeByCentreRoutes = [{
           //     middleware: [Middleware.auth]
           // }
       },
+      
       {
         path: '/app/dashboard/demandesByCentre/:id',
         name: 'demandeByCentre-demandes',
         component: () => import( /* webpackChunkName: 'demande_details' */ './views/Demandes.vue'),
+      //   meta: {
+      //     middleware: [Middleware.auth]
+      // }
+      },
+      {
+        path: '/app/dashboard/RecapDemandes',
+        name: 'recap-demandes',
+        component: () => import( /* webpackChunkName: 'demande_details' */ './views/Recap.vue'),
       //   meta: {
       //     middleware: [Middleware.auth]
       // }

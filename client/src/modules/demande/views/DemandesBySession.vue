@@ -53,37 +53,10 @@
        </v-chip>
       </span> -->
       <div v-if="props.column.field === 'actions'">
-    <div class="actions-wrapper"
-     v-if="props.row.quota === 'OUI' && 
-      props.row.hasAcceptedDemande === 'NON'&&
-      props.row.affectable === 'OUI'">
-      <div v-if="props.row.etatDemande === 'en attente'">
-        <v-btn  variant="flat" color="teal" size="small" class="">
-          Affecté
-        </v-btn>
-      </div>
-      <div v-if="props.row.etatDemande === 'déclinée'" >
-        <v-btn  variant="flat" color="teal" size="small" class="">
-          réaffecté
-        </v-btn> 
-      </div>
-    </div>
-    <div v-else>
-      <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-      <v-btn  variant="flat" color="red-darken-4" size="small">
-          NON AFFECTABLE
-        </v-btn>
-    </div>
-    <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
-      <v-btn  variant="flat" color="green" size="small">
-          dèja Affecté
-        </v-btn>
-    </div>
-    <div class="actions-wrapper" v-else>
-      <v-btn  variant="flat" color="red" size="small">
-         quota atteint
-        </v-btn>
-    </div>
+    <div class="actions-wrapper">
+<v-chip  size="x-small" variant="flat">
+  archivée
+</v-chip>
     </div>
   </div>
     </template>
@@ -192,7 +165,7 @@ const redirectToSessions = (id) => {
   router.push({ name: 'demandeBySession-demandes', params: { id } });
 };
 </script>
-<style scoped>
+<style >
 .v-text-field {
 background-color: white;
 }
@@ -205,4 +178,10 @@ max-width: 85px;
 .active-page {
 background-color: green;
 }
+.vgt-table td,
+  .vgt-table th {
+  font-size: 12px;
+  padding: 4px;
+  width: auto;
+  }
 </style>

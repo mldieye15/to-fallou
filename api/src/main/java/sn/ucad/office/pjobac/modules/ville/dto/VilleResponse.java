@@ -18,6 +18,7 @@ public class VilleResponse {
     private Academie academie;
     private int totalJury;
     private int totalDemandes;
+    private int quota;
     private double rapportJuryDemande;
 
 }

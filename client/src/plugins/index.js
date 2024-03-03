@@ -12,6 +12,8 @@ import pinia from '../store'
 import router from '../router'
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
+import VueJsonExcel from 'vue-json-excel3';
+import JsonExcel from "vue-json-excel3";
 // import VueGoodTablePlugin from 'vue-good-table';
 // import 'vue-good-table/dist/vue-good-table.css'
 import Toast from "vue-toastification";
@@ -25,6 +27,8 @@ import 'vue-good-table-next/dist/vue-good-table-next.css'
 export function registerPlugins (app) {
   loadFonts()
   app.component('EasyDataTable', Vue3EasyDataTable);
+  app.component('VueJsonExcel', VueJsonExcel);
+  app.component("downloadExcel", JsonExcel);
   //app.component('AxiosPlugin', AxiosPlugin);
   app
     .use(vuetify)

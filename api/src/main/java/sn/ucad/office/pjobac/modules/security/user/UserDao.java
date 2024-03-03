@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserDao extends JpaRepository<AppUser, Long> {
-    Optional<AppUser> findByUsername(String username);
+//    Optional<AppUser> findByUsername(String username);
     Optional<AppUser> findByEmail(String email);
     Optional<AppUser> findByMatricule(String email);
     @Query("SELECT u FROM AppUser u JOIN u.roles r WHERE r.nom = 'ROLE_ADMIN'")

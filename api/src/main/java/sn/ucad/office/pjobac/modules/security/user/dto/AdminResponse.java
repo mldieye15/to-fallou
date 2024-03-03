@@ -19,7 +19,7 @@ public class AdminResponse {
     private String nom;
 //    private Date dateNaiss;
     private String email;
-    private String username;
+//    private String username;
     private String mdpasse;
     private String profileImageUrl;
     private String sexe;

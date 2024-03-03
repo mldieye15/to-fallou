@@ -133,7 +133,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.requestToEntity(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             UserResponse response = mapper.toEntiteResponse(dao.save(entity));
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -151,7 +151,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.adminRequestToUser(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -169,7 +169,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.adminRequestToUser(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -187,7 +187,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.adminRequestToUser(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -208,7 +208,7 @@ public class UserServiceImp implements UserService {
                     );
             AppUser entity = mapper.requestToEntiteUp(entiteOptional, request);
             UserResponse response = mapper.toEntiteResponse(dao.save(entity));
-            log.info("Mise à jour " + response.getUsername() + " effectué avec succés <maj>");
+            log.info("Mise à jour " + response.getEmail() + " effectué avec succés <maj>");
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -232,7 +232,7 @@ public class UserServiceImp implements UserService {
                     );
             AppUser entity = mapper.adminRequestToUserUp(entiteOptional, request);
             AdminResponse response = mapper.userToAdminResponse(dao.save(entity));
-            log.info("Mise à jour " + response.getUsername() + " effectué avec succés <maj>");
+            log.info("Mise à jour " + response.getEmail() + " effectué avec succés <maj>");
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -254,9 +254,9 @@ public class UserServiceImp implements UserService {
                             () -> new BusinessResourceException("not-found", "User avec " + id + " non trouvé(e).", HttpStatus.NOT_FOUND)
                     );
             dao.deleteById(myId);
-            log.info("Role avec id & nom: " + id + " & " + entity.getUsername() + " supprimé avec succés. <del>");
+            log.info("Role avec id & nom: " + id + " & " + entity.getEmail() + " supprimé avec succés. <del>");
             String response;
-            response = "Role: " + entity.getUsername() + " supprimée avec succés. <del>";
+            response = "Role: " + entity.getEmail() + " supprimée avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -282,17 +282,17 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    @Override
-    public Optional<AppUser> userByUsername(String username) throws BusinessResourceException {
-        try {
-            Optional<AppUser> response = dao.findByUsername(username);
-            log.info("User avec username: " + username + " trouvé. <userBy username>");
-            return response;
-        } catch (Exception ex) {
-            log.error("User by username: Une erreur inattandue est rencontrée." + ex.toString());
-            throw new BusinessResourceException("not-found", "Role avec nom: " + username + " non trouvé(e).", HttpStatus.NOT_FOUND);
-        }
-    }
+//    @Override
+//    public Optional<AppUser> userByUsername(String username) throws BusinessResourceException {
+//        try {
+//            Optional<AppUser> response = dao.findByUsername(username);
+//            log.info("User avec username: " + username + " trouvé. <userBy username>");
+//            return response;
+//        } catch (Exception ex) {
+//            log.error("User by username: Une erreur inattandue est rencontrée." + ex.toString());
+//            throw new BusinessResourceException("not-found", "Role avec nom: " + username + " non trouvé(e).", HttpStatus.NOT_FOUND);
+//        }
+//    }
 
     @Override
     public Optional<AppUser> userByEmail(String email) throws BusinessResourceException {
@@ -307,25 +307,25 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void addRoleToUser(String username, String nom) throws BusinessResourceException {
+    public void addRoleToUser(String email, String nom) throws BusinessResourceException {
         try {
-            AppUser user = this.userByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + username + " trouve."));//.get();
+            AppUser user = this.userByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + email + " trouve."));//.get();
             AppRole role = roleService.roleByNom(nom).orElseThrow(() -> new RoleNotFoundException("Aucun role avec: " + nom + " trouve."));//.get();
             user.getRoles().add(role);
-            log.warn("{} affected to username: {} with <addRoleToUser>", nom, username);
+            log.warn("{} affected to username: {} with <addRoleToUser>", nom, email);
         } catch (Exception ex) {
             log.error("User by username: Une erreur inattandue est rencontrée." + ex.toString());
-            throw new BusinessResourceException("not-found", "Role avec nom: " + username + " non trouvé(e).", HttpStatus.NOT_FOUND);
+            throw new BusinessResourceException("not-found", "Role avec nom: " + email + " non trouvé(e).", HttpStatus.NOT_FOUND);
         }
     }
 
     @Override
     public void addRoleToUser(RoleToUserRequest request) throws BusinessResourceException {
         try {
-            AppUser user = this.userByUsername(request.getUsername()).orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + request.getUsername() + " trouve."));//.get();
+            AppUser user = this.userByEmail(request.getEmail()).orElseThrow(() -> new UsernameNotFoundException("Aucun utilisateur avec: " + request.getEmail() + " trouve."));//.get();
             AppRole role = roleService.roleByNom(request.getRole()).orElseThrow(() -> new RoleNotFoundException("Aucun role avec: " + request.getRole() + " trouve."));//.get();
             user.getRoles().add(role);
-            log.info("{} affected to username: {} with <addRoleToUser>", request.getRole(), request.getUsername());
+            log.info("{} affected to username: {} with <addRoleToUser>", request.getRole(), request.getEmail());
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Affectation role to user: donnée existante ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée existante ou contrainte non respectée ", HttpStatus.CONFLICT);
@@ -342,7 +342,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.requestToEntity(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AppUser response = dao.save(entity);
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -360,7 +360,7 @@ public class UserServiceImp implements UserService {
             AppUser entity = mapper.adminRequestToUser(request);
             log.info("Debug 002-request_to_entity:  " + entity.toString());
             AppUser response = dao.save(entity);
-            log.info("Ajout " + response.getUsername() + " effectué avec succés <add>");
+            log.info("Ajout " + response.getEmail() + " effectué avec succés <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Ajout user: donnée existante ou contrainte non respectée" + e.toString());
@@ -380,7 +380,7 @@ public class UserServiceImp implements UserService {
 
             user.setEnabled(action);
             AppUser result = dao.saveAndFlush(user);
-            log.info("Utilisateur active/desactive: " + user.getUsername() + " avec succes. <maj>.");
+            log.info("Utilisateur active/desactive: " + user.getEmail() + " avec succes. <maj>.");
             return result;
         } catch (NoSuchElementException e) {
             log.warn("Aucun utilisateur avec  trouvé. <activeUser>.");
@@ -404,7 +404,7 @@ public class UserServiceImp implements UserService {
             String encodedPassword = passwordEncoder.encode(newPassword);
             user.setMdpasse(encodedPassword);
             AppUser result = dao.saveAndFlush(user);
-            log.info("Mot de passe de l'utilisateur" + user.getUsername() +   "reinitialisé:  avec succes. <maj>.");
+            log.info("Mot de passe de l'utilisateur" + user.getEmail() +   "reinitialisé:  avec succes. <maj>.");
             return result;
         } catch (NoSuchElementException e) {
             log.warn("Aucun utilisateur avec  trouvé. <resetPassword>.");
@@ -432,11 +432,11 @@ public class UserServiceImp implements UserService {
         }
 
     }
-    @Override
-    public void verifyUsernamelUnique(String username) throws BusinessResourceException {
-        if(dao.findByUsername(username).isPresent()){
-            throw new ResourceAlreadyExists("Le username  existe déjà.");
-        }
-
-    }
+//    @Override
+//    public void verifyUsernamelUnique(String username) throws BusinessResourceException {
+//        if(dao.findByUsername(username).isPresent()){
+//            throw new ResourceAlreadyExists("Le username  existe déjà.");
+//        }
+//
+//    }
 }

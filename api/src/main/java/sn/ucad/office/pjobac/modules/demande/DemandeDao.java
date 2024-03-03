@@ -19,19 +19,6 @@ import java.util.List;
 
 @Repository
 public interface DemandeDao extends JpaRepository<Demande, Long> {
-//    @Query(value = "SELECT " +
-//            "dc.id, dc.candidat_id, dc.annee_id, dc.bonus, dc.malus, dc.note_fonction, " +
-//            "dc.note_etablissement_provenance, dc.note_anciennete, dc.note, " +
-//            "dc.note_supervisseur, dc.appreciation, dc.affectable, dc.uti_cree, " +
-//            "dc.date_creation, dc.uti_modifie, dc.date_modification, " +
-//            "d.user_id, d.ville_id, d.academie_id, d.session_id, d.centre_id, d.etat_demande_id, " +
-//            "d.ordre_arrivee, d.delais_de_validation, d.date_demande, " +
-//            "d.date_rejet_demande, d.date_confirmation_demande, d.uti_cree as uti_cree_demande, " +
-//            "d.date_creation as date_creation_demande, d.uti_modifie as uti_modifie_demande, " +
-//            "d.date_modification as date_modification_demande " +
-//            "FROM details_candidat dc " +
-//            "JOIN demande d ON dc.candidat_id = d.user_id", nativeQuery = true)
-//    List<DemandeDetailsCandidat> candidatDetailsDemande();
     @Query("SELECT d FROM Demande d WHERE d.user=:user AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true) ")
     List<Demande> findByUser( @Param("user") AppUser user);
 
@@ -54,6 +41,8 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     List<Demande> demandeObseleteByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='obsolète' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
     List<Demande> allDemandeObselete();
+    @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='validée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
+    List<Demande> allDemandeValider();
     @Query("SELECT d FROM Demande d WHERE d.ville = :ville AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
     List<Demande> demandeByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.centre = :centre AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)" )
@@ -64,4 +53,9 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     List<Demande> demandeBySession();
     @Query("SELECT COUNT(d) FROM Demande d WHERE d.ville=:ville AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true) ")
     int totalDemandeByVille(@Param("ville")Ville ville);
+    @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre=:centre AND d.etatDemande.libelleLong='validée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true) ")
+    int totalAffectedByCentre(@Param("centre")Centre centre);
+    @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre=:centre AND d.etatDemande.libelleLong='validée' AND d.jury IS NOT NULL AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
+    int totalAffectedJuryByCentre(@Param("centre") Centre centre);
+
 }

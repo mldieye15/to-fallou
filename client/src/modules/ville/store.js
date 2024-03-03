@@ -29,7 +29,8 @@ export const useVilleStore = defineStore('ville', {
       { label: 'Academie', field: 'academie'},
       { label: 'Nombre de Jurys', field: 'totalJury'},
       { label: 'Rapport', field: 'rapport'},
-      { label: 'Totale Demandes', field: 'totalDemandes'},
+      // { label: 'Quota', field: 'quota'},
+      { label: 'Planification', field: 'totalDemandes'},
     ],
   }),
 
@@ -55,6 +56,7 @@ export const useVilleStore = defineStore('ville', {
             libelleCourt: element.libelleCourt,
             totalJury: element.totalJury,
             totalDemandes: element.totalDemandes,
+            quota: element.quota,
             rapport: element.rapportJuryDemande,
             academie: academieLabel,
             academieId:academieIdLabel,

@@ -64,34 +64,6 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
-              <!-- <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Date de Naissance:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.dateNaiss }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card> -->
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom d'Utilisateur:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.username }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
               <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>

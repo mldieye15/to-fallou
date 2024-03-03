@@ -108,6 +108,26 @@ const demandeStore = useDemandeStore();
 const { add } = demandeStore;
 const formValid = ref(false);
 const handleSave = () => {
+  const selectedAcademies = new Map();
+  const selectedVilles = new Set();
+  for (const inputForm of requests.value) {
+    // Vérifier les académies
+    if (selectedAcademies.has(inputForm.academie)) {
+      if (selectedAcademies.get(inputForm.academie) >= 2) {
+        toast.error("Vous ne pouvez sélectionner la même académie plus de deux fois.");
+        return; // Bloquer l'envoi du formulaire
+      }
+      selectedAcademies.set(inputForm.academie, selectedAcademies.get(inputForm.academie) + 1);
+    } else {
+      selectedAcademies.set(inputForm.academie, 1);
+    }
+    // Vérifier les villes
+    if (selectedVilles.has(inputForm.ville)) {
+      toast.error("Vous ne pouvez sélectionner la même ville plus d'une fois.");
+      return; // Bloquer l'envoi du formulaire
+    }
+    selectedVilles.add(inputForm.ville);
+  }
   console.log("Payload avant envoi:", requests.value);
     const payload = requests.value.map((inputForm) => ({
     ville: inputForm.ville,

@@ -1,6 +1,13 @@
 <template>
-  <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
+  <!-- <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p> -->
+  
   <v-container class="my-1" grid-list-xl>
+    <p class="mt-1">Centre d'ecrit <v-chip class="ml-2" color="pink-accent-3" variant="flat" size="x-small" > {{ inputForm.libelleLong }}</v-chip></p>
+    <p class="mt-1">Ville <v-chip class="ml-2" color="green" variant="flat" size="x-small" > {{ inputForm.ville }}</v-chip></p>
+    <p class="mt-1">Academie <v-chip class="ml-2" color="indigo" variant="flat" size="x-small"> {{ inputForm.academie }}</v-chip></p>
+    <p class="mt-1">Nombre de jurys <v-chip class="ml-2" color="cyan" variant="flat" size="x-small">{{ inputForm.totalJury }} </v-chip></p>
+    <p class="mt-1">jurys affectés<v-chip class="ml-2" color="orange-darken-4" variant="flat" size="x-small">{{ inputForm.totalAffecteds }} </v-chip></p>
+    <!-- <p class="mt-1">rapport  <v-chip class="ml-2" color="yellow-accent-4" variant="flat" size="x-small">{{ inputForm.rapport }} </v-chip></p> -->
     <v-row class="mb-0 mx-auto pa-0"  align="center">
     <v-spacer></v-spacer>
     <v-col class="text-right" md="8" cols="auto">
@@ -81,7 +88,7 @@ const redirectToListe = () => {
 const router = useRouter();
 const route = useRoute();
 const centreStore=useCentreStore();
-const { dataListeByCentre} = storeToRefs(centreStore);
+const { dataDetails} = storeToRefs(centreStore);
 
 const i18n = useI18n();
 
@@ -91,11 +98,25 @@ const { addNotification } = notificationStore;
 const demandeByCentreStore = useDemandeByCentreStore();
 const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByCentreStore);
 const { demandeByCentre } = demandeByCentreStore;
-
+const {one}=centreStore;
+const inputForm = reactive({
+  libelleLong:'',
+  ville:null,
+  academie:null,
+  totalJury:null,
+  totalAffecteds:null,
+});
 const dialog = ref(false);
 onMounted(()=>{
-const CentreId=route.params.id;
-demandeByCentre(CentreId)
+const centreId=route.params.id;
+demandeByCentre(centreId)
+one(centreId ).then( () => {
+    inputForm.libelleLong = dataDetails.value.libelleLong,
+    inputForm.ville=dataDetails.value.ville.libelleLong,
+    inputForm.academie=dataDetails.value.ville.academie.libelleLong,
+    inputForm.totalJury=dataDetails.value.nombreJury,
+    inputForm.totalAffecteds=dataDetails.value.nombreAffected
+  });
 console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });
 // const currentPage = ref(1);

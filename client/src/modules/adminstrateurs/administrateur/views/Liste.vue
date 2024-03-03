@@ -129,7 +129,7 @@ const redirectToUsers = () => {
 }
 .vgt-table td,
   .vgt-table th {
-  font-size: 14px;
+  font-size: 12px;
   width: auto;
   }
 </style>

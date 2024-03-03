@@ -20,14 +20,14 @@ export const useUserStore = defineStore('user', {
       username: ''
     },*/
     user: {
-      username: '',
+      email: '',
       fullname: '',
       photo: '',
       initiale: '',
       role:'',
     },
     refreshToken:'',
-    username:'',
+    email:'',
     users: [],
     user: null,
     loading: false,
@@ -39,7 +39,7 @@ export const useUserStore = defineStore('user', {
     getUerDetails: (state) => state.userDetails,
     getUser: (state) => state.user,
     getRefreshToken: (state) => state.refreshToken,
-    getUsername: (state) => state.username,
+    getEmail: (state) => state.email,
     getRole: (state) => state.role,
     getError: (state) => state.error
   },
@@ -59,10 +59,10 @@ export const useUserStore = defineStore('user', {
           if(response.status === 200 && response.data.authenticationToken){
             localStorage.setItem('token', response.data.authenticationToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
-            localStorage.setItem('username', response.data.username);
+            localStorage.setItem('email', response.data.email);
             localStorage.setItem('role', response.data.role);
             this.user = {
-              username: response.data.username,
+              email: response.data.email,
               fullname: response.data.fullname,
               photo: response.data.photo,
               initiale: response.data.initiale,
@@ -71,7 +71,7 @@ export const useUserStore = defineStore('user', {
             console.log(this.user);
             this.changeLoggedIn(true);
             this.refreshToken = response.data.refreshToken;
-            this.username = response.data.username;
+            this.email = response.data.email;
             axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.authenticationToken}`;
             resolve(response);
           } else{
@@ -91,10 +91,10 @@ export const useUserStore = defineStore('user', {
       //this.user = null;
       this.loading = true;
       let refreshTokenLocal = localStorage.getItem('refreshToken');//(this.refreshToken == " ") ? localStorage.getItem('refreshToken') : this.refreshToken;
-      let usernameLocal = localStorage.getItem('username'); // this.username || localStorage.getItem('username');
+      let emailLocal = localStorage.getItem('email'); // this.email || localStorage.getItem('email');
       const payload = {
         refreshToken: refreshTokenLocal, //this.refreshToken,
-        username: usernameLocal //this.username
+        email: emailLocal //this.username
       };
       //console.log(payload);
       try {
@@ -121,7 +121,7 @@ export const useUserStore = defineStore('user', {
       this.loading = true;
       const payload = {
         refreshToken: this.refreshToken,
-        username: this.username
+        email: this.email
       };
       console.log(payload);
       try {
@@ -129,16 +129,16 @@ export const useUserStore = defineStore('user', {
           if(response.status === 200 && response.data.authenticationToken){
             localStorage.setItem('token', response.data.authenticationToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
-            localStorage.setItem('username', response.data.username);
+            localStorage.setItem('email', response.data.email);
             this.user = {
-              username: response.data.username,
+              email: response.data.email,
               fullname: response.data.fullname,
               photo: response.data.photo,
               initiale: response.data.initiale
             };
             this.changeLoggedIn(true);
             this.refreshToken = response.data.refreshToken;
-            this.username = response.data.username;
+            this.email = response.data.email;
           }
         })
       } catch (error) {
@@ -162,11 +162,11 @@ export const useUserStore = defineStore('user', {
     resetCredentials() {
       this.changeLoggedIn(false);
       localStorage.removeItem('refreshToken');
-      localStorage.removeItem('username');
+      localStorage.removeItem('email');
       localStorage.removeItem('token');
       this.user = null;
       this.refreshToken = "";
-      this.username = "";
+      this.email = "";
     },
     async resetPassword(email) {
       try {

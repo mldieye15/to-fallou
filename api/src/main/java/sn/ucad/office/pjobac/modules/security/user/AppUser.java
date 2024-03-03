@@ -24,7 +24,7 @@ import java.util.Date;
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username"),
+//                @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email"),
                 @UniqueConstraint(columnNames = "code")
         })
@@ -69,10 +69,10 @@ public class AppUser {
     @Size(min=5, max=100, message="Email doit etre comprise entre 5 et 100 cracteres")
     private String email;
 
-    @NotNull
-    @Size(min=3, max=50, message="username doit etre comprise entre 3 et 50 cracteres")
-    @Column(unique = true)
-    private String username;
+//    @NotNull
+//    @Size(min=3, max=50, message="username doit etre comprise entre 3 et 50 cracteres")
+//    @Column(unique = true)
+//    private String username;
 
     @NotNull
     @Size(min=6, max=255, message="mot de passe doit etre comprise entre 6 et 255 cracteres")

@@ -16,7 +16,7 @@
         :label="$t('auth.forms.authentification.username')"
         type="text"
         variant="underlined"
-        v-model="userForm.username"
+        v-model="userForm.email"
         color="balck"
       ></v-text-field>
 
@@ -87,7 +87,7 @@ const showPwd = ref(false);
 
 const userForm = reactive({
   //username:'',
-  username:'',
+  email:'',
   password:''
 });
 
@@ -104,7 +104,7 @@ const handleLogin = () => {
      login(userForm).then( () => {
       console.log("Debug 2: ",userForm);
       const role = localStorage.getItem('role');
-      const name = localStorage.getItem('username');
+      const name = localStorage.getItem('email');
       if (role === 'ROLE_USER') {
         router.push({ name: 'accueil' });
       } else {

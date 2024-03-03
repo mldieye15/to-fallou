@@ -11,11 +11,11 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu transition="slide-y-transition">
-        <template v-slot:activator="{ props }">
+        <!-- <template v-slot:activator="{ props }">
           <v-btn text v-bind="props" >
             <v-icon left size="36" class="text-white">mdi-apps</v-icon>
           </v-btn>
-        </template>
+        </template> -->
         <v-list flat >
           <v-list-item  v-for="link in modules" :key="link.id" router  class="link-item active">
             <v-list-item-title @click="loadFonction(link.id)">{{link.libelle}}</v-list-item-title>

@@ -77,6 +77,10 @@ import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 const router = useRouter();
 const i18n = useI18n();
 

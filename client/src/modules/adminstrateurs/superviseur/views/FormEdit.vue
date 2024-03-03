@@ -36,10 +36,10 @@
         variant="solo"
       ></v-text-field>
       </v-col>
-       
+         
     </v-row>
     <v-row style="height: 16vh">
-        <v-col>
+      <v-col>
       <v-text-field 
         id="matricule"
         prepend-inner-icon="mdi-card-account-details"
@@ -54,39 +54,6 @@
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
-      </v-col>
-      <!-- <v-col>
-        <v-text-field
-        id="dateNaiss"
-        prepend-inner-icon="mdi-calendar"
-        name="dateNaiss"
-        density="compact"
-        :label="$t('apps.forms.user.dateNaiss')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.dateNaiss"
-        variant="solo"
-        type="date"
-      ></v-text-field>
-      </v-col>  -->
-    </v-row>
-    <v-row style="height: 16vh">
-      <v-col>
-        <v-text-field
-        id="username"
-        prepend-inner-icon="mdi-account-circle"
-        name="username"
-        density="compact"
-        :label="$t('apps.forms.user.username')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.username"
-        variant="solo" 
-        @input="onUsernameInput" 
-      >
-    </v-text-field> 
-    
-    <div v-if="usernameError" class="error-message">{{ usernameErrorMessage }}</div> 
       </v-col>
       <v-col>
         <v-select
@@ -177,39 +144,16 @@ const { inputForm, actionSubmit } = defineProps({
   }
 });
 
-const codeError = ref(false);
-const codeErrorMessage = ref("");
+
 const emailError = ref(false);
 const emailErrorMessage = ref("");
-const usernameError = ref(false);
-const usernameErrorMessage = ref("");
 const matriculeError = ref("");
 const matriculeErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
 watchEffect(() => {
-  isSubmitDisabled.value = codeError.value||emailError.value ||matriculeError.value||usernameError.value
+  isSubmitDisabled.value =emailError.value ||matriculeError.value
 });
 
-const checkCodeValidity = async () => {
-  codeError.value = false;
-  codeErrorMessage.value = "";
-
-  if (inputForm.code && inputForm.email) {
-    try {
-      const isCodeValid = await codeStore.verifyCode(inputForm.code, inputForm.email);
-      console.log("Après la vérification de l'e-mail");
-
-      if (!isCodeValid) {
-        codeError.value = true;
-        codeErrorMessage.value = "Code invalide. Veuillez vérifier le code saisi.";
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du code :", error);
-      codeError.value = true;
-      codeErrorMessage.value = "Erreur lors de la vérification du code. Veuillez réessayer.";
-    }
-  }
-};
 const checkEmailExistence = async () => {
   emailError.value = false;
   emailErrorMessage.value = "";
@@ -226,25 +170,6 @@ const checkEmailExistence = async () => {
       console.error("Erreur lors de la vérification de l'email :", error);
       emailError.value = true;
       emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
-    }
-  }
-};
-const checkUsernameExistence = async () => {
-  usernameError.value = false;
-  usernameErrorMessage.value = "";
-  if (inputForm.username) {
-    try {
-      const isAvailable = await adminStore.checkUsernameExistence(inputForm.username);
-      console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
-      if (!isAvailable) {
-        usernameError.value = true;
-        usernameErrorMessage.value = "Ce nom d'utilisateur est déjà utilisé.";
-        console.log('usernameErrorMessage:', usernameErrorMessage);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
-      usernameError.value = true;
-      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'utilisateur. Veuillez réessayer.";
     }
   }
 };
@@ -296,17 +221,6 @@ const onMatriculeInput = () => {
   } else {
     // Sinon, effectue la vérification normale de l'existence du matricule
     checkMatriculeExistence();
-  }
-};
-const onUsernameInput = () => {
-  // Vérifie s'il y a des espaces dans le nom d'utilisateur
-  if (/\s/.test(inputForm.username)) {
-    // Si des espaces sont trouvés, affiche un message d'erreur
-    usernameError.value = true;
-    usernameErrorMessage.value = "Le nom d'utilisateur ne doit pas contenir d'espaces.";
-  } else {
-    // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
-    checkUsernameExistence();
   }
 };
 const redirectToUsers = () => {

@@ -128,6 +128,9 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     academie: inputForm.academie,
     centre: inputForm.centre,
   };
+  const redirectToVilleAfterAccept = (villeId) => {
+    router.push({ name: 'demandeByVille-demandes', params: { id: villeId } });
+};
   accepterDemande(route.params.id, payload).then(() => {
     // addNotification({
     //   show: true,
@@ -135,7 +138,7 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     //   color: 'blue',
     // });
     toast.success(i18n.t('accepted'));
-    router.push({ name: 'demandeByVille-demandes' });
+    redirectToVilleAfterAccept(inputForm.ville);
   });
 };
 onMounted(() => {

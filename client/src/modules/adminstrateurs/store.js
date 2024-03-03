@@ -16,7 +16,6 @@ const planificateurs= modulesURL+'/planificateurs';
 const supervisseurs= modulesURL+'/supervisseurs';
 const add= modulesURL+'/';
 const emailAvailability = modulesURL +'/email-availability';
-const usernameAvailability = modulesURL +'/username-availability';
 const matriculeAvailability = modulesURL +'/matricule-availability';
 
 export const useAdminStore = defineStore('admin', {
@@ -42,7 +41,7 @@ export const useAdminStore = defineStore('admin', {
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
       // { text: 'Date de Naissance', value: 'dateNaiss', align: 'start', sortable: true },
       { text: 'Email', value: 'email', align: 'start', sortable: true },
-      { text: 'Username', value: 'username', align: 'start', sortable: true },
+      // { text: 'Username', value: 'username', align: 'start', sortable: true },
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
@@ -54,7 +53,7 @@ export const useAdminStore = defineStore('admin', {
       { label: 'Matricule', field: 'matricule'},
       // { label: 'Date de Naissance', field: 'dateNaiss',width: "200px" ,resizable: true},
       { label: 'Email', field: 'email'},
-      { label: 'Username', field: 'username'},
+      // { label: 'Username', field: 'username'},
       { label: 'Sexe', field: 'sexe'},
       { label: 'Telephone', field: 'telephone'},
       { label: 'Actions', field: 'actions' }
@@ -82,7 +81,7 @@ export const useAdminStore = defineStore('admin', {
               matricule: element.matricule,
               // dateNaiss: this.formatDate(element.dateNaiss),
               email: element.email,
-              username: element.username,
+              // username: element.username,
               code: element.code,
               // mdpasse: element.mdpasse,
               sexe: element.sexe,
@@ -117,7 +116,7 @@ export const useAdminStore = defineStore('admin', {
                 matricule: element.matricule,
                 // dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
-                username: element.username,
+                telephone: element.telephone,
                 sexe: element.sexe,
               }
               
@@ -146,7 +145,7 @@ export const useAdminStore = defineStore('admin', {
                 matricule: element.matricule,
                 // dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
-                username: element.username,
+                // username: element.username,
                 sexe: element.sexe,
                 telephone: element.telephone
               }
@@ -176,7 +175,7 @@ export const useAdminStore = defineStore('admin', {
                 matricule: element.matricule,
                 // dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
-                username: element.username,
+                // username: element.username,
                 sexe: element.sexe,
                 telephone: element.telephone
               }
@@ -206,7 +205,7 @@ export const useAdminStore = defineStore('admin', {
                 matricule: element.matricule,
                 // dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
-                username: element.username,
+                // username: element.username,
                 code: element.code,
                 sexe: element.sexe,
                 telephone: element.telephone,
@@ -331,17 +330,6 @@ export const useAdminStore = defineStore('admin', {
         return true;
       } catch (error) {
         console.error("Erreur lors de la vérification de l'email :", error);
-        return false;
-      }
-    },
-    async checkUsernameExistence(username) {
-      try {
-        const response = await axios.get(`${usernameAvailability}?username=${username}`);
-        console.log("Réponse de usernameAvailability :", response);
-        response.data=response.data.isAvailable;
-        return true;
-      } catch (error) {
-        console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
         return false;
       }
     },

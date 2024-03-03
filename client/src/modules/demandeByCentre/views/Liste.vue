@@ -3,6 +3,12 @@
     <p class="text-h6">{{ $t('apps.forms.centre.centre') }}</p>
     
     <v-container class="my-5">
+      <v-col class="text-right" md="8" cols="auto">
+      <v-btn  @click.prevent="redirectToRecap()" class="ma-1" variant="flat" color="cyan-darken-1">Récapitulatif</v-btn>
+      <v-btn  @click.prevent="redirectToCentres()" class="ma-1" variant="flat" color="cyan-darken-1">Planification des centres secondaires</v-btn>
+      <!-- <v-chip  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="blue"> Administrateurs</v-chip>
+      <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
+    </v-col>
       <vue-good-table
         :columns="columns"
         :rows="dataListeCentre"
@@ -18,16 +24,19 @@
         >    
         <template #table-row="props">
           <div v-if="props.column.field === 'totalDemandes'">
-            <router-link :to="{ name: 'admin-details', params: { id: props.row.id } }"> 
-            </router-link>
-            <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
-              Voir demandes
+            <div v-if="props.row.planification==='OUI'">
+              <v-icon class="mr-1" color="teal-darken-4" style="font-size: 25px;">mdi-checkbox-marked-circle-outline</v-icon> Terminée
+            </div>
+            <div v-else>
+              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              Planifié
               <div class="ml-3">
-                <p color="teal"  size="small" variant="outlined" >
+                <p color="light-blue-darken-4"  size="small" variant="outlined" >
               ( {{ props.row.totalDemandes}})
               </p>
               </div>
             </v-btn>
+            </div>
           </div> 
           <div v-if="props.column.field === 'nombreJury'">
               <v-chip color="light-blue-darken-4"  size="small" variant="outlined" >
@@ -78,6 +87,9 @@ onMounted(()=>{
 
 const redirectToDemandes = (id) => {
   router.push({ name: 'demandeByCentre-demandes', params: { id } });
+};
+const redirectToRecap = () => {
+  router.push({ name: 'recap-demandes'});
 };
 </script>
 <style>

@@ -41,7 +41,7 @@ public class Demande {
     private Jury jury;
     @ManyToOne
     private EtatDemande etatDemande;
-    private Integer ordreArrivee;
+//    private Integer ordreArrivee;
     private Integer rang;
     protected LocalDateTime dateDemande=LocalDateTime.now();
     protected LocalDateTime dateRejetDemande;

@@ -8,6 +8,7 @@
     "valided":"Demande validée avec succés! ",
     "accepted":"Demande acceptée avec succés! ",
     "updated": "Modification effectué!",
+    "registre": "Inscription reussie!",
     "deleted": "Supression effectué!",
     "note": "Note ajoutée avec succés!",
     "apple": "pas de pommes | une pomme | {count} pommes",
@@ -39,7 +40,7 @@
         "forms":{
             "authentification": {
                 "titre": "Auhentification",
-                "username": "Nom d'utilisateur",
+                "username": "Email",
                 "mdp": "Mot de passe",
                 "mdpoublie": "Mot de passe oublié?",
                 "btnconn": "Se connecter",

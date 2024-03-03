@@ -20,9 +20,9 @@ public class VerificationTokenServiceImp implements VerificationTokenService {
     @Override
     public String genVerifToken(AppUser user) throws BusinessResourceException {
         try {
-            log.info("Debug 001-generation verifcation token for:  "+user.getUsername());
+            log.info("Debug 001-generation verifcation token for:  "+user.getEmail());
             VerificationToken verificationToken = dao.save( mapper.getVerifToken(user) ); //mapper.getVerifToken(user);
-            log.info("Debug 002: token {} generated for user {}:  ", verificationToken.getToken(), user.getUsername());
+            log.info("Debug 002: token {} generated for user {}:  ", verificationToken.getToken(), user.getEmail());
             return verificationToken.getToken();
         } catch (DataIntegrityViolationException e) {
             log.error("Génération token de vérification: donnée en doublon ou contrainte non respectée");

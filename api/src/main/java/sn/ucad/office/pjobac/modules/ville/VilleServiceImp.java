@@ -44,18 +44,21 @@ public class VilleServiceImp implements VilleService {
         response = all.stream()
                 .map(ville -> {
                     int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille
-                    int nombreJurys = ville.getTotalJury(); // Obtenez le nombre de jurys de l'objet Ville
-
+                    int nombreJurys = ville.getTotalJury();// Obtenez le nombre de jurys de l'objet Ville
+                    int totalAffected=dao.totalDemandeAccepteOrValideByVille(ville);
+                    int quota= nombreJurys - totalAffected;
                     // Calculer le rapport
                     double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
                     rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
 
                     VilleResponse villeResponse = mapper.toEntiteResponse(ville);
                     villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
-                    villeResponse.setRapportJuryDemande(rapport); // Ajout du rapport dans l'objet VilleResponse
+                    villeResponse.setRapportJuryDemande(rapport);
+                    villeResponse.setQuota(quota);// Ajout du rapport dans l'objet VilleResponse
                     return villeResponse;
                 })
-                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed()) // Ordonner les villes par rapport de façon décroissante
+                .sorted(Comparator.comparingInt(VilleResponse::getQuota) // Trie par quota décroissant
+                        .thenComparingDouble(VilleResponse::getRapportJuryDemande).reversed()) // Puis par rapport du jury à la demande décroissant
                 .collect(Collectors.toList());
 
         return response;
@@ -81,7 +84,7 @@ public class VilleServiceImp implements VilleService {
         academie=academieDao.findById(myId)
                 .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + academieId));
         AppUser currentUser = authService.getCurrentUser();
-        log.info("User: {}", currentUser.getUsername());
+        log.info("User: {}", currentUser.getEmail());
         log.info("Academie: {}", academie.getLibelleLong());
         List<Ville> villes=dao.availableVillesForUserAndAcademy(currentUser,academie);
         List<VilleResponse> response;
@@ -117,6 +120,8 @@ public class VilleServiceImp implements VilleService {
             int totalDemandes = demandeDao.totalDemandeByVille(one);
 
             int nombreJurys = one.getTotalJury();
+            int totalAffected=dao.totalDemandeAccepteOrValideByVille(one);
+            int quota= nombreJurys - totalAffected;
                 // Calculer le rapport
                 double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
                 rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demande
@@ -124,6 +129,7 @@ public class VilleServiceImp implements VilleService {
                 VilleResponse villeResponse = mapper.toEntiteResponse(one);
                 villeResponse.setTotalDemandes(totalDemandes);
                 villeResponse.setRapportJuryDemande(rapport);
+                villeResponse.setQuota(quota);
                 Optional<VilleResponse> response;
                 response = Optional.of(villeResponse);
                 return response;

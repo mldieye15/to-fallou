@@ -12,7 +12,7 @@ import lombok.ToString;
 @ToString
 public class RoleToUserRequest {
     @NotBlank
-    private String username;
+    private String email;
     @NotBlank
     private String role;
 }

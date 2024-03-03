@@ -81,6 +81,13 @@ public class DemandeResource {
         Map<Long, List<DemandeDetailsCandidatResponse>> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/recap")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeResponse>> recap() {
+        List<DemandeResponse> response = service.recaptDemandes();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/demandeByVille/{villeId}")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
@@ -182,16 +189,16 @@ public class DemandeResource {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @GetMapping("/updateOrderByVille")
-    public ResponseEntity<String> updateOrderByVille() {
-        try {
-            ordreArrive.updateOrderByVille();
-            return ResponseEntity.ok("Mise à jour réussie de l'ordre d'arrivée par ville.");
-        } catch (BusinessResourceException e) {
-            // Gérer les exceptions liées aux ressources métier
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'ordre d'arrivée.");
-        }
-    }
+//    @GetMapping("/updateOrderByVille")
+//    public ResponseEntity<String> updateOrderByVille() {
+//        try {
+//            ordreArrive.updateOrderByVille();
+//            return ResponseEntity.ok("Mise à jour réussie de l'ordre d'arrivée par ville.");
+//        } catch (BusinessResourceException e) {
+//            // Gérer les exceptions liées aux ressources métier
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'ordre d'arrivée.");
+//        }
+//    }
     @GetMapping("/updateRangByVille")
     public ResponseEntity<String> updateRangByVille() {
         try {

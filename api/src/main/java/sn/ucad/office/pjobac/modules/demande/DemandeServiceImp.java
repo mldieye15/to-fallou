@@ -121,8 +121,11 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                     demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
                     return demandeResponse;
                 })
-                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getOrdreArrivee))
+                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getNote).reversed())
                 .collect(Collectors.toList());
+        for (int i = 0; i < response.size(); i++) {
+            response.get(i).setOrdreArrivee(i + 1);
+        }
         return response;
     }
     @Override
@@ -159,8 +162,11 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                     demandeResponse = mapper.mapToResponse(demande, detailsCandidat);
                     return demandeResponse;
                 })
-                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getOrdreArrivee))
+                .sorted(Comparator.comparing(DemandeDetailsCandidatResponse::getNote).reversed())
                 .collect(Collectors.toList());
+        for (int i = 0; i < response.size(); i++) {
+            response.get(i).setOrdreArrivee(i + 1);
+        }
         return response;
     }
     @Override
@@ -202,6 +208,15 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
         }
     }
 
+    @Override
+    public List<DemandeResponse> recaptDemandes() throws BusinessResourceException {
+        List<Demande> demandes = dao.allDemandeValider();
+        List<DemandeResponse> response;
+        response = demandes.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
     @Override
     public List<DemandeResponse> demandeObseleteByVille(String villeId) throws BusinessResourceException {
         Long myId= Long.valueOf(villeId.trim());
@@ -315,7 +330,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                 oneBrute.setEtatDemande(etatParDefaut);
 
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-            ordreArrive.updateOrderByVille();
+//            ordreArrive.updateOrderByVille();
             log.info("Mise à jour " + response.getId() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {
@@ -524,7 +539,7 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                             () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Ville avec id: " + villeId + " trouvé. <auditOneById>");
-            int accepte= villeDao.totalDemandeAccepteByVille(ville);
+            int accepte= villeDao.totalDemandeAccepteOrValideByVille(ville);
             int totalJury= ville.getTotalJury();
             log.info("totalJury: " + totalJury + " trouvé. <auditOneById>");
             log.info("TotalAccepte: " + accepte + " trouvé. <auditOneById>");

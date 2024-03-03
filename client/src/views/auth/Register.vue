@@ -13,6 +13,9 @@ import { useI18n } from "vue-i18n";
 //  
 import FormVue from "@/modules/user/views/Form.vue";
 import { useUtilisateurStore } from "@/modules/user/store";
+import { useToast } from 'vue-toastification';
+
+const toast= useToast();
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -42,12 +45,13 @@ const inputForm= reactive({
 
 const handleSave = (payload) => {
   inscription(payload).then( () => {
-    addNotification({
-        show: true,
-        text:  i18n.t('added'),
-        color: 'blue'
-      });
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('added'),
+    //     color: 'blue'
+    //   });
     router.push( { name: 'login',});
+    toast.success(i18n.t('registre'));
   });
 }
 

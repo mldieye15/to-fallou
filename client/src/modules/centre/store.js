@@ -43,7 +43,10 @@ export const useCentreStore = defineStore('centre', {
       { label: 'Ville', field: 'ville'},
       { label: 'Academie', field: 'academie' },
       { label: 'Nombre de Jurys', field: 'nombreJury'},
-      { label: 'Totale Demandes', field: 'totalDemandes'},
+      // { label: 'Nombre de Jurys', field: 'nombreJury'},
+      { label: 'Planification', field: 'totalDemandes'},
+      // { label: 'Planification', field: 'planification'},
+
       
     ],
   }),
@@ -65,11 +68,14 @@ export const useCentreStore = defineStore('centre', {
               let villeLabel = element.ville? element.ville.libelleLong:null;
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let typeCentreLabel = element.typeCentre ? element.typeCentre.libelleLong:null;
+              let labelPlanification=element.planification ? 'OUI' : 'NON';
               return{
               id:element.id, 
               libelleLong: element.libelleLong,
               libelleCourt: element.libelleCourt,
               nombreJury: element.nombreJury,
+              totalDemandes:element.nombreAffected,
+              planification:labelPlanification,
               ville: villeLabel,
               typeCentre: typeCentreLabel,
               academie: academieLabel,

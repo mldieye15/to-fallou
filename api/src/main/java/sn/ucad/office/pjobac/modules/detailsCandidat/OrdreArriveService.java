@@ -31,30 +31,30 @@ public class OrdreArriveService {
     private final DemandeMapper demandeMapper;
     private final VilleDao villeDao;
     private final EtatDemandeService etatDemandeService;
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateOrderByVille() throws BusinessResourceException {
-        log.info("DemandeServiceImp::updateOrderByVille");
-        // Récupérer toutes les demandes avec les détails de chaque candidat
-        List<Demande> all = demandeDao.demandeBySession();
-        // Regrouper les demandes par ville
-        Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
-                .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
-                        Collectors.mapping(demande -> demandeMapper.mapToResponse(demande,
-                                dao.detailsForUserAndSession(demande.getUser())), Collectors.toList())));
-        // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
-        groupedByVille.forEach((city, candidates) -> {
-            candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());
-            // Mettre à jour l'ordre d'arrivée
-            int order = 1;
-            for (DemandeDetailsCandidatResponse candidate : candidates) {
-                Demande demande = demandeDao.findById(candidate.getDemandeId()).orElse(null);
-                if (demande != null) {
-                    demande.setOrdreArrivee(order++);
-                    demandeDao.save(demande);
-                }
-            }
-        });
-    }
+//    @Transactional(propagation = Propagation.REQUIRES_NEW)
+//    public void updateOrderByVille() throws BusinessResourceException {
+//        log.info("DemandeServiceImp::updateOrderByVille");
+//        // Récupérer toutes les demandes avec les détails de chaque candidat
+//        List<Demande> all = demandeDao.demandeBySession();
+//        // Regrouper les demandes par ville
+//        Map<Long, List<DemandeDetailsCandidatResponse>> groupedByVille = all.stream()
+//                .collect(Collectors.groupingBy(demande -> demande.getVille().getId(),
+//                        Collectors.mapping(demande -> demandeMapper.mapToResponse(demande,
+//                                dao.detailsForUserAndSession(demande.getUser())), Collectors.toList())));
+//        // Pour chaque ville, trier les candidats par note et mettre à jour l'ordre d'arrivée
+//        groupedByVille.forEach((city, candidates) -> {
+//            candidates.sort(Comparator.comparingInt(DemandeDetailsCandidatResponse::getNote).reversed());
+//            // Mettre à jour l'ordre d'arrivée
+//            int order = 1;
+//            for (DemandeDetailsCandidatResponse candidate : candidates) {
+//                Demande demande = demandeDao.findById(candidate.getDemandeId()).orElse(null);
+//                if (demande != null) {
+//                    demande.setOrdreArrivee(order++);
+//                    demandeDao.save(demande);
+//                }
+//            }
+//        });
+//    }
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateRangByVille() throws BusinessResourceException {
         log.info("DemandeServiceImp::updateOrderByVille");

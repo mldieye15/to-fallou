@@ -14,7 +14,6 @@ const planificateurs= modulesURL+'/planificateurs';
 const supervisseurs= modulesURL+'/supervisseurs';
 const add= modulesURL+'/';
 const emailAvailability = modulesURL +'/email-availability';
-const usernameAvailability = modulesURL +'/username-availability';
 const matriculeAvailability = modulesURL +'/matricule-availability';
 
 export const useUtilisateurStore = defineStore('utilisateur', {
@@ -40,7 +39,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
       { text: 'Code', value: 'code', align: 'start', sortable: true },
       { text: 'Email', value: 'email', align: 'start', sortable: true },
-      { text: 'Username', value: 'username', align: 'start', sortable: true },
+      // { text: 'Username', value: 'username', align: 'start', sortable: true },
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
@@ -52,7 +51,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       { label: 'Matricule', field: 'matricule',width: "100px",resizable: true },
       // { label: 'Date de Naissance', field: 'dateNaiss',width: "200px" ,resizable: true},
       { label: 'Email', field: 'email',width: "100px",resizable: true},
-      { label: 'Username', field: 'username',width: "160px",resizable: true },
+      // { label: 'Username', field: 'username',width: "160px",resizable: true },
       { label: 'Sexe', field: 'sexe',width: "100px",resizable: true},
       { label: 'Telephone', field: 'telephone',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions',width: "200px",resizable: true }
@@ -75,13 +74,13 @@ export const useUtilisateurStore = defineStore('utilisateur', {
               let fonctionLabel = element.fonction? element.fonction.libelleLong:null;
               let etablissementLabel = element.etablissement? element.etablissement.libelleLong:null;
               return{
-                id:element.id, 
+              id:element.id, 
               prenoms: element.prenoms,
               nom: element.nom,
               matricule: element.matricule,
               // dateNaiss: this.formatDate(element.dateNaiss),
               email: element.email,
-              username: element.username,
+              // username: element.username,
               code: element.code,
               // mdpasse: element.mdpasse,
               sexe: element.sexe,
@@ -212,7 +211,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 matricule: element.matricule,
                 // dateNaiss: this.formatDate(element.dateNaiss),
                 email: element.email,
-                username: element.username,
+                // username: element.username,
                 code: element.code,
                 sexe: element.sexe,
                 telephone: element.telephone,
@@ -306,17 +305,6 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         return true;
       } catch (error) {
         console.error("Erreur lors de la vérification de l'email :", error);
-        return false;
-      }
-    },
-    async checkUsernameExistence(username) {
-      try {
-        const response = await axios.get(`${usernameAvailability}?username=${username}`);
-        console.log("Réponse de usernameAvailability :", response);
-        response.data=response.data.isAvailable;
-        return true;
-      } catch (error) {
-        console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
         return false;
       }
     },

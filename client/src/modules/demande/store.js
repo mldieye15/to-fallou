@@ -39,7 +39,7 @@ export const useDemandeStore = defineStore('demande', {
       // { label: 'Affectable', field: 'affectable',width: "100px",sortable: true},
       { label: 'Score', field: 'note',sortable: true },
       { label: 'Statut', field: 'etatDemande',sortable: true},
-      { label: "Ordre d'Arrivée", field: 'ordreArrivee',sortable: true},
+      // { label: "Classement", field: 'ordreArrivee',sortable: true},
       // { label: 'Rang', field: 'rang',width: "120px",sortable: true},
       { label: 'Actions', field: 'actions',sortable: true }
       // Ajoutez d'autres colonnes selon vos besoins

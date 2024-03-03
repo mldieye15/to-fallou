@@ -109,7 +109,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
             log.info("Ajout " + response.getCandidat().getPrenoms() + " effectué avec succés. <add>");
             dao.updateNoteBy(currentUser);
-            ordreArrive.updateOrderByVille();
+//            ordreArrive.updateOrderByVille();
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de creation Academie: donnée en doublon ou contrainte non respectée" + e.toString());
@@ -165,7 +165,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("appreciation " + response.getAppreciation() + " effectuée avec succés. <appreciation>");
             dao.updateNote(detailsCandidatOptional);
-            ordreArrive.updateOrderByVille();
+//            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <appreciation>.");
@@ -191,7 +191,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
             dao.updateNote(detailsCandidatOptional);
-            ordreArrive.updateOrderByVille();
+//            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
@@ -217,7 +217,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
             dao.updateNote(detailsCandidatOptional);
-            ordreArrive.updateOrderByVille();
+//            ordreArrive.updateOrderByVille();
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <maj>.");
@@ -249,7 +249,6 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
-
     @Override
     public Optional<DetailsCandidatAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException {
         try {

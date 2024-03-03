@@ -37,7 +37,7 @@ public interface DemandeDetailsCandidat {
     Session getSession();
     Centre getCentre();
     EtatDemande getEtatDemande();
-    Integer getOrdreArrivee();
+//    Integer getOrdreArrivee();
     Integer getDelaisDeValidation();
     LocalDateTime getDateDemande();
     LocalDateTime getDateRejetDemande();

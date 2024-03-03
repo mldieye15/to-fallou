@@ -13,7 +13,7 @@ public class AuthenticationResponse {
     private String authenticationToken;
     private String refreshToken;
     private Instant expiresAt;
-    private String username;
+    private String email;
     private String role;
     private String fullname;
     private String photo;

@@ -19,7 +19,7 @@ public class UserRequest {
     private String nom;
 //    private String  dateNaiss;
     private String email;
-    private String username;
+//    private String username;
     private String mdpasse;
     private String profileImageUrl;
     private String sexe;
