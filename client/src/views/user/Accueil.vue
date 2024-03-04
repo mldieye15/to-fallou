@@ -1,44 +1,51 @@
 <template>
-  <v-main id="inspire" class="d-flex flex-column" justify="space-between">
-    <Navbar :appName="appName"/>
+    <Navbar :appName="appName" />
     <Snackbar :notifications="notifications" :removeNotification="removeNotification"/>
-    
     <v-container fluid >
       <div v-if="dataListeSession.length > 0">
-<div v-if="dataListeForUser.length> 0">
-  <v-row>
-    <!-- Première carte -->
-    <v-col>
-      <v-card class="ma-5">
-        <v-card-title class="ml-10">
-          <p>Demandes Utilisateurs</p>
-        </v-card-title>
-
-        <v-card-text>
-          <div v-for="demande in dataListeForUser" :key="demande.id" class="demande-bloc ml-10"> 
-            <p> Academie: {{ demande.academie }}</p>
+     <div v-if="dataListeForUser.length> 0">
+  <div  class="mt-1 ">
+    <transition-group name="fade">
+      <template v-for="session in dataListeSession" :key="session.id">
+        <div class="session-item">
+          <p class="phrase">
+            La date de clôture de dépôt de candidature est le {{ session.dateClotureDepotCandidature }} passé cette date vous ne pouvez pas modifier votre demande 
+          </p>
+        </div>
+      </template>
+    </transition-group>
+</div>
+  <v-container fluid> 
+    <div class="text-center mb-10">
+      <span>  Demande utilisateur</span>
+     
+    </div> 
+  <v-row justify="center">
+  <v-col v-for="demande in dataListeForUser" :key="demande.id" cols="12" sm="6" md="3" class="demande-bloc ml-10">
+    <v-card class="ma-1">
+      <p> Académie: {{ demande.academie }}</p>
             <p> Ville: {{ demande.ville }}</p>
             <p>Statut:
               <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[demande.etatDemande]" variant="tonal">
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
             </p>
-            <div class="actions-wrapper" v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'" >
-                <div class="demandes"> Veuillez cliquer sur le bouton bleu pour modifier votre demande</div>
+            <div class="actions-wrapper"  v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'" >
+                <div class="demandes"> Veuillez cliquer sur le bouton 'modifier' pour modifier votre demande</div>
              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
               modifier
              </v-btn>   
           </div>
           <div class="actions-wrapper" v-else-if="demande.candidatureOuvert==='OUI' && demande.etatDemande==='en attente'" >
-                <div class="demandes"> Veuillez cliquer sur le bouton bleu pour modifier votre demande</div>
-             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
+                <div class="demandes"> Veuillez cliquer sur le bouton 'modifier' pour modifier votre demande</div>
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3">
               modifier
              </v-btn>   
           </div>
             <div v-if="demande.etatDemande==='acceptée'" class="mt-4">
             <v-dialog v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-                 <div class="demandes"> Veuillez cliquer sur le bouton vert pour valider votre demande</div>
+                 <div class="demandes"> Veuillez cliquer sur le bouton 'valider' pour valider votre demande</div>
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
                    valider
                   </v-btn>
@@ -57,26 +64,12 @@
               </template>
             </v-dialog>
           </div>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-col>
-
-    <!-- Deuxième carte -->
-    <v-col>
-      <v-card class="ma-5 ">
-        <v-card-title>
-          <p>Details Candidats</p>
-        </v-card-title>
-
-        <v-card-text>
-          <!-- Ajoutez ici le contenu des détails des candidats -->
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+    </v-card>
+  </v-col>
+</v-row>
+</v-container>
 </div>
-<div v-else>
+<div class="text-center" v-else>
   <h2>Sessions en cours</h2>
       <ul>
         <div v-for="session in dataListeSession" :key="session.id" :to="{ name: 'demande', params: { id: session.id } }">
@@ -89,10 +82,9 @@
             </router-link>
             </div>
             <div v-else>
-              <p>Depot candidature cloturée</p>
+              <p>Depot candidature cloturée dépuis le {{ session.dateClotureDepotCandidature }}</p>
             </div>
            </v-chip>
-            
           </span>
         </div>
       </ul>
@@ -105,7 +97,6 @@
     </v-container>
     
     <Footer :copyrightName="copyrightName" />
-  </v-main>
 </template>
 
 <script setup>
@@ -138,7 +129,7 @@ const userStore = useUserStore();
 const { changeLoggedIn } = useUserStore();
 const i18n = useI18n();
 const dialog = ref(false);
-
+let animate = true;
 
 //  nom de l'application défin au niveau du fihcier .env
 const appName = import.meta.env.VITE_APP_NAME;
@@ -178,12 +169,12 @@ const redirectToEditDemande = (id) => {
   color: blue; 
   text-decoration: underline;
 }
-.demande-bloc {
+/* .demande-bloc {
     border: 1px solid #ccc;
     padding: 10px;
     margin-bottom: 10px;
     max-width: 300px;
-  }
+  } */
   .demande-bloc p {
     border: 1px solid #ccc;
     padding: 8px; /* Ajustez le remplissage selon vos préférences */
@@ -191,5 +182,24 @@ const redirectToEditDemande = (id) => {
   .demandes{
     color: red; 
   }
-  
+  .actions-wrapper{
+    text-align: center;
+  }
+.phrase {
+  overflow: hidden; /* Masquer les caractères non visibles */
+  white-space: nowrap; /* Empêcher le saut à la ligne */
+  font-size: 20px; /* Ajustez la taille de la police selon vos préférences */
+  animation: revealPhrase 10s infinite;
+  text-align: center;
+  background-color:#1E88E5;
+  color: white; 
+}
+@keyframes revealPhrase {
+  0% {
+    width: 0; /* Largeur initiale : 0 */
+  }
+  100% {
+    width: 100%; /* Largeur finale : 100% */
+  }
+}
 </style>

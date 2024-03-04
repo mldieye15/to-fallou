@@ -23,7 +23,7 @@
         </v-list>
       </v-menu>
 
-      <Localisation iconColorClass="text-white" />
+      <!-- <Localisation iconColorClass="text-white" /> -->
 
       <v-menu bottom min-width="250px" rounded offset-x class="px-12" >
         <template v-slot:activator="{ props }">

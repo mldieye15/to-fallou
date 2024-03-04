@@ -17,6 +17,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.0.23",
     "roboto-fontface": "*",
+    "vee-validate": "^4.5.8",
     "vue": "^3.3.7",
     "vue-good-table": "^2.21.11",
     "vue-good-table-next": "^0.2.1",

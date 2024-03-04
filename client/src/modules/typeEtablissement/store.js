@@ -28,6 +28,7 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'Nombre de point', value: 'nombrePoint', sortable: true },
+      { text: 'Fonction', value: 'fonction', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
@@ -43,7 +44,20 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
         await axios.get(`${all}`) 
         .then((response) => {
           if(response.status === 200){
-            this.dataListeTypeEtablissement = response.data;
+
+            let res = response.data.map( (element) => {
+              let fonctionLabel = element.fonction?element.fonction.libelleLong:null;
+              return{
+                id:element.id, 
+                libelleLong: element.libelleLong,
+                libelleCourt: element.libelleCourt,
+                nombrePoint:element.nombrePoint,
+                fonction: fonctionLabel,
+              }
+              
+            })
+
+            this.dataListeTypeEtablissement = res;
           } 
         })
       } catch (error) {

@@ -11,21 +11,6 @@
     <v-form @submit.prevent="handleSave" ref="juryForm">
       <v-select
         prepend-inner-icon="mdi-alpha-a-circle"
-        name="centre"
-        density="compact"
-        :label="$t('apps.forms.centre.nom')"
-        color="balck"
-        v-model="inputForm.centre"
-        variant="solo"
-        :items="dataListeCentre"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
         name="session"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -51,6 +36,19 @@
         variant="solo"
       >
       </v-text-field>
+      <v-autocomplete
+        v-model="inputForm.centre"
+        :items="dataListeCentre"
+        item-title="libelleLong"
+        item-value="id"
+        :label="$t('apps.forms.centre.nom')"
+        dense
+        outlined
+        variant="solo"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        clearable
+      ></v-autocomplete>
+      
       <v-text-field
         id="nom"
         prepend-inner-icon="mdi-alpha-a-circle"

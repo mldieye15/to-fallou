@@ -46,21 +46,19 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="ville"
-        density="compact"
-        :label="$t('apps.forms.ville.nom')"
-        color="balck"
+      <v-autocomplete
         v-model="inputForm.ville"
-        variant="underlined"
         :items="dataListeVille"
-        persistent-hint
-        
-        single-line
         item-title="libelleLong"
         item-value="id"
-      ></v-select>
+        :label="$t('apps.forms.ville.nom')"
+        dense
+        outlined
+        variant="underlined"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        clearable
+      ></v-autocomplete>
+
 
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
@@ -102,7 +100,10 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-
+const customFilterFunction = (item, queryText, itemText) => {
+  const searchText = queryText.toLowerCase();
+  return itemText.toLowerCase().includes(searchText);
+};
 const handleSave = () => {
   if(instance.refs.etablissementForm.validate){
     actionSubmit(inputForm);

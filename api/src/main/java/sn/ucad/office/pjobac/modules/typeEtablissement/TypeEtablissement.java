@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import sn.ucad.office.pjobac.modules.fonction.Fonction;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,8 @@ public class TypeEtablissement {
     private String libelleCourt;
     @NotNull
     private int nombrePoint;
+    @ManyToOne
+    private Fonction fonction;
 
     @Column(nullable = true)
     private Long utiCree;

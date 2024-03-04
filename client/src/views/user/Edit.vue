@@ -11,7 +11,7 @@
     <div v-if="inputForm.etatDemande==='obsolète' || inputForm.etatDemande==='en attente'">
       <v-form @submit.prevent="handleSave" ref="demandeForm" :value="formValid">
       <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+       prepend-inner-icon="mdi-calendar"
         name="session"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -25,36 +25,45 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+      <v-autocomplete
+        prepend-inner-icon="mdi-school"
         name="academie"
-        density="compact"
-        :label="$t('apps.forms.academie.nom')"
-        color="balck"
         v-model="inputForm.academie"
-        variant="solo"
         :items="dataListeForUser"
-        persistent-hint
         item-title="libelleLong"
         item-value="id"
-        @change="handleAcademieChange"
-      >
-    </v-select>
-
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="ville"
-        density="compact"
-        :label="$t('apps.forms.ville.nom')"
-        color="balck"
-        v-model="inputForm.ville"
+        :label="$t('apps.forms.academie.nom')"
+        dense
+        outlined
         variant="solo"
-        :items="dataListeByAcademieAndUser"
+        density="compact"
+        clearable
+        @change="handleAcademieChange"
+        persistent-hint
+      ></v-autocomplete>
+      <!-- <v-select
+
+        variant="solo"
+        
         persistent-hint
         single-line
+      ></v-select> -->
+      <v-autocomplete
+        name="ville"
+        v-model="inputForm.ville"
+       :items="dataListeByAcademieAndUser"
         item-title="libelleLong"
         item-value="id"
-      ></v-select>
+        :label="$t('apps.forms.ville.nom')"
+        dense
+        outlined
+        variant="solo"
+        prepend-inner-icon="mdi-city"
+        density="compact"
+        clearable
+        persistent-hint
+        single-line
+      ></v-autocomplete>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>

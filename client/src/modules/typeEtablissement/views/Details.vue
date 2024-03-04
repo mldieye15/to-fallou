@@ -50,6 +50,20 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
+              <v-card class="custom-card">
+              <v-list-item>
+                <v-list-item-content>
+                  <v-row>
+                    <v-col>
+                      <v-list-item-title class="font-weight-bold">Fonction:</v-list-item-title>
+                    </v-col>
+                    <v-col class="text-right">
+                      <v-list-item-subtitle>{{ inputForm.fonction}}</v-list-item-subtitle>
+                    </v-col>
+                  </v-row>
+                </v-list-item-content>
+              </v-list-item>
+              </v-card>
             </v-list>
           </v-card-text>
         </v-card>
@@ -82,13 +96,15 @@ const { one, } = typeEtablissementStore;
 const inputForm = reactive({
   libelleLong: '',
   libelleCourt:'',
-  nombrePoint:''
+  nombrePoint:'',
+  fonction:null
 });
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong ,
     inputForm.libelleCourt = dataDetails.value.libelleCourt ,
-    inputForm.nombrePoint = dataDetails.value.nombrePoint   
+    inputForm.nombrePoint = dataDetails.value.nombrePoint,
+    inputForm.fonction=dataDetails.value.fonction?dataDetails.value.fonction.libelleLong:null
   });
 });
 

@@ -13,7 +13,7 @@
        <v-chip color="green" class="mt-3 mb-2"><h3>Choix N°{{ index+1 }}</h3></v-chip> 
       <v-text-field
         :id="'session'+index"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar"
         :name="'session'+index"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -24,37 +24,39 @@
       >
       <input type="hidden" :v-model="inputForm.session">
     </v-text-field>
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+    <v-autocomplete
+        prepend-inner-icon="mdi-school"
         :name="'academie'+index"
-        density="compact"
-        :label="$t('apps.forms.academie.nom')"
-        color="balck"
         v-model="inputForm.academie"
-        variant="solo"
         :items="dataListe"
-        persistent-hint
-        single-line
         item-title="libelleLong"
         item-value="id"
-        @input="onAcademieChange(index)"
-        :rules="[rules.required]"
-      ></v-select>
-      <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
-        :name="'ville'+index"
-        density="compact"
-        :label="$t('apps.forms.ville.nom')"
-        color="balck"
-        v-model="inputForm.ville"
+        :label="$t('apps.forms.academie.nom')"
+        dense
+        outlined
         variant="solo"
-        :items="inputForm.villes"
-        persistent-hint
         :rules="[rules.required]"
-        single-line
+        density="compact"
+        clearable
+        @input="onAcademieChange(index)"
+      ></v-autocomplete>
+      <v-autocomplete
+      :name="'ville'+index"
+       v-model="inputForm.ville"
+        :items="inputForm.villes"
         item-title="libelleLong"
         item-value="id"
-      ></v-select>
+        :label="$t('apps.forms.ville.nom')"
+        dense
+        outlined
+        variant="solo"
+        prepend-inner-icon="mdi-city"
+        :rules="[rules.required]"
+        density="compact"
+        clearable
+      ></v-autocomplete>
+
+
     </div>  
     </v-form>
     <div class="d-flex justify-end">

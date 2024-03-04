@@ -46,6 +46,21 @@
         v-model="inputForm.nombrePoint"
         variant="solo"
       ></v-text-field>
+      <v-select
+        prepend-inner-icon="mdi-briefcase"
+        name="fonction"
+        density="compact"
+        :label="$t('apps.forms.fonction.nom')"
+        color="balck"
+        v-model="inputForm.fonction"
+        variant="solo"
+        :items="dataListe"
+        persistent-hint
+        
+        single-line
+        item-title="libelleLong"
+        item-value="id"
+      ></v-select>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -56,9 +71,11 @@
 </template>
 
 <script setup>
-import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
+import { reactive, getCurrentInstance,ref,watchEffect, onMounted } from "vue";
 import { useTypeEtablissementStore } from "../store";
+import { storeToRefs } from "pinia";
 import { useRouter } from 'vue-router';
+import { useFonctionStore } from "@/modules/fonction/store";
 const router = useRouter();
 
 const redirectToListe = () => {
@@ -67,7 +84,8 @@ const redirectToListe = () => {
 
 const instance = getCurrentInstance();
 const typeEtablissementStore = useTypeEtablissementStore();
-
+const fonctionStore = useFonctionStore();
+const { dataListe } = storeToRefs(fonctionStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
@@ -104,7 +122,9 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-
+onMounted(()=>{
+  fonctionStore.all();
+});
 const handleSave = () => {
   if(instance.refs.typeEtablissementForm.validate&& !isSubmitDisabled.value){
     actionSubmit(inputForm);

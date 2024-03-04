@@ -12,4 +12,5 @@ public class TypeEtablissementRequest {
     private String libelleLong;
     private String libelleCourt;
     private String nombrePoint;
+    private  String fonction;
 }

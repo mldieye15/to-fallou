@@ -20,6 +20,7 @@ import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class AcademieServiceImp implements AcademieService {
         List<AcademieResponse> response;
         response = all.stream()
                 .map(mapper::toEntiteResponse)
+                .sorted(Comparator.comparing(AcademieResponse::getLibelleLong))
                 .collect(Collectors.toList());
         return response;
     }

@@ -39,21 +39,30 @@
         @keyup.enter="onCodeInput"
       ></v-text-field>
       <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
-       <v-select
-            prepend-inner-icon="mdi-alpha-a-circle"
-            name="ville"
-            density="compact"
-            :label="$t('apps.forms.ville.nom')"
+       <!-- <v-select
+            
             color="balck"
-            v-model="inputForm.ville"
-            variant="solo"
-            :items="dataListeVille"
+           
+            
+           
             persistent-hint
             
             single-line
             item-title="libelleLong"
             item-value="id"
-        ></v-select>
+        ></v-select> -->
+        <v-autocomplete
+        v-model="inputForm.ville"
+        :items="dataListeVille"
+        item-title="libelleLong"
+        item-value="id"
+        :label="$t('apps.forms.ville.nom')"
+        dense
+        outlined
+        variant="solo"
+        prepend-inner-icon="mdi-alpha-a-circle"
+        clearable
+      ></v-autocomplete>
         <v-select
               prepend-inner-icon="mdi-alpha-a-circle"
               name="typeCentre"
