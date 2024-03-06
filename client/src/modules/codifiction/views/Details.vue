@@ -5,7 +5,7 @@
       <v-col cols="12" sm="8" md="9">
         <v-card>
           <v-card-title class="headline">
-            Details codification
+            Détail codification
           </v-card-title>
           <v-card-text>
             <v-list>
@@ -14,7 +14,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Email:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.email}}</v-list-item-subtitle>

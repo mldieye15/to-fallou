@@ -5,7 +5,7 @@
       <v-col cols="12" sm="8" md="9">
         <v-card>
           <v-card-title class="headline">
-            Details Academie
+            Détail Académie
           </v-card-title>
           <v-card-text>
             <v-list>

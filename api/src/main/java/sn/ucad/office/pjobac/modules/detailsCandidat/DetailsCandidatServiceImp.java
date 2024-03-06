@@ -97,7 +97,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidat one = mapper.requestToEntity(req);
             AppUser currentUser = authService.getCurrentUser();
             Annee annee= anneeDao.findByEncoursTrue();
-            int noteFonction= currentUser.getFonction().getNombrePoint();
+            int noteFonction= currentUser.getEtablissement().getTypeEtablissement().getFonction().getNombrePoint();
             int noteEtablissementProvenance=currentUser.getEtablissement().getTypeEtablissement().getNombrePoint();
             String numeroCandidat = "N°" + currentUser.getNom() + currentUser.getId() +"AN"+annee.getLibelleLong();
             one.setCandidat(currentUser);

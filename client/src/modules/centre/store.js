@@ -29,9 +29,9 @@ export const useCentreStore = defineStore('centre', {
     ],*/
     headerTable: [
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
+      { text: 'Code', value: 'libelleCourt', align: 'start', sortable: true },
       { text: 'nombre de Jurys', value: 'nombreJury', align: 'start', sortable: true },
-      { text: 'Type de Centre', value: 'typeCentre', align: 'start', sortable: true },
+      { text: 'Type de centre', value: 'typeCentre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
       { text: 'Academie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }

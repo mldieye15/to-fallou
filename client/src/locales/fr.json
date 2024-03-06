@@ -64,15 +64,15 @@
             "academie": "Académies",
             "ville": "Villes",
             "jury":"Jurys",
-            "annee":"Annees",
+            "annee":"Années",
             "centre":"Centres",
             "etablissement":"Etablissements",
-            "typeEtablissement":"Type d'Etablissement",
+            "typeEtablissement":"Type d'établissement",
             "session":"Sessions",
-            "typeCentre":"Type de Centres",
+            "typeCentre":"Type de centres",
             "demande":"Demandes",
             "fonction":"Fonctions",
-            "typeSession":"Type de Sessions",
+            "typeSession":"Type de sessions",
             "codification":"Codifications",
             "user":"Users",
             "candidat":"Candidats"
@@ -95,12 +95,12 @@
             "academie": {
                 "academie": "Académie",
                 "nom": "Académie",
-                "abreviation":"Abreviation"
+                "abreviation":"Abréviation"
             },
             "ville": {
                 "ville": "Ville",
                 "nom": "Ville",
-                "abreviation":"Abreviation"
+                "abreviation":"Abréviation"
             },
             "jury":{
                 "jury":"Jury",
@@ -109,18 +109,18 @@
             },
             "annee":{
                 "annee":"Année",
-                "libelle":"Libelle de l'annee"
+                "libelle":"Libelle de l'année"
             },
             "centre":{
                 "centre":"Centre",
                 "nom":"Centre",
-                "abreviation":"Abreviation",
+                "abreviation":"Abréviation",
                 "nombreJury":"nombre de Jurys"
             },
             "etablissement":{
                 "etablissement":"Etablissements",
                 "nom":"Etablissement",
-                "abreviation":"Abreviation"
+                "abreviation":"Abréviation"
             },
             "typeEtablissement":{
                 "typeEtablissement":"Type d'etablissement",
@@ -135,7 +135,7 @@
                 "nombreDemandeAutorise":"Le nombre de demande autorisé",
                 "delaisValidation":"Le délais de validation",
                 "dateOuvertureDepotCandidature":"Date d'ouverture des dépots de candidature",
-                "dateClotureDepotCandidature":"Date de cloture des dépots de candidature"
+                "dateClotureDepotCandidature":"Date de clôture des dépots de candidature"
 
 
             },
@@ -144,23 +144,27 @@
                 "admin":"Administrateur",
                 "planif":"Planificateur",
                 "sup":"Supervisseur",
-                "prenoms": "prenoms",
-                "nom": "nom",
-                "matricule": "matricule",
-                "dateNaiss":"date de Naissance",
-                "email": "l'address email",
-                "username": "Nom d'utilisateur",
-                "mdpasse": "mot de passe",
-                "sexe": "sexe",
-                "code": "code",
-                "telephone": "telephone",
-                "anciennete": "enciennete"
+                "prenoms": "Prénom(s)",
+                "nom": "Nom",
+                "matricule": "Matricule",
+                "dateNaiss":"Date de Naissance",
+                "email": "Adresse email",
+                "mdpasse": "Mot de passe",
+                "sexe": "Sexe",
+                "code": "Code",
+                "telephone": "Téléphone",
+                "anciennete": "encienneté",
+                "banque": "Nom de la banque",
+                "codeBanque": "Code banque(5 chiffres)",
+                "codeAgence": "Code agence(5 chiffres)",
+                "numeroCompte": "Numéro de compte(12 chiffres)",
+                "cleRib":"clé rib(2 chiffres)"
             },
 
             "typeCentre":{
                 "typeCentre":"Type du Centre",
                 "nom":"Type de centre",
-                "abreviation":"Abreviation"
+                "abreviation":"Abréviation"
             },
             "demande":{
                 "demande":"Demande",
@@ -170,7 +174,7 @@
             "fonction":{
                 "fonction":"Fonction",
                 "nom":"Fonction",
-                "abreviation":"Abreviation",
+                "abreviation":"Abréviation",
                 "nombrePoint":"Nombre de point"
             },
             "typeSession":{
@@ -179,8 +183,8 @@
             },
             "codification":{
                 "codification":"Codifications",
-                "email":"le mail",
-                "code":"le code"
+                "email":"Adresse email",
+                "code":"Code"
             },
             "candidat":{
                 "candidat":"Candidat",

@@ -18,7 +18,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Prenom:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Prénom(s):</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.prenoms}}</v-list-item-subtitle>
@@ -46,7 +46,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Email:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.email }}</v-list-item-subtitle>
@@ -83,7 +83,7 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
-              <v-card class="custom-card">
+              <!-- <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
@@ -96,7 +96,7 @@
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
-              </v-card>
+              </v-card> -->
               <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
@@ -116,7 +116,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Telephone:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Téléphone:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.telephone }}</v-list-item-subtitle>
@@ -144,7 +144,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Etablissement de Provenance:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Etablissement de provenance:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.etablissement }}</v-list-item-subtitle>
@@ -225,7 +225,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">note de l'etablissement de Provenance:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Note de l'établissement de provenance:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteEtablissementProvenance }}</v-list-item-subtitle>
@@ -239,7 +239,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold"> Note du Supervisseur:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold"> Note du supervisseur:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteSupervisseur}}</v-list-item-subtitle>
@@ -253,7 +253,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Note de la Fonction:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Note de la fonction (grade):</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.noteFonction }}</v-list-item-subtitle>
@@ -346,7 +346,6 @@ const inputForm = reactive({
   matricule: "",
   code:"",
   email: "",
-  username: "",
   mdpasse: "",
   sexe: "",
   telephone: "",
@@ -370,11 +369,10 @@ onMounted(()=>{
     inputForm.matricule = dataDetails.value.candidat.matricule,
     inputForm.code = dataDetails.value.candidat.code,
     inputForm.email = dataDetails.value.candidat.email,
-    inputForm.username = dataDetails.value.candidat.username,
     inputForm.mdpasse = dataDetails.value.candidat.mdpasse
     inputForm.sexe = dataDetails.value.candidat.sexe,
     inputForm.telephone = dataDetails.value.candidat.telephone,
-    inputForm.fonction=dataDetails.value.candidat.fonction.libelleLong,
+    inputForm.fonction=dataDetails.value.candidat.etablissement.typeEtablissement.fonction.libelleLong,
     inputForm.etablissement=dataDetails.value.candidat.etablissement.libelleLong 
     inputForm.annee = dataDetails.value.annee.libelleLong,
     inputForm.bonus = dataDetails.value.bonus,

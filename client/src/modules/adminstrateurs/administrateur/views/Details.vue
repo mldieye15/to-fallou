@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="9">
         <v-card>
           <v-card-title class="headline">
-            User Details
+            Détail administrateur
           </v-card-title>
           <v-card-text>
             <v-list>
@@ -13,7 +13,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Prenom:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Prénom(s):</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.prenoms}}</v-list-item-subtitle>
@@ -41,7 +41,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Email:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.email }}</v-list-item-subtitle>
@@ -83,7 +83,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Telephone:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Téléphone:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.telephone }}</v-list-item-subtitle>

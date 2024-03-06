@@ -29,9 +29,13 @@ public class UserResponse {
     private String sexe;
     private String telephone;
     private Integer anciennete;
-    private Fonction fonction;
     private Etablissement etablissement;
     private String code;
+    private  String banque;
+    private  String codeBanque;
+    private  int codeAgence;
+    private  int numeroCompte;
+    private  int cleRib;
     private boolean isEnabled;
     private boolean isLocked;
     private String identifiant;

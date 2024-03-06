@@ -34,26 +34,26 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       }
     ],*/
     headerTable: [
-      { text: 'Prenoms', value: 'prenoms', align: 'start', sortable: true },
+      { text: 'Prénom(s)', value: 'prenoms', align: 'start', sortable: true },
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
       { text: 'Code', value: 'code', align: 'start', sortable: true },
-      { text: 'Email', value: 'email', align: 'start', sortable: true },
+      { text: 'Adresse email', value: 'email', align: 'start', sortable: true },
       // { text: 'Username', value: 'username', align: 'start', sortable: true },
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
-      { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
+      { text: 'Téléphone', value: 'telephone', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
-      { label: 'Prenoms', field: 'prenoms',width: "200px",resizable: true},
+      { label: 'Prénom(s)', field: 'prenoms',width: "200px",resizable: true},
       { label: 'Nom', field: 'nom',width: "100px",resizable: true },
       { label: 'Matricule', field: 'matricule',width: "100px",resizable: true },
       // { label: 'Date de Naissance', field: 'dateNaiss',width: "200px" ,resizable: true},
-      { label: 'Email', field: 'email',width: "100px",resizable: true},
+      { label: 'Adresse email', field: 'email',width: "100px",resizable: true},
       // { label: 'Username', field: 'username',width: "160px",resizable: true },
       { label: 'Sexe', field: 'sexe',width: "100px",resizable: true},
-      { label: 'Telephone', field: 'telephone',width: "120px",resizable: true},
+      { label: 'Téléphone', field: 'telephone',width: "120px",resizable: true},
       { label: 'Actions', field: 'actions',width: "200px",resizable: true }
       // Ajoutez d'autres colonnes selon vos besoins
     ],

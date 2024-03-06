@@ -1,5 +1,7 @@
 package sn.ucad.office.pjobac.modules.security.user.dto;
 
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,8 +27,13 @@ public class UserRequest {
     private String sexe;
     private String telephone;
 //    private Integer anciennete;
-    private String fonction;
+//    private String fonction;
     private String etablissement;
     private String code;
+    private  String banque;
+    private  String codeBanque;
+    private  int codeAgence;
+    private  int numeroCompte;
+    private  int cleRib;
 
 }

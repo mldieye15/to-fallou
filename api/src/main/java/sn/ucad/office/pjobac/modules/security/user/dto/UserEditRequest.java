@@ -23,5 +23,10 @@ public class UserEditRequest {
     private String fonction;
     private String etablissement;
     private String code;
+    private  String banque;
+    private  String codeBanque;
+    private  int codeAgence;
+    private  int numeroCompte;
+    private  int cleRib;
 
 }

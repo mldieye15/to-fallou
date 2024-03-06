@@ -48,14 +48,14 @@ export const useAdminStore = defineStore('admin', {
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
-      { label: 'Prenoms', field: 'prenoms'},
+      { label: 'Prénom(s)', field: 'prenoms'},
       { label: 'Nom', field: 'nom'},
       { label: 'Matricule', field: 'matricule'},
       // { label: 'Date de Naissance', field: 'dateNaiss',width: "200px" ,resizable: true},
-      { label: 'Email', field: 'email'},
+      { label: 'Adresse email', field: 'email'},
       // { label: 'Username', field: 'username'},
       { label: 'Sexe', field: 'sexe'},
-      { label: 'Telephone', field: 'telephone'},
+      { label: 'Téléphone', field: 'telephone'},
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
     ],

@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="userForm" v-model="formValid">
-      <v-row style="height: 16vh">
+      <v-row >
         <v-col>
       <v-text-field 
         id="prenoms"
@@ -23,7 +23,7 @@
         variant="solo" 
       ></v-text-field >
       </v-col>
-      <v-col sm="6" cols="12">
+      <v-col sm="4" cols="12">
         <v-text-field
         id="nom"
         prepend-inner-icon="mdi-account"
@@ -36,9 +36,24 @@
         variant="solo"
       ></v-text-field>
       </v-col>
-       
+      <v-col>
+      <v-text-field
+        id="code"
+        prepend-inner-icon="mdi-key"
+        name="code"
+        density="compact"
+        :label="$t('apps.forms.user.code')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.code"
+        variant="solo"
+        @blur="checkCodeValidity"
+      ></v-text-field>
+      <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 
+       </router-link>
+        </v-col>
     </v-row>
-    <v-row style="height: 16vh">
+    <v-row >
       <v-col>
         <v-text-field
         id="email"
@@ -70,7 +85,7 @@
       </v-col>
       
     </v-row >
-      <v-row style="height: 16vh">  
+      <v-row >  
         <v-col>
           <v-text-field
         id="telephone"
@@ -103,7 +118,7 @@
       </v-row>
       
       <v-row >
-      <v-col style="height: 16vh">
+      <v-col >
         <v-select
         id="sexe"
         prepend-inner-icon="mdi-gender-male-female"
@@ -118,58 +133,8 @@
       >
     </v-select>
       </v-col> 
-      <v-col>
-      <v-text-field
-        id="code"
-        prepend-inner-icon="mdi-key"
-        name="code"
-        density="compact"
-        :label="$t('apps.forms.user.code')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
-        v-model="inputForm.code"
-        variant="solo"
-        @blur="checkCodeValidity"
-      ></v-text-field>
-      <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 
-       </router-link>
-        </v-col>
-
-      </v-row>
-      
-      <v-row style="height: 16vh">
-        <!-- <v-col>
-          <v-text-field
-        id="anciennete"
-        prepend-inner-icon="mdi-timer"
-        name="anciennete"
-        density="compact"
-        :label="$t('apps.forms.user.anciennete')"
-        color="balck"
-        :rules="[rules.required]"
-        v-model="inputForm.anciennete"
-        variant="solo"
-      ></v-text-field>
-        </v-col> -->
-        <v-col>
-          <v-select
-        prepend-inner-icon="mdi-briefcase"
-        name="fonction"
-        density="compact"
-        :label="$t('apps.forms.fonction.nom')"
-        color="balck"
-        v-model="inputForm.fonction"
-        variant="solo"
-        :items="dataListe"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-      ></v-select>
-        </v-col>
-        <v-col>
-          <v-select
+    <v-col>
+      <v-select
         prepend-inner-icon="mdi-domain"
         name="etablissement"
         density="compact"
@@ -184,7 +149,93 @@
         item-title="libelleLong"
         item-value="id"
       ></v-select>
-        </v-col> 
+    </v-col>
+      </v-row>
+      
+      <v-row >
+        <v-col>
+      <v-text-field 
+        id="banque"
+        prepend-inner-icon="mdi-bank"
+        name="banque"
+        density="compact"
+        :label="$t('apps.forms.user.banque')"
+        color="balck"
+        :rules="[rules.required, rules.min]"
+        v-model="inputForm.banque"
+        variant="solo" 
+        @blur="onMatriculeInput"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
+      <v-col>
+      <v-text-field 
+        id="codeBanque"
+        prepend-inner-icon="mdi-domain"
+        name="codeBanque"
+        density="compact"
+        :label="$t('apps.forms.user.codeBanque')"
+        color="balck"
+        :rules="[rules.required, rules.codeBanque]"
+        v-model="inputForm.codeBanque"
+        variant="solo" 
+        @blur="onMatriculeInput"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
+      <v-col>
+      <v-text-field 
+        id="codeAgence"
+        prepend-inner-icon="mdi-bank"
+        name="codeAgence"
+        density="compact"
+        :label="$t('apps.forms.user.codeAgence')"
+        color="balck"
+        :rules="[rules.required, rules.codeAgence]"
+        v-model="inputForm.codeAgence"
+        variant="solo" 
+        @blur="onMatriculeInput"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
+      </v-row>
+      <v-row>
+        <v-col md="9">
+      <v-text-field 
+        id="numeroCompte"
+        prepend-inner-icon="mdi-wallet"
+        name="numeroCompte"
+        density="compact"
+        :label="$t('apps.forms.user.numeroCompte')"
+        color="balck"
+        :rules="[rules.required, rules.exactlynumeroCompte]"
+        v-model="inputForm.numeroCompte"
+        variant="solo" 
+        @blur="onMatriculeInput"
+        :mask="['##########']"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
+      <v-col >
+      <v-text-field 
+        id="cleRib"
+        prepend-inner-icon="mdi-finance"
+        name="cleRib"
+        density="compact"
+        :label="$t('apps.forms.user.cleRib')"
+        color="balck"
+        :rules="[rules.required, rules.exactlycleRib]"
+        v-model="inputForm.cleRib"
+        variant="solo" 
+        @blur="onMatriculeInput"
+    >
+    </v-text-field >
+    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+      </v-col>
       </v-row>
        <p>
         <div v-if="codeError" class="error-message">{{ codeErrorMessage }}
@@ -223,6 +274,10 @@ const { dataListeEtab } = storeToRefs(etablissementStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
+  exactlynumeroCompte: value => value && value.length === 12 && /^\d+$/.test(value) || 'Le numéro de compte doit comporter exactement 12 chiffres',
+  exactlycodeBanque: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code banque doit comporter exactement 5 chiffres',
+  exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
+  exactlycleRib: value => value && value.length === 2 && /^\d+$/.test(value) || 'Le clé rip doit comporter exactement 2 chiffres',
 });
 
 const { inputForm, actionSubmit } = defineProps({

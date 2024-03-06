@@ -10,7 +10,7 @@
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="juryForm">
       <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar"
         name="session"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -26,7 +26,7 @@
       ></v-select>
       <v-text-field
         id="numero"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-numeric"
         name="numero"
         density="compact"
         :label="$t('apps.forms.jury.numero')"
@@ -45,7 +45,7 @@
         dense
         outlined
         variant="solo"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-pencil-box"
         clearable
       ></v-autocomplete>
       

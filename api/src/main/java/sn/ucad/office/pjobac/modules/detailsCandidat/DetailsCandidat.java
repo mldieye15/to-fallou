@@ -1,6 +1,8 @@
 package sn.ucad.office.pjobac.modules.detailsCandidat;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -29,10 +31,13 @@ public class DetailsCandidat{
     @ManyToOne
     private Annee annee;
     @Column(columnDefinition = "INT DEFAULT 0")
+    @Max(value=100)
+    @Min(value = 0)
     private int bonus=0;
     @Column(columnDefinition = "INT DEFAULT 0")
+    @Max(value=100)
+    @Min(value = 0)
     private int malus=0;
-
     private int noteFonction;
     private int noteEtablissementProvenance;
     private int noteAnciennete;
@@ -40,6 +45,8 @@ public class DetailsCandidat{
     @Column(columnDefinition = "INT DEFAULT 0")
     private int note = 0;
     @Column(columnDefinition = "INT DEFAULT 0")
+    @Max(value=60)
+    @Min(value = 0)
     private int noteSupervisseur = 0;
     @Column(nullable = true)
     private String appreciation;

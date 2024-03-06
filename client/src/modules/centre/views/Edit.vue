@@ -56,7 +56,7 @@ onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
     inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.ville =dataDetails.value.ville? dataDetails.value.ville.id:null,
+    inputForm.ville =dataDetails.value.ville,
     inputForm.typeCentre =dataDetails.value.typeCentre? dataDetails.value.typeCentre.id:null
 
   });

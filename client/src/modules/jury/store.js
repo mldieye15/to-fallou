@@ -192,6 +192,7 @@ export const useJuryStore = defineStore('jury', {
     async destroy(id) {
       try {
         await axios.delete(`${modulesURL}/${id}`) 
+        console.log("ID à supprimer :", id)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

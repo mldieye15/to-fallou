@@ -53,8 +53,8 @@ public class AppUser {
 
     private Integer anciennete;
 
-    @ManyToOne
-    private Fonction fonction;
+//    @ManyToOne
+//    private Fonction fonction;
 
     @ManyToOne
     private Etablissement etablissement;
@@ -64,6 +64,24 @@ public class AppUser {
 
 //    @NotNull
 //    private Date dateNaiss;
+
+    @NotNull
+    private  String banque;
+
+    @NotNull
+    @Column(length = 5)
+    private  String codeBanque;
+
+    @Column(length = 5)
+    @NotNull
+    private  int codeAgence;
+
+    @Column(length = 12)
+    @NotNull
+    private  int numeroCompte;
+    @Column(length = 2)
+    @NotNull
+    private  int cleRib;
 
     @NotNull
     @Size(min=5, max=100, message="Email doit etre comprise entre 5 et 100 cracteres")

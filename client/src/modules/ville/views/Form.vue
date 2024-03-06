@@ -11,7 +11,7 @@
     <v-form @submit.prevent="handleSave" ref="villeForm" :value="formValid">
       <v-text-field
         id="libelleLong"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-city"
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.ville.nom')"
@@ -25,7 +25,7 @@
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
       <v-text-field
         id="libelleCourt"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-city"
         name="libelleCourt"
         density="compact"
         :label="$t('apps.forms.ville.abreviation')"
@@ -37,7 +37,7 @@
       ></v-text-field>
       <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
       <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-school"
         name="academie"
         density="compact"
         :label="$t('apps.forms.academie.nom')"

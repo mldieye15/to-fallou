@@ -4,7 +4,7 @@
       <v-col cols="12" sm="8" md="9">
         <v-card>
           <v-card-title class="headline">
-            User Details
+            Détail de l'utilisateur
           </v-card-title>
           <v-card-text>
             <v-list>
@@ -41,7 +41,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Email:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.email }}</v-list-item-subtitle>
@@ -111,7 +111,7 @@
                 <v-list-item-content>
                   <v-row>
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Ancienente:</v-list-item-title>
+                      <v-list-item-title class="font-weight-bold">Ancienneté:</v-list-item-title>
                     </v-col>
                     <v-col class="text-right">
                       <v-list-item-subtitle>{{ inputForm.anciennete }}</v-list-item-subtitle>
@@ -120,7 +120,7 @@
                 </v-list-item-content>
               </v-list-item>
               </v-card>
-              <v-card class="custom-card">
+              <!-- <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
                   <v-row>
@@ -133,7 +133,7 @@
                   </v-row>
                 </v-list-item-content>
               </v-list-item>
-              </v-card>
+              </v-card> -->
               <v-card class="custom-card">
               <v-list-item>
                 <v-list-item-content>
@@ -223,7 +223,7 @@ onMounted(()=>{
     inputForm.code = dataDetails.value.code,
     inputForm.telephone = dataDetails.value.telephone,
     inputForm.anciennete = dataDetails.value.anciennete,
-    inputForm.fonction=dataDetails.value.fonction.libelleLong,
+    // inputForm.fonction=dataDetails.value.fonction.libelleLong,
     inputForm.etablissement=dataDetails.value.etablissement.libelleLong    
   });
 });

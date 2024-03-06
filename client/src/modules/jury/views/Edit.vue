@@ -50,7 +50,7 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.centre= dataDetails.value.centre?dataDetails.value.centre.id:null
+    inputForm.centre= dataDetails.value.centre,
     inputForm.session= dataDetails.value.session?dataDetails.value.session.id:null,
     inputForm.numero= dataDetails.value.numero
   });

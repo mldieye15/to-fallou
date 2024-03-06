@@ -11,7 +11,7 @@
     <v-form @submit.prevent="handleSave" ref="codificationForm" :value="formValid">
       <v-text-field
         id="email"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-email"
         name="email"
         density="compact"
         :label="$t('apps.forms.codification.email')"
@@ -25,7 +25,7 @@
         <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       <v-text-field
         id="code"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-account-key"
         name="code"
         density="compact"
         :label="$t('apps.forms.codification.code')"

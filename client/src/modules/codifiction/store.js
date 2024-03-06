@@ -25,7 +25,7 @@ export const useCodificationStore = defineStore('codification', {
       }
     ],*/
     headerTable: [
-      { text: 'Email', value: 'email', align: 'start', sortable: true },
+      { text: 'Adresse email', value: 'email', align: 'start', sortable: true },
       { text: 'Code', value: 'code', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
