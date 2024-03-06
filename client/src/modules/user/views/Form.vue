@@ -8,7 +8,7 @@
     >
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
-    <v-form @submit.prevent="handleSave" ref="userForm" v-model="formValid">
+    <v-form @submit.prevent="handleSave" ref="userForm">
       <v-row >
         <v-col>
       <v-text-field 
@@ -94,7 +94,7 @@
         density="compact"
         :label="$t('apps.forms.user.telephone')"
         color="balck"
-        :rules="[rules.required]"
+        :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
         variant="solo"
       ></v-text-field>
@@ -177,7 +177,7 @@
         density="compact"
         :label="$t('apps.forms.user.codeBanque')"
         color="balck"
-        :rules="[rules.required, rules.codeBanque]"
+        :rules="[rules.required, rules.exactlycodeBanque]"
         v-model="inputForm.codeBanque"
         variant="solo" 
         @blur="onMatriculeInput"
@@ -193,7 +193,7 @@
         density="compact"
         :label="$t('apps.forms.user.codeAgence')"
         color="balck"
-        :rules="[rules.required, rules.codeAgence]"
+        :rules="[rules.required, rules.exactlycodeAgence]"
         v-model="inputForm.codeAgence"
         variant="solo" 
         @blur="onMatriculeInput"
@@ -245,7 +245,7 @@
        </p>
        
 
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
     </v-form>
     </v-card>
   </div>
@@ -262,7 +262,7 @@ import { useCodeStore } from "@/store/codification";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 import { useRouter } from "vue-router";
-
+import * as yup from 'yup';
 const router = useRouter();
 const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
@@ -275,9 +275,27 @@ const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
   exactlynumeroCompte: value => value && value.length === 12 && /^\d+$/.test(value) || 'Le numéro de compte doit comporter exactement 12 chiffres',
-  exactlycodeBanque: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code banque doit comporter exactement 5 chiffres',
+  exactlycodeBanque: value => value && value.length === 5 && /^[a-zA-Z0-9]+$/.test(value) || 'Le code banque doit comporter exactement 5 caractères',
   exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
   exactlycleRib: value => value && value.length === 2 && /^\d+$/.test(value) || 'Le clé rip doit comporter exactement 2 chiffres',
+  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres',
+  
+});
+const schema = yup.object().shape({
+  prenoms: yup.string().required('Le prénom est requis').min(2, 'Au moins 2 caractères requis'),
+  nom: yup.string().required('Le nom est requis'),
+  code: yup.string().required('Le code est requis').min(2, 'Au moins 2 caractères requis'),
+  email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
+  mdpasse: yup.string().required('Le mot de passe est requis'),
+  telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
+  matricule: yup.string().required('Le matricule est requis').min(2, 'Au moins 2 caractères requis'),
+  sexe: yup.string().required('Le sexe est requis'),
+  etablissement: yup.string().required('L\'établissement est requis'),
+  banque: yup.string().required('La banque est requise').min(2, 'Au moins 2 caractères requis'),
+  codeBanque: yup.string().required('Le code banque est requis').matches(/^.{5}$/, 'Le code banque doit comporter exactement 5 caractères'),
+  codeAgence: yup.string().required('Le code agence est requis').matches(/^\d{5}$/, 'Code agence invalide'),
+  numeroCompte: yup.string().required('Le numéro de compte est requis').matches(/^\d{12}$/, 'Numéro de compte invalide'),
+  cleRib: yup.string().required('La clé RIB est requise').matches(/^\d{2}$/, 'Clé RIB invalide'),
 });
 
 const { inputForm, actionSubmit } = defineProps({
@@ -286,7 +304,7 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-
+const formValid = ref(false);
 const codeError = ref(false);
 const codeErrorMessage = ref("");
 const emailError = ref(false);
@@ -365,10 +383,21 @@ function formatDateForInput(date) {
   const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
   return formattedDate;
 };
-const handleSave = () => {
-  console.log("isSubmitDisabled:", isSubmitDisabled.value);
-  if(instance.refs.userForm.validate() && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm);
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+    error.inner.forEach(err => {
+      console.error(err.message);
+    });
+    console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
   }
 };
 

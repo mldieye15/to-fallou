@@ -78,7 +78,7 @@ public class AppUser {
 
     @Column(length = 12)
     @NotNull
-    private  int numeroCompte;
+    private  Long numeroCompte;
     @Column(length = 2)
     @NotNull
     private  int cleRib;

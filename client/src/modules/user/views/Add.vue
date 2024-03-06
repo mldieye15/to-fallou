@@ -42,6 +42,12 @@ const inputForm= reactive({
   anciennete: "",
   fonction: null,
   etablissement: null,
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
+
 });
 
 const handleSave = (payload) => {

@@ -38,7 +38,7 @@
           <div class="actions-wrapper">
             <router-link :to="{ name: 'annee-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
             <router-link :to="{ name: 'annee-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
-            <v-dialog  v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
+            <v-dialog  transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>
@@ -53,7 +53,7 @@
                   </v-card-text>
                   <v-card-actions class="justify-end">
                     <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
-                    <v-btn variant="outlined" color="black"  @click="del(item.id)">{{ $t('apps.forms.oui') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="del(item.id);isActive.value = false">{{ $t('apps.forms.oui') }}</v-btn>
                   </v-card-actions>
                 </v-card>
               </template>
