@@ -21,6 +21,7 @@
         :rules="[rules.required, rules.min]"
         v-model="inputForm.prenoms"
         variant="solo" 
+        class="input-with-asterisk"
       ></v-text-field >
       </v-col>
       <v-col sm="4" cols="12">
@@ -34,8 +35,17 @@
         :rules="[rules.required]"
         v-model="inputForm.nom"
         variant="solo"
-      ></v-text-field>
+        class="input-with-asterisk"
+      ></v-text-field >
+      <div v-if="formSubmitted && !inputForm.nom" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
+    </v-row>
+    <v-row>
       <v-col>
       <v-text-field
         id="code"
@@ -48,9 +58,14 @@
         v-model="inputForm.code"
         variant="solo"
         @blur="checkCodeValidity"
+        class="input-with-asterisk"
       ></v-text-field>
-      <router-link :to="{ name: 'code' }"> <p>Recuperer votre code ici</p> 
-       </router-link>
+     
+        </v-col>
+        <v-col>
+          <router-link :to="{ name: 'code' }">
+             <p class="mt-5">Recuperer votre code ici</p> 
+          </router-link>
         </v-col>
     </v-row>
     <v-row >
@@ -66,6 +81,7 @@
         v-model="inputForm.email"
         variant="solo"
         @blur="onEmailInput"
+        class="input-with-asterisk"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
@@ -81,6 +97,7 @@
         :rules="[rules.required]"
         v-model="inputForm.mdpasse"
         variant="solo"
+        class="input-with-asterisk"
       ></v-text-field>
       </v-col>
       
@@ -97,6 +114,7 @@
         :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
         variant="solo"
+        class="input-with-asterisk"
       ></v-text-field>
         </v-col>
       <v-col>
@@ -111,6 +129,7 @@
         v-model="inputForm.matricule"
         variant="solo" 
         @blur="onMatriculeInput"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -130,6 +149,8 @@
         v-model="inputForm.sexe"
         variant="solo"
         :items="['Homme', 'Femme']"
+        class="input-with-asterisk"
+        
       >
     </v-select>
       </v-col> 
@@ -148,6 +169,7 @@
         single-line
         item-title="libelleLong"
         item-value="id"
+        class="input-with-asterisk"
       ></v-select>
     </v-col>
       </v-row>
@@ -165,6 +187,7 @@
         v-model="inputForm.banque"
         variant="solo" 
         @blur="onMatriculeInput"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -181,6 +204,7 @@
         v-model="inputForm.codeBanque"
         variant="solo" 
         @blur="onMatriculeInput"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -197,6 +221,7 @@
         v-model="inputForm.codeAgence"
         variant="solo" 
         @blur="onMatriculeInput"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -215,7 +240,7 @@
         v-model="inputForm.numeroCompte"
         variant="solo" 
         @blur="onMatriculeInput"
-        :mask="['##########']"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -232,6 +257,7 @@
         v-model="inputForm.cleRib"
         variant="solo" 
         @blur="onMatriculeInput"
+        class="input-with-asterisk"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
@@ -297,7 +323,7 @@ const schema = yup.object().shape({
   numeroCompte: yup.string().required('Le numéro de compte est requis').matches(/^\d{12}$/, 'Numéro de compte invalide'),
   cleRib: yup.string().required('La clé RIB est requise').matches(/^\d{2}$/, 'Clé RIB invalide'),
 });
-
+const  formSubmitted=ref(false);
 const { inputForm, actionSubmit } = defineProps({
   inputForm: Object,
   actionSubmit: {
@@ -314,6 +340,7 @@ const matriculeErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
 watchEffect(() => {
   isSubmitDisabled.value = codeError.value||emailError.value ||matriculeError.value
+
 });
 
 const checkCodeValidity = async () => {
@@ -388,7 +415,7 @@ const handleSave = async () => {
     if (!isSubmitDisabled.value) {
       await schema.validate(inputForm, { abortEarly: false });
       console.log('Formulaire valide. Soumission en cours...');
-      actionSubmit(inputForm);
+      actionSubmit(inputForm); 
       // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
@@ -398,6 +425,8 @@ const handleSave = async () => {
       console.error(err.message);
     });
     console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    formSubmitted.value = true;
+      console.log(formSubmitted)
   }
 };
 
@@ -435,4 +464,21 @@ const onMatriculeInput = () => {
   color: red; /* ou toute autre couleur de votre choix */
   margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
 }
+.required-icon {
+  color: orange; /* Couleur de l'icône pour les champs requis non remplis */
+  margin-left: 5px; /* Ajustement de l'espacement entre le message d'erreur et l'icône */
+}
+.input-with-asterisk {
+  position: relative; /* Permet de positionner l'astérisque par rapport à l'input */
+}
+
+.input-with-asterisk:after {
+  content: "*"; /* Ajouter l'astérisque */
+  color: red; /* Couleur rouge */
+  font-size: larger; /* Taille de police plus grande */
+  position: absolute; /* Position absolue */
+  top: 0px; /* Ajuster la position verticale */
+  right: 8px; /* Ajuster la position horizontale */
+}
+
 </style>
