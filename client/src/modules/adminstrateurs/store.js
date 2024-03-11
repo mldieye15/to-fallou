@@ -17,6 +17,7 @@ const supervisseurs= modulesURL+'/supervisseurs';
 const add= modulesURL+'/';
 const emailAvailability = modulesURL +'/email-availability';
 const matriculeAvailability = modulesURL +'/matricule-availability';
+const upProfile= modulesURL +'/upProfileAdmin';
 
 export const useAdminStore = defineStore('admin', {
   state: () => ({
@@ -294,6 +295,22 @@ export const useAdminStore = defineStore('admin', {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
         await axios.put(`${upAdmin}/${id}`, payload)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async upProfile(payload) {
+      try {
+        console.log("Payload: ", payload);
+        await axios.put(upProfile, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;

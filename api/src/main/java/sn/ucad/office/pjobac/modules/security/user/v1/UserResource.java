@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
+import sn.ucad.office.pjobac.modules.security.user.ProfileUserServie;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService service;
+    private  final ProfileUserServie profileUserServie;
 
     @GetMapping("")
     @PreAuthorize("hasRole('ROLE_USER_LISTE') or hasRole('ROLE_ADMIN')")
@@ -88,10 +90,22 @@ public class UserResource {
         UserResponse response = service.maj(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PutMapping(value = "upProfileUser")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<UserResponse> majProfileUser(@RequestBody @Valid UserEditRequest request) {
+        UserResponse response = profileUserServie.majProfileUser(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @PutMapping(value = "/upProfileAdmin")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<AdminResponse> majProfilAdmin(@RequestBody @Valid AdminEditRequest request) {
+        AdminResponse response = profileUserServie.majProfilAdmin(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @PutMapping(value = "/upAdmin/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<AdminResponse> majAdmin(@PathVariable(value="id") String id,
-                                            @RequestBody @Valid AdminEditRequest request) {
+                                                  @RequestBody @Valid AdminEditRequest request) {
         AdminResponse response = service.majAdmin(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

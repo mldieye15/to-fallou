@@ -7,12 +7,14 @@ const  refreshtokenURL = '/auth/v1/refresh-token';
 const verifyTokenURL = '/auth/v1/verif-token';
 const  resetPasswordURL = '/auth/v1/reset-password';
 const newPasswordURL= '/auth/v1/new-password';
+const  currentURL = '/auth/v1/current';
 export const useUserStore = defineStore('user', {
 
   state: () => ({
     isLoggedIn: false,
     successMessage: null,
     errorMessage: null,
+    dataDetails: {},
     /*userDetails: {
       email: '',
       prenoms: '',
@@ -196,6 +198,21 @@ export const useUserStore = defineStore('user', {
       } catch (error) {
         console.error('Erreur lors de la vérification du token :', error);
         throw error;
+      }
+    },
+    async current() {
+      try {
+        await axios.get(currentURL)
+        .then((response) => {
+          if(response.status === 200){
+            this.dataDetails = response.data;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
       }
     },
   }

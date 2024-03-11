@@ -32,8 +32,8 @@ public class UserRequest {
     private String code;
     private  String banque;
     private  String codeBanque;
-    private  int codeAgence;
-    private  Long numeroCompte;
-    private  int cleRib;
+    private  String codeAgence;
+    private  String numeroCompte;
+    private  String cleRib;
 
 }

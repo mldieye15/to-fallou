@@ -43,7 +43,7 @@
                 {{ user.username }}
               </p>
               <v-divider class="my-3"></v-divider>
-              <router-link :to="{name:'profile'}" class="text">{{ $t('public.nav.top.profile') }}</router-link>
+              <router-link :to="{name:'profileUser'}" class="text">{{ $t('public.nav.top.profile') }}</router-link>
               <v-divider class="my-3"></v-divider>
               <v-btn class="ma-3 bg-blue" rounded text @click="handleLogout">
                 {{ $t('public.nav.top.deconnexion') }}

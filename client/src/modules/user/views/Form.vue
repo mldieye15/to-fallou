@@ -18,11 +18,16 @@
         density="compact"
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.prenoms"
         variant="solo" 
         class="input-with-asterisk"
       ></v-text-field >
+      <div v-if="formSubmitted && !inputForm.prenoms" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col sm="4" cols="12">
         <v-text-field
@@ -32,7 +37,6 @@
         density="compact"
         :label="$t('apps.forms.user.nom')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.nom"
         variant="solo"
         class="input-with-asterisk"
@@ -54,13 +58,17 @@
         density="compact"
         :label="$t('apps.forms.user.code')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
         variant="solo"
         @blur="checkCodeValidity"
         class="input-with-asterisk"
       ></v-text-field>
-     
+      <div v-if="formSubmitted && !inputForm.code" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
         </v-col>
         <v-col>
           <router-link :to="{ name: 'code' }">
@@ -77,13 +85,18 @@
         density="compact"
         :label="$t('apps.forms.user.email')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.email"
         variant="solo"
         @blur="onEmailInput"
         class="input-with-asterisk"
       >
     </v-text-field>
+    <div v-if="formSubmitted && !inputForm.email" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
     <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       </v-col>
       <v-col>
@@ -92,13 +105,19 @@
         prepend-inner-icon="mdi-lock"
         name="mdpasse"
         density="compact"
+        :rules="[rules.min]"
         :label="$t('apps.forms.user.mdpasse')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.mdpasse"
         variant="solo"
         class="input-with-asterisk"
       ></v-text-field>
+      <div v-if="formSubmitted && !inputForm.mdpasse" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       
     </v-row >
@@ -116,6 +135,12 @@
         variant="solo"
         class="input-with-asterisk"
       ></v-text-field>
+      <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
         </v-col>
       <v-col>
       <v-text-field 
@@ -125,13 +150,18 @@
         density="compact"
         :label="$t('apps.forms.user.matricule')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
+    <div v-if="formSubmitted && !inputForm.matricule" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
       </v-row>
@@ -145,7 +175,6 @@
         density="compact"
         :label="$t('apps.forms.user.sexe')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.sexe"
         variant="solo"
         :items="['Homme', 'Femme']"
@@ -153,6 +182,12 @@
         
       >
     </v-select>
+    <div v-if="formSubmitted && !inputForm.sexe" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col> 
     <v-col>
       <v-select
@@ -171,6 +206,12 @@
         item-value="id"
         class="input-with-asterisk"
       ></v-select>
+      <div v-if="formSubmitted && !inputForm.etablissement" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
     </v-col>
       </v-row>
       
@@ -183,14 +224,18 @@
         density="compact"
         :label="$t('apps.forms.user.banque')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.banque"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.banque" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col>
       <v-text-field 
@@ -200,14 +245,19 @@
         density="compact"
         :label="$t('apps.forms.user.codeBanque')"
         color="balck"
-        :rules="[rules.required, rules.exactlycodeBanque]"
+        :rules="[rules.exactlycodeBanque]"
         v-model="inputForm.codeBanque"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.codeBanque" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col>
       <v-text-field 
@@ -217,14 +267,19 @@
         density="compact"
         :label="$t('apps.forms.user.codeAgence')"
         color="balck"
-        :rules="[rules.required, rules.exactlycodeAgence]"
+        :rules="[rules.exactlycodeAgence]"
         v-model="inputForm.codeAgence"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.codeAgence" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       </v-row>
       <v-row>
@@ -236,14 +291,19 @@
         density="compact"
         :label="$t('apps.forms.user.numeroCompte')"
         color="balck"
-        :rules="[rules.required, rules.exactlynumeroCompte]"
+        :rules="[rules.exactlynumeroCompte]"
         v-model="inputForm.numeroCompte"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.numeroCompte" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col >
       <v-text-field 
@@ -253,14 +313,19 @@
         density="compact"
         :label="$t('apps.forms.user.cleRib')"
         color="balck"
-        :rules="[rules.required, rules.exactlycleRib]"
+        :rules="[rules.exactlycleRib]"
         v-model="inputForm.cleRib"
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
     </v-text-field >
-    <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.cleRib" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       </v-row>
        <p>
@@ -289,17 +354,14 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 import { useRouter } from "vue-router";
 import * as yup from 'yup';
-const router = useRouter();
-const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
 const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
 const codeStore = useCodeStore();
-const { dataListe } = storeToRefs(fonctionStore);
 const { dataListeEtab } = storeToRefs(etablissementStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+  min: v => v.length >= 5 || '5 cractére au moins',
   exactlynumeroCompte: value => value && value.length === 12 && /^\d+$/.test(value) || 'Le numéro de compte doit comporter exactement 12 chiffres',
   exactlycodeBanque: value => value && value.length === 5 && /^[a-zA-Z0-9]+$/.test(value) || 'Le code banque doit comporter exactement 5 caractères',
   exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
@@ -308,16 +370,16 @@ const rules = reactive({
   
 });
 const schema = yup.object().shape({
-  prenoms: yup.string().required('Le prénom est requis').min(2, 'Au moins 2 caractères requis'),
+  prenoms: yup.string().required('Le prénom est requis'),
   nom: yup.string().required('Le nom est requis'),
-  code: yup.string().required('Le code est requis').min(2, 'Au moins 2 caractères requis'),
+  code: yup.string().required('Le code est requis'),
   email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
-  mdpasse: yup.string().required('Le mot de passe est requis'),
+  mdpasse: yup.string().required('Le mot de passe est requis').min(5, 'Au moins 5 caractères requis'),
   telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
-  matricule: yup.string().required('Le matricule est requis').min(2, 'Au moins 2 caractères requis'),
+  matricule: yup.string().required('Le matricule est requis'),
   sexe: yup.string().required('Le sexe est requis'),
   etablissement: yup.string().required('L\'établissement est requis'),
-  banque: yup.string().required('La banque est requise').min(2, 'Au moins 2 caractères requis'),
+  banque: yup.string().required('La banque est requise'),
   codeBanque: yup.string().required('Le code banque est requis').matches(/^.{5}$/, 'Le code banque doit comporter exactement 5 caractères'),
   codeAgence: yup.string().required('Le code agence est requis').matches(/^\d{5}$/, 'Code agence invalide'),
   numeroCompte: yup.string().required('Le numéro de compte est requis').matches(/^\d{12}$/, 'Numéro de compte invalide'),
@@ -330,7 +392,6 @@ const { inputForm, actionSubmit } = defineProps({
     type: Function,
   }
 });
-const formValid = ref(false);
 const codeError = ref(false);
 const codeErrorMessage = ref("");
 const emailError = ref(false);

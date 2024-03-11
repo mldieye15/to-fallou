@@ -34,6 +34,8 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "typescript": "^5.3.3",
     "vite": "^4.5.2",
-    "vite-plugin-vuetify": "^1.0.0"
+    "vite-bundle-analyzer": "^0.8.3",
+    "vite-plugin-vuetify": "^1.0.0",
+    "webpack-cli": "^5.1.4"
   }
 }

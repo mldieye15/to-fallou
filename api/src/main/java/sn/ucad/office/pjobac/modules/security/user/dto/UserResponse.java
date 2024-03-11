@@ -33,9 +33,9 @@ public class UserResponse {
     private String code;
     private  String banque;
     private  String codeBanque;
-    private  int codeAgence;
-    private  Long numeroCompte;
-    private  int cleRib;
+    private  String codeAgence;
+    private  String numeroCompte;
+    private  String cleRib;
     private boolean isEnabled;
     private boolean isLocked;
     private String identifiant;

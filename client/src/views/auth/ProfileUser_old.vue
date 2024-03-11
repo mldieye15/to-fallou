@@ -234,12 +234,11 @@ import { reactive, getCurrentInstance, onMounted, watchEffect} from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
-import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/store/user";
+const currentUser = useUserStore();
+const {current} = currentUser;
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
-
-import { useUtilisateurStore } from "../store";
-const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
@@ -248,11 +247,9 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const userStore = useUtilisateurStore();
-const { dataDetails, loading } = storeToRefs(userStore);
-const { one, modify } = userStore;
+const { dataDetails, loading } = storeToRefs(currentUser);
 const redirectToUsers = () => {
-  router.push({ name: 'user-liste'});
+  router.push({ name: 'accueil'});
 };
 const inputForm = reactive({
   prenoms: "",
@@ -286,7 +283,7 @@ const inputForm = reactive({
 //   }
 // });
 onMounted(()=>{
-  one(route.params.id ).then( () => {
+  current().then( () => {
     inputForm.prenoms = dataDetails.value.prenoms,
     inputForm.nom = dataDetails.value.nom,
     inputForm.matricule = dataDetails.value.matricule,
@@ -299,7 +296,7 @@ onMounted(()=>{
     inputForm.telephone = dataDetails.value.telephone,
     inputForm.anciennete = dataDetails.value.anciennete,
     // inputForm.fonction=dataDetails.value.fonction.libelleLong,
-    inputForm.etablissement=dataDetails.value.etablissement.libelleLong,
+    inputForm.etablissement=dataDetails.value.etablissement.libelleLong, 
     inputForm.banque=dataDetails.value.banque,
     inputForm.codeBanque=dataDetails.value.codeBanque,
     inputForm.codeAgence=dataDetails.value.codeAgence,
@@ -307,7 +304,6 @@ onMounted(()=>{
     inputForm.cleRib=dataDetails.value.cleRib   
   });
 });
-
 </script>
 <style scoped>
 .custom-card {

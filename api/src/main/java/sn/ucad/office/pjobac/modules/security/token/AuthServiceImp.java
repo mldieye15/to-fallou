@@ -288,7 +288,21 @@ public class AuthServiceImp implements AuthService {
         return UserDetailsResponse.builder()
                 .userId(user.getId())  // Utilisez la méthode getId() ou le champ correspondant de votre classe AppUser
                 .email(user.getEmail())
+                .matricule(user.getMatricule())
                 .nom(user.getNom())
+                .prenoms(user.getPrenoms())
+                .mdpasse(user.getMdpasse())
+                .profileImageUrl(user.getProfileImageUrl())
+                .sexe(user.getSexe())
+                .telephone(user.getTelephone())
+                .anciennete(user.getAnciennete())
+                .etablissement(user.getEtablissement())
+                .code(user.getCode())
+                .banque(user.getBanque())
+                .codeBanque(user.getCodeBanque())
+                .codeAgence(user.getCodeAgence())
+                .numeroCompte(user.getNumeroCompte())
+                .cleRib(user.getCleRib())
                 .build();
     }
 

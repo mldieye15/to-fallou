@@ -6,7 +6,7 @@
       max-width="900"
       rounded="lg"
     >
-    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.user') }}</h2>
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">Mon profil</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="userForm">
       <v-row >
@@ -21,6 +21,7 @@
         v-model="inputForm.prenoms"
         variant="solo" 
         class="input-with-asterisk"
+        
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.prenoms" class="required-message mb-0">
           Champ obligatoire
@@ -40,6 +41,7 @@
         v-model="inputForm.nom"
         variant="solo"
         class="input-with-asterisk"
+        
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.nom" class="required-message mb-0">
           Champ obligatoire
@@ -84,8 +86,8 @@
         v-model="inputForm.code"
         variant="solo"
         @blur="checkCodeValidity"
-        class="input-with-asterisk"
         readonly
+        class="input-with-asterisk"
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.code" class="required-message mb-0">
           Champ obligatoire
@@ -108,6 +110,7 @@
         v-model="inputForm.telephone"
         variant="solo"
         class="input-with-asterisk"
+        
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
           Champ obligatoire
@@ -128,6 +131,7 @@
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.matricule" class="required-message mb-0">
@@ -138,8 +142,7 @@
         </div>
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
       </v-col>
-      </v-row>
-      
+      </v-row>      
       <v-row >
       <v-col >
         <v-select
@@ -179,6 +182,7 @@
         item-title="libelleLong"
         item-value="id"
         class="input-with-asterisk"
+        
       ></v-select>
       <div v-if="formSubmitted && !inputForm.etablissement" class="required-message mb-0">
           Champ obligatoire
@@ -187,8 +191,9 @@
           </span>
         </div>
     </v-col>
-      </v-row>
+      </v-row >
       
+
       <v-row >
         <v-col>
       <v-text-field 
@@ -202,6 +207,7 @@
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.banque" class="required-message mb-0">
@@ -224,6 +230,7 @@
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeBanque" class="required-message mb-0">
@@ -246,6 +253,7 @@
         variant="solo" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeAgence" class="required-message mb-0">
@@ -308,7 +316,18 @@
        </router-link>
       </div>
        </p>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+       <!-- <v-btn v-if="!isEditing" block class="mt-2" size="large" color="orange" @click="startEditing">
+    Mise à jour de mes informations
+    </v-btn> -->
+
+    <!-- Bouton pour enregistrer les modifications -->
+    <!-- <v-btn  block class="mt-2" size="large" color="blue" @click="handleSave">
+      {{ $t('apps.forms.enregistrer') }}
+    </v-btn> -->
+     <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToAccueil()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
     </v-form>
     </v-card>
   </div>
@@ -316,7 +335,7 @@
 
 <script setup>
 import { reactive, getCurrentInstance,watchEffect,ref} from "vue";
-import { useUtilisateurStore } from "../store";
+import { useUtilisateurStore } from "@/modules/user/store";
 import { onMounted } from "vue"
 import { storeToRefs } from "pinia";
 import { useFonctionStore } from "@/modules/fonction/store";
@@ -326,10 +345,14 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 import { useRouter } from "vue-router";
 import * as yup from 'yup';
+import { useUserStore } from "@/store/user";
+const currentUser = useUserStore();
+const {current} = currentUser;
 const router = useRouter();
-
+const { dataDetails, loading } = storeToRefs(currentUser);
 const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
+const {upProfileUser}=utilisateurStore;
 const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
 const codeStore = useCodeStore();
@@ -350,7 +373,6 @@ const schema = yup.object().shape({
   nom: yup.string().required('Le nom est requis'),
   code: yup.string().required('Le code est requis'),
   email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
-  mdpasse: yup.string().required('Le mot de passe est requis').min(5, 'Au moins 5 caractères requis'),
   telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
   matricule: yup.string().required('Le matricule est requis'),
   sexe: yup.string().required('Le sexe est requis'),
@@ -361,25 +383,47 @@ const schema = yup.object().shape({
   numeroCompte: yup.string().required('Le numéro de compte est requis').matches(/^\d{12}$/, 'Numéro de compte invalide'),
   cleRib: yup.string().required('La clé RIB est requise').matches(/^\d{2}$/, 'Clé RIB invalide'),
 });
-const  formSubmitted=ref(false);
-const { inputForm, actionSubmit } = defineProps({
-  inputForm: Object,
-  actionSubmit: {
-    type: Function,
-  }
+const inputForm = reactive({
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  email: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
+  fonction: null,
+  etablissement: null,
+  libelleLong: "",
 });
-
+const  formSubmitted=ref(false);
+// const { inputForm, actionSubmit } = defineProps({
+//   inputForm: Object,
+//   actionSubmit: {
+//     type: Function,
+//   }
+// });
+const redirectToAccueil = () => {
+  router.push({ name: 'accueil'});
+};
+const isEditing = ref(false);
+const startEditing = () => {
+  isEditing.value = true;
+};
 const codeError = ref(false);
 const codeErrorMessage = ref("");
 const emailError = ref(false);
 const emailErrorMessage = ref("");
-const usernameError = ref(false);
-const usernameErrorMessage = ref("");
 const matriculeError = ref("");
 const matriculeErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
 watchEffect(() => {
-  isSubmitDisabled.value = codeError.value||emailError.value ||matriculeError.value||usernameError.value
+  isSubmitDisabled.value = codeError.value||emailError.value ||matriculeError.value
 });
 
 const checkCodeValidity = async () => {
@@ -418,25 +462,6 @@ const checkEmailExistence = async () => {
       console.error("Erreur lors de la vérification de l'email :", error);
       emailError.value = true;
       emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
-    }
-  }
-};
-const checkUsernameExistence = async () => {
-  usernameError.value = false;
-  usernameErrorMessage.value = "";
-  if (inputForm.username) {
-    try {
-      const isAvailable = await utilisateurStore.checkUsernameExistence(inputForm.username);
-      console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
-      if (!isAvailable) {
-        usernameError.value = true;
-        usernameErrorMessage.value = "Ce nom d'utilisateur est déjà utilisé.";
-        console.log('usernameErrorMessage:', usernameErrorMessage);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
-      usernameError.value = true;
-      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'utilisateur. Veuillez réessayer.";
     }
   }
 };
@@ -491,27 +516,28 @@ const onMatriculeInput = () => {
     checkMatriculeExistence();
   }
 };
-const onUsernameInput = () => {
-  // Vérifie s'il y a des espaces dans le nom d'utilisateur
-  if (/\s/.test(inputForm.username)) {
-    // Si des espaces sont trouvés, affiche un message d'erreur
-    usernameError.value = true;
-    usernameErrorMessage.value = "Le nom d'utilisateur ne doit pas contenir d'espaces.";
-  } else {
-    // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
-    checkUsernameExistence();
-  }
-};
-const redirectToUsers = () => {
-  router.push({ name: 'user-liste'});
-};
 const handleSave = async () => {
   try {
-    if (!isSubmitDisabled.value) {
+    if (!isSubmitDisabled.value){
       await schema.validate(inputForm, { abortEarly: false });
       console.log('Formulaire valide. Soumission en cours...');
-      actionSubmit(inputForm); 
-      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+        const payload = {
+          prenoms:inputForm.prenoms, 
+          nom:inputForm.nom,
+          matricule:inputForm.matricule, 
+          email:inputForm.email,
+          sexe:inputForm.sexe ,
+          code:inputForm.code ,
+          telephone:inputForm.telephone ,
+          etablissement:inputForm.etablissement, 
+          banque:inputForm.banque,
+          codeBanque:inputForm.codeBanque,
+          codeAgence:inputForm.codeAgence,
+          numeroCompte:inputForm.numeroCompte,
+          cleRib:inputForm.cleRib 
+    };
+      upProfileUser(payload); 
+      router.push({ name: 'accueil'});
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
     }
@@ -525,8 +551,24 @@ const handleSave = async () => {
   }
 };
 onMounted(()=>{
-  fonctionStore.all();
   etablissementStore.all();
+  current().then( () => {
+    inputForm.prenoms = dataDetails.value.prenoms,
+    inputForm.nom = dataDetails.value.nom,
+    inputForm.matricule = dataDetails.value.matricule,
+    inputForm.email = dataDetails.value.email,
+    inputForm.sexe = dataDetails.value.sexe,
+    inputForm.code = dataDetails.value.code,
+    inputForm.telephone = dataDetails.value.telephone,
+    inputForm.anciennete = dataDetails.value.anciennete,
+    inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null,
+    inputForm.libelleLong=dataDetails.value.etablissement?dataDetails.value.etablissement.libelleLong:null,
+    inputForm.banque=dataDetails.value.banque,
+    inputForm.codeBanque=dataDetails.value.codeBanque,
+    inputForm.codeAgence=dataDetails.value.codeAgence,
+    inputForm.numeroCompte=dataDetails.value.numeroCompte,
+    inputForm.cleRib=dataDetails.value.cleRib   
+  });
 
 });
 </script>

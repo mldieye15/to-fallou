@@ -44,6 +44,11 @@ const inputForm = reactive({
   code: "",
   telephone: "",
   anciennete: "",
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
   fonction: null,
   etablissement: null,
 });
@@ -73,9 +78,13 @@ onMounted(()=>{
     inputForm.code = dataDetails.value.code,
     inputForm.telephone = dataDetails.value.telephone,
     // inputForm.anciennete = dataDetails.value.anciennete
-
     inputForm.fonction=dataDetails.value.fonction?dataDetails.value.fonction.id:null,
-    inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null
+    inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null,
+    inputForm.banque=dataDetails.value.banque,
+    inputForm.codeBanque=dataDetails.value.codeBanque,
+    inputForm.codeAgence=dataDetails.value.codeAgence,
+    inputForm.numeroCompte=dataDetails.value.numeroCompte,
+    inputForm.cleRib=dataDetails.value.cleRib 
     
 
 

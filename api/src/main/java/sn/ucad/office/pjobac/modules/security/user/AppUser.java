@@ -74,14 +74,14 @@ public class AppUser {
 
     @Column(length = 5)
     @NotNull
-    private  int codeAgence;
+    private  String codeAgence;
 
     @Column(length = 12)
     @NotNull
-    private  Long numeroCompte;
+    private  String numeroCompte;
     @Column(length = 2)
     @NotNull
-    private  int cleRib;
+    private  String cleRib;
 
     @NotNull
     @Size(min=5, max=100, message="Email doit etre comprise entre 5 et 100 cracteres")

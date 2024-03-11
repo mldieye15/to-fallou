@@ -9,6 +9,7 @@ import { resolve, dirname } from 'node:path'
 
 //  i18n
 import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import { analyzer } from "vite-bundle-analyzer";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,6 +17,7 @@ export default defineConfig({
     vue({
       template: { transformAssetUrls }
     }),
+    analyzer(),
     // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vite-plugin
     vuetify({
       autoImport: true,

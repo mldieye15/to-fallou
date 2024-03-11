@@ -178,9 +178,9 @@ const routes = [
     },
         {
           path: 'profile',
-          name: 'profile',
+          name: 'profileUser',
           component: () =>
-              import ( /* webpackChunkName: "profile" */ '@/views/auth/Profile.vue'),
+              import ( /* webpackChunkName: "profile" */ '@/views/auth/ProfileUser.vue'),
           meta: {
               middleware: [Middleware.auth]
           }
