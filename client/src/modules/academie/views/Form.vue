@@ -16,13 +16,18 @@
         density="compact"
         :label="$t('apps.forms.academie.nom')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="solo"
-        @blur="checkLibelleExistence"
+        variant="outlined"
+        @blur="onLibelleInput"
       >
       </v-text-field>
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
+      <div v-if="formSubmitted && !inputForm.libelleLong" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       <v-text-field
         id="libelleCourt"
         prepend-inner-icon="mdi-school"
@@ -30,9 +35,8 @@
         density="compact"
         :label="$t('apps.forms.academie.abreviation')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleCourt"
-        variant="solo"
+        variant="outlined"
         @blur="onCodeInput"
       ></v-text-field>
       <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
@@ -53,10 +57,12 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const instance = getCurrentInstance();
 const academieStore = useAcademieStore();
+import * as yup from 'yup';
 
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+const schema = yup.object().shape({
+  libelleLong: yup.string().required('Le libelleLong est requis'),
+  
+ 
 });
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
@@ -75,7 +81,28 @@ const checkLibelleExistence = async () => {
       console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
       if (!isAvailable) {
         libelleError.value = true;
-        libelleErrorMessage.value = "Cet nom  est déjà utilisé.";
+        libelleErrorMessage.value = "Cette academie existe dèja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
+const checkLibelleExistenceUp = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    const academieId= inputForm.id;
+    const libelleLong = inputForm.libelleLong;
+    try {
+      const isAvailable = await academieStore.checkLibelleExistenceUp({academieId ,libelleLong});
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "Cette academie existe dèja.";
         console.log('libelleErrorMessage:', libelleErrorMessage);
       }
     } catch (error) {
@@ -104,6 +131,7 @@ const checkCodeExistence = async () => {
     }
   }
 };
+
 const onCodeInput = () => {
   // Vérifie s'il y a des espaces dans le matricule
   if (/\s/.test(inputForm.libelleCourt)) {
@@ -115,8 +143,16 @@ const onCodeInput = () => {
     checkCodeExistence ();
   }
 };
-const { inputForm, actionSubmit } = defineProps({
+const onLibelleInput = () => {
+  if (isEdit) {
+      checkLibelleExistenceUp();
+    } else {
+      checkLibelleExistence();
+    } 
+};
+const { inputForm, actionSubmit,isEdit  } = defineProps({
   inputForm: Object,
+  isEdit: Boolean,
   actionSubmit: {
     type: Function,
   }
@@ -124,16 +160,45 @@ const { inputForm, actionSubmit } = defineProps({
 const redirectToUsers = () => {
   router.push({ name: 'academie-liste'});
 };
-const handleSave = () => {
-  if(instance.refs.academieForm.validate()&& !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const  formSubmitted=ref(false);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+    error.inner.forEach(err => {
+      console.error(err.message);
+    });
+    console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    formSubmitted.value = true;
+      console.log(formSubmitted)
   }
-}
-
+};
 </script>
 <style>
 .error-message {
   color: red; /* ou toute autre couleur de votre choix */
   margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+.required-icon {
+  color: orange; /* Couleur de l'icône pour les champs requis non remplis */
+  margin-left: 5px; /* Ajustement de l'espacement entre le message d'erreur et l'icône */
+}
+.input-with-asterisk {
+  position: relative; /* Permet de positionner l'astérisque par rapport à l'input */
+}
+.input-with-asterisk:after {
+  content: "*"; /* Ajouter l'astérisque */
+  color: red; /* Couleur rouge */
+  font-size: larger; /* Taille de police plus grande */
+  position: absolute; /* Position absolue */
+  top: 0px; /* Ajuster la position verticale */
+  right: 8px; /* Ajuster la position horizontale */
 }
 </style>

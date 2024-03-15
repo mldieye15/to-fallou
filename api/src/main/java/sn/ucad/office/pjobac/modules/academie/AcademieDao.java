@@ -17,6 +17,8 @@ import java.util.Optional;
 @Repository
 public interface AcademieDao extends JpaRepository<Academie, Long> {
     Optional <Academie> findByLibelleLong(String libelleLong);
+    @Query("SELECT a FROM Academie a WHERE a.libelleLong= :libelleLong AND a.id != :academieId")
+    Optional<Academie> findByLibelleLongAndIdNot(@Param("libelleLong") String libelleLong, @Param("academieId") Long academieId);
     Optional <Academie> findByLibelleCourt(String libelleCourt);
     @Query(value = "select a.libelle_long as libelleLong, a.libelle_court, v.libelle_long  from  academies a  join villes v  on a.id=v.id",  nativeQuery = true)
     List <AcademieVille> academieWithVille();

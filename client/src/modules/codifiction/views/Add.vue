@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.codification.codification') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="false"/>
   </div>
 </template>
 

@@ -39,15 +39,15 @@
         </template>
         <template #item-actions="item">
           <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
-            <v-btn  variant="tonal" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
+            <v-btn  variant="flat" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
               Appreciation
             </v-btn>
-            <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
+            <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn>
           </div>
           <div v-else>
-            <v-btn  variant="tonal" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
+            <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn>
           </div>

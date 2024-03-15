@@ -1,11 +1,16 @@
 <template>
-  <v-container>
-    <v-alert
+  <v-container class="text-center">
+    <v-alert variant="flat"
       v-if="successMessage || errorMessage"
       :type="successMessage ? 'success' : 'error'"
     >
       {{ successMessage || errorMessage }}
     </v-alert>
+    <!-- Utilisation de v-if pour conditionner l'affichage de la section -->
+    <h2 v-if="successMessage">
+     Veuillez cliquer
+      <router-link :to="{name:'login'}"><span>ici</span></router-link> pour vous connecter.
+    </h2>
   </v-container>
 </template>
 

@@ -3,8 +3,8 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="9">
         <v-card>
-          <v-card-title class="headline">
-            Détail administrateur
+          <v-card-title class="headline text-center">
+            Détail superviseur
           </v-card-title>
           <v-card-text>
             <v-list>

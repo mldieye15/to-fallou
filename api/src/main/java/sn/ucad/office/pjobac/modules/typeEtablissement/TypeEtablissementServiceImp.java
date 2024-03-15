@@ -160,5 +160,14 @@ public class TypeEtablissementServiceImp implements TypeEtablissementService {
 
     }
 
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<TypeEtablissement> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
+        }
+        return false;
+    }
+
 
 }

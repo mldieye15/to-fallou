@@ -70,7 +70,7 @@
 </template>
 
 <script setup>
-import imageUrl from '@/assets/imgs/logo_blanc.jpg'
+import imageUrl from '@/assets/imgs/logo_ucad.png';
 import profileUrl from '@/assets/imgs/profile3.png'
 import Localisation from '@/components/core/Localisation.vue';
 import SidebarItem from '@/components/core/SidebarItem.vue';
@@ -117,32 +117,7 @@ const defaultSideBarItems = reactive({ items: [
       "route": "dashboard"
   },
   {
-    "id": 14,
-    "title": "Codifications",
-    "translate": "codification",
-    "code": "codification",
-    "icon": "mdi-school",
-    "route": "codification-liste"
-  },
-  
-  {
-      "id": 1,
-      "title": "Users",
-      "translate": "user",
-      "code": "user",
-      "icon": "mdi-account-cowboy-hat-outline",
-      "route": "user-liste"
-  },
-  {
-    "id": 15,
-    "title": "Candidats",
-    "translate": "candidat",
-    "code": "candidat",
-    "icon": "mdi-school",
-    "route": "candidat-liste"
-  },
-  {
-    "id": 2,
+    "id": 1,
     "title": "Académies",
     "translate": "academie",
     "code": "academie",
@@ -150,23 +125,7 @@ const defaultSideBarItems = reactive({ items: [
     "route": "academie-liste"
   },
   {
-    "id": 3,
-    "title": "Villes",
-    "translate": "ville",
-    "code": "ville",
-    "icon": "mdi-city",
-    "route": "ville-liste"
-  },
-  {
-    "id": 4,
-    "title": "Jurys",
-    "translate": "jury",
-    "code": "jury",
-    "icon": "mdi-align-vertical-center",
-    "route": "jury-liste"
-  },
-  {
-    "id": 5,
+    "id": 2,
     "title": "Annees",
     "translate": "annee",
     "code": "annee",
@@ -174,12 +133,36 @@ const defaultSideBarItems = reactive({ items: [
     "route": "annee-liste"
   },
   {
-    "id": 6,
+    "id": 3,
+    "title": "Candidats",
+    "translate": "candidat",
+    "code": "candidat",
+    "icon": "mdi-school",
+    "route": "candidat-liste"
+  },
+  {
+    "id": 4,
     "title": "Centres",
     "translate": "centre",
     "code": "centre",
     "icon": "mdi-cast-education",
     "route": "centre-liste"
+  },
+  {
+    "id": 5,
+    "title": "Codifications",
+    "translate": "codification",
+    "code": "codification",
+    "icon": "mdi-school",
+    "route": "codification-liste"
+  },
+  {
+    "id": 6,
+    "title": "Demandes",
+    "translate": "demande",
+    "code": "demande",
+    "icon": "mdi-account-multiple-check",
+    "route": "demande-liste"
   },
   {
     "id": 7,
@@ -191,38 +174,6 @@ const defaultSideBarItems = reactive({ items: [
   },
   {
     "id": 8,
-    "title": "Type d'etablissements",
-    "translate": "typeEtablissement",
-    "code": "typeEtablissement",
-    "icon": "mdi-account-school-outline",
-    "route": "typeEtablissement-liste"
-  },
-  {
-    "id": 9,
-    "title": "Sessions",
-    "translate": "session",
-    "code": "session",
-    "icon": "mdi-calendar-clock",
-    "route": "session-liste"
-  },
-  {
-    "id": 10,
-    "title": "TypeCentres",
-    "translate": "typeCentre",
-    "code": "typeCentre",
-    "icon": "mdi-school-outline",
-    "route": "typeCentre-liste"
-  },
-  {
-    "id": 11,
-    "title": "Demandes",
-    "translate": "demande",
-    "code": "demande",
-    "icon": "mdi-account-multiple-check",
-    "route": "demande-liste"
-  },
-  {
-    "id": 12,
     "title": "Fonctions",
     "translate": "fonction",
     "code": "fonction",
@@ -230,12 +181,61 @@ const defaultSideBarItems = reactive({ items: [
     "route": "fonction-liste"
   },
   {
+    "id": 9,
+    "title": "Jurys",
+    "translate": "jury",
+    "code": "jury",
+    "icon": "mdi-align-vertical-center",
+    "route": "jury-liste"
+  },
+  {
+    "id": 10,
+    "title": "Sessions",
+    "translate": "session",
+    "code": "session",
+    "icon": "mdi-calendar-clock",
+    "route": "session-liste"
+  },
+  {
+    "id": 11,
+    "title": "TypeCentres",
+    "translate": "typeCentre",
+    "code": "typeCentre",
+    "icon": "mdi-school-outline",
+    "route": "typeCentre-liste"
+  },
+  {
+    "id": 12,
+    "title": "Type d'etablissements",
+    "translate": "typeEtablissement",
+    "code": "typeEtablissement",
+    "icon": "mdi-account-school-outline",
+    "route": "typeEtablissement-liste"
+  },
+  
+  {
     "id": 13,
     "title": "TypeSessions",
     "translate": "typeSession",
     "code": "typeSessions",
     "icon": "mdi-clock ",
     "route": "typeSession-liste"
+  },
+  {
+      "id": 14,
+      "title": "Users",
+      "translate": "user",
+      "code": "user",
+      "icon": "mdi-account-cowboy-hat-outline",
+      "route": "user-liste"
+  },
+  {
+    "id": 15,
+    "title": "Villes",
+    "translate": "ville",
+    "code": "ville",
+    "icon": "mdi-city",
+    "route": "ville-liste"
   },
   // {
   //     "id": 3,

@@ -29,4 +29,5 @@ public interface AcademieService {
     public Optional<AcademieAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyAcademieUnique(String libelleLong)throws  BusinessResourceException;
     void verifyUniqueLibelleCourt(String libelleCourt)throws  BusinessResourceException;
+    boolean verifyLibelleLongUniqueUp(String libelleLong, Long academieId)throws  BusinessResourceException;
 }

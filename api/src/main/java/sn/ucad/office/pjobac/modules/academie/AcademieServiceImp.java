@@ -198,5 +198,14 @@ public class AcademieServiceImp implements AcademieService {
 
     }
 
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long academieId) throws BusinessResourceException {
+        Optional<Academie> existingUserWithLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,  academieId);
+        if (existingUserWithLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre academie.");
+        }
+        return false;
+    }
+
 
 }

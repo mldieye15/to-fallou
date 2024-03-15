@@ -6,6 +6,7 @@ const  modulesURL = '/v1/typeEtablissements';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
 const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 
 export const useTypeEtablissementStore = defineStore('typeEtablissement', {
   state: () => ({
@@ -142,6 +143,16 @@ export const useTypeEtablissementStore = defineStore('typeEtablissement', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ typeId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?typeId=${typeId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

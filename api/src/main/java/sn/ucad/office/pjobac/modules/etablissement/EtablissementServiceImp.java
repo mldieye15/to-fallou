@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.etablissement.dto.EtablissementAudit;
 import sn.ucad.office.pjobac.modules.etablissement.dto.EtablissementRequest;
 import sn.ucad.office.pjobac.modules.etablissement.dto.EtablissementResponse;
@@ -32,8 +33,9 @@ public class EtablissementServiceImp implements EtablissementService {
     public List<EtablissementResponse> all() throws BusinessResourceException {
         log.info("EtablissementServiceImp::all");
         List<Etablissement> all = dao.findAll();
-        List<EtablissementResponse> response = all.stream()
-                .map(one -> mapper.toEntiteResponse(one))
+        List<EtablissementResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;
     }
@@ -42,9 +44,9 @@ public class EtablissementServiceImp implements EtablissementService {
     public SimplePage<EtablissementResponse> all(Pageable pageable) throws BusinessResourceException {
         log.info("Liste des Annees avec pagination. <all>");
         final Page<Etablissement> page = dao.findAll(pageable);
-        return new SimplePage<EtablissementResponse>(page.getContent()
+        return new SimplePage<>(page.getContent()
                 .stream()
-                .map(item -> mapper.toEntiteResponse(item))
+                .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList()),
                 page.getTotalElements(), pageable
         );
@@ -59,7 +61,8 @@ public class EtablissementServiceImp implements EtablissementService {
                             () -> new BusinessResourceException("not-found", "Aucun Etablissement avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Agen avec id: " + id + " trouvé. <oneById>");
-            Optional<EtablissementResponse> response = Optional.ofNullable(mapper.toEntiteResponse(one));
+            Optional<EtablissementResponse> response;
+            response = Optional.ofNullable(mapper.toEntiteResponse(one));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");
@@ -123,7 +126,8 @@ public class EtablissementServiceImp implements EtablissementService {
                     );
             dao.deleteById(myId);
             log.info("Etablissement avec id & matricule: " + id + " & " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>");
-            String response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
+            String response;
+            response = "Imputation: " + oneBrute.getLibelleLong() + " supprimé avec succés. <del>";
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <del>.");
@@ -140,7 +144,8 @@ public class EtablissementServiceImp implements EtablissementService {
                             () -> new BusinessResourceException("not-found", "Aucune Etablissement avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             log.info("Etablissement avec id: " + id + " trouvé. <auditOneById>");
-           Optional<EtablissementAudit> response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
+           Optional<EtablissementAudit> response;
+            response = Optional.ofNullable(mapper.toEntiteAudit(oneBrute, Long.valueOf("1"), Long.valueOf("1") ));
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <auditOneById>.");
@@ -149,7 +154,31 @@ public class EtablissementServiceImp implements EtablissementService {
         //return Optional.empty();
     }
 
+    @Override
+    public void verifyEtablissementUnique(String libelleLong) throws BusinessResourceException {
+        String normalizedLibelleLong = libelleLong.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleLong(normalizedLibelleLong).isPresent()){
+            throw new ResourceAlreadyExists("Le centre existe déjà.");
+        }
 
+    }
+
+    @Override
+    public void verifyUniqueLibelleCourt(String libelleCourt) throws BusinessResourceException {
+        String normalizedLibelleCourt = libelleCourt.replaceAll("\\s+", " ").trim();
+        if(dao.findByLibelleCourt(normalizedLibelleCourt).isPresent()){
+            throw new ResourceAlreadyExists("Le code du centre existe déjà.");
+        }
+    }
+
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<Etablissement> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
+        }
+        return false;
+    }
 
 
 

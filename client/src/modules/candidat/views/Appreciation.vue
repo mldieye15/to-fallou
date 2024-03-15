@@ -14,21 +14,28 @@
         prepend-inner-icon="mdi-account"
         name="noteSupervisseur"
         density="compact"
-        :label="$t('apps.forms.candidat.note')"
+        :label="$t('apps.forms.candidat.appreciation')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.noteSupervisseur"
-        variant="solo" 
-      ></v-text-field >
+        variant="outlined" 
+        :error="inputForm.error" 
+        :error-messages="errors.noteSupervisseur?[errors.noteSupervisseur]:[]" 
+        @focus="clearErrors"
+      >
+          <template v-slot:append>
+            <v-icon v-if="errors.noteSupervisseur" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-text-field >
         <v-textarea
         id="appreciation"
         name="appreciation"
         density="compact"
         :label="$t('apps.forms.candidat.appreciation')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.appreciation"
-        variant="solo"
+        variant="outlined"
       ></v-textarea>
       
       <div class="d-flex justify-end">
@@ -47,7 +54,7 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useCandidatStore } from "../store";
 import { useToast } from 'vue-toastification';
-
+import * as yup from 'yup';
 
 const toast= useToast();
 const i18n = useI18n();
@@ -62,30 +69,59 @@ const route = useRoute();
 const candidatStore = useCandidatStore();
 const { dataDetails, loading } = storeToRefs(candidatStore);
 const { one, appreciation } = candidatStore;
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+const schema = yup.object().shape({
+  noteSupervisseur: yup
+    .number()
+    .required('La note est requise') // Définition de la règle "required"
+    .typeError('La note  doit être un nombre')
+    .min(0, 'La note  ne peut pas être négatif')
+    .max(60, 'La note  doit être inférieure ou égale à 100'),
+});
+const clearErrors = () => {
+  errors.noteSupervisseur = null;
+};
+const errors = reactive({
+  noteSupervisseur: "",
+  error: false,
 });
 const inputForm = reactive({
 noteSupervisseur:"",
 appreciation:"",
 });
-const handleSave = (event) => {
+const handleSave = async (event) => {
   event.preventDefault();
-  const payload = {
-    noteSupervisseur: inputForm.noteSupervisseur,
-    appreciation: inputForm.appreciation,
-  };
-appreciation(route.params.id, payload).then( () => {
-  // addNotification({
-  //     show: true,
-  //     text:  i18n.t('noter'),
-  //     color: 'blue'
-  //   });
-  toast.success(i18n.t('note'));
-  router.push( { name: 'candidat-liste'});
-});
-}
+  
+  try {
+  
+    // Validation Yup du formulaire
+    await schema.validate(inputForm, { abortEarly: false });
+
+    const payload = {
+      noteSupervisseur: inputForm.noteSupervisseur,
+    };
+    // Appel à votre API pour sauvegarder les données
+    await appreciation(route.params.id, payload);
+
+    // Affichage du message de succès
+    toast.success(i18n.t('note'));
+
+    // Redirection vers la page des détails du candidat
+    router.push({ name: 'candidat-liste' });
+  } catch (error) {
+    // Si la validation échoue, afficher les messages d'erreur
+    if (error instanceof yup.ValidationError) {
+      error.errors.forEach(errorMessage => {
+        // Afficher les messages d'erreur associés à chaque champ du formulaire
+        errors.noteSupervisseur = errorMessage;
+        inputForm.error = true;
+        // toast.error(errorMessage);
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
+  }
+};
 const redirectToListe = () => {
   router.push({ name: 'candidat-liste'});
 };

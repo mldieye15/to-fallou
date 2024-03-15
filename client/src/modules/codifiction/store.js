@@ -7,6 +7,8 @@ const add= modulesURL+'/';
 const  all = modulesURL+'/all';
 const emailAvailability = modulesURL +'/email-availability';
 const codeAvailability = modulesURL +'/code-availability';
+const emailAvailabilityUp = modulesURL +'/email-availabilityUp';
+const codeAvailabilityUp = modulesURL +'/code-availabilityUp';
 export const useCodificationStore = defineStore('codification', {
   state: () => ({
     dataListe: [],  //  List des données à afficher pour la table
@@ -131,6 +133,16 @@ export const useCodificationStore = defineStore('codification', {
         return false;
       }
     },
+    async checkEmailExistenceUp({ codificationId, email }) {
+      try {
+        const response = await axios.get(`${emailAvailabilityUp}?codificationId=${codificationId}&email=${email}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
+        return false;
+      }
+    },
     async checkCodeExistence(code) {
       try {
         const response = await axios.get(`${codeAvailability}?code=${code}`);
@@ -138,7 +150,17 @@ export const useCodificationStore = defineStore('codification', {
         response.data=response.data.isAvailable;
         return true;
       } catch (error) {
-        console.error('Erreur lors de la vérification du nom :', error);
+        console.error('Erreur lors de la vérification de l\' email :', error);
+        return false;
+      }
+    },
+    async checkCodeExistenceUp({ codificationId, code }) {
+      try {
+        const response = await axios.get(`${codeAvailabilityUp}?codificationId=${codificationId}&code=${code}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du code :", error);
         return false;
       }
     },

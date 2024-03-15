@@ -4,7 +4,7 @@ const codificationListe = () => import( /* webpackChunkName: 'codification__list
 //const codificationDetails = () => import( /* webpackChunkName: 'academie__details' */ './views/Details.vue');
 
 const codificationRoutes = [{
-    path: '/app/dashboard/academies',
+    path: '/app/dashboard/codifications',
     component: AppLayout,
     children: [
       {

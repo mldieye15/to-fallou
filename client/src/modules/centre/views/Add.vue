@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"  :isEdit="false"/>
   </div>
 </template>
 
@@ -32,7 +32,8 @@ const inputForm= reactive({
   libelleLong:'',
   libelleCourt:'',
   ville: null,
-  typeCentre: null
+  typeCentre: null,
+  error: false
 });
 const updateLibelleLong = () => {
   if (inputForm.typeSession && inputForm.annee) {

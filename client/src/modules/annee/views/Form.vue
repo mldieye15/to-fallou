@@ -16,13 +16,19 @@
         density="compact"
         :label="$t('apps.forms.annee.libelle')"
         color="balck"
-        :rules="[rules.required, rules.min]"
+        :rules="[rules.exactlylibelleLong]"
         v-model="inputForm.libelleLong"
-        variant="solo"
+        variant="outlined"
         @blur="onLibelleInput" 
       >
     </v-text-field>
     <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.libelleLong" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
 
     <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
@@ -37,14 +43,18 @@
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { useAnneeStore } from "../store";
 import { useRouter } from 'vue-router';
+import * as yup from 'yup';
 const router = useRouter();
 
 const instance = getCurrentInstance();
 const anneeStore=useAnneeStore();
-
 const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+  exactlylibelleLong: value => value && value.length === 4 && /^\d+$/.test(value) || 'Le libelleLong doit comporter exactement 4 chiffres',  
+});
+
+const schema = yup.object().shape({
+  libelleLong: yup.string().matches(/^\d{4}$/, 'Année invalide').required("L'année est requis'"),
+ 
 });
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
@@ -61,7 +71,7 @@ const checkLibelleExistence = async () => {
       console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
       if (!isAvailable) {
         libelleError.value = true;
-        libelleErrorMessage.value = "L'annee   existe deja.";
+        libelleErrorMessage.value = "L'annee   existe dèja.";
         console.log('libelleErrorMessage:', libelleErrorMessage);
       }
     } catch (error) {
@@ -92,16 +102,47 @@ const onLibelleInput = () => {
 const redirectToListe = () => {
   router.push({ name: 'annee-liste'});
 };
-const handleSave = () =>{
-  if(instance.refs.anneeForm.validate && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const  formSubmitted=ref(false);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+    error.inner.forEach(err => {
+      console.error(err.message);
+    });
+    console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    formSubmitted.value = true;
+      console.log(formSubmitted)
   }
-}
+};
 
 </script>
 <style>
 .error-message {
   color: red; /* ou toute autre couleur de votre choix */
   margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+.required-icon {
+  color: orange; /* Couleur de l'icône pour les champs requis non remplis */
+  margin-left: 5px; /* Ajustement de l'espacement entre le message d'erreur et l'icône */
+}
+.input-with-asterisk {
+  position: relative; /* Permet de positionner l'astérisque par rapport à l'input */
+}
+
+.input-with-asterisk:after {
+  content: "*"; /* Ajouter l'astérisque */
+  color: red; /* Couleur rouge */
+  font-size: larger; /* Taille de police plus grande */
+  position: absolute; /* Position absolue */
+  top: 0px; /* Ajuster la position verticale */
+  right: 8px; /* Ajuster la position horizontale */
 }
 </style>

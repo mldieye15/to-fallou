@@ -16,7 +16,7 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         v-model="inputForm.sessionName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.session">
@@ -30,7 +30,7 @@
         :label="$t('apps.forms.ville.nom')"
         color="balck"
         v-model="inputForm.villeName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.ville">
@@ -42,7 +42,7 @@
         :label="$t('apps.forms.centre.nom')"
         color="balck"
         v-model="inputForm.centreName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.centre">
@@ -53,7 +53,7 @@
         density="compact"
         color="balck"
         v-model="inputForm.jury"
-        variant="solo"
+        variant="outlined"
         :items="dataListeJury"
         persistent-hint
         item-title="numero"

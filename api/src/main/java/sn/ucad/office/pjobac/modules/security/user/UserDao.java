@@ -2,6 +2,7 @@ package sn.ucad.office.pjobac.modules.security.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +13,12 @@ public interface UserDao extends JpaRepository<AppUser, Long> {
 //    Optional<AppUser> findByUsername(String username);
     Optional<AppUser> findByEmail(String email);
     Optional<AppUser> findByMatricule(String email);
+//    Optional<AppUser> findByEmailAndIdNot(String email, Long id);
+    @Query("SELECT u FROM AppUser u WHERE u.email = :email AND u.id != :userId")
+    Optional<AppUser> findByEmailAndIdNot(@Param("email") String email, @Param("userId") Long userId);
+//    Optional<AppUser> findByMatriculeAndIdNot(String matricule, Long id);
+    @Query("SELECT u FROM AppUser u WHERE u.matricule = :matricule AND u.id != :userId")
+    Optional<AppUser> findByMatriculeAndIdNot(@Param("matricule") String matricule, @Param("userId") Long userId);
     @Query("SELECT u FROM AppUser u JOIN u.roles r WHERE r.nom = 'ROLE_ADMIN'")
     List<AppUser> adminRole();
     @Query("SELECT u FROM AppUser u JOIN u.roles r WHERE r.nom = 'ROLE_USER'")

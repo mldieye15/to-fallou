@@ -19,7 +19,7 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         v-model="inputForm.libelleLong"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.session">
@@ -34,12 +34,19 @@
         :label="$t('apps.forms.academie.nom')"
         dense
         outlined
-        variant="solo"
-        :rules="[rules.required]"
+        variant="outlined"
         density="compact"
         clearable
         @input="onAcademieChange(index)"
-      ></v-autocomplete>
+        :error-messages="errors.academie ? [errors.academie] : []"
+        @focus="clearErrors"
+      >
+      <template v-if="errors.academie"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-autocomplete>
       <v-autocomplete
       :name="'ville'+index"
        v-model="inputForm.ville"
@@ -49,19 +56,26 @@
         :label="$t('apps.forms.ville.nom')"
         dense
         outlined
-        variant="solo"
+        variant="outlined"
         prepend-inner-icon="mdi-city"
-        :rules="[rules.required]"
         density="compact"
         clearable
-      ></v-autocomplete>
+        :error-messages="errors.ville ? [errors.ville] : []"
+        @focus="clearErrors"
+      >
+      <template v-if="errors.ville"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-autocomplete>
 
 
     </div>  
     </v-form>
     <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
-        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave" :disabled="!formValid">{{ $t('apps.forms.valider') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
       </div>
     </v-card>
     
@@ -80,8 +94,21 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import * as yup from 'yup';
 
-
+const schema = yup.object().shape({
+  ville: yup.string().required('Veuillez selectionner une ville'),
+  academie: yup.string().required('Veuillez selectionner une académie'),
+});
+const errors = reactive({
+  ville:null,
+  academie: null,
+  error: false,
+});
+const clearErrors = () => {
+  errors.ville = null;
+  errors.academie= null;
+};
 const toast= useToast();
 const instance = getCurrentInstance();
 
@@ -109,10 +136,12 @@ const { addNotification } = notificationStore;
 const demandeStore = useDemandeStore();
 const { add } = demandeStore;
 const formValid = ref(false);
-const handleSave = () => {
-  const selectedAcademies = new Map();
-  const selectedVilles = new Set();
-  for (const inputForm of requests.value) {
+const handleSave = async() => {
+  try{
+    const selectedAcademies = new Map();
+    const selectedVilles = new Set();
+   for (const inputForm of requests.value) {
+     await schema.validate(inputForm, { abortEarly: false });
     // Vérifier les académies
     if (selectedAcademies.has(inputForm.academie)) {
       if (selectedAcademies.get(inputForm.academie) >= 2) {
@@ -147,6 +176,20 @@ const handleSave = () => {
         toast.success(i18n.t('added'));
         router.push({ name: 'accueil' });
       })
+  }catch (error) {
+    if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'ville') {
+        errors.ville = err.message;
+      } else if (err.path === 'academie') {
+        errors.academie = err.message;
+      } 
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
+  }
   };
 const requests = ref([]);
 const onAcademieChange = (index) => {

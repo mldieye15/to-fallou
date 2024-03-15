@@ -17,6 +17,8 @@ const supervisseurs= modulesURL+'/supervisseurs';
 const add= modulesURL+'/';
 const emailAvailability = modulesURL +'/email-availability';
 const matriculeAvailability = modulesURL +'/matricule-availability';
+const emailAvailabilityUp = modulesURL +'/email-availabilityUp';
+const matriculeAvailabilityUp = modulesURL +'/matricule-availabilityUp';
 const upProfile= modulesURL +'/upProfileAdmin';
 
 export const useAdminStore = defineStore('admin', {
@@ -354,6 +356,26 @@ export const useAdminStore = defineStore('admin', {
       try {
         const response = await axios.get(`${matriculeAvailability}?matricule=${matricule}`);
         console.log("Réponse de matriculeAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du matricule :", error);
+        return false;
+      }
+    },
+    async checkEmailExistenceUp({ userId, email }) {
+      try {
+        const response = await axios.get(`${emailAvailabilityUp}?userId=${userId}&email=${email}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification de l'email :", error);
+        return false;
+      }
+    },
+    async checkMatriculeExistenceUp({ userId, matricule }) {
+      try {
+        const response = await axios.get(`${matriculeAvailabilityUp}?userId=${userId}&matricule=${matricule}`);
         response.data=response.data.isAvailable;
         return true;
       } catch (error) {

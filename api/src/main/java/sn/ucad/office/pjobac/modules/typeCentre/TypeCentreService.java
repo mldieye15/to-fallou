@@ -27,4 +27,5 @@ public interface TypeCentreService {
 
     public Optional<TypeCentreAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyLibelleUnique(String libelleLong) throws  BusinessResourceException;
+    boolean verifyLibelleLongUniqueUp(String libelleLong, Long id)throws  BusinessResourceException;
 }

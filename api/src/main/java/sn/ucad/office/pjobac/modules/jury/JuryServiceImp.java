@@ -223,5 +223,14 @@ public class JuryServiceImp implements JuryService {
         }
     }
 
+    @Override
+    public boolean verifyNomUniqueUp(String nom, Long id) throws BusinessResourceException {
+        Optional<Jury> existingNom = dao.findByNomAndIdNot(nom,id);
+        if (existingNom.isPresent()) {
+            throw new ResourceAlreadyExists("Le nom existe déjà pour un autre jury.");
+        }
+        return false;
+    }
+
 
 }

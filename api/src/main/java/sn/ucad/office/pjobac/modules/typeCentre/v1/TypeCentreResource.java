@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.typeCentre.TypeCentreService;
 import sn.ucad.office.pjobac.modules.typeCentre.dto.TypeCentreRequest;
@@ -74,6 +75,16 @@ public class TypeCentreResource {
             service.verifyLibelleUnique(libelleLong);
             return ResponseEntity.ok(true);
         } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+
+    @GetMapping("/libelle-availabilityUp")
+    public ResponseEntity<Boolean> checklibelleAvailabilityUp(@RequestParam Long typeId, @RequestParam String libelleLong) {
+        try {
+            boolean isUnique = service.verifyLibelleLongUniqueUp(libelleLong, typeId);
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
             return ResponseEntity.ok(false);
         }
     }

@@ -6,6 +6,7 @@ const  modulesURL = '/v1/fonctions';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
 const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 
 export const useFonctionStore = defineStore('fonction', {
   state: () => ({
@@ -25,8 +26,8 @@ export const useFonctionStore = defineStore('fonction', {
       }
     ],*/
     headerTable: [
-      { text: 'Libelle', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'Abreviation', value: 'libelleCourt', sortable: true },
+      { text: 'Libellé', value: 'libelleLong', align: 'start', sortable: true },
+      { text: 'Abréviation', value: 'libelleCourt', sortable: true },
       { text: 'Nombre de points', value: 'nombrePoint', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -129,6 +130,16 @@ export const useFonctionStore = defineStore('fonction', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ fonctionId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?fonctionId=${fonctionId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

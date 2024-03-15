@@ -4,8 +4,8 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="9">
         <v-card>
-          <v-card-title class="headline">
-            Details etablissement
+          <v-card-title class="headline text-center">
+            Détail établissement
           </v-card-title>
           <v-card-text>
             <v-list>

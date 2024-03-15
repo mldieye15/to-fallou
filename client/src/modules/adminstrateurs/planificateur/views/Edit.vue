@@ -34,6 +34,7 @@ const { dataDetails, loading } = storeToRefs(adminStore);
 const { one, modify } = adminStore;
 
 const inputForm = reactive({
+  id: "",
   prenoms: "",
   nom: "",
   matricule: "",
@@ -59,6 +60,7 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
+    inputForm.id = dataDetails.value.id,
     inputForm.prenoms = dataDetails.value.prenoms,
     inputForm.nom = dataDetails.value.nom,
     inputForm.matricule = dataDetails.value.matricule,

@@ -5,6 +5,9 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/etablissements';
 const all= modulesURL+'/all';
 const add = modulesURL+'/';
+const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
+const codeAvailability = modulesURL +'/code-availability';
 
 export const useEtablissementStore = defineStore('etablissement', {
   state: () => ({
@@ -25,10 +28,10 @@ export const useEtablissementStore = defineStore('etablissement', {
     ],*/
     headerTable: [
       { text: 'LibelleLong', value: 'libelleLong', align: 'start', sortable: true },
-      { text: 'LibelleCourt', value: 'libelleCourt', align: 'start', sortable: true },
-      { text: 'TypeEtablissement', value: 'typeEtablissement', align: 'start', sortable: true },
+      { text: 'Code', value: 'libelleCourt', align: 'start', sortable: true },
+      { text: 'Type établissement', value: 'typeEtablissement', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
-      { text: 'Academie', value: 'academie', align: 'start', sortable: true },
+      { text: 'Académie', value: 'academie', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions',align: 'start', sortable: false }
     ]
   }),
@@ -136,7 +139,28 @@ export const useEtablissementStore = defineStore('etablissement', {
       } finally {
         this.loading = false
       }
-    }
+    },
+    async checkLibelleExistence(libelleLong) {
+      try {
+        const response = await axios.get(`${libelleAvailability}?libelleLong=${libelleLong}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ etablissementId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?etablissementId=${etablissementId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
+        return false;
+      }
+    },
   },
   
 })

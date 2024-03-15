@@ -161,5 +161,14 @@ public class TypeSessionServiceImp implements TypeSessionService {
 
     }
 
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<TypeSession> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
+        }
+        return false;
+    }
+
 
 }

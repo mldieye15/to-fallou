@@ -8,6 +8,7 @@ const add=modulesURL+'/';
 const villesByAcademie=modulesURL+'/by-academie'
 const availableVillesForUserAndAcademy= modulesURL+'/availableVillesForUserAndAcademy'
 const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 const codeAvailability = modulesURL +'/code-availability';
 export const useVilleStore = defineStore('ville', {
   state: () => ({
@@ -221,6 +222,16 @@ export const useVilleStore = defineStore('ville', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ villeId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?villeId=${villeId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

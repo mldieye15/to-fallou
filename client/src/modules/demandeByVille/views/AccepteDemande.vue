@@ -16,7 +16,7 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         v-model="inputForm.sessionName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.session">
@@ -29,7 +29,7 @@
         :label="$t('apps.forms.ville.nom')"
         color="balck"
         v-model="inputForm.villeName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.ville">
@@ -42,7 +42,7 @@
         :label="$t('apps.forms.academie.nom')"
         color="balck"
         v-model="inputForm.academieName"
-        variant="solo"
+        variant="outlined"
         readonly
       >
       <input type="hidden" :v-model="inputForm.academie">
@@ -53,7 +53,7 @@
         density="compact"
         color="balck"
         v-model="inputForm.centre"
-        variant="solo"
+        variant="outlined"
         :items="dataListeByVille"
         persistent-hint
         item-title="libelleLong"

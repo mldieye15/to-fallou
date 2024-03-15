@@ -31,7 +31,7 @@ const supRoutes = [{
       // }
       },
       {
-        path: '/app/dashboard/administrateurs/edit/:id',
+        path: '/app/dashboard/superviseurs/edit/:id',
         name: 'sup-edit',
         component: () => import( /* webpackChunkName: 'user_edit */ './views/Edit.vue'),
       //   meta: {

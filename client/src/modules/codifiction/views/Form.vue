@@ -16,11 +16,17 @@
         density="compact"
         :label="$t('apps.forms.codification.email')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.email"
-        variant="solo"
+        variant="outlined"
         @blur="onEmailInput"
+        :error-messages="errors.email ? [errors.email] : []"
+        @focus="clearErrors"
        >
+       <template v-slot:append>
+            <v-icon v-if="errors.email" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
         </v-text-field>
         <div v-if="emailError" class="error-message">{{ emailErrorMessage }}</div>
       <v-text-field
@@ -30,11 +36,17 @@
         density="compact"
         :label="$t('apps.forms.codification.code')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.code"
-        variant="solo"
+        variant="outlined"
         @blur="onCodeInput"
+        :error-messages="errors.code ? [errors.code] : []"
+        @focus="clearErrors"
        >
+       <template v-slot:append>
+            <v-icon v-if="errors.code" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
         </v-text-field>
         <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
       <div class="d-flex justify-end">
@@ -50,16 +62,27 @@
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { useCodificationStore } from "../store";
 import { useRouter } from 'vue-router';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  email: yup.string().email('Veuillez saisir une adresse email valide').required('L\'email est requis'),
+  code: yup.string().required('Le code est requis'),
+});
 const router = useRouter();
 const redirectToListe = () => {
   router.push({ name: 'codification-liste'});
 };
 const instance = getCurrentInstance();
 const coddificationStore = useCodificationStore();
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+const errors = reactive({
+  email:'',
+  code:'',
+  error: false,
 });
+const clearErrors = () => {
+  errors.email = '';
+  errors.code = '';
+};
 const emailError = ref(false);
 const emailErrorMessage = ref("");
 const codeError = ref(false);
@@ -106,6 +129,50 @@ const checkCodeExistence = async () => {
     }
   }
 };
+const checkEmailExistenceUp = async () => {
+  emailError.value = false;
+  emailErrorMessage.value = "";
+  if (inputForm.email) {
+    const codificationId= inputForm.id;
+    const email = inputForm.email;
+    try {
+      const isAvailable = await coddificationStore.checkEmailExistenceUp({ codificationId, email });
+      console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
+      console.log("email, codificationId:", email, codificationId);
+      if (!isAvailable) {
+        emailError.value = true;
+        emailErrorMessage.value = "Cet email  est déjà utilisé.";
+        // console.log('emailErrorMessage:', emailErrorMessage);
+      }
+    } catch (error) {
+      // console.error("Erreur lors de la vérification de l'email :", error);
+      emailError.value = true;
+      emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
+    }
+  }
+};
+const checkCodeExistenceUp = async () => {
+  codeError.value = false;
+  codeErrorMessage.value = "";
+  if (inputForm.code) {
+    const codificationId = inputForm.id;
+    const code = inputForm.code;
+    try {
+      const isAvailable = await coddificationStore.checkCodeExistenceUp({codificationId,code});
+      // console.log("codificationIdet :code) :", userId, code);
+      // console.log("Résultat de la vérification du code (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        codeError.value = true;
+        codeErrorMessage.value = "Ce code  est déjà utilisé.";
+        // console.log('codeErrorMessage:', codeErrorMessage);
+      }
+    } catch (error) {
+      // console.error("Erreur lors de la vérification du code :", error);
+      codeError.value = true;
+      codeErrorMessage.value = "Erreur lors de la vérification du code. Veuillez réessayer.";
+    }
+  }
+};
 const onEmailInput = () => {
   // Vérifie s'il y a des espaces dans l'email
   if (/\s/.test(inputForm.email)) {
@@ -113,8 +180,13 @@ const onEmailInput = () => {
     emailError.value = true;
     emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
   } else {
+    if(isEdit){
+      checkEmailExistenceUp(); 
+    }else{
+      checkEmailExistence();
+    }
     // Sinon, effectue la vérification normale de l'existence de l'email
-    checkEmailExistence();
+    
   }
 };
 const onCodeInput = () => {
@@ -125,11 +197,16 @@ const onCodeInput = () => {
     codeErrorMessage.value = "Le code ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence du code
-    checkCodeExistence();
+    if(isEdit){
+      checkCodeExistenceUp();
+    }else{
+      checkCodeExistence();
+    }
   }
 };
 
-const { inputForm, actionSubmit } = defineProps({
+const { inputForm, actionSubmit,isEdit } = defineProps({
+  isEdit:Boolean,
   inputForm: Object,
   actionSubmit: {
     type: Function,
@@ -137,11 +214,32 @@ const { inputForm, actionSubmit } = defineProps({
 });
 
 
-const handleSave = () => {
-  if(instance.refs.codificationForm.validate&& !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+  // Si la validation échoue, afficher les messages d'erreur
+  if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'email') {
+        errors.email = err.message;
+      } else if (err.path === 'code') {
+        errors.code = err.message;
+      } 
+    });
+  } else {
+    // Gérer d'autres erreurs ici, si nécessaire
+    console.error(error);
   }
 }
+};
 
 </script>
 <style>

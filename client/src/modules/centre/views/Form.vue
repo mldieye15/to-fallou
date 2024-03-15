@@ -11,46 +11,48 @@
     <v-form @submit.prevent="handleSave" ref="centreForm" >
       <v-text-field
         id="libelleLong"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-office-building"
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.centre.nom')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleLong"
-        variant="solo"
+        variant="outlined"
         @blur="onLibelleInput"
         @keyup.enter="onLibelleInput"
+        :error="inputForm.error" 
+        :error-messages="errors.libelleLong ? [errors.libelleLong] : []"
+        @focus="clearErrors"
       >
+         <template v-slot:append>
+            <v-icon v-if="errors.libelleLong" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
       </v-text-field>
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
 
       <v-text-field
         id="libelleCourt"
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-office-building"
         name="libelleCourt"
         density="compact"
         :label="$t('apps.forms.centre.abreviation')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleCourt"
-        variant="solo"
+        variant="outlined"
         @blur="onCodeInput"
-        @keyup.enter="onCodeInput"
-      ></v-text-field>
+        @keyup.enter="onCodeInput" 
+        :error-messages="errors.libelleCourt? [errors.libelleCourt] : []"
+        @focus="clearErrors"
+      >
+         <template v-slot:append>
+            <v-icon v-if="errors.libelleCourt" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-text-field>
       <div v-if="codeError" class="error-message">{{ codeErrorMessage }}</div>
-       <!-- <v-select
-            
-            color="balck"
-           
-            
-           
-            persistent-hint
-            
-            single-line
-            item-title="libelleLong"
-            item-value="id"
-        ></v-select> -->
         <v-autocomplete
         v-model="inputForm.ville"
         :items="dataListeVille"
@@ -59,25 +61,43 @@
         :label="$t('apps.forms.ville.nom')"
         dense
         outlined
-        variant="solo"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        clearable
-      ></v-autocomplete>
+        color="black"
+        variant="outlined"
+        prepend-inner-icon="mdi-city-variant-outline"
+        clearable 
+        :error-messages="errors.ville?[errors.ville]:[]"
+        @focus="clearErrors"
+      >
+      <template v-slot:append>
+            <v-icon v-if="errors.ville" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-autocomplete>
         <v-select
-              prepend-inner-icon="mdi-alpha-a-circle"
+              prepend-inner-icon="mdi-factory"
               name="typeCentre"
               density="compact"
               :label="$t('apps.forms.typeCentre.nom')"
               color="balck"
               v-model="inputForm.typeCentre"
-              variant="solo"
+              variant="outlined"
               :items="dataListeTypeCentre"
               persistent-hint
               
               single-line
               item-title="libelleLong"
               item-value="id"
-        ></v-select>
+              :error="inputForm.error" 
+              :error-messages="errors.typeCentre?[errors.typeCentre]:[]"
+              @focus="clearErrors"
+        >
+         <template v-slot:append>
+            <v-icon v-if="errors.typeCentre" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+        </v-select>
       
         <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
@@ -96,6 +116,14 @@ import { useCentreStore } from "../store";
 import { useVilleStore } from "@/modules/ville/store";
 import { useTypeCentreStore } from "@/modules/typeCentre/store";
 import { useRouter } from 'vue-router';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  libelleLong: yup.string().required('Le libelle est requis'),
+  libelleCourt: yup.string().required('Le code est requis'),
+  ville: yup.string().required('Veuillez selectionner une ville'),
+  typeCentre: yup.string().required('Veuillez selectionner un type de centre'),
+});
 const router = useRouter();
 
 
@@ -110,6 +138,13 @@ const { dataListeTypeCentre } = storeToRefs(typeCentreStore);
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 2 || '2 cractére au moins',
+});
+const errors = reactive({
+  libelleLong:'',
+  libelleCourt:'',
+  ville: null,
+  typeCentre: null,
+  error: false,
 });
 
 const libelleError = ref(false);
@@ -158,6 +193,34 @@ const checkCodeExistence = async () => {
     }
   }
 };
+const checkLibelleExistenceUp = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    const centreId= inputForm.id;
+    const libelleLong = inputForm.libelleLong;
+    try {
+      const isAvailable = await centreStore.checkLibelleExistenceUp({centreId ,libelleLong});
+      console.log("academie ,libelleLong :",centreId,libelleLong );
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "Ce centre existe dèja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
+const clearErrors = () => {
+  errors.libelleLong = '';
+  errors.libelleCourt = '';
+  errors.ville = null;
+  errors.typeCentre = null;
+};
 const onCodeInput = () => {
   // Vérifie s'il y a des espaces dans le matricule
   if (/\s/.test(inputForm.libelleCourt)) {
@@ -169,11 +232,17 @@ const onCodeInput = () => {
     checkCodeExistence ();
   }
 };
+
 const onLibelleInput = () => { 
-    checkLibelleExistence ();
+  if (isEdit) {
+      checkLibelleExistenceUp();
+    } else {
+      checkLibelleExistence();
+    } 
 };
-const { inputForm, actionSubmit } = defineProps({
+const { inputForm, actionSubmit,isEdit } = defineProps({
   inputForm: Object,
+  isEdit: Boolean,
   actionSubmit: {
     type: Function,
   }
@@ -181,11 +250,36 @@ const { inputForm, actionSubmit } = defineProps({
 const redirectToListe = () => {
   router.push({ name: 'centre-liste'});
 };
-const handleSave = () => {
-  if(instance.refs.centreForm.validate  && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+  // Si la validation échoue, afficher les messages d'erreur
+  if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'libelleLong') {
+        errors.libelleLong = err.message;
+      } else if (err.path === 'libelleCourt') {
+        errors.libelleCourt = err.message;
+      } else if (err.path === 'ville') {
+        errors.ville = err.message;
+      } else if (err.path === 'typeCentre') {
+        errors.typeCentre = err.message;
+      }
+    });
+  } else {
+    // Gérer d'autres erreurs ici, si nécessaire
+    console.error(error);
   }
 }
+};
 
 onMounted(()=>{
   villeStore.all();

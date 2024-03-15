@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="false"/>
   </div>
 </template>
 

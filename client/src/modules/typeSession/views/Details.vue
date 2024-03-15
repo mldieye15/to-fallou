@@ -3,8 +3,8 @@
     <v-row justify="center">
       <v-col cols="12" sm="8" md="9">
         <v-card>
-          <v-card-title class="headline">
-            Details type de Session
+          <v-card-title class="headline text-center">
+            Détail type de session
           </v-card-title>
           <v-card-text>
             <v-list>

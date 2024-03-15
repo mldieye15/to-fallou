@@ -161,5 +161,14 @@ public class TypeCentreServiceImp implements TypeCentreService {
 
     }
 
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<TypeCentre> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre type de centre.");
+        }
+        return false;
+    }
+
 
 }

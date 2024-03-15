@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
@@ -86,6 +87,15 @@ public class JuryResource {
             service.verifyJuryUnique(nom);
             return ResponseEntity.ok(true);
         } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/nom-availabilityUp")
+    public ResponseEntity<Boolean> checkJuryAvailabilityUp(@RequestParam Long juryId, @RequestParam String libelleLong) {
+        try {
+            boolean isUnique = service.verifyNomUniqueUp(libelleLong, juryId);
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
             return ResponseEntity.ok(false);
         }
     }

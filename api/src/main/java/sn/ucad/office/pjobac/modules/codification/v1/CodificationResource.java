@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.codification.CodificationService;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationRequest;
@@ -121,6 +122,24 @@ public class CodificationResource {
             service.verifyEmailUnique(email);
             return ResponseEntity.ok(true);
         } catch (ResourceNotFoundException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/email-availabilityUp")
+    public ResponseEntity<Boolean> checkEmailAvailabilityUp(@RequestParam Long codificationId, @RequestParam String email) {
+        try {
+            boolean isUnique = service.verifyEmailUniqueUp(email, codificationId);
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/code-availabilityUp")
+    public ResponseEntity<Boolean> checkMatriculeAvailabilityUp(@RequestParam Long codificationId, @RequestParam String code) {
+        try {
+            boolean isUnique = service.verifyCodeUniqueUp(code, codificationId);
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
             return ResponseEntity.ok(false);
         }
     }

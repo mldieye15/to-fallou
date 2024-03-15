@@ -15,12 +15,19 @@
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.fonction.nom')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
+        :color="errors.libelleLong ? 'red' : 'black'"
         v-model="inputForm.libelleLong"
-        variant="solo"
-        @blur="checkLibelleExistence"
-       >
+        variant="outlined"
+        @blur="onLibelleInput"
+        @keyup.enter="onLibelleInput"
+        :error-messages="errors.libelleLong ? [errors.libelleLong] : []"
+        @focus="clearErrors"
+      >
+         <template v-if="errors.libelleLong" v-slot:append>
+            <v-icon  color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
         </v-text-field>
         <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
       <v-text-field
@@ -30,9 +37,8 @@
         density="compact"
         :label="$t('apps.forms.fonction.abreviation')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.libelleCourt"
-        variant="solo"
+        variant="outlined"
       ></v-text-field>
       <v-text-field
         id="nombrePoint"
@@ -41,10 +47,17 @@
         density="compact"
         :label="$t('apps.forms.fonction.nombrePoint')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.nombrePoint"
-        variant="solo"
-      ></v-text-field>
+        variant="outlined"
+        :error-messages="errors.nombrePoint ? [errors.nombrePoint] : []"
+        @focus="clearErrors" 
+      >
+          <template v-if="errors.nombrePoint" v-slot:append>
+            <v-icon  color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-text-field>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -58,6 +71,18 @@
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { useFonctionStore } from "../store";
 import { useRouter } from 'vue-router';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  libelleLong: yup.string().required('Le libelle est requis'),
+  nombrePoint: yup
+    .number()
+    .required('Le nombre de point est requise') // Définition de la règle "required"
+    .typeError('Le nombre de poin  doit être un nombre')
+    .min(0, 'Le nombre de poin  ne peut pas être négatif')
+    .max(60, 'Le nombre de poin  doit être inférieure ou égale à 60'),
+
+});
 const router = useRouter();
 const redirectToListe = () => {
   router.push({ name: 'fonction-liste'});
@@ -66,10 +91,6 @@ const redirectToListe = () => {
 const instance = getCurrentInstance();
 const fonctionStore = useFonctionStore();
 
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
-});
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
@@ -95,19 +116,79 @@ const checkLibelleExistence = async () => {
     }
   }
 };
+const checkLibelleExistenceUp = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    const fonctionId= inputForm.id;
+    const libelleLong = inputForm.libelleLong;
+    try {
+      const isAvailable = await fonctionStore.checkLibelleExistenceUp({fonctionId ,libelleLong});
+      console.log("academie ,libelleLong :",fonctionId,libelleLong );
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "Ce fonction existe dèja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
+const errors = reactive({
+  libelleLong:'',
+  nombrePoint:null,
+  error: false,
+});
+const clearErrors = () => {
+  errors.libelleLong = '';
+  errors.nombrePoint = '';
 
-const { inputForm, actionSubmit } = defineProps({
+};
+const onLibelleInput = () => { 
+  if (isEdit) {
+      checkLibelleExistenceUp();
+    } else {
+      checkLibelleExistence();
+    } 
+};
+const { inputForm, actionSubmit,isEdit } = defineProps({
+  isEdit:Boolean,
   inputForm: Object,
   actionSubmit: {
     type: Function,
   }
 });
 
-const handleSave = () => {
-  if(instance.refs.fonctionForm.validate && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+  // Si la validation échoue, afficher les messages d'erreur
+  if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'libelleLong') {
+        errors.libelleLong = err.message;
+      } else if (err.path === 'nombrePoint') {
+        errors.nombrePoint = err.message;
+      }
+    });
+  } else {
+    // Gérer d'autres erreurs ici, si nécessaire
+    console.error(error);
   }
 }
+};
 
 </script>
 <style>

@@ -34,4 +34,5 @@ public interface JuryService {
     int countJuryByVille(Long villeId);
     void updateVilleTotalJury(Long villeId);
     void verifyJuryUnique(String numero)throws  BusinessResourceException;
+    boolean verifyNomUniqueUp(String nom, Long id)throws  BusinessResourceException;
 }

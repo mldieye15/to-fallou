@@ -19,7 +19,7 @@
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
         v-model="inputForm.prenoms"
-        variant="solo" 
+        variant="outlined" 
         class="input-with-asterisk"
         
       ></v-text-field >
@@ -39,7 +39,7 @@
         :label="$t('apps.forms.user.nom')"
         color="balck"
         v-model="inputForm.nom"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
         
       ></v-text-field >
@@ -61,7 +61,7 @@
         :label="$t('apps.forms.user.email')"
         color="balck"
         v-model="inputForm.email"
-        variant="solo"
+        variant="outlined"
         @blur="onEmailInput"
         class="input-with-asterisk"
         readonly
@@ -84,7 +84,7 @@
         :label="$t('apps.forms.user.code')"
         color="balck"
         v-model="inputForm.code"
-        variant="solo"
+        variant="outlined"
         @blur="checkCodeValidity"
         readonly
         class="input-with-asterisk"
@@ -108,8 +108,9 @@
         color="balck"
         :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
+        maxlength="9"
         
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
@@ -128,7 +129,7 @@
         :label="$t('apps.forms.user.matricule')"
         color="balck"
         v-model="inputForm.matricule"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
         
@@ -153,7 +154,7 @@
         :label="$t('apps.forms.user.sexe')"
         color="balck"
         v-model="inputForm.sexe"
-        variant="solo"
+        variant="outlined"
         :items="['Homme', 'Femme']"
         class="input-with-asterisk"
         
@@ -174,7 +175,7 @@
         :label="$t('apps.forms.etablissement.nom')"
         color="balck"
         v-model="inputForm.etablissement"
-        variant="solo"
+        variant="outlined"
         :items="dataListeEtab"
         persistent-hint
         
@@ -204,7 +205,7 @@
         :label="$t('apps.forms.user.banque')"
         color="balck"
         v-model="inputForm.banque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
         
@@ -227,9 +228,10 @@
         color="balck"
         :rules="[rules.exactlycodeBanque]"
         v-model="inputForm.codeBanque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="5"
         
     >
     </v-text-field >
@@ -250,10 +252,10 @@
         color="balck"
         :rules="[rules.exactlycodeAgence]"
         v-model="inputForm.codeAgence"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
-        
+        maxlength="5"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeAgence" class="required-message mb-0">
@@ -275,9 +277,10 @@
         color="balck"
         :rules="[rules.exactlynumeroCompte]"
         v-model="inputForm.numeroCompte"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="12"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.numeroCompte" class="required-message mb-0">
@@ -297,9 +300,10 @@
         color="balck"
         :rules="[rules.exactlycleRib]"
         v-model="inputForm.cleRib"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="2"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.cleRib" class="required-message mb-0">
@@ -384,6 +388,7 @@ const schema = yup.object().shape({
   cleRib: yup.string().required('La clé RIB est requise').matches(/^\d{2}$/, 'Clé RIB invalide'),
 });
 const inputForm = reactive({
+  id: "",
   prenoms: "",
   nom: "",
   matricule: "",
@@ -446,52 +451,49 @@ const checkCodeValidity = async () => {
     }
   }
 };
-const checkEmailExistence = async () => {
+const checkEmailExistenceUp = async () => {
   emailError.value = false;
   emailErrorMessage.value = "";
   if (inputForm.email) {
+    const userId = inputForm.id;
+    const email = inputForm.email;
     try {
-      const isAvailable = await utilisateurStore.checkEmailExistence(inputForm.email);
-      console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
+      const isAvailable = await utilisateurStore.checkEmailExistenceUp({ userId, email });
+      // console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
+      // console.log("email, userId :", email, userId);
       if (!isAvailable) {
         emailError.value = true;
         emailErrorMessage.value = "Cet email  est déjà utilisé.";
-        console.log('emailErrorMessage:', emailErrorMessage);
+        // console.log('emailErrorMessage:', emailErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification de l'email :", error);
+      // console.error("Erreur lors de la vérification de l'email :", error);
       emailError.value = true;
       emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
     }
   }
 };
-const checkMatriculeExistence = async () => {
+const checkMatriculeExistenceUp = async () => {
   matriculeError.value = false;
   matriculeErrorMessage.value = "";
   if (inputForm.matricule) {
+    const userId = inputForm.id;
+    const matricule = inputForm.matricule;
     try {
-      const isAvailable = await utilisateurStore.checkMatriculeExistence(inputForm.matricule);
-      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
+      const isAvailable = await utilisateurStore.checkMatriculeExistenceUp({userId,matricule});
+      console.log("userId et :matricule) :", userId, matricule);
+      // console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
       if (!isAvailable) {
         matriculeError.value = true;
         matriculeErrorMessage.value = "Ce matricule  est déjà utilisé.";
-        console.log('matriculeErrorMessage:', matriculeErrorMessage);
+        // console.log('matriculeErrorMessage:', matriculeErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du matricule :", error);
+      // console.error("Erreur lors de la vérification du matricule :", error);
       matriculeError.value = true;
       matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
     }
   }
-};
-watchEffect(() => {
-  if (inputForm.dateNaiss) {
-    inputForm.dateNaiss = formatDateForInput(inputForm.dateNaiss);
-  }
-});
-function formatDateForInput(date) {
-  const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
-  return formattedDate;
 };
 const onEmailInput = () => {
   // Vérifie s'il y a des espaces dans l'email
@@ -501,7 +503,7 @@ const onEmailInput = () => {
     emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence de l'email
-    checkEmailExistence();
+    checkEmailExistenceUp();
     checkCodeValidity(); 
   }
 };
@@ -513,7 +515,7 @@ const onMatriculeInput = () => {
     matriculeErrorMessage.value = "Le matricule ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence du matricule
-    checkMatriculeExistence();
+    checkMatriculeExistenceUp();
   }
 };
 const handleSave = async () => {
@@ -553,6 +555,7 @@ const handleSave = async () => {
 onMounted(()=>{
   etablissementStore.all();
   current().then( () => {
+    inputForm.id = dataDetails.value.userId,
     inputForm.prenoms = dataDetails.value.prenoms,
     inputForm.nom = dataDetails.value.nom,
     inputForm.matricule = dataDetails.value.matricule,
@@ -567,7 +570,7 @@ onMounted(()=>{
     inputForm.codeBanque=dataDetails.value.codeBanque,
     inputForm.codeAgence=dataDetails.value.codeAgence,
     inputForm.numeroCompte=dataDetails.value.numeroCompte,
-    inputForm.cleRib=dataDetails.value.cleRib   
+    inputForm.cleRib=dataDetails.value.cleRib 
   });
 
 });

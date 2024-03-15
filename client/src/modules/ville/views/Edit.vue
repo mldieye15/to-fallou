@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.ville.ville') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="true"/>
   </div>
 </template>
 
@@ -35,6 +35,7 @@ const { dataDetails, loading } = storeToRefs(villeStore);
 const { one, modify } = villeStore;
 
 const inputForm = reactive({
+  id:"",
   libelleLong:'',
   libelleCourt: '',
   academie:null
@@ -54,9 +55,10 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
+    inputForm.id = dataDetails.value.id
     inputForm.libelleLong = dataDetails.value.libelleLong
     inputForm.libelleCourt = dataDetails.value.libelleCourt
-    inputForm.academie = dataDetails.value.academie.id
+    inputForm.academie = dataDetails.value.academie.libelleLong
   });
 });
 

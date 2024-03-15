@@ -25,4 +25,5 @@ public interface FonctionService {
 
     public Optional<FonctionAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyFonctionUnique(String libelleLong)throws  BusinessResourceException;
+    boolean verifyLibelleLongUniqueUp(String libelleLong, Long id)throws  BusinessResourceException;
 }

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.typeSession.TypeSession;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +16,10 @@ import java.util.Optional;
 @Repository
 public interface VilleDao extends JpaRepository<Ville, Long> {
     List<Ville> findByAcademie(Academie academie);
+
     Optional<Ville> findByLibelleLong(String libelleLong);
+    @Query("SELECT v FROM Ville v WHERE v.libelleLong= :libelleLong AND v.id != :villeId")
+    Optional<Ville> findByLibelleLongAndIdNot(@Param("libelleLong") String libelleLong, @Param("villeId") Long villeId);
     Optional<Ville> findByLibelleCourt(String libelleCourt);
     @Query("SELECT COALESCE(SUM(c.nombreJury), 0) FROM Centre c WHERE c.ville.id = :villeId")
     int getTotalJuryByVilleId(@Param("villeId") Long villeId);

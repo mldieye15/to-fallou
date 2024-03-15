@@ -6,6 +6,7 @@ const  modulesURL = '/v1/typeSessions';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
 const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 
 export const useTypeSessionStore = defineStore('typeSession', {
   state: () => ({
@@ -131,6 +132,16 @@ export const useTypeSessionStore = defineStore('typeSession', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ typeId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?typeId=${typeId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

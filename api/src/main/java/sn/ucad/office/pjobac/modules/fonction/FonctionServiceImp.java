@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.fonction.dto.FonctionAudit;
 import sn.ucad.office.pjobac.modules.fonction.dto.FonctionRequest;
 import sn.ucad.office.pjobac.modules.fonction.dto.FonctionResponse;
@@ -158,6 +159,15 @@ public class FonctionServiceImp implements FonctionService {
             throw new ResourceAlreadyExists("L' annee existe déjà.");
         }
 
+    }
+
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<Fonction> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
+        }
+        return false;
     }
 
 

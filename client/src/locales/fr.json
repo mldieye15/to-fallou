@@ -95,12 +95,12 @@
             "academie": {
                 "academie": "Académie",
                 "nom": "Académie",
-                "abreviation":"Abréviation"
+                "abreviation":"Code"
             },
             "ville": {
                 "ville": "Ville",
                 "nom": "Ville",
-                "abreviation":"Abréviation"
+                "abreviation":"Code"
             },
             "jury":{
                 "jury":"Jury",
@@ -114,18 +114,19 @@
             "centre":{
                 "centre":"Centre",
                 "nom":"Centre",
-                "abreviation":"Abréviation",
+                "abreviation":"Code",
                 "nombreJury":"nombre de Jurys"
             },
             "etablissement":{
                 "etablissement":"Etablissements",
                 "nom":"Etablissement",
-                "abreviation":"Abréviation"
+                "abreviation":"Code"
             },
             "typeEtablissement":{
                 "typeEtablissement":"Type d'etablissement",
                 "nom":"Type de l'etablissement",
-                "abreviation":"Abreviation"
+                "abreviation":"Abreviation",
+                "nombrePoint":"Nombre de points"
             },
             "session":{
                 "session":"Session",
@@ -164,7 +165,7 @@
             "typeCentre":{
                 "typeCentre":"Type du Centre",
                 "nom":"Type de centre",
-                "abreviation":"Abréviation"
+                "abreviation":"Code"
             },
             "demande":{
                 "demande":"Demande",
@@ -174,8 +175,8 @@
             "fonction":{
                 "fonction":"Fonction",
                 "nom":"Fonction",
-                "abreviation":"Abréviation",
-                "nombrePoint":"Nombre de point"
+                "abreviation":"Code",
+                "nombrePoint":"Nombre de points"
             },
             "typeSession":{
                 "typeSession":"type de la session",

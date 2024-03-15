@@ -8,6 +8,7 @@ const allBySession= modulesURL+'/allBySession';
 const add = modulesURL+'/';
 const juryByCentre = modulesURL+'/by-centre';
 const nomAvailability=modulesURL+'/nom-availability';
+const nomAvailabilityUp=modulesURL+'/nom-availabilityUp';
 export const useJuryStore = defineStore('jury', {
   state: () => ({
     dataListeJury: [],  //  List des données à afficher pour la table
@@ -224,6 +225,16 @@ export const useJuryStore = defineStore('jury', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkNomExistenceUp({ juryId, libelleLong }) {
+      try {
+        const response = await axios.get(`${nomAvailabilityUp}?juryId=${juryId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

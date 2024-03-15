@@ -16,6 +16,7 @@ import sn.ucad.office.pjobac.modules.codification.dto.CodificationRequest;
 import sn.ucad.office.pjobac.modules.codification.dto.CodificationResponse;
 import sn.ucad.office.pjobac.modules.security.mail.MailService;
 import sn.ucad.office.pjobac.modules.security.mail.NotificationEmail;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -198,5 +199,22 @@ public class CodificationServiceImp implements CodificationService {
             throw new ResourceAlreadyExists("Le mail existe déjà.");
         }
 
+    }
+
+    @Override
+    public boolean verifyEmailUniqueUp(String email, Long id) throws BusinessResourceException {
+        Optional<Codification> existingEmail = dao.findByEmailAndIdNot(email, id);
+        if (existingEmail.isPresent()) {
+            throw new ResourceAlreadyExists("L'e-mail existe déjà pour un autre utilisateur.");
+        }
+        return false;
+    }
+    @Override
+    public boolean verifyCodeUniqueUp(String code, Long id) throws BusinessResourceException {
+        Optional<Codification> existingCode = dao.findByCodeAndIdNot(code, id);
+        if (existingCode.isPresent()) {
+            throw new ResourceAlreadyExists("L'e-mail existe déjà pour un autre utilisateur.");
+        }
+        return false;
     }
 }

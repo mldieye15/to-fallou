@@ -16,10 +16,18 @@
         density="compact"
         :label="$t('apps.forms.candidat.malus')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.malus"
-        variant="solo" 
-      ></v-text-field >
+        variant="outlined" 
+        :error="inputForm.error" 
+        :error-messages="errors.malus?[errors.malus]:[]"
+        @focus="clearErrors" 
+      >
+          <template v-slot:append>
+            <v-icon v-if="errors.malus" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-text-field >
      
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
@@ -37,7 +45,7 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useCandidatStore } from "../store";
 import { useToast } from 'vue-toastification';
-
+import * as yup from 'yup';
 
 const toast= useToast();
 const i18n = useI18n();
@@ -52,31 +60,62 @@ const route = useRoute();
 const candidatStore = useCandidatStore();
 const { dataDetails, loading } = storeToRefs(candidatStore);
 const { one,malus } = candidatStore;
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+const schema = yup.object().shape({
+  malus: yup
+    .number()
+    .required('Le malus est requis') // Définition de la règle "required"
+    .typeError('Le malus doit être un nombre')
+    .min(0, 'Le malus ne peut pas être négatif')
+    .max(100, 'Le malus doit être inférieur ou égal à 100'),
 });
+
+const errors = reactive({
+  malus: "",
+  error: false,
+});
+const clearErrors = () => {
+  errors.malus = null;
+};
 const inputForm = reactive({
 malus:"",
 });
 const redirectToListe = () => {
-  router.push({ name: 'candidat-liste'});
+  router.push({ name: 'candidat-details'});
 };
-const handleSave = (event) => {
+const handleSave = async (event) => {
   event.preventDefault();
-  const payload = {
-    malus: inputForm.malus,
-  };
-malus(route.params.id, payload).then( () => {
-  // addNotification({
-  //     show: true,
-  //     text:  i18n.t('noter'),
-  //     color: 'blue'
-  //   });
-  toast.success(i18n.t('note'));
-  router.push( { name: 'candidat-details'});
-});
-}
+  
+  try {
+  
+    // Validation Yup du formulaire
+    await schema.validate(inputForm, { abortEarly: false });
+
+    const payload = {
+      malus: inputForm.malus,
+    };
+    // Appel à votre API pour sauvegarder les données
+    await malus(route.params.id, payload);
+
+    // Affichage du message de succès
+    toast.success(i18n.t('note'));
+
+    // Redirection vers la page des détails du candidat
+    router.push({ name: 'candidat-details' });
+  } catch (error) {
+    // Si la validation échoue, afficher les messages d'erreur
+    if (error instanceof yup.ValidationError) {
+      error.errors.forEach(errorMessage => {
+        // Afficher les messages d'erreur associés à chaque champ du formulaire
+        errors.malus = errorMessage;
+        inputForm.error = true;
+        // toast.error(errorMessage);
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
+  }
+};
 </script>
 <style>
 .error-message {

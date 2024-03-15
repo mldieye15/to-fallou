@@ -19,7 +19,7 @@
         :label="$t('apps.forms.session.delaisValidation')"
         color="black"
         :rules="[rules.required, rules.validateHeur]"
-        variant="solo"
+        variant="outlined"
       ></v-text-field>
         </v-col>
         <v-col>
@@ -30,7 +30,7 @@
         :label="$t('apps.forms.typeSession.nom')"
         color="balck"
         v-model="inputForm.typeSession"
-        variant="solo"
+        variant="outlined"
         :items="dataListeTypeSession"
         persistent-hint
         
@@ -47,7 +47,7 @@
         :label="$t('apps.forms.annee.libelle')"
         color="balck"
         v-model="inputForm.annee"
-        variant="solo"
+        variant="outlined"
         :items="dataAnneeEnours"
         persistent-hint
         
@@ -68,7 +68,7 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="libelleLongSession"
-        variant="solo"
+        variant="outlined"
         readonly
       ></v-text-field >
       </v-col>
@@ -82,7 +82,7 @@
         color="balck"
         :rules="[rules.required,rules.validateNombre]"
         v-model="inputForm.nombreDemandeAutorise"
-        variant="solo"
+        variant="outlined"
       ></v-text-field>
       </v-col>
        
@@ -98,7 +98,7 @@
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.dateDebut"
-        variant="solo"
+        variant="outlined"
         type="date"
          @input="validateDates"
       ></v-text-field>
@@ -115,7 +115,7 @@
         :rules="[rules.required]"
         v-model="inputForm.dateFin"
         type="date"
-        variant="solo"
+        variant="outlined"
       ></v-text-field>
       </v-col>
     </v-row >
@@ -130,7 +130,7 @@
         color="balck"
         :rules="[rules.required]"
         v-model="inputForm.dateOuvertureDepotCandidature"
-        variant="solo"
+        variant="outlined"
         type="date"
         @change="validateDates"
         ></v-text-field>
@@ -146,7 +146,7 @@
         color="balck"
         :rules="[rules.required, rules.min]"
         v-model="inputForm.dateClotureDepotCandidature"
-        variant="solo"
+        variant="outlined"
         type="date"
          @change="validateDates"
       ></v-text-field>

@@ -19,7 +19,7 @@
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
         v-model="inputForm.prenoms"
-        variant="solo" 
+        variant="outlined" 
         class="input-with-asterisk"
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.prenoms" class="required-message mb-0">
@@ -38,7 +38,7 @@
         :label="$t('apps.forms.user.nom')"
         color="balck"
         v-model="inputForm.nom"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.nom" class="required-message mb-0">
@@ -59,7 +59,7 @@
         :label="$t('apps.forms.user.code')"
         color="balck"
         v-model="inputForm.code"
-        variant="solo"
+        variant="outlined"
         @blur="checkCodeValidity"
         class="input-with-asterisk"
       ></v-text-field>
@@ -86,7 +86,7 @@
         :label="$t('apps.forms.user.email')"
         color="balck"
         v-model="inputForm.email"
-        variant="solo"
+        variant="outlined"
         @blur="onEmailInput"
         class="input-with-asterisk"
       >
@@ -109,7 +109,7 @@
         :label="$t('apps.forms.user.mdpasse')"
         color="balck"
         v-model="inputForm.mdpasse"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.mdpasse" class="required-message mb-0">
@@ -132,8 +132,9 @@
         color="balck"
         :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
+        maxlength="9"
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
           Champ obligatoire
@@ -151,7 +152,7 @@
         :label="$t('apps.forms.user.matricule')"
         color="balck"
         v-model="inputForm.matricule"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
@@ -176,7 +177,7 @@
         :label="$t('apps.forms.user.sexe')"
         color="balck"
         v-model="inputForm.sexe"
-        variant="solo"
+        variant="outlined"
         :items="['Homme', 'Femme']"
         class="input-with-asterisk"
         
@@ -190,22 +191,31 @@
         </div>
       </v-col> 
     <v-col>
-      <v-select
-        prepend-inner-icon="mdi-domain"
-        name="etablissement"
-        density="compact"
-        :label="$t('apps.forms.etablissement.nom')"
+      <!-- <v-select
         color="balck"
-        v-model="inputForm.etablissement"
-        variant="solo"
-        :items="dataListeEtab"
+        variant="outlined"
+       
         persistent-hint
         
         single-line
+        
+        
+      ></v-select> -->
+      <v-autocomplete
+        name="etablissement"
+        v-model="inputForm.etablissement"
+        :items="dataListeEtab"
         item-title="libelleLong"
         item-value="id"
+        density="compact"
+        :label="$t('apps.forms.etablissement.nom')"
+        dense
+        outlined
+        variant="outlined"
+        prepend-inner-icon="mdi-domain"
+        clearable
         class="input-with-asterisk"
-      ></v-select>
+      ></v-autocomplete>
       <div v-if="formSubmitted && !inputForm.etablissement" class="required-message mb-0">
           Champ obligatoire
           <span class="required-icon">
@@ -225,7 +235,7 @@
         :label="$t('apps.forms.user.banque')"
         color="balck"
         v-model="inputForm.banque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
@@ -247,9 +257,10 @@
         color="balck"
         :rules="[rules.exactlycodeBanque]"
         v-model="inputForm.codeBanque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="5"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeBanque" class="required-message mb-0">
@@ -269,8 +280,9 @@
         color="balck"
         :rules="[rules.exactlycodeAgence]"
         v-model="inputForm.codeAgence"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
+        maxlength="5"
         class="input-with-asterisk"
     >
     </v-text-field >
@@ -293,9 +305,10 @@
         color="balck"
         :rules="[rules.exactlynumeroCompte]"
         v-model="inputForm.numeroCompte"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="12"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.numeroCompte" class="required-message mb-0">
@@ -315,8 +328,9 @@
         color="balck"
         :rules="[rules.exactlycleRib]"
         v-model="inputForm.cleRib"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
+        maxlength="2"
         class="input-with-asterisk"
     >
     </v-text-field >
@@ -334,9 +348,11 @@
        </router-link>
       </div>
        </p>
-       
-
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+       <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+      </div>
+      <!-- <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn> -->
     </v-form>
     </v-card>
   </div>
@@ -359,6 +375,10 @@ const fonctionStore = useFonctionStore();
 const etablissementStore= useEtablissementStore();
 const codeStore = useCodeStore();
 const { dataListeEtab } = storeToRefs(etablissementStore);
+const router= useRouter();
+const redirectToListe = () => {
+  router.push({ name: 'home'});
+};
 const rules = reactive({
   required: value => !!value || 'Champ obligatoire.',
   min: v => v.length >= 5 || '5 cractére au moins',

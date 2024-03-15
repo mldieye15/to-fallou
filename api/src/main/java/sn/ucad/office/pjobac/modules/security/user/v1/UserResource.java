@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
+import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.security.user.ProfileUserServie;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
@@ -124,6 +125,28 @@ public class UserResource {
             return ResponseEntity.ok(false);
         }
         }
+    @GetMapping("/email-availabilityUp")
+    public ResponseEntity<Boolean> checkEmailAvailabilityUp(@RequestParam Long userId, @RequestParam String email) {
+        try {
+            boolean isUnique = service.verifyEmailUniqueUp(email, userId);
+            // Si le matricule est unique, retourne true
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
+            // Si le matricule n'est pas unique, retourne false
+            return ResponseEntity.ok(false);
+        }
+    }
+    @GetMapping("/matricule-availabilityUp")
+    public ResponseEntity<Boolean> checkMatriculeAvailabilityUp(@RequestParam Long userId, @RequestParam String matricule) {
+        try {
+            boolean isUnique = service.verifyMatriculeUniqueUp(matricule, userId);
+            // Si le matricule est unique, retourne true
+            return ResponseEntity.ok(isUnique);
+        } catch (BusinessResourceException e) {
+            // Si le matricule n'est pas unique, retourne false
+            return ResponseEntity.ok(false);
+        }
+    }
     @GetMapping("/matricule-availability")
     public ResponseEntity<Boolean> checkMatriculeAvailability(@RequestParam String matricule) {
         try {

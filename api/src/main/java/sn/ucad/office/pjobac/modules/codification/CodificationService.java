@@ -32,6 +32,8 @@ public interface CodificationService {
     boolean verifyCode(String code, String email)throws BusinessResourceException, InterruptedException;
     void verifyCodeUnique(String code)throws  BusinessResourceException;
     void verifyEmailUnique(String email)throws  BusinessResourceException;
+    boolean verifyEmailUniqueUp(String email, Long id)throws  BusinessResourceException;
+    boolean verifyCodeUniqueUp(String code, Long id)throws  BusinessResourceException;
 
 
 }

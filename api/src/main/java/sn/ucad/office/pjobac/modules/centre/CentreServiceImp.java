@@ -243,5 +243,14 @@ public class CentreServiceImp implements CentreService {
         }
     }
 
+    @Override
+    public boolean verifyLibelleLongUniqueUp(String libelleLong, Long id) throws BusinessResourceException {
+        Optional<Centre> existingLibelleLong = dao.findByLibelleLongAndIdNot(libelleLong,id);
+        if (existingLibelleLong.isPresent()) {
+            throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
+        }
+        return false;
+    }
+
 
 }

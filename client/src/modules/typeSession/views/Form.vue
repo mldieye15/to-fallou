@@ -15,13 +15,20 @@
         name="libelleLong"
         density="compact"
         :label="$t('apps.forms.typeSession.nom')"
-        color="balck"
-        :rules="[rules.required, rules.min]"
+        :color="errors.libelleLong ? 'red' : 'black'"
         v-model="inputForm.libelleLong"
-        variant="solo"
-        @blur="checkLibelleExistence"
+        variant="outlined"
+        @blur="onLibelleInput"
+        @keyup.enter="onLibelleInput"
+        :error-messages="errors.libelleLong ? [errors.libelleLong] : []"
+        @focus="clearErrors"
       >
-      </v-text-field>
+         <template v-if="errors.libelleLong" v-slot:append>
+            <v-icon  color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+        </v-text-field>
       <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
@@ -36,14 +43,15 @@
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
 import { useTypeSessionStore } from "../store";
 import { useRouter } from 'vue-router';
+import * as yup from 'yup';
+
+const schema = yup.object().shape({
+  libelleLong: yup.string().required('Le libelle est requis'),
+});
 const router = useRouter();
 const instance = getCurrentInstance();
 const typeSessionStore = useTypeSessionStore();
 
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
-});
 
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
@@ -71,20 +79,84 @@ const checkLibelleExistence = async () => {
   }
 };
 
-const { inputForm, actionSubmit } = defineProps({
+const redirectToListe = () => {
+  router.push({ name: 'typeSession-liste'});
+};
+const checkLibelleExistenceUp = async () => {
+  libelleError.value = false;
+  libelleErrorMessage.value = "";
+  if (inputForm.libelleLong) {
+    const typeId= inputForm.id;
+    const libelleLong = inputForm.libelleLong;
+    try {
+      const isAvailable = await  typeSessionStore.checkLibelleExistenceUp({typeId ,libelleLong});
+      console.log("academie ,libelleLong :",typeId,libelleLong );
+      console.log("Résultat de la vérification du libelle (isAvailable) :", isAvailable);
+      if (!isAvailable) {
+        libelleError.value = true;
+        libelleErrorMessage.value = "Ce type existe dèja.";
+        console.log('libelleErrorMessage:', libelleErrorMessage);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la vérification du libelle :", error);
+      libelleError.value = true;
+      libelleErrorMessage.value = "Erreur lors de la vérification du libelle. Veuillez réessayer.";
+    }
+  }
+};
+
+const errors = reactive({
+  libelleLong:'',
+  error: false,
+});
+const clearErrors = () => {
+  errors.libelleLong = '';
+
+};
+const onLibelleInput = () => { 
+  if (isEdit) {
+      checkLibelleExistenceUp();
+    } else {
+      checkLibelleExistence();
+    } 
+};
+const { inputForm, actionSubmit,isEdit } = defineProps({
+  isEdit:Boolean,
   inputForm: Object,
   actionSubmit: {
     type: Function,
   }
 });
-const redirectToListe = () => {
-  router.push({ name: 'typeSession-liste'});
-};
-const handleSave = () => {
-  if(instance.refs.typeSessionForm.validate && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+  // Si la validation échoue, afficher les messages d'erreur
+  if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'libelleLong') {
+        errors.libelleLong = err.message;
+      } else if (err.path === 'nombrePoint') {
+        errors.nombrePoint = err.message;
+      }
+      else if (err.path === 'fonction') {
+        errors.fonction = err.message;
+      }
+    });
+  } else {
+    // Gérer d'autres erreurs ici, si nécessaire
+    console.error(error);
   }
 }
+};
 
 </script>
 <style>

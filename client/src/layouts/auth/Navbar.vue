@@ -19,9 +19,9 @@
       <!-- <v-btn class="text-button">
       <router-link :to="{name:'aide'}"><span class="text-white">{{ $t('public.nav.top.aide') }}</span></router-link>
       </v-btn> -->
-      <v-btn class="text-caption" style="background-color: white; color: blue;">
+      <!-- <v-btn class="text-caption" style="background-color: white; color: blue;">
     <router-link :to="{name:'login'}"><span class="text-black">{{ $t('public.nav.top.monespace') }}</span></router-link>
-    </v-btn>
+    </v-btn> -->
 
       <!-- <Localisation/> -->
 

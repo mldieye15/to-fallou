@@ -17,7 +17,7 @@
         :label="$t('apps.forms.session.nom')"
         color="balck"
         v-model="inputForm.session"
-        variant="solo"
+        variant="outlined"
         :items="dataListeSession"
         persistent-hint
         readonly
@@ -35,7 +35,7 @@
         :label="$t('apps.forms.academie.nom')"
         dense
         outlined
-        variant="solo"
+        variant="outlined"
         density="compact"
         clearable
         @change="handleAcademieChange"
@@ -43,7 +43,7 @@
       ></v-autocomplete>
       <!-- <v-select
 
-        variant="solo"
+        variant="outlined"
         
         persistent-hint
         single-line
@@ -57,7 +57,7 @@
         :label="$t('apps.forms.ville.nom')"
         dense
         outlined
-        variant="solo"
+        variant="outlined"
         prepend-inner-icon="mdi-city"
         density="compact"
         clearable

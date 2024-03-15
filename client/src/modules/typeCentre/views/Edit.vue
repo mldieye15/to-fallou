@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="true"/>
   </div>
 </template>
 
@@ -15,6 +15,7 @@ import { useI18n } from "vue-i18n";
 import FormVue from "./Form.vue";
 import { useTypeCentreStore } from "../store";
 import { useToast } from 'vue-toastification';
+
 
 
 const toast= useToast();
@@ -34,6 +35,7 @@ const { dataDetails, loading } = storeToRefs(typeCentreStore);
 const { one, modify } = typeCentreStore;
 
 const inputForm = reactive({
+  id:"",
   libelleLong:'',
   libelleCourt:''
 });
@@ -52,6 +54,7 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
+    inputForm.id=dataDetails.value.id;
     inputForm.libelleLong = dataDetails.value.libelleLong,
     inputForm.libelleCourt = dataDetails.value.libelleCourt
 

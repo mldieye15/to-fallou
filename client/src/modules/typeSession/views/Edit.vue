@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.typeSession.typeSession') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="true" />
   </div>
 </template>
 
@@ -35,7 +35,8 @@ const { dataDetails, loading } = storeToRefs(typeSessiontore);
 const { one, modify } = typeSessiontore;
 
 const inputForm = reactive({
-  libelleLong: ''
+  libelleLong: '',
+  id:""
 });
 
 const handleSave = (payload) => {
@@ -53,6 +54,7 @@ const handleSave = (payload) => {
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong
+    inputForm.id = dataDetails.value.id
   });
 });
 

@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.codification.codification') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" />
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="true" />
   </div>
 </template>
 
@@ -33,6 +33,7 @@ const { dataDetails, loading } = storeToRefs(codificationtore);
 const { one, modify } = codificationtore;
 
 const inputForm = reactive({
+  id:"",
   email:'',
   code:'',
 });
@@ -51,6 +52,7 @@ const handleSave = (payload) => {
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
+    inputForm.id=dataDetails.value.id;
     inputForm.email = dataDetails.value.email;
     inputForm.code = dataDetails.value.code;
   });

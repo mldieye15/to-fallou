@@ -432,6 +432,25 @@ public class UserServiceImp implements UserService {
         }
 
     }
+
+    @Override
+    public boolean verifyEmailUniqueUp(String email, Long userId) throws BusinessResourceException {
+        Optional<AppUser> existingUserWithEmail = dao.findByEmailAndIdNot(email, userId);
+        if (existingUserWithEmail.isPresent()) {
+            throw new ResourceAlreadyExists("L'e-mail existe déjà pour un autre utilisateur.");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean verifyMatriculeUniqueUp(String matricule, Long userId) throws BusinessResourceException {
+        Optional<AppUser> existingUserWithMatricule = dao.findByMatriculeAndIdNot(matricule, userId);
+        if (existingUserWithMatricule.isPresent()) {
+            throw new ResourceAlreadyExists("Le matricule existe déjà pour un autre utilisateur.");
+        }
+
+        return false;
+    }
 //    @Override
 //    public void verifyUsernamelUnique(String username) throws BusinessResourceException {
 //        if(dao.findByUsername(username).isPresent()){

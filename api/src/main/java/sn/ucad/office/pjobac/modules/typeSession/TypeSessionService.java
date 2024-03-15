@@ -26,4 +26,5 @@ public interface TypeSessionService {
 
     public Optional<TypeSessionAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyTypeSessionUnique(String libelleLong)throws  BusinessResourceException;
+    boolean verifyLibelleLongUniqueUp(String libelleLong, Long id)throws  BusinessResourceException;
 }

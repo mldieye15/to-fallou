@@ -1,16 +1,23 @@
 <template>
+  
   <v-container>
+    <h2 class="text-center">
+    Fiche Candidature
+   </h2>
     <div v-if="role=='ROLE_PLANIFICATEUR'" class="text-right">
-      <v-btn  @click.prevent="redirectToBonus(route.id)" class="ma-1" variant="tonal" color="blue"> Bonus</v-btn>
-      <v-btn @click.prevent="redirectToMalus(route.id)" class="ma-1" variant="tonal" color="blue">Malus </v-btn>
+      <v-btn @click.prevent="redirectToBonus(route.id)" class="mb-2 " variant="flat" size="small" color="green">
+        <v-icon>mdi-plus-circle-outline</v-icon> <!-- Icône de bonus -->
+        Bonus
+      </v-btn>
+      <v-btn @click.prevent="redirectToMalus(route.id)" class="mb-2 ml-2" variant="flat" size="small" color="red">
+        <v-icon>mdi-minus-circle-outline</v-icon> <!-- Icône de malus -->
+        Malus
+      </v-btn>
     </div>
           
     <v-row justify="center">
       <v-col cols="12" sm="6" md="6">
         <v-card>
-          <v-card-title class="headline">
-          users  Details 
-          </v-card-title>
           <v-card-text>
             <v-list>
               <v-card class="custom-card">
@@ -146,7 +153,7 @@
                     <v-col>
                       <v-list-item-title class="font-weight-bold">Etablissement de provenance:</v-list-item-title>
                     </v-col>
-                    <v-col class="text-right">
+                    <v-col class="text-right ">
                       <v-list-item-subtitle>{{ inputForm.etablissement }}</v-list-item-subtitle>
                     </v-col>
                   </v-row>
@@ -156,12 +163,12 @@
             </v-list>
           </v-card-text>
         </v-card>
+        <div class="d-flex">
+           <v-btn class="mt-4 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+        </div>
       </v-col>
       <v-col>
         <v-card>
-          <v-card-title class="headline">
-            Details Candidats
-          </v-card-title>
           <v-card-text>
             <v-list>
               <v-card class="custom-card">
@@ -310,9 +317,6 @@
       </v-col>
     </v-row>
   </v-container>
-  <div class="d-flex justify-end">
-        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
-      </div>
 </template>
 <script setup>
 import { reactive, getCurrentInstance, onMounted, watchEffect} from "vue";

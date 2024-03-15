@@ -9,7 +9,7 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.user.sup') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="userForm">
-      <v-row style="height: 16vh">
+      <v-row >
         <v-col>
       <v-text-field 
         id="prenoms"
@@ -18,10 +18,15 @@
         density="compact"
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.prenoms"
-        variant="solo" 
+        variant="outlined" 
       ></v-text-field >
+      <div v-if="formSubmitted && !inputForm.prenoms" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col sm="6" cols="12">
         <v-text-field
@@ -31,14 +36,20 @@
         density="compact"
         :label="$t('apps.forms.user.nom')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.nom"
-        variant="solo"
+        variant="outlined"
       ></v-text-field>
+      <div v-if="formSubmitted && !inputForm.nom" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
-         
+       
     </v-row>
-    <v-row style="height: 16vh">
+    
+    <v-row >
       <v-col>
       <v-text-field 
         id="matricule"
@@ -47,13 +58,18 @@
         density="compact"
         :label="$t('apps.forms.user.matricule')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.matricule"
-        variant="solo" 
+        variant="outlined" 
         @input="onMatriculeInput"
     >
     </v-text-field >
     <div v-if="matriculeError" class="error-message">{{ matriculeErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.matricule" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
       <v-col>
         <v-select
@@ -63,15 +79,20 @@
         density="compact"
         :label="$t('apps.forms.user.sexe')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.sexe"
-        variant="solo"
+        variant="outlined"
         :items="['Homme', 'Femme']"
       >
     </v-select>
+    <div v-if="formSubmitted && !inputForm.sexe" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col>
     </v-row >
-      <v-row style="height: 16vh">
+      <v-row >
         <v-col>
           <v-text-field
         id="telephone"
@@ -80,10 +101,17 @@
         density="compact"
         :label="$t('apps.forms.user.telephone')"
         color="balck"
-        :rules="[rules.required]"
+        :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
-        variant="solo"
+        variant="outlined"
+        maxlength="9"
       ></v-text-field>
+      <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
         </v-col>
         <v-col>
         <v-text-field
@@ -93,13 +121,18 @@
         density="compact"
         :label="$t('apps.forms.user.email')"
         color="balck"
-        :rules="[rules.required]"
         v-model="inputForm.email"
-        variant="solo"
+        variant="outlined"
         @input="onEmailInput"
       >
     </v-text-field>
     <div v-if="emailError" class="error-message ma-1">{{ emailErrorMessage }}</div>
+    <div v-if="formSubmitted && !inputForm.email" class="required-message mb-0">
+          Champ obligatoire
+          <span class="required-icon">
+            <i class="mdi mdi-alert"></i>
+          </span>
+        </div>
       </v-col> 
       </v-row>
       <div class="d-flex justify-end">
@@ -122,9 +155,10 @@ import { useCodeStore } from "@/store/codification";
 import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 import { useRouter } from "vue-router";
+import * as yup from 'yup';
 
 const router = useRouter();
-
+const  formSubmitted=ref(false);
 const instance = getCurrentInstance();
 const adminStore= useAdminStore();
 const fonctionStore = useFonctionStore();
@@ -133,8 +167,16 @@ const codeStore = useCodeStore();
 const { dataListe } = storeToRefs(fonctionStore);
 const { dataListeEtab } = storeToRefs(etablissementStore);
 const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres', 
+});
+const schema = yup.object().shape({
+  prenoms: yup.string().required('Le prénom est requis'),
+  nom: yup.string().required('Le nom est requis'),
+  email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
+  telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
+  matricule: yup.string().required('Le matricule est requis'),
+  sexe: yup.string().required('Le sexe est requis'),
+ 
 });
 
 const { inputForm, actionSubmit } = defineProps({
@@ -153,14 +195,16 @@ const isSubmitDisabled = ref(false);
 watchEffect(() => {
   isSubmitDisabled.value =emailError.value ||matriculeError.value
 });
-
-const checkEmailExistence = async () => {
+const checkEmailExistenceUp = async () => {
   emailError.value = false;
   emailErrorMessage.value = "";
   if (inputForm.email) {
+    const userId = inputForm.id;
+    const email = inputForm.email;
     try {
-      const isAvailable = await adminStore.checkEmailExistence(inputForm.email);
+      const isAvailable = await adminStore.checkEmailExistenceUp({ userId, email });
       console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
+      console.log("email, userId :", email, userId);
       if (!isAvailable) {
         emailError.value = true;
         emailErrorMessage.value = "Cet email  est déjà utilisé.";
@@ -173,33 +217,27 @@ const checkEmailExistence = async () => {
     }
   }
 };
-const checkMatriculeExistence = async () => {
+const checkMatriculeExistenceUp = async () => {
   matriculeError.value = false;
   matriculeErrorMessage.value = "";
   if (inputForm.matricule) {
+    const userId = inputForm.id;
+    const matricule = inputForm.matricule;
     try {
-      const isAvailable = await adminStore.checkMatriculeExistence(inputForm.matricule);
-      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
+      const isAvailable = await adminStore.checkMatriculeExistenceUp({userId,matricule});
+      // console.log("userId et :matricule) :", userId, matricule);
+      // console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
       if (!isAvailable) {
         matriculeError.value = true;
         matriculeErrorMessage.value = "Ce matricule  est déjà utilisé.";
-        console.log('matriculeErrorMessage:', matriculeErrorMessage);
+        // console.log('matriculeErrorMessage:', matriculeErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du matricule :", error);
+      // console.error("Erreur lors de la vérification du matricule :", error);
       matriculeError.value = true;
       matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
     }
   }
-};
-watchEffect(() => {
-  if (inputForm.dateNaiss) {
-    inputForm.dateNaiss = formatDateForInput(inputForm.dateNaiss);
-  }
-});
-function formatDateForInput(date) {
-  const formattedDate = format(new Date(date), 'yyyy-MM-dd', { locale: fr });
-  return formattedDate;
 };
 const onEmailInput = () => {
   // Vérifie s'il y a des espaces dans l'email
@@ -209,7 +247,7 @@ const onEmailInput = () => {
     emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence de l'email
-    checkEmailExistence();
+    checkEmailExistenceUp(); 
   }
 };
 const onMatriculeInput = () => {
@@ -220,16 +258,29 @@ const onMatriculeInput = () => {
     matriculeErrorMessage.value = "Le matricule ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence du matricule
-    checkMatriculeExistence();
+    checkMatriculeExistenceUp();
   }
 };
 const redirectToUsers = () => {
   router.push({ name: 'sup-liste'});
 };
-const handleSave = () => {
-  console.log("isSubmitDisabled:", isSubmitDisabled.value);
-  if(instance.refs.userForm.validate() && !isSubmitDisabled.value){
-    actionSubmit(inputForm);
+const handleSave = async () => {
+  try {
+    if (!isSubmitDisabled.value) {
+      await schema.validate(inputForm, { abortEarly: false });
+      console.log('Formulaire valide. Soumission en cours...');
+      actionSubmit(inputForm); 
+      // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
+    } else {
+      console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    }
+  } catch (error) {
+    error.inner.forEach(err => {
+      console.error(err.message);
+    });
+    console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
+    formSubmitted.value = true;
+      console.log(formSubmitted)
   }
 };
 
@@ -238,5 +289,25 @@ const handleSave = () => {
 .error-message {
   color: red; /* ou toute autre couleur de votre choix */
   margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+.error-message {
+  color: red; /* ou toute autre couleur de votre choix */
+  margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
+}
+.required-icon {
+  color: orange; /* Couleur de l'icône pour les champs requis non remplis */
+  margin-left: 5px; /* Ajustement de l'espacement entre le message d'erreur et l'icône */
+}
+.input-with-asterisk {
+  position: relative; /* Permet de positionner l'astérisque par rapport à l'input */
+}
+
+.input-with-asterisk:after {
+  content: "*"; /* Ajouter l'astérisque */
+  color: red; /* Couleur rouge */
+  font-size: larger; /* Taille de police plus grande */
+  position: absolute; /* Position absolue */
+  top: 0px; /* Ajuster la position verticale */
+  right: 8px; /* Ajuster la position horizontale */
 }
 </style>

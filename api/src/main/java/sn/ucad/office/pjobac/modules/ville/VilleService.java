@@ -26,5 +26,6 @@ public interface VilleService {
     public Optional<VilleAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
     void verifyVilleUnique(String libelleLong)throws  BusinessResourceException;
     void verifyUniqueLibelleCourt(String libelleCourt)throws  BusinessResourceException;
+    boolean verifyLibelleLongUniqueUp(String libelleLong, Long id)throws  BusinessResourceException;
 
 }

@@ -7,6 +7,7 @@ const all = modulesURL+'/all';
 const add = modulesURL+'/';
 const centreByville = modulesURL+'/by-ville';
 const libelleAvailability = modulesURL +'/libelle-availability';
+const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 const codeAvailability = modulesURL +'/code-availability';
 
 export const useCentreStore = defineStore('centre', {
@@ -24,7 +25,7 @@ export const useCentreStore = defineStore('centre', {
       {
         text: 'Académies',
         disabled: true,
-        route: 'src/modules/academie/routes.js',
+        route: 'src/modules/centre/routes.js',
       }
     ],*/
     headerTable: [
@@ -209,6 +210,16 @@ export const useCentreStore = defineStore('centre', {
         return true;
       } catch (error) {
         console.error('Erreur lors de la vérification du nom :', error);
+        return false;
+      }
+    },
+    async checkLibelleExistenceUp({ centreId, libelleLong }) {
+      try {
+        const response = await axios.get(`${libelleAvailabilityUp}?centreId=${centreId}&libelleLong=${libelleLong}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du libelleLong :", error);
         return false;
       }
     },

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="false"/>
   </div>
 </template>
 
@@ -31,6 +31,7 @@ const juryStore = useJuryStore();
 const { add } = juryStore;
 
 const inputForm= reactive({
+  libellelong: "",
   centre: null,
   numero:'',
   session: null,

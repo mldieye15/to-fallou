@@ -16,11 +16,17 @@
         density="compact"
         :label="$t('apps.forms.candidat.bonus')"
         color="balck"
-        :rules="[rules.required, rules.min]"
         v-model="inputForm.bonus"
-        variant="solo" 
-      ></v-text-field >
-      
+        variant="outlined" 
+        :error-messages="errors.bonus?[errors.bonus]:[]" 
+        @focus="clearErrors" 
+      >
+          <template v-slot:append>
+            <v-icon v-if="errors.bonus" color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-text-field >
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -37,7 +43,7 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useCandidatStore } from "../store";
 import { useToast } from 'vue-toastification';
-
+import * as yup from 'yup';
 
 const toast= useToast();
 const i18n = useI18n();
@@ -52,35 +58,68 @@ const route = useRoute();
 const candidatStore = useCandidatStore();
 const { dataDetails, loading } = storeToRefs(candidatStore);
 const { one, bonus } = candidatStore;
-const rules = reactive({
-  required: value => !!value || 'Champ obligatoire.',
-  min: v => v.length >= 2 || '2 cractére au moins',
+const schema = yup.object().shape({
+  bonus: yup
+    .number()
+    .required('Le bonus est requis') // Définition de la règle "required"
+    .typeError('Le bonus doit être un nombre')
+    .min(0, 'Le bonus ne peut pas être négatif')
+    .max(100, 'Le bonus doit être inférieur ou égal à 100'),
 });
 const inputForm = reactive({
 bonus:"",
 });
-const redirectToListe = () => {
-  router.push({ name: 'candidat-liste'});
+const clearErrors = () => {
+  errors.bonus =null;
 };
-const handleSave = (event) => {
-  event.preventDefault();
-  const payload = {
-    bonus: inputForm.bonus,
-  };
-bonus(route.params.id, payload).then( () => {
-  // addNotification({
-  //     show: true,
-  //     text:  i18n.t('noter'),
-  //     color: 'blue'
-  //   });
-  toast.success(i18n.t('note'));
-  router.push( { name: 'candidat-details'});
+const errors = reactive({
+  bonus: "",
+  error: false,
 });
-}
+
+const redirectToListe = () => {
+  router.push({ name: 'candidat-details'});
+};
+const handleSave = async (event) => {
+  event.preventDefault();
+  
+  try {
+  
+    // Validation Yup du formulaire
+    await schema.validate(inputForm, { abortEarly: false });
+
+    const payload = {
+      bonus: inputForm.bonus,
+    };
+    // Appel à votre API pour sauvegarder les données
+    await bonus(route.params.id, payload);
+
+    // Affichage du message de succès
+    toast.success(i18n.t('note'));
+
+    // Redirection vers la page des détails du candidat
+    router.push({ name: 'candidat-details' });
+  } catch (error) {
+    // Si la validation échoue, afficher les messages d'erreur
+    if (error instanceof yup.ValidationError) {
+      error.errors.forEach(errorMessage => {
+        // Afficher les messages d'erreur associés à chaque champ du formulaire
+        errors.bonus = errorMessage;
+        inputForm.error = true;
+        // toast.error(errorMessage);
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
+  }
+};
+
+
 </script>
 <style>
 .error-message {
-  color: red; /* ou toute autre couleur de votre choix */
+  color: #8e0c0c; /* ou toute autre couleur de votre choix */
   margin-top: 5px; /* Ajustez la marge en fonction de vos besoins */
 }
 </style>

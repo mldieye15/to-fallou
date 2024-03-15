@@ -19,7 +19,7 @@
         :label="$t('apps.forms.user.prenoms')"
         color="balck"
         v-model="inputForm.prenoms"
-        variant="solo" 
+        variant="outlined" 
         class="input-with-asterisk"
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.prenoms" class="required-message mb-0">
@@ -38,7 +38,7 @@
         :label="$t('apps.forms.user.nom')"
         color="balck"
         v-model="inputForm.nom"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
       ></v-text-field >
       <div v-if="formSubmitted && !inputForm.nom" class="required-message mb-0">
@@ -59,7 +59,7 @@
         :label="$t('apps.forms.user.email')"
         color="balck"
         v-model="inputForm.email"
-        variant="solo"
+        variant="outlined"
         @blur="onEmailInput"
         class="input-with-asterisk"
         readonly
@@ -82,7 +82,7 @@
         :label="$t('apps.forms.user.code')"
         color="balck"
         v-model="inputForm.code"
-        variant="solo"
+        variant="outlined"
         @blur="checkCodeValidity"
         class="input-with-asterisk"
         readonly
@@ -106,8 +106,9 @@
         color="balck"
         :rules="[rules.exactlynumeroTelephone]"
         v-model="inputForm.telephone"
-        variant="solo"
+        variant="outlined"
         class="input-with-asterisk"
+        maxlength="9"
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
           Champ obligatoire
@@ -125,7 +126,7 @@
         :label="$t('apps.forms.user.matricule')"
         color="balck"
         v-model="inputForm.matricule"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
@@ -150,7 +151,7 @@
         :label="$t('apps.forms.user.sexe')"
         color="balck"
         v-model="inputForm.sexe"
-        variant="solo"
+        variant="outlined"
         :items="['Homme', 'Femme']"
         class="input-with-asterisk"
         
@@ -171,7 +172,7 @@
         :label="$t('apps.forms.etablissement.nom')"
         color="balck"
         v-model="inputForm.etablissement"
-        variant="solo"
+        variant="outlined"
         :items="dataListeEtab"
         persistent-hint
         
@@ -199,7 +200,7 @@
         :label="$t('apps.forms.user.banque')"
         color="balck"
         v-model="inputForm.banque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
     >
@@ -221,9 +222,10 @@
         color="balck"
         :rules="[rules.exactlycodeBanque]"
         v-model="inputForm.codeBanque"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="5"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeBanque" class="required-message mb-0">
@@ -243,9 +245,10 @@
         color="balck"
         :rules="[rules.exactlycodeAgence]"
         v-model="inputForm.codeAgence"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="5"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.codeAgence" class="required-message mb-0">
@@ -267,9 +270,10 @@
         color="balck"
         :rules="[rules.exactlynumeroCompte]"
         v-model="inputForm.numeroCompte"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="12"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.numeroCompte" class="required-message mb-0">
@@ -289,9 +293,10 @@
         color="balck"
         :rules="[rules.exactlycleRib]"
         v-model="inputForm.cleRib"
-        variant="solo" 
+        variant="outlined" 
         @blur="onMatriculeInput"
         class="input-with-asterisk"
+        maxlength="2"
     >
     </v-text-field >
     <div v-if="formSubmitted && !inputForm.cleRib" class="required-message mb-0">
@@ -308,7 +313,11 @@
        </router-link>
       </div>
        </p>
-      <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn>
+       <div class="d-flex justify-end">
+        <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
+        <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
+      </div>
+      <!-- <v-btn block class="mt-2 mb-8" size="large" color="blue" @click="handleSave">{{ $t('apps.forms.enregistrer') }}</v-btn> -->
     </v-form>
     </v-card>
   </div>
@@ -327,7 +336,9 @@ import { fr } from "date-fns/locale";
 import { useRouter } from "vue-router";
 import * as yup from 'yup';
 const router = useRouter();
-
+const redirectToListe = () => {
+  router.push({ name: 'user-liste' });
+};
 const instance = getCurrentInstance();
 const utilisateurStore= useUtilisateurStore();
 const fonctionStore = useFonctionStore();
@@ -350,7 +361,6 @@ const schema = yup.object().shape({
   nom: yup.string().required('Le nom est requis'),
   code: yup.string().required('Le code est requis'),
   email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
-  mdpasse: yup.string().required('Le mot de passe est requis').min(5, 'Au moins 5 caractères requis'),
   telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
   matricule: yup.string().required('Le matricule est requis'),
   sexe: yup.string().required('Le sexe est requis'),
@@ -402,58 +412,45 @@ const checkCodeValidity = async () => {
     }
   }
 };
-const checkEmailExistence = async () => {
+const checkEmailExistenceUp = async () => {
   emailError.value = false;
   emailErrorMessage.value = "";
   if (inputForm.email) {
+    const userId = inputForm.id;
+    const email = inputForm.email;
     try {
-      const isAvailable = await utilisateurStore.checkEmailExistence(inputForm.email);
+      const isAvailable = await utilisateurStore.checkEmailExistenceUp({ userId, email });
       console.log("Résultat de la vérification du email (isAvailable) :", isAvailable);
+      console.log("email, userId :", email, userId);
       if (!isAvailable) {
         emailError.value = true;
         emailErrorMessage.value = "Cet email  est déjà utilisé.";
-        console.log('emailErrorMessage:', emailErrorMessage);
+        // console.log('emailErrorMessage:', emailErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification de l'email :", error);
+      // console.error("Erreur lors de la vérification de l'email :", error);
       emailError.value = true;
       emailErrorMessage.value = "Erreur lors de la vérification de l'email. Veuillez réessayer.";
     }
   }
 };
-const checkUsernameExistence = async () => {
-  usernameError.value = false;
-  usernameErrorMessage.value = "";
-  if (inputForm.username) {
-    try {
-      const isAvailable = await utilisateurStore.checkUsernameExistence(inputForm.username);
-      console.log("Résultat de la vérification du nom d'utilisateur (isAvailable) :", isAvailable);
-      if (!isAvailable) {
-        usernameError.value = true;
-        usernameErrorMessage.value = "Ce nom d'utilisateur est déjà utilisé.";
-        console.log('usernameErrorMessage:', usernameErrorMessage);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la vérification du nom d'utilisateur :", error);
-      usernameError.value = true;
-      usernameErrorMessage.value = "Erreur lors de la vérification du nom d'utilisateur. Veuillez réessayer.";
-    }
-  }
-};
-const checkMatriculeExistence = async () => {
+const checkMatriculeExistenceUp = async () => {
   matriculeError.value = false;
   matriculeErrorMessage.value = "";
   if (inputForm.matricule) {
+    const userId = inputForm.id;
+    const matricule = inputForm.matricule;
     try {
-      const isAvailable = await utilisateurStore.checkMatriculeExistence(inputForm.matricule);
-      console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
+      const isAvailable = await utilisateurStore.checkMatriculeExistenceUp({userId,matricule});
+      // console.log("userId et :matricule) :", userId, matricule);
+      // console.log("Résultat de la vérification du matricule (isAvailable) :", isAvailable);
       if (!isAvailable) {
         matriculeError.value = true;
         matriculeErrorMessage.value = "Ce matricule  est déjà utilisé.";
-        console.log('matriculeErrorMessage:', matriculeErrorMessage);
+        // console.log('matriculeErrorMessage:', matriculeErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du matricule :", error);
+      // console.error("Erreur lors de la vérification du matricule :", error);
       matriculeError.value = true;
       matriculeErrorMessage.value = "Erreur lors de la vérification du matricule. Veuillez réessayer.";
     }
@@ -476,7 +473,7 @@ const onEmailInput = () => {
     emailErrorMessage.value = "L'adresse e-mail ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence de l'email
-    checkEmailExistence();
+    checkEmailExistenceUp();
     checkCodeValidity(); 
   }
 };
@@ -488,18 +485,7 @@ const onMatriculeInput = () => {
     matriculeErrorMessage.value = "Le matricule ne doit pas contenir d'espaces.";
   } else {
     // Sinon, effectue la vérification normale de l'existence du matricule
-    checkMatriculeExistence();
-  }
-};
-const onUsernameInput = () => {
-  // Vérifie s'il y a des espaces dans le nom d'utilisateur
-  if (/\s/.test(inputForm.username)) {
-    // Si des espaces sont trouvés, affiche un message d'erreur
-    usernameError.value = true;
-    usernameErrorMessage.value = "Le nom d'utilisateur ne doit pas contenir d'espaces.";
-  } else {
-    // Sinon, effectue la vérification normale de l'existence du nom d'utilisateur
-    checkUsernameExistence();
+    checkMatriculeExistenceUp();
   }
 };
 const redirectToUsers = () => {

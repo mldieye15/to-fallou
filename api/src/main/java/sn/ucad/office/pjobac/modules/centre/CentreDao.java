@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Optional;
 @Repository
 public interface CentreDao extends JpaRepository<Centre, Long> {
     Optional<Centre> findByLibelleLong(String libelleLong);
+    @Query("SELECT c FROM Centre c WHERE c.libelleLong= :libelleLong AND c.id != :centreId")
+    Optional<Centre> findByLibelleLongAndIdNot(@Param("libelleLong") String libelleLong, @Param("centreId") Long centreId);
     Optional<Centre> findByLibelleCourt(String libelleCourt);
     @Query("SELECT COUNT(j) FROM Jury j WHERE j.centre.id = :centreId AND j.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     int totalJuryByCentre(@Param("centreId") Long centreId);
