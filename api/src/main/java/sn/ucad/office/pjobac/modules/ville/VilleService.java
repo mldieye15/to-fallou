@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface VilleService {
     public List<VilleResponse> all() throws BusinessResourceException;
     public List<VilleResponse>getVilleByAcademie(String idAcademie) throws BusinessResourceException;
-    List<VilleResponse> availableVillesForUserAndAcademy(String academieId);
+    List<VilleResponse> availableVillesForUserAndAcademy(Long academieId);
     public SimplePage<VilleResponse> all(Pageable pageable) throws BusinessResourceException;
     public Optional<VilleResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
     public VilleResponse add(VilleRequest req) throws BusinessResourceException;

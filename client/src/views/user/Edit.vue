@@ -40,7 +40,15 @@
         clearable
         @change="handleAcademieChange"
         persistent-hint
-      ></v-autocomplete>
+        :error-messages="errors.academie ? [errors.academie] : []"
+        @focus="clearErrors"
+      >
+      <template v-if="errors.academie"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+      </v-autocomplete>
       <!-- <v-select
 
         variant="outlined"
@@ -63,7 +71,15 @@
         clearable
         persistent-hint
         single-line
-      ></v-autocomplete>
+        :error-messages="errors.ville ? [errors.ville] : []"
+        @focus="clearErrors"
+      >
+      <template v-if="errors.ville"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+      </v-autocomplete>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -93,7 +109,12 @@
   import { useDemandeStore } from '@/modules/demande/store';
   import { useToast } from 'vue-toastification';
 
+  import * as yup from 'yup';
 
+  const schema = yup.object().shape({
+    ville: yup.string().required('Veuillez selectionner une ville'),
+    academie: yup.string().required('Veuillez selectionner une académie'),
+  });
 const toast= useToast();
 
 
@@ -125,16 +146,27 @@ const { dataListeSession } = storeToRefs(sesssionStore);
   const demandeStore = useDemandeStore();
   const { dataDetails, loading } = storeToRefs(demandeStore);
   const { one, modify,accepterDemande } = demandeStore;
-  
+  const errors = reactive({
+  ville:null,
+  academie: null,
+  error: false,
+});
+const clearErrors = () => {
+  errors.ville = null;
+  errors.academie= null;
+};
   const inputForm = reactive({
+    id:null,
     session:null,
     ville:null,
     academie:null,
     etatDemande:null,
   });
   
-  const handleSave = () => {
-  const payload = {
+  const handleSave = async () => {
+  try{
+    await schema.validate(inputForm, { abortEarly: false });
+    const payload = {
     session: inputForm.session,
     ville: inputForm.ville,
     academie: inputForm.academie,
@@ -148,16 +180,46 @@ const { dataListeSession } = storeToRefs(sesssionStore);
     toast.success(i18n.t('updated'));
     router.push({ name: 'accueil' });
   });
-};
-const handleAcademieChange = async () => {
-  if (inputForm.academie) {
-    try {
-      await availableVillesForUserAndAcademy(inputForm.academie);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des villes:", error);
+  }catch (error) {
+    if (error instanceof yup.ValidationError) {
+    error.inner.forEach(err => {
+      if (err.path === 'ville') {
+        errors.ville = err.message;
+      } else if (err.path === 'academie') {
+        errors.academie = err.message;
+      } 
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
     }
   }
 };
+const selectedAcademies = new Map();
+const handleAcademieChange = async () => {
+  if (inputForm.academie) {
+    // Vérifier si l'académie sélectionnée a changé depuis la dernière fois
+    const selectedAcademie = inputForm.academie;
+    const previousAcademie = selectedAcademies.get("selectedAcademieKey");
+    if (selectedAcademie !== previousAcademie) {
+      try {
+        // Réinitialiser la valeur de la ville uniquement si elle a été précédemment sélectionnée
+        if (previousAcademie !== undefined) {
+          inputForm.ville = null;
+        }
+        
+        // Appeler la fonction pour récupérer les villes disponibles pour cette académie
+        await availableVillesForUserAndAcademy(selectedAcademie);
+        
+        // Mettre à jour la map avec la nouvelle académie sélectionnée
+        selectedAcademies.set("selectedAcademieKey", selectedAcademie);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des villes:", error);
+      }
+    }
+  }
+};
+
 watchEffect(() => {
   handleAcademieChange();
 });
@@ -165,6 +227,10 @@ const demandeId = ref(route.params.id);
   onMounted(()=>{
     one(route.params.id ).then( () => {
       inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,
+      inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
+      inputForm.academie=dataDetails.value.academie?dataDetails.value.academie.libelleLong:null,
+      inputForm.id=dataDetails.value.academie?dataDetails.value.academie.id:null,
+      inputForm.ville=dataDetails.value.ville?dataDetails.value.ville.libelleLong:null,
       inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       villeStore.all();
       academieStore.availableAcademiesForUser(demandeId.value);

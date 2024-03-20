@@ -7,8 +7,8 @@ const all= modulesURL+'/all';
 const allBySession= modulesURL+'/allBySession';
 const add = modulesURL+'/';
 const juryByCentre = modulesURL+'/by-centre';
-const nomAvailability=modulesURL+'/nom-availability';
-const nomAvailabilityUp=modulesURL+'/nom-availabilityUp';
+const numeroAvailability=modulesURL+'/numero-availability';
+const numeroAvailabilityUp=modulesURL+'/numero-availabilityUp';
 export const useJuryStore = defineStore('jury', {
   state: () => ({
     dataListeJury: [],  //  List des données à afficher pour la table
@@ -228,9 +228,30 @@ export const useJuryStore = defineStore('jury', {
         return false;
       }
     },
-    async checkNomExistenceUp({ juryId, libelleLong }) {
+    async checkNomExistenceUp({ juryId, numero }) {
       try {
-        const response = await axios.get(`${nomAvailabilityUp}?juryId=${juryId}&libelleLong=${libelleLong}`);
+        const response = await axios.get(`${nomAvailabilityUp}?juryId=${juryId}&numero=${numero}`);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du numero :", error);
+        return false;
+      }
+    },
+    async checkNumeroExistence(numero) {
+      try {
+        const response = await axios.get(`${numeroAvailability}?numero=${numero}`);
+        console.log("Réponse de libelleAvailability :", response);
+        response.data=response.data.isAvailable;
+        return true;
+      } catch (error) {
+        console.error('Erreur lors de la vérification du numero :', error);
+        return false;
+      }
+    },
+    async checkNumeroExistenceUp({ juryId, numero }) {
+      try {
+        const response = await axios.get(`${numeroAvailabilityUp}?juryId=${juryId}&numero=${numero}`);
         response.data=response.data.isAvailable;
         return true;
       } catch (error) {

@@ -191,12 +191,28 @@ const handleSave = async() => {
     }
   }
   };
+const selected = new Map();
 const requests = ref([]);
-const onAcademieChange = (index) => {
+const onAcademieChange = async (index) => {
   console.log(`onAcademieChange appelée avec l'index : ${index}`);
   if (requests.value[index].academie !== null) {
     console.log(`Academie avant mise à jour des villes : ${requests.value[index].academie}`);
-    updateVilles(index);
+    const selectedAcademie = requests.value[index].academie;
+    const previousAcademie = selected.get(index);
+    if (selectedAcademie !== previousAcademie) {
+      try {
+        // Réinitialiser la valeur de la ville à null
+        requests.value[index].ville = null;
+
+        // Appeler la fonction pour récupérer les villes disponibles pour cette académie
+        await villesByAcademie(selectedAcademie);
+         requests.value[index].villes = dataListeByAcademie.value;
+        // Mettre à jour la map avec la nouvelle académie sélectionnée
+        selected.set(index, selectedAcademie);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des villes :", error);
+      }
+    }
     console.log(`Academie après mise à jour des villes : ${requests.value[index].academie}`);
   }
 };

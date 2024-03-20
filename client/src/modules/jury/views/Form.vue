@@ -43,7 +43,7 @@
         variant="outlined"
         :error-messages="errors.numero ? [errors.numero] : []"
         @focus="clearErrors"
-        @blur="onLibelleInput"
+        @blur="onNumeroInput"
       >
          <template v-if="errors.numero"  v-slot:append>
             <v-icon color="red">
@@ -51,7 +51,7 @@
             </v-icon>
           </template>
       </v-text-field>
-      <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
+      <div v-if="numeroError" class="error-message">{{ numeroErrorMessage }}</div>
       <v-autocomplete
         v-model="inputForm.centre"
         :items="dataListeCentre"
@@ -83,7 +83,6 @@
         v-model="nomJury"
         variant="outlined"
         readonly
-        @blur="onLibelleInput"
       >
       </v-text-field>
       <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
@@ -124,8 +123,8 @@ const { dataListeCentre } = storeToRefs(centreStore);
 const sessionStore = useSessionStore();
 const{dataListeSession}=storeToRefs(sessionStore);
 
-const nomError = ref(false);
-const nomErrorMessage = ref("");
+const numeroError = ref(false);
+const numeroErrorMessage = ref("");
 const isSubmitDisabled = ref(false);
 
 const { inputForm, actionSubmit,isEdit } = defineProps({
@@ -135,49 +134,49 @@ const { inputForm, actionSubmit,isEdit } = defineProps({
     type: Function,
   }
 });
-const checkNomExistence = async () => {
-  nomError.value = false;
-  nomErrorMessage.value = "";
-  console.log('Vérification avant la condition (nomJury) :', nomJury);
-  if (nomJury.value) {
-    console.log('Vérification dans la condition (nomJury) :', nomJury);
+const checkNumeroExistence = async () => {
+  numeroError.value = false;
+  numeroErrorMessage.value = "";
+  console.log('Vérification avant la condition (numero) :', numero);
+  if (inputForm.numero) {
+    console.log('Vérification dans la condition (numero) :', numero);
     try {
-      const isAvailable = await juryStore.checkNomExistence(nomJury.value);
-      console.log("nom  :", nomJury.value);
-      console.log("Résultat de la vérification du nom (isAvailable) :", isAvailable);
+      const isAvailable = await juryStore.checkNumeroExistence(inputForm.numero);
+      console.log("numero  :", inputForm.numero);
+      console.log("Résultat de la vérification du numero (isAvailable) :", isAvailable);
       if (!isAvailable) {
-        nomError.value = true;
-        nomErrorMessage.value = "Ce nom  est déjà utilisé.";
-        console.log('nomErrorMessage:', nomErrorMessage);
+        numeroError.value = true;
+        numeroErrorMessage.value = "Ce numero  est déjà utilisé pour cette année.";
+        console.log('numeroErrorMessage:', numeroErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du nom :", error);
-      nomError.value = true;
-      nomErrorMessage.value = "Erreur lors de la vérification du nom. Veuillez réessayer.";
+      console.error("Erreur lors de la vérification du numero :", error);
+      numeroError.value = true;
+      numeroErrorMessage.value = "Erreur lors de la vérification du numero. Veuillez réessayer.";
     }
   }
 };
-const checkNomExistenceUp = async () => {
-  nomError.value = false;
-  nomErrorMessage.value = "";
-  console.log('Vérification avant la condition (nomJury) :', nomJury);
-  if (nomJury.value) {
+const checkNumeroExistenceUp = async () => {
+  numeroError.value = false;
+  numeroErrorMessage.value = "";
+  console.log('Vérification avant la condition (numero) :', numero);
+  if (numero.value) {
     const juryId= inputForm.id;
-    const libelleLong = nomJury.value;
-    console.log('Vérification dans la condition (nomJury) :', nomJury);
+    const numero = inputForm.numero;
+    console.log('Vérification dans la condition (numero) :', numero);
     try {
-      const isAvailable = await juryStore.checkNomExistenceUp({juryId, libelleLong});
-      console.log("nom  :", nomJury.value,juryId, libelleLong);
-      console.log("Résultat de la vérification du nom (isAvailable) :", isAvailable);
+      const isAvailable = await juryStore.checkNumeroExistenceUp({juryId, numero});
+      console.log("numero et jury  :",juryId, numero);
+      console.log("Résultat de la vérification du numero (isAvailable) :", isAvailable);
       if (!isAvailable) {
-        nomError.value = true;
-        nomErrorMessage.value = "Ce nom  est déjà utilisé.";
-        console.log('nomErrorMessage:', nomErrorMessage);
+        numeroError.value = true;
+        numeroErrorMessage.value = "Ce numero  est déjà utilisé pour cette année.";
+        console.log('numeroErrorMessage:', numeroErrorMessage);
       }
     } catch (error) {
-      console.error("Erreur lors de la vérification du nom :", error);
-      nomError.value = true;
-      nomErrorMessage.value = "Erreur lors de la vérification du nom. Veuillez réessayer.";
+      console.error("Erreur lors de la vérification du numero :", error);
+      numeroError.value = true;
+      numeroErrorMessage.value = "Erreur lors de la vérification du numero. Veuillez réessayer.";
     }
   }
 };
@@ -189,7 +188,7 @@ const clearErrors = () => {
 const redirectToListe = () => {
   router.push({ name: 'jury-liste'});
 };
-// const nomJury = computed(() => {
+// const numeroJury = computed(() => {
 //   const numero = inputForm.numero;
 //   const session = inputForm.session;
 //   const nomLabel = sessionStore.getAnneBySessionId(session);
@@ -205,7 +204,7 @@ const getNomJury = () => {
 };
 const nomJury = ref(getNomJury());
 watchEffect(() => {
-  isSubmitDisabled.value = nomError.value; 
+  isSubmitDisabled.value = numeroError.value; 
   nomJury.value = getNomJury();
 });
 const errors = reactive({
@@ -215,11 +214,11 @@ const errors = reactive({
   error: false,
 });
 
-const onLibelleInput = () => { 
+const onNumeroInput = () => { 
   if (isEdit) {
-    checkNomExistenceUp();
+    checkNumeroExistenceUp();
     } else {
-      checkNomExistence();
+      checkNumeroExistence();
     } 
 };
 const handleSave = async () => {

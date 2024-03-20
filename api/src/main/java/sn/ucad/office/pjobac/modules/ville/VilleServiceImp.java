@@ -78,22 +78,29 @@ public class VilleServiceImp implements VilleService {
     }
 
     @Override
-    public List<VilleResponse> availableVillesForUserAndAcademy(String academieId) {
-        Long myId= Long.valueOf(academieId.trim());
-        Academie academie;
-        academie=academieDao.findById(myId)
-                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + academieId));
+    public List<VilleResponse> availableVillesForUserAndAcademy(Long academieId) {
+        // Obtention de l'utilisateur actuellement connecté
         AppUser currentUser = authService.getCurrentUser();
         log.info("User: {}", currentUser.getEmail());
+
+        // Récupération de l'academie correspondant à l'ID fourni
+        Academie academie = academieDao.findById(academieId)
+                .orElseThrow(() -> new RuntimeException("Académie non trouvée pour l'ID : " + academieId));
+
         log.info("Academie: {}", academie.getLibelleLong());
-        List<Ville> villes=dao.availableVillesForUserAndAcademy(currentUser,academie);
-        List<VilleResponse> response;
-        response= villes.stream()
+
+        // Utilisation de l'ID de l'académie pour obtenir les villes disponibles
+        List<Ville> villes = dao.availableVillesForUserAndAcademy(currentUser, academieId);
+
+        // Conversion des entités Ville en objets VilleResponse
+        List<VilleResponse> response = villes.stream()
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
+
         log.info("Result size: {}", response.size());
-        return  response;
+        return response;
     }
+
 
     @Override
     public SimplePage<VilleResponse> all(Pageable pageable) throws BusinessResourceException {

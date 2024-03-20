@@ -232,5 +232,21 @@ public class JuryServiceImp implements JuryService {
         return false;
     }
 
+    @Override
+    public void verifyNumeroUnique(String numero) throws BusinessResourceException {
+        if(dao.findByNumero(numero).isPresent()){
+            throw new ResourceAlreadyExists("Le numero existe déjà pour cette annee.");
+        }
+
+    }
+    @Override
+    public boolean verifyNumeroUniqueUp(String numero, Long id) throws BusinessResourceException {
+        Optional<Jury> existingNom = dao.findByNumeroAndIdNot(numero,id);
+        if (existingNom.isPresent()) {
+            throw new ResourceAlreadyExists("Le est  déjà utilisé pour un autre jury.");
+        }
+        return false;
+    }
+
 
 }

@@ -7,14 +7,16 @@
               {{ $t('public.hero.titre') }}
             </h1>
             <h3 class="subheading font-weight-bold text-white">
-              {{ $t('public.hero.soustitre') }},
+              {{ $t('public.hero.soustitre') }}
               <br>{{ $t('public.hero.pasdecompte') }}
-              <v-btn class="text-caption large" large>
-                <router-link :to="{name:'register'}"><span class="text hidden-sm-and-down text-black"> {{ $t('public.nav.top.inscription') }}</span></router-link>
-              </v-btn>
-              <v-btn  class="text-caption ml-2" style="background-color: white; color: blue;">
+              <v-btn @click.prevent="redirectToRegistre ()" class="text-black text-caption ml-2">{{ $t('public.nav.top.inscription') }}</v-btn>
+              <!-- <v-btn class="text-caption large" large>
+                <router-link :to="{name:'register'}"><span class="text hidden-sm-and-down text-black"> </span></router-link>
+              </v-btn> -->
+              <!-- <v-btn  class="text-caption ml-2" style="background-color: white; color: blue;">
                 <router-link :to="{name:'login'}"><span class="text-black">Se connecter</span></router-link>
-              </v-btn>
+              </v-btn> -->
+              <v-btn @click.prevent="redirectToLogin ()" class="text-black text-caption ml-2">Se connecter</v-btn>
             </h3>
           </v-flex>
         </v-col>
@@ -78,6 +80,14 @@
 import heroImage from '@/assets/imgs/off1.jpeg'
 import heroImage2 from '@/assets/imgs/off2.jpg'
 import dir from '@/assets/imgs/dir3.jpg'
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const redirectToLogin = () => {
+  router.push({ name: 'login'});
+};
+const redirectToRegistre = () => {
+  router.push({ name: 'register'});
+};
 </script>
 <style scoped>
 .custom-bg-blue {

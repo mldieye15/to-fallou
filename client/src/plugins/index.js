@@ -21,11 +21,17 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import VueGoodTablePlugin from 'vue-good-table-next';
 import 'vue-good-table-next/dist/vue-good-table-next.css'
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import  Typewriter from 'vue3-typer';
+import "vue3-typer/dist/vue-typer.css"
+
 //import AxiosPlugin from 'vue-axios-cors';
 
 
 export function registerPlugins (app) {
   loadFonts()
+  AOS.init();
   app.component('EasyDataTable', Vue3EasyDataTable);
   app.component('VueJsonExcel', VueJsonExcel);
   app.component("downloadExcel", JsonExcel);
@@ -37,5 +43,6 @@ export function registerPlugins (app) {
     .use(i18n)
     .use(VueGoodTablePlugin)
     .use(Toast)
+    .use(Typewriter)
     //.use(AxiosPlugin)
 }

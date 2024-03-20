@@ -106,29 +106,24 @@ export const useVilleStore = defineStore('ville', {
         this.loading = false;
       }
     },
-    async availableVillesForUserAndAcademy(academie) {
+    async availableVillesForUserAndAcademy(academieId) {
+      console.log("Valeur de academie reçue:", academieId);
       try {
-        // Ajouter une vérification pour s'assurer que academie est un nombre non nul
-        if (typeof academie === 'number' && !isNaN(academie)) {
-          await axios.get(`${availableVillesForUserAndAcademy}/${academie}`)
-            .then((response) => {
-              if (response.status === 200) {
-                let res = response.data.map((element) => {
-                  let academieLabel = element.academie ? element.academie.libelleLong : null;
-                  return {
-                    id: element.id,
-                    libelleLong: element.libelleLong,
-                    libelleCourt: element.libelleCourt,
-                    academie: academieLabel
-                  };
-                });
-                this.dataListeByAcademieAndUser = res;
-                console.log("Villes récupérées pour l'académie", academie, ":", this.dataListeByAcademieAndUser);
-              }
+        // Vérifiez que academieId est un nombre valide
+        const response = await axios.get(`${availableVillesForUserAndAcademy}/${academieId}`);
+          if (response.status === 200) {
+            let res = response.data.map((element) => {
+              let academieLabel = element.academie ? element.academie.libelleLong : null;
+              return {
+                id: element.id,
+                libelleLong: element.libelleLong,
+                libelleCourt: element.libelleCourt,
+                academie: academieLabel
+              };
             });
-        } else {
-          console.error("La valeur de academie est invalide. La requête n'a pas été effectuée.");
-        }
+            this.dataListeByAcademieAndUser = res;
+            console.log("Villes récupérées pour l'académie", academieId, ":", this.dataListeByAcademieAndUser);
+          }
       } catch (error) {
         console.log(error);
         this.error = error;

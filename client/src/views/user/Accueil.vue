@@ -5,15 +5,31 @@
       <div v-if="dataListeSession.length > 0">
      <div v-if="dataListeForUser.length> 0">
   <div  class="mt-1 ">
-    <transition-group name="fade">
-      <template v-for="session in dataListeSession" :key="session.id">
-        <div class="session-item">
-          <p class="phrase">
-            La date de clôture de dépôt de candidature est le {{ session.dateClotureDepotCandidature }} passé cette date vous ne pouvez pas modifier votre demande 
-          </p>
-        </div>
-      </template>
-    </transition-group>
+    <div  v-for="session in dataListeSession" :key="session.id" class="bg-cyan text-center text-white w-70 ">
+      <div v-if="session.candidatureOuvert==='ouverte'">
+        <h3 class="subheading font-weight-bold text-white">
+        <VueTyper 
+        pre-type-delay='1000'
+        :text="`La date limite des candidatures est fixée au  ${session.dateClotureDepotCandidature}. Au-delà de cette date, vous ne pourriez plus  modifier votre demande.`" 
+        style="color: white;"
+        
+         />
+      </h3>
+      </div>
+      <div v-if="session.modification==='ouverte'">
+        <h3 class="subheading font-weight-bold text-white">
+        <VueTyper 
+        pre-type-delay='1000'
+        text="Les modifications sont réouvertes, vous pouvez modifier vos demandes 'OBSOLETE'." 
+        color="white"
+        style=""
+         />
+      </h3> 
+      </div>
+      
+    
+   
+</div>
 </div>
   <v-container fluid> 
     <div class="text-center mb-10">
@@ -185,21 +201,12 @@ const redirectToEditDemande = (id) => {
   .actions-wrapper{
     text-align: center;
   }
-.phrase {
-  overflow: hidden; /* Masquer les caractères non visibles */
-  white-space: nowrap; /* Empêcher le saut à la ligne */
-  font-size: 20px; /* Ajustez la taille de la police selon vos préférences */
-  animation: revealPhrase 10s infinite;
-  text-align: center;
-  background-color:#1E88E5;
+  .vue-typer {
+  color: white;
+}
+.vue-typer .custom.char{
   color: white; 
 }
-@keyframes revealPhrase {
-  0% {
-    width: 0; /* Largeur initiale : 0 */
-  }
-  100% {
-    width: 100%; /* Largeur finale : 100% */
-  }
-}
+
+
 </style>

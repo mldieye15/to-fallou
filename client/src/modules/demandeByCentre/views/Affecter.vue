@@ -10,7 +10,7 @@
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="demandeForm" :value="formValid">
       <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar"
         name="session"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -24,7 +24,7 @@
     
 
       <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-city"
         name="ville"
         density="compact"
         :label="$t('apps.forms.ville.nom')"
@@ -36,7 +36,7 @@
       <input type="hidden" :v-model="inputForm.ville">
     </v-text-field> 
     <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-office-building"
         name="centre"
         density="compact"
         :label="$t('apps.forms.centre.nom')"
@@ -47,8 +47,8 @@
       >
       <input type="hidden" :v-model="inputForm.centre">
     </v-text-field>
-    <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+    <v-autocomplete
+        prepend-inner-icon="mdi-gavel"
         name="jury"
         density="compact"
         color="balck"
@@ -58,8 +58,16 @@
         persistent-hint
         item-title="numero"
         item-value="id"
+        :error-messages="errors.jury ? [errors.jury] : []"
+        @focus="clearErrors"
+        clearable 
       >
-    </v-select>
+         <template v-if="errors.jury"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-autocomplete>
     <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -82,6 +90,12 @@
   
   import { useDemandeByCentreStore } from "../store";
   import { useToast } from 'vue-toastification';
+  import * as yup from 'yup';
+  
+  const schema = yup.object().shape({
+   jury: yup.string().required('Veuillez selectionner un centre'),
+});
+
   const redirectToListe = () => {
     router.push({ name: 'demandeByCentre-demandes'});
   };
@@ -92,7 +106,13 @@
   
   const notificationStore = useNotificationStore();
   const { addNotification } = notificationStore;
-
+  const clearErrors = () => {
+  errors.jury= null;
+};
+  const errors = reactive({
+  jury: null,
+  error: false,
+});
   const villeStore = useVilleStore();
 const juryStore= useJuryStore();
 const {dataListeJury}=storeToRefs(juryStore);
@@ -123,7 +143,9 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     jury:null,
     etatDemande:null,
   });
-  const handleSave = () => {
+  const handleSave = async () => {
+ try{
+  await schema.validate(inputForm, { abortEarly: false }); 
   const payload = {
     session: inputForm.session,
     ville: inputForm.ville,
@@ -144,7 +166,20 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     redirectToCentreAfterAffected(inputForm.centre)
     // router.push({ name: 'demandeByCentre-demandes' });
   });
+ }catch (error) {
+    // Si la validation échoue, afficher les messages d'erreur
+    if (error instanceof yup.ValidationError) {
+      error.errors.forEach(errorMessage => {
+        // Afficher les messages d'erreur associés à chaque champ du formulaire
+        errors.jury = errorMessage;
+        // toast.error(errorMessage);
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
 };
+}
   onMounted(()=>{
     one(route.params.id ).then( () => {
       inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,

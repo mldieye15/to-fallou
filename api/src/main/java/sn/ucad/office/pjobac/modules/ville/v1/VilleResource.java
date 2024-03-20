@@ -45,7 +45,7 @@ public class VilleResource {
     @GetMapping("/availableVillesForUserAndAcademy/{academieId}")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<VilleResponse>> availableVillesForUserAndAcademy(@PathVariable String academieId){
+    public ResponseEntity<List<VilleResponse>> availableVillesForUserAndAcademy(@PathVariable Long academieId){
         List<VilleResponse> response = service.availableVillesForUserAndAcademy(academieId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

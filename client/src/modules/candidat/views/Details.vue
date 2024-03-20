@@ -2,9 +2,9 @@
   
   <v-container>
     <h2 class="text-center">
-    Fiche Candidature
+    Fiche Candidat
    </h2>
-    <div v-if="role=='ROLE_PLANIFICATEUR'" class="text-right">
+    <div v-if="role !=='ROLE_SUPERVISSEUR'" class="text-right">
       <v-btn @click.prevent="redirectToBonus(route.id)" class="mb-2 " variant="flat" size="small" color="green">
         <v-icon>mdi-plus-circle-outline</v-icon> <!-- Icône de bonus -->
         Bonus

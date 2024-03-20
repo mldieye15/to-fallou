@@ -10,7 +10,7 @@
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="demandeForm">
       <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-calendar"
         name="session"
         density="compact"
         :label="$t('apps.forms.session.nom')"
@@ -23,7 +23,7 @@
     </v-text-field>
 
       <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-city"
         name="ville"
         density="compact"
         :label="$t('apps.forms.ville.nom')"
@@ -36,7 +36,7 @@
     </v-text-field>
 
       <v-text-field
-        prepend-inner-icon="mdi-alpha-a-circle"
+        prepend-inner-icon="mdi-school"
         name="academie"
         density="compact"
         :label="$t('apps.forms.academie.nom')"
@@ -47,8 +47,8 @@
       >
       <input type="hidden" :v-model="inputForm.academie">
     </v-text-field>
-    <v-select
-        prepend-inner-icon="mdi-alpha-a-circle"
+    <v-autocomplete
+        prepend-inner-icon="mdi-office-building"
         name="centre"
         density="compact"
         color="balck"
@@ -58,8 +58,16 @@
         persistent-hint
         item-title="libelleLong"
         item-value="id"
+        :error-messages="errors.centre ? [errors.centre] : []"
+        @focus="clearErrors"
+        clearable 
       >
-    </v-select>
+         <template v-if="errors.centre"  v-slot:append>
+            <v-icon color="red">
+               mdi-alert-circle-outline
+            </v-icon>
+          </template>
+    </v-autocomplete>
      <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -78,10 +86,16 @@
   import { useAcademieStore } from "@/modules/academie/store";
   import { useSessionStore } from "@/modules/session/store";
   import { useI18n } from "vue-i18n";
+ 
+
   
   import { useDemandeStore } from "../store";
   import { useToast } from 'vue-toastification';
-
+  import * as yup from 'yup';
+  
+  const schema = yup.object().shape({
+   centre: yup.string().required('Veuillez selectionner un centre'),
+});
 
 const toast= useToast();
 const redirectToListe = () => {
@@ -109,7 +123,13 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
   const demandeStore = useDemandeStore();
   const { dataDetails, loading } = storeToRefs(demandeStore);
   const { one, modify,accepterDemande,hasAcceptedDemande } = demandeStore;
-  
+  const clearErrors = () => {
+  errors.centre= null;
+};
+  const errors = reactive({
+  centre: null,
+  error: false,
+});
   const inputForm = reactive({
     villeName:"",
     sessionName:"",
@@ -120,22 +140,34 @@ const { dataListeCentre,dataListeByVille} = storeToRefs(centreStore);
     centre:null,
     etatDemande:null, 
   });
-  const handleSave = () => {
-  const payload = {
+  const handleSave = async () => {
+    try{
+    await schema.validate(inputForm, { abortEarly: false });  
+    const payload = {
     session: inputForm.session,
     ville: inputForm.ville,
     academie: inputForm.academie,
     centre: inputForm.centre,
   };
   accepterDemande(route.params.id, payload).then(() => {
-    // addNotification({
-    //   show: true,
-    //   text:  i18n.t('updated'),
-    //   color: 'blue',
-    // });
     toast.success(i18n.t('accepted'));
     router.push({ name: 'demande-liste' });
   });
+  } catch (error) {
+    // Si la validation échoue, afficher les messages d'erreur
+    if (error instanceof yup.ValidationError) {
+      error.errors.forEach(errorMessage => {
+        // Afficher les messages d'erreur associés à chaque champ du formulaire
+        errors.centre = errorMessage;
+        // toast.error(errorMessage);
+      });
+    } else {
+      // Gérer d'autres erreurs ici, si nécessaire
+      console.error(error);
+    }
+  }
+ 
+  
 };
 onMounted(() => {
   one(route.params.id ).then(() => {

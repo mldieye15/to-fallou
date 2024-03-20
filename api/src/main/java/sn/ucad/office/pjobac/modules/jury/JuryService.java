@@ -35,4 +35,6 @@ public interface JuryService {
     void updateVilleTotalJury(Long villeId);
     void verifyJuryUnique(String numero)throws  BusinessResourceException;
     boolean verifyNomUniqueUp(String nom, Long id)throws  BusinessResourceException;
+    void verifyNumeroUnique(String numero)throws  BusinessResourceException;
+    boolean verifyNumeroUniqueUp(String numero, Long id)throws  BusinessResourceException;
 }

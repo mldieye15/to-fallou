@@ -75,7 +75,7 @@ const schema = yup.object().shape({
     .required('La note est requise') // Définition de la règle "required"
     .typeError('La note  doit être un nombre')
     .min(0, 'La note  ne peut pas être négatif')
-    .max(60, 'La note  doit être inférieure ou égale à 100'),
+    .max(60, 'La note  doit être inférieure ou égale à 60'),
 });
 const clearErrors = () => {
   errors.noteSupervisseur = null;

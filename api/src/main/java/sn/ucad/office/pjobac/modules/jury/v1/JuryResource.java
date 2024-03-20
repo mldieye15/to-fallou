@@ -81,19 +81,38 @@ public class JuryResource {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @GetMapping("/nom-availability")
-    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String nom) {
+//    @GetMapping("/nom-availability")
+//    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String nom) {
+//        try {
+//            service.verifyJuryUnique(nom);
+//            return ResponseEntity.ok(true);
+//        } catch (ResourceNotFoundException e) {
+//            return ResponseEntity.ok(false);
+//        }
+//    }
+//    @GetMapping("/nom-availabilityUp")
+//    public ResponseEntity<Boolean> checkJuryAvailabilityUp(@RequestParam Long juryId, @RequestParam String libelleLong) {
+//        try {
+//            boolean isUnique = service.verifyNomUniqueUp(libelleLong, juryId);
+//            return ResponseEntity.ok(isUnique);
+//        } catch (BusinessResourceException e) {
+//            return ResponseEntity.ok(false);
+//        }
+//    }
+
+    @GetMapping("/numero-availability")
+    public ResponseEntity<Boolean> checkJuryAvailability(@RequestParam String numero) {
         try {
-            service.verifyJuryUnique(nom);
+            service.verifyNumeroUnique(numero);
             return ResponseEntity.ok(true);
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.ok(false);
         }
     }
-    @GetMapping("/nom-availabilityUp")
-    public ResponseEntity<Boolean> checkJuryAvailabilityUp(@RequestParam Long juryId, @RequestParam String libelleLong) {
+    @GetMapping("/numero-availabilityUp")
+    public ResponseEntity<Boolean> checkJuryAvailabilityUp(@RequestParam Long juryId, @RequestParam String numero) {
         try {
-            boolean isUnique = service.verifyNomUniqueUp(libelleLong, juryId);
+            boolean isUnique = service.verifyNumeroUniqueUp(numero, juryId);
             return ResponseEntity.ok(isUnique);
         } catch (BusinessResourceException e) {
             return ResponseEntity.ok(false);

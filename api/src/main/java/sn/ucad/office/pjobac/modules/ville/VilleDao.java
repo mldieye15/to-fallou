@@ -32,10 +32,17 @@ public interface VilleDao extends JpaRepository<Ville, Long> {
     int totalDemandeAccepteOrValideByVille(@Param("ville") Ville ville);
     @Query("SELECT COUNT(d) FROM Demande d WHERE d.ville= :ville AND d.etatDemande.libelleLong='validée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)")
     int totalJuryAffecteByVille(@Param("ville") Ville ville);
+//    @Query("SELECT v FROM Ville v " +
+//            "WHERE v.academie = :academie " +
+//            "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) " +
+//            "AND v.totalJury > (SELECT COUNT(d) FROM Demande d WHERE d.ville = v AND d.etatDemande.libelleLong = 'validée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) ")
+//    List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academie") Academie academie);
+
     @Query("SELECT v FROM Ville v " +
-            "WHERE v.academie = :academie " +
-            "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie = :academie AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) " +
+            "WHERE v.academie.id = :academieId " +
+            "AND v.id NOT IN (SELECT d.ville.id FROM Demande d WHERE d.user = :user AND d.academie.id = :academieId AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) " +
             "AND v.totalJury > (SELECT COUNT(d) FROM Demande d WHERE d.ville = v AND d.etatDemande.libelleLong = 'validée' AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true)) ")
-    List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academie") Academie academie);
+    List<Ville> availableVillesForUserAndAcademy(@Param("user") AppUser user, @Param("academieId") Long academieId);
+
 
 }
