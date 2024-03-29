@@ -74,7 +74,7 @@ const schema = yup.object().shape({
     .number()
     .required('La note est requise') // Définition de la règle "required"
     .typeError('La note  doit être un nombre')
-    .min(0, 'La note  ne peut pas être négatif')
+    .min(0, 'La note  ne peut être négative')
     .max(60, 'La note  doit être inférieure ou égale à 60'),
 });
 const clearErrors = () => {
@@ -98,6 +98,7 @@ const handleSave = async (event) => {
 
     const payload = {
       noteSupervisseur: inputForm.noteSupervisseur,
+      appreciation: inputForm.appreciation,
     };
     // Appel à votre API pour sauvegarder les données
     await appreciation(route.params.id, payload);

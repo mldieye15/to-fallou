@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "ville"
         , uniqueConstraints = {
         @UniqueConstraint(columnNames="libelleLong"),
-        @UniqueConstraint(columnNames="libelleCourt")
+//        @UniqueConstraint(columnNames="libelleCourt")
 
 }
 )

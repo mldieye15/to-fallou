@@ -40,6 +40,7 @@
         @input="onAcademieChange(index)"
         :error-messages="errors.academie ? [errors.academie] : []"
         @focus="clearErrors"
+        autocomplete="off"
       >
       <template v-if="errors.academie"  v-slot:append>
             <v-icon color="red">
@@ -62,6 +63,7 @@
         clearable
         :error-messages="errors.ville ? [errors.ville] : []"
         @focus="clearErrors"
+        autocomplete="off"
       >
       <template v-if="errors.ville"  v-slot:append>
             <v-icon color="red">

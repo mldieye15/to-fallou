@@ -42,6 +42,7 @@
         persistent-hint
         :error-messages="errors.academie ? [errors.academie] : []"
         @focus="clearErrors"
+        autocomplete="off"
       >
       <template v-if="errors.academie"  v-slot:append>
             <v-icon color="red">
@@ -61,7 +62,6 @@
         v-model="inputForm.ville"
        :items="dataListeByAcademieAndUser"
         item-title="libelleLong"
-        item-value="id"
         :label="$t('apps.forms.ville.nom')"
         dense
         outlined
@@ -73,6 +73,7 @@
         single-line
         :error-messages="errors.ville ? [errors.ville] : []"
         @focus="clearErrors"
+        autocomplete="off"
       >
       <template v-if="errors.ville"  v-slot:append>
             <v-icon color="red">
@@ -144,7 +145,7 @@ const { dataListeSession } = storeToRefs(sesssionStore);
   const route = useRoute();
   
   const demandeStore = useDemandeStore();
-  const { dataDetails, loading } = storeToRefs(demandeStore);
+  const { dataDetails, loading,error } = storeToRefs(demandeStore);
   const { one, modify,accepterDemande } = demandeStore;
   const errors = reactive({
   ville:null,
@@ -171,18 +172,20 @@ const clearErrors = () => {
     ville: inputForm.ville,
     academie: inputForm.academie,
   };
-  modify(route.params.id, payload).then(() => {
-    // addNotification({
-    //   show: true,
-    //   text:  i18n.t('updated'),
-    //   color: 'blue',
-    // });
-    toast.success(i18n.t('updated'));
-    router.push({ name: 'accueil' });
-  });
-  }catch (error) {
-    if (error instanceof yup.ValidationError) {
-    error.inner.forEach(err => {
+  try {
+   await modify(route.params.id, payload).then(() => {
+    if(!error.value){
+      toast.success(i18n.t('updated'));
+    router.push({ name: 'accueil' }); 
+    }  
+  });  
+  } catch (error) {
+    console.error('Erreur lors de la modification:', error);
+    toast.error("Erreur lors de la modification. Veuillez vérifier les données saisies.");  
+  }
+  }catch (validationError) {
+    if (validationError instanceof yup.ValidationError) {
+      validationError.inner.forEach(err => {
       if (err.path === 'ville') {
         errors.ville = err.message;
       } else if (err.path === 'academie') {
@@ -190,7 +193,7 @@ const clearErrors = () => {
       } 
       });
     } else {
-      // Gérer d'autres erreurs ici, si nécessaire
+      toast.error("Erreur lors de la validation. Veuillez vérifier les données saisies.");
       console.error(error);
     }
   }
@@ -230,7 +233,7 @@ const demandeId = ref(route.params.id);
       inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       inputForm.academie=dataDetails.value.academie?dataDetails.value.academie.libelleLong:null,
       inputForm.id=dataDetails.value.academie?dataDetails.value.academie.id:null,
-      inputForm.ville=dataDetails.value.ville?dataDetails.value.ville.libelleLong:null,
+      inputForm.ville=dataDetails.value.ville?dataDetails.value.ville.libelleLong:null
       inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       villeStore.all();
       academieStore.availableAcademiesForUser(demandeId.value);

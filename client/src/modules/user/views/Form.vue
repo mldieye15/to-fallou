@@ -386,8 +386,7 @@ const rules = reactive({
   exactlycodeBanque: value => value && value.length === 5 && /^[a-zA-Z0-9]+$/.test(value) || 'Le code banque doit comporter exactement 5 caractères',
   exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
   exactlycleRib: value => value && value.length === 2 && /^\d+$/.test(value) || 'Le clé rip doit comporter exactement 2 chiffres',
-  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres',
-  
+  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres', 
 });
 const schema = yup.object().shape({
   prenoms: yup.string().required('Le prénom est requis'),
@@ -510,7 +509,6 @@ const handleSave = async () => {
       console.log(formSubmitted)
   }
 };
-
 onMounted(()=>{
   fonctionStore.all();
   etablissementStore.all();

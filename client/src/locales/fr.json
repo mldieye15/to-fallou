@@ -8,7 +8,7 @@
     "valided":"Demande validée avec succés! ",
     "accepted":"Demande acceptée avec succés! ",
     "updated": "Modification effectué!",
-    "registre": "Inscription reussie!",
+    "registre": "Inscription reussie! Un lien vous a été envoyer dans votre email pour activer votre compte",
     "deleted": "Supression effectué!",
     "note": "Note ajoutée avec succés!",
     "apple": "pas de pommes | une pomme | {count} pommes",
@@ -138,7 +138,6 @@
                 "dateOuvertureDepotCandidature":"Date d'ouverture des dépots de candidature",
                 "dateClotureDepotCandidature":"Date de clôture des dépots de candidature"
 
-
             },
             "user":{
                 "user":"Utilisateur",
@@ -156,7 +155,7 @@
                 "telephone": "Téléphone",
                 "anciennete": "encienneté",
                 "banque": "Nom de la banque",
-                "codeBanque": "Code banque(5 chiffres)",
+                "codeBanque": "Code banque(5 caractères)",
                 "codeAgence": "Code agence(5 chiffres)",
                 "numeroCompte": "Numéro de compte(12 chiffres)",
                 "cleRib":"clé rib(2 chiffres)"

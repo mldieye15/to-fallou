@@ -15,11 +15,12 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto">
-          <v-btn variant="outlined" color="black" >
+          <!-- <v-btn variant="outlined" color="black" >
             <router-link :to="{ name: 'jury-add' }" class="">
               {{ $t('apps.forms.ajouter') }}
             </router-link>
-          </v-btn>
+          </v-btn> -->
+          <v-btn @click.prevent="redirectToAdd()" class="ma-0" variant="outlined" color="cyan-darken-1"> {{ $t('apps.forms.ajouter') }} </v-btn>
         </v-col>
         <v-col class="text-right" cols="auto">
           <v-btn @click.prevent="redirectToArchives()" class="ma-0" variant="outlined" color="cyan-darken-1">jurys Archivés </v-btn>
@@ -108,6 +109,9 @@ toast.success(i18n.t('deleted'));
 }
 const redirectToArchives = () => {
   router.push({ name: 'jury-liste-archive'});
+};
+const redirectToAdd = () => {
+  router.push({ name: 'jury-add'});
 };
 </script>
 <style scoped>

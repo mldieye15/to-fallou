@@ -11,33 +11,33 @@ const academieRoutes = [{
             path: '',
             name: 'ville-liste',
             component: () => import( /* webpackChunkName: 'ville_liste' */ './views/Liste.vue'),
-          //   meta: {
-          //     middleware: [Middleware.auth]
-          // }
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
       },
       {
         path: '/app/dashboard/villes/:id',
         name: 'ville-details',
         component: () => import( /* webpackChunkName: 'ville_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/villes/add',
         name: 'ville-add',
         component: () => import( /* webpackChunkName: 'ville_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/villes/edit/:id',
         name: 'ville-edit',
         component: () => import( /* webpackChunkName: 'ville_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

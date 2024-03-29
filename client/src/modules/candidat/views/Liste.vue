@@ -40,7 +40,7 @@
         <template #item-actions="item">
           <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
             <v-btn  variant="flat" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
-              Appreciation
+              Evaluation
             </v-btn>
             <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details

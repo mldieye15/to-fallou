@@ -1,8 +1,17 @@
 <template>
-    <Navbar :appName="appName" />
-    <Snackbar :notifications="notifications" :removeNotification="removeNotification"/>
     <v-container fluid >
-      <div v-if="dataListeSession.length > 0">
+<div v-if="inputForm.cleRib===null">
+  <h1 class="text-center">Attention votre RIB n'est pas disponible ! Ajouter votre RIB pour continuer votre candidature.</h1>
+  <br>
+  <hr>
+  <h2 class="text-center bg-blue">Mise à jour du RIB
+     <v-btn @click.prevent="redirectToProfile()" class="ma-0 text-caption" variant="text"  >
+     <h1> (cliquer ici)</h1>  
+     </v-btn>  </h2>
+  <hr>
+</div>
+<div v-else>
+  <div v-if="dataListeSession.length > 0">
      <div v-if="dataListeForUser.length> 0">
   <div  class="mt-1 ">
     <div  v-for="session in dataListeSession" :key="session.id" class="bg-cyan text-center text-white w-70 ">
@@ -110,25 +119,26 @@
     <div v-else>
       <h2> Aucune Session en cours actuellement.</h2>
     </div>
+</div>
+      
     </v-container>
     
     <Footer :copyrightName="copyrightName" />
 </template>
 
 <script setup>
-import { onMounted,ref } from 'vue';
+import { onMounted,ref,reactive } from 'vue';
 import { storeToRefs } from "pinia";
 import { useAppStore } from "@/store/app";
 import { useNotificationStore } from "@/store/notification";
 import { useUserStore } from "@/store/user";
-import Snackbar from '@/components/core/Snackbar.vue';
 import { useSessionStore } from "@/modules/session/store";
 import { useDemandeStore } from '@/modules/demande/store';
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-
-
-
+const currentUser = useUserStore();
+const {current} = currentUser;
+const { dataDetails, loading } = storeToRefs(currentUser);
 const router = useRouter();
 const appStore = useAppStore();
 const sessionStore = useSessionStore();
@@ -150,7 +160,25 @@ let animate = true;
 //  nom de l'application défin au niveau du fihcier .env
 const appName = import.meta.env.VITE_APP_NAME;
 const copyrightName = import.meta.env.VITE_APP_COPYRIGHT;
-
+const inputForm = reactive({
+  // id: "",
+  // prenoms: "",
+  // nom: "",
+  // matricule: "",
+  // email: "",
+  // sexe: "",
+  // code: "",
+  // telephone: "",
+  // anciennete: "",
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
+  // fonction: null,
+  // etablissement: null,
+  // libelleLong: "",
+});
 const valider = (id) => {
   validerDemande(id).then( () => {
     // addNotification({
@@ -166,9 +194,31 @@ onMounted(()=>{
   changeLoggedIn();
   sessionStore.enCoursSession();
   demandeStore.allForUser();
+  current().then( () => {
+    // inputForm.id = dataDetails.value.userId,
+    // inputForm.prenoms = dataDetails.value.prenoms,
+    // inputForm.nom = dataDetails.value.nom,
+    // inputForm.matricule = dataDetails.value.matricule,
+    // inputForm.email = dataDetails.value.email,
+    // inputForm.sexe = dataDetails.value.sexe,
+    // inputForm.code = dataDetails.value.code,
+    // inputForm.telephone = dataDetails.value.telephone,
+    // inputForm.anciennete = dataDetails.value.anciennete,
+    // inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null,
+    // inputForm.libelleLong=dataDetails.value.etablissement?dataDetails.value.etablissement.libelleLong:null,
+    inputForm.banque=dataDetails.value.banque,
+    inputForm.codeBanque=dataDetails.value.codeBanque,
+    inputForm.codeAgence=dataDetails.value.codeAgence,
+    inputForm.numeroCompte=dataDetails.value.numeroCompte,
+    inputForm.cleRib=dataDetails.value.cleRib 
+  });
+
 });
 const redirectToEditDemande = (id) => {
   router.push({ name: 'edit', params: { id } });
+};
+const redirectToProfile= () => {
+  router.push({ name: 'profileUser'});
 };
 </script>
 <style>

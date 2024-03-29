@@ -11,33 +11,33 @@ const anneeRoutes = [{
             path: '',
             name: 'annee-liste',
             component: () => import( /* webpackChunkName: 'annee_liste' */ './views/Liste.vue'),
-          //   meta: {
-          //     middleware: [Middleware.auth]
-          // }
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
       },
       {
         path: '/app/dashboard/annees/:id',
         name: 'annee-details',
         component: () => import( /* webpackChunkName: 'annee_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/annees/add',
         name: 'annee-add',
         component: () => import( /* webpackChunkName: 'annee_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/annees/edit/:id',
         name: 'annee-edit',
         component: () => import( /* webpackChunkName: 'annee_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

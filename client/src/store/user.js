@@ -15,6 +15,7 @@ export const useUserStore = defineStore('user', {
     successMessage: null,
     errorMessage: null,
     dataDetails: {},
+    error: null,
     /*userDetails: {
       email: '',
       prenoms: '',
@@ -33,7 +34,6 @@ export const useUserStore = defineStore('user', {
     users: [],
     user: null,
     loading: false,
-    error: null
   }),
 
   getters: {
@@ -48,47 +48,97 @@ export const useUserStore = defineStore('user', {
 
   actions: {
     //  connexion
-    async login(payload){
-      this.user = null;
-      this.loading = true;
-      this.error = null
+    // async login(payload){
+    //   this.user = null;
+    //   this.loading = true;
+    //   console.log("Payload connexion", payload);
+    //   console.log("loginURL", loginURL);
+    //   try {
+    //     //`${loginURL}`
+    //     await axios.post(loginURL, payload)
+    //     .then((response) => {
+    //       if(response.status === 200 && response.data.authenticationToken){
+    //         localStorage.setItem('token', response.data.authenticationToken);
+    //         localStorage.setItem('refreshToken', response.data.refreshToken);
+    //         localStorage.setItem('email', response.data.email);
+    //         localStorage.setItem('role', response.data.role);
+    //         this.user = {
+    //           email: response.data.email,
+    //           fullname: response.data.fullname,
+    //           photo: response.data.photo,
+    //           initiale: response.data.initiale,
+    //           role: response.data.role,
+    //         };
+    //         console.log(this.user);
+    //         this.changeLoggedIn(true);
+    //         this.refreshToken = response.data.refreshToken;
+    //         this.email = response.data.email;
+    //         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.authenticationToken}`;
+    //         resolve(response);
+    //         this.error = null;
+    //       } else{
+    //         reject(response);
+    //     }
+    //     })
+    //   } catch (error) {
+    //     console.log(error);
+    //     this.error = error
+    //     throw error; 
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
+    async login(payload) {
       console.log("Payload connexion", payload);
       console.log("loginURL", loginURL);
       try {
-        //`${loginURL}`
-        await axios.post(loginURL, payload)
-        .then((response) => {
-          if(response.status === 200 && response.data.authenticationToken){
-            localStorage.setItem('token', response.data.authenticationToken);
-            localStorage.setItem('refreshToken', response.data.refreshToken);
-            localStorage.setItem('email', response.data.email);
-            localStorage.setItem('role', response.data.role);
-            this.user = {
-              email: response.data.email,
-              fullname: response.data.fullname,
-              photo: response.data.photo,
-              initiale: response.data.initiale,
-              role: response.data.role,
-            };
-            console.log(this.user);
-            this.changeLoggedIn(true);
-            this.refreshToken = response.data.refreshToken;
-            this.email = response.data.email;
-            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.authenticationToken}`;
-            resolve(response);
-          } else{
-            reject(response);
+        // Réinitialiser l'erreur à chaque tentative de connexion
+        this.error = null;
+        
+        // Effectuer la connexion avec axios ou toute autre méthode
+        const response = await axios.post(loginURL, payload);
+    
+        // Vérifier si la connexion est réussie
+        if (response.status === 200 && response.data.authenticationToken) {
+          // Enregistrer les données utilisateur dans le local storage
+          localStorage.setItem('token', response.data.authenticationToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
+          localStorage.setItem('email', response.data.email);
+          localStorage.setItem('role', response.data.role);
+    
+          // Mettre à jour les données utilisateur dans le store
+          this.user = {
+            email: response.data.email,
+            fullname: response.data.fullname,
+            photo: response.data.photo,
+            initiale: response.data.initiale,
+            role: response.data.role,
+          };
+    
+          // Mettre à jour le statut de connexion
+          this.changeLoggedIn(true);
+    
+          // Définir le token d'authentification pour les futures requêtes Axios
+          axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.authenticationToken}`;
+    
+          // Retourner la réponse (si nécessaire)
+          return response;
+        } else {
+          // Si la connexion échoue, définir l'erreur dans le store
+          this.error = new Error('Authentication failed');
+          throw this.error; // Rejeter l'erreur pour la capturer dans le composant
         }
-
-        })
       } catch (error) {
-        console.log(error);
-        this.error = error
+        console.error('Erreur lors de la connexion:', error);
+        // Définir l'erreur dans le store pour qu'elle puisse être accessible dans le composant
+        this.error = error;
+        throw error; // Rejeter l'erreur pour la capturer dans le composant
       } finally {
-        this.loading = false
+        // Quoi qu'il arrive, arrêter le chargement
+        this.loading = false;
       }
     },
-
+    
     async logout(){
       //this.user = null;
       this.loading = true;

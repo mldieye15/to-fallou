@@ -10,33 +10,33 @@ const supRoutes = [{
         path: 'superviseurs',
         name: 'sup-liste',
         component: () => import( /* webpackChunkName: 'user_liste' */ './views/Liste.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/superviseurs/:id',
         name: 'sup-details',
         component: () => import( /* webpackChunkName: 'user_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/superviseurs/add',
         name: 'sup-add',
         component: () => import( /* webpackChunkName: 'user_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/superviseurs/edit/:id',
         name: 'sup-edit',
         component: () => import( /* webpackChunkName: 'user_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

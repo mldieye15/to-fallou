@@ -68,7 +68,7 @@
           size="large"
           variant="tonal"
         >
-         Email le code dans votre email
+         Envoyer le code dans votre email
         </v-btn>
   
         <v-card-text class="text-center">

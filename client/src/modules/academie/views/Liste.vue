@@ -15,11 +15,12 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto">
-          <v-btn variant="outlined" color="black" >
+          <!-- <v-btn variant="outlined" color="black" >
             <router-link :to="{ name: 'academie-add' }" class="">
               {{ $t('apps.forms.ajouter') }}
             </router-link>
-          </v-btn>
+          </v-btn> -->
+          <v-btn @click.prevent="redirectToAdd()" class="ma-0" variant="outlined" color="cyan-darken-1"> {{ $t('apps.forms.ajouter') }} </v-btn>
         </v-col>
       </v-row>
       <EasyDataTable
@@ -69,6 +70,12 @@ import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useToast } from 'vue-toastification';
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const redirectToAdd= () => {
+  router.push({ name: 'academie-add'});
+};
 
 
 const toast= useToast();

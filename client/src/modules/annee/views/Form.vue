@@ -20,6 +20,7 @@
         v-model="inputForm.libelleLong"
         variant="outlined"
         @blur="onLibelleInput" 
+        maxlength="4"
       >
     </v-text-field>
     <div v-if="libelleError" class="error-message">{{ libelleErrorMessage }}</div>

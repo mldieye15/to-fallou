@@ -35,7 +35,7 @@
           </v-flex>
         </v-col> -->
       </v-row>
-      <v-row no-gutters class="w-100 custom-bg-blue ">
+      <v-row no-gutters class="custom-bg-blue  mb-3">
         <!-- <v-col cols="3">
             <v-card elevation="10">
               <v-img
@@ -90,10 +90,10 @@ const redirectToRegistre = () => {
 };
 </script>
 <style scoped>
-.custom-bg-blue {
-  background-image: url('@/assets/imgs/OFFICEDUBAC.jpg'); /* Utilisation de l'image de fond */
-  background-size: 2000px 800px; /* Définissez la taille souhaitée */
-  background-position: center; /* Centrez l'image de fond */
-  height: 700px; /* Définissez la hauteur souhaitée */
-}
+/* .custom-bg-blue {
+  background-image: url('@/assets/imgs/OFFICEDUBAC.jpg');
+  background-size: 2000px 800px; 
+  background-position: center; 
+  height: 700px;
+} */
 </style>

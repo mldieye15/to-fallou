@@ -540,6 +540,7 @@ const handleSave = async () => {
     };
       upProfileUser(payload); 
       router.push({ name: 'accueil'});
+      current();
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
     }

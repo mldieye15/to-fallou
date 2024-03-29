@@ -6,7 +6,7 @@
       max-width="500"
       rounded="lg"
     >
-    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.ville') }}</h2>
+    <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">Ville</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="villeForm" :value="formValid">
       <v-text-field
@@ -87,7 +87,7 @@ import * as yup from 'yup';
 
 const schema = yup.object().shape({
   libelleLong: yup.string().required('Le libelle est requis'),
-  libelleCourt: yup.string().required('Le code est requis'),
+  // libelleCourt: yup.string().required('Le code est requis'),
   academie: yup.string().required('Veuillez selectionner une académie'),
 });
 const router = useRouter();
@@ -152,7 +152,6 @@ const checkCodeExistence = async () => {
 };
 const errors = reactive({
   libelleLong:'',
-  libelleCourt:'',
   academie: null,
   error: false,
 });
@@ -224,8 +223,6 @@ const handleSave = async () => {
   if (error instanceof yup.ValidationError) {
     error.inner.forEach(err => {
       if (err.path === 'libelleLong') {
-        errors.libelleLong = err.message;
-      } else if (err.path === 'libelleCourt') {
         errors.libelleCourt = err.message;
       } else if (err.path === 'academie') {
         errors.academie = err.message;

@@ -11,50 +11,50 @@ const demandeByCentreRoutes = [{
             path: '',
             name: 'demandeByCentre-liste',
             component: () => import( /* webpackChunkName: 'demande_liste' */ './views/Liste.vue'),
-          //   meta: {
-          //     middleware: [Middleware.auth]
-          // }
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
       },
       
       {
         path: '/app/dashboard/demandesByCentre/:id',
         name: 'demandeByCentre-demandes',
         component: () => import( /* webpackChunkName: 'demande_details' */ './views/Demandes.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/RecapDemandes',
         name: 'recap-demandes',
         component: () => import( /* webpackChunkName: 'demande_details' */ './views/Recap.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/demandesByCentre/add',
         name: 'demandeByCentre-add',
         component: () => import( /* webpackChunkName: 'demande_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/demandesByCentre/edit/:id',
         name: 'demandeByCentre-edit',
         component: () => import( /* webpackChunkName: 'demande_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/demandesByCentre/affecter/:id',
         name: 'affecter-DemandeByCentre',
         component: () => import( /* webpackChunkName: 'demande_edit */ './views/Affecter.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

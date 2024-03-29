@@ -58,7 +58,7 @@ onMounted(()=>{
     inputForm.id = dataDetails.value.id,
     inputForm.libelleLong = dataDetails.value.libelleLong,
     inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.ville =dataDetails.value.ville.libelleLong,
+    inputForm.ville =dataDetails.value.ville.id,
     inputForm.typeCentre =dataDetails.value.typeCentre? dataDetails.value.typeCentre.id:null
 
   });

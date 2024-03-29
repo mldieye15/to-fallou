@@ -30,23 +30,34 @@
           <v-btn icon x-large v-bind="props">
             <v-avatar color="white" size="46" light >
               <!--<v-img alt="Logo" class="shrink logo" rounded lazy-src="" :src="imageUrl" transition="scale-transition" width="40"  />-->
-              <span v-if="user != null" black class="black--text text-h5">{{ user.initiale }}</span>
+              <!-- <span v-if="user != null" black class="black--text text-h5">{{ user.initiale }}</span> -->
+              <v-icon color="blue">mdi-account</v-icon>
             </v-avatar>
           </v-btn>
         </template>
 
         <v-card>
           <v-list-item-content class="justify-center">
-            <div class="mx-auto text-center">
-              <h3 v-if="user != null">{{ user.fullname }} </h3>
+            <div class="mx-auto">
+              <h3 class="ml-10 mt-3" v-if="user != null">{{ user.fullname }} </h3>
               <p class="text-caption mt-1" v-if="user != null">
                 {{ user.username }}
               </p>
               <v-divider class="my-3"></v-divider>
-              <router-link :to="{name:'profileUser'}" class="text">{{ $t('public.nav.top.profile') }}</router-link>
+              <v-btn @click.prevent="redirectToAdd()" class="ma-1" variant="text" >
+                <v-avatar color="blue mr-1" size="30" light >
+                  <v-icon>mdi-account-edit</v-icon>
+              </v-avatar> 
+                {{ $t('public.nav.top.profile') }}
+               </v-btn>
+              <!-- <router-link :to="{name:'profileUser'}" class="text"></router-link> -->
               <v-divider class="my-3"></v-divider>
-              <v-btn class="ma-3 bg-blue" rounded text @click="handleLogout">
-                {{ $t('public.nav.top.deconnexion') }}
+              
+              <v-btn class="ma-1 " variant="text"  @click="handleLogout">
+                <v-avatar color="red mr-1" size="30" light >
+              <v-icon  >mdi-logout</v-icon>
+              </v-avatar>
+              {{ $t('public.nav.top.deconnexion') }}
               </v-btn>
             </div>
           </v-list-item-content>
@@ -70,7 +81,7 @@
 </template>
   
 <script setup>
-import imageUrl from '@/assets/imgs/logo_blanc.jpg'
+import imageUrl from '@/assets/imgs/logo_ucad.png'
 import profileUrl from '@/assets/imgs/profile3.png'
 import Localisation from '@/components/core/Localisation.vue';
 import SidebarItem from '@/components/core/SidebarItem.vue';
@@ -80,6 +91,9 @@ import { storeToRefs } from "pinia";
 import { useAppStore } from "@/store/app";
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router'
+const redirectToAdd= () => {
+  router.push({ name: 'profileUser'});
+};
 
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);

@@ -15,11 +15,11 @@
         </v-col>
         <v-spacer></v-spacer>
         <v-col cols="auto">
-          <v-btn variant="outlined" color="black" >
+          <!-- <v-btn variant="outlined" color="black" >
             <router-link :to="{ name: 'jury-add' }" class="">
               {{ $t('apps.forms.ajouter') }}
             </router-link>
-          </v-btn>
+          </v-btn> -->
         </v-col>
         <v-col class="text-right" cols="auto">
           <v-btn @click.prevent="redirectToJurys()" class="ma-0" variant="outlined" color="cyan-darken-1">jurys Session en cours </v-btn>

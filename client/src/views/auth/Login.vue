@@ -96,28 +96,25 @@ const rules = reactive({
   min: v => v.length >= 6 || '6 cractére au moins',
   //emailMatch: () => (`The email and password you entered don't match`),
 });
-
 //  traitement de la connexion
-const handleLogin = () => {
-
-  if(instance.refs.loginForm.validate){
-     login(userForm).then( () => {
-      console.log("Debug 2: ",userForm);
-      const role = localStorage.getItem('role');
-      const name = localStorage.getItem('email');
-      if (role === 'ROLE_USER') {
-        router.push({ name: 'accueil' });
-      } else {
-        router.push({ name: 'dashboard' });
+const handleLogin = async () => {
+      try {
+        await userStore.login(userForm);
+        // Vérifier si une erreur est définie dans le store Pinia
+        if (!error.value) {
+          console.log(error.value);
+          const role = localStorage.getItem('role');
+          const name = localStorage.getItem('email');
+          if (role === 'ROLE_USER') {
+            router.push({ name: 'accueil' });
+          } else {
+            router.push({ name: 'dashboard' });
+          }
+          toast.success(i18n.t('welcome') + ' ' + name);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la connexion:', error);
+        toast.error("Email ou mot de passe incorrect. Veuillez réessayer.");
       }
-      // addNotification({
-      //   show: true,
-      //   text:  i18n.t('welcome')+' '+name,
-      //   color: 'black'
-      // });
-      toast.success(i18n.t('welcome')+' '+name);
-
-    });
-  }
-}
+    };
 </script>

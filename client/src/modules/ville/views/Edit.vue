@@ -58,7 +58,7 @@ onMounted(()=>{
     inputForm.id = dataDetails.value.id
     inputForm.libelleLong = dataDetails.value.libelleLong
     inputForm.libelleCourt = dataDetails.value.libelleCourt
-    inputForm.academie = dataDetails.value.academie.libelleLong
+    inputForm.academie = dataDetails.value.academie.id
   });
 });
 

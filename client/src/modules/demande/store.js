@@ -21,6 +21,7 @@ export const useDemandeStore = defineStore('demande', {
     dataDetails: {},  //  Détails d'un élment,
     loading: true,
     hasAcceptedDemande: false,  //  utilisé pour le chargement
+    error: null,
     etatCouleurs: {
       'acceptée': 'orange',
       'en attente': 'purple',
@@ -52,6 +53,7 @@ export const useDemandeStore = defineStore('demande', {
     getDataListeForUser: (state) => state.dataListeForUser,
     getEtatCouleurs: (state) => state.etatCouleurs,
     getHasAcceptedDemande: (state) => state.hasAcceptedDemande,
+    getError: (state) => state.error
   },
 
   actions: {
@@ -325,6 +327,7 @@ export const useDemandeStore = defineStore('demande', {
       
     async one(demande) {
       try {
+        this.error = null;
         await axios.get(`${modulesURL}/${demande}`) 
         .then((response) => {
           if(response.status === 200){
@@ -334,6 +337,7 @@ export const useDemandeStore = defineStore('demande', {
       } catch (error) {
         console.log(error);
         this.error = error
+        throw error;
       } finally {
         this.loading = false
       }
@@ -341,6 +345,7 @@ export const useDemandeStore = defineStore('demande', {
     //  ajouter une demande
     async add(payload) {
       try {
+        this.error = null;
         await axios.post(`${add}`, payload) 
         .then((response) => {
           if(response.status === 200 ){
@@ -351,6 +356,7 @@ export const useDemandeStore = defineStore('demande', {
       } catch (error) {
         console.log(error);
         this.error = error
+        throw error;
       } finally {
         this.loading = false
       }
@@ -358,6 +364,7 @@ export const useDemandeStore = defineStore('demande', {
     //  modifier une demande
     async modify(id, payload) {
       try {
+        this.error = null;
         console.log("Id: ", id);
         console.log("Payload: ", payload);
         await axios.put(`${modulesURL}/${id}`, payload) 
@@ -369,12 +376,14 @@ export const useDemandeStore = defineStore('demande', {
       } catch (error) {
         console.log(error);
         this.error = error
+        throw error;
       } finally {
         this.loading = false
       }
     },
     async accepterDemande(id, payload) {
       try {
+        this.error = null;
         console.log("Id: ", id);
         console.log("Payload: ", payload);
         await axios.put(`${accepter}/${id}`, payload)
@@ -386,12 +395,14 @@ export const useDemandeStore = defineStore('demande', {
       } catch (error) {
         console.log(error);
         this.error = error
+        throw error;
       } finally {
         this.loading = false
       }
     },
     async validerDemande(id) {
       try {
+        this.error = null;
         await axios.put(`${valider}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
@@ -401,6 +412,7 @@ export const useDemandeStore = defineStore('demande', {
       } catch (error) {
         console.log(error);
         this.error = error
+        throw error;
       } finally {
         this.loading = false
       }

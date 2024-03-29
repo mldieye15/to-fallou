@@ -12,33 +12,33 @@ const academieRoutes = [{
             path: '',
             name: 'academie-liste',
             component: () => import( /* webpackChunkName: 'academie_liste' */ './views/Liste.vue'),
-          //   meta: {
-          //     middleware: [Middleware.auth]
-          // }
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
       },
       {
         path: '/app/dashboard/academies/:id',
         name: 'academie-details',
         component: () => import( /* webpackChunkName: 'academie_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/academies/add',
         name: 'academie-add',
         component: () => import( /* webpackChunkName: 'academie_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/academies/edit/:id',
         name: 'academie-edit',
         component: () => import( /* webpackChunkName: 'academie_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

@@ -11,33 +11,33 @@ const fonctionRoutes = [{
             path: '',
             name: 'fonction-liste',
             component: () => import( /* webpackChunkName: 'fonction_liste' */ './views/Liste.vue'),
-          //   meta: {
-          //     middleware: [Middleware.auth]
-          // }
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
       },
       {
         path: '/app/dashboard/fonctions/:id',
         name: 'fonction-details',
         component: () => import( /* webpackChunkName: 'fonction_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/fonctions/add',
         name: 'fonction-add',
         component: () => import( /* webpackChunkName: 'fonction_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/fonctions/edit/:id',
         name: 'fonction-edit',
         component: () => import( /* webpackChunkName: 'fonction_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

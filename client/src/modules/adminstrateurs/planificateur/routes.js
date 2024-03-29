@@ -10,33 +10,33 @@ const planifRoutes = [{
         path: 'planificateurs',
         name: 'planif-liste',
         component: () => import( /* webpackChunkName: 'user_liste' */ './views/Liste.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/planificateurs/:id',
         name: 'planif-details',
         component: () => import( /* webpackChunkName: 'user_details' */ './views/Details.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/planificateurs/add',
         name: 'planif-add',
         component: () => import( /* webpackChunkName: 'user_add' */ './views/Add.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       },
       {
         path: '/app/dashboard/planificateurs/edit/:id',
         name: 'planif-edit',
         component: () => import( /* webpackChunkName: 'user_edit */ './views/Edit.vue'),
-      //   meta: {
-      //     middleware: [Middleware.auth]
-      // }
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
       }
     ]
 }];

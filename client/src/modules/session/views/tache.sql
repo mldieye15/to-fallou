@@ -45,6 +45,8 @@ SET GLOBAL event_scheduler="ON" ; pour activer le planificateur
 SHOW VARIABLES LIKE 'event_scheduler' pour verifier le planificateur;
 
 
+
+
 sudo find / -name my.cnf pour rechercher les fichiers de configuration
 
 sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf pour modifier le fichier
@@ -55,3 +57,14 @@ sql
 Enregistrez les modifications en appuyant sur Ctrl + O, puis appuyez sur Enter. Ensuite, appuyez sur Ctrl + X pour quitter l'éditeur Nano
 
 sudo systemctl restart mysql
+
+
+
+ @Query("SELECT c FROM Centre c " +
+            "WHERE c.ville = :ville " +
+            "AND c.nombreJury > (SELECT COUNT(d) FROM Demande d WHERE d.centre = c AND d.etatDemande.libelleLong IN ('acceptée', 'validée') AND d.session IN (SELECT s FROM Session s WHERE s.annee.encours = true))")
+List<Centre> findCentresQuotaNonAtteintParVille(@Param("ville") Ville ville);
+
+
+
+<v-btn @click.prevent="redirectToAdd()" class="ma-0" variant="outlined" color="cyan-darken-1"> {{ $t('apps.forms.ajouter') }} </v-btn>
