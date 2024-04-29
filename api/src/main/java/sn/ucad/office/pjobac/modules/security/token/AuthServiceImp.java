@@ -30,6 +30,7 @@ import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserMapper;
 import sn.ucad.office.pjobac.modules.security.user.UserService;
 import sn.ucad.office.pjobac.modules.security.user.dto.*;
+import sn.ucad.office.pjobac.utils.EncryptionUtils;
 import sn.ucad.office.pjobac.utils.JwtProvider;
 
 import javax.management.relation.RoleNotFoundException;
@@ -285,13 +286,30 @@ public class AuthServiceImp implements AuthService {
     @Override
     public UserDetailsResponse getCurrentUserDetails() throws BusinessResourceException {
         AppUser user = getCurrentUser();
+
+        // Déchiffrer les champs sensibles
+        String codeBanqueDecrypte = null;
+        String codeAgenceDecrypte = null;
+        String numeroCompteDecrypte = null;
+        String cleRibDecrypte = null;
+
+        try {
+            codeBanqueDecrypte = EncryptionUtils.decrypt(user.getCodeBanque());
+            codeAgenceDecrypte = EncryptionUtils.decrypt(user.getCodeAgence());
+            numeroCompteDecrypte = EncryptionUtils.decrypt(user.getNumeroCompte());
+            cleRibDecrypte = EncryptionUtils.decrypt(user.getCleRib());
+        } catch (Exception e) {
+            // Gérer les exceptions de déchiffrement ici
+            // Par exemple, journaliser l'erreur, renvoyer des valeurs par défaut, etc.
+            e.printStackTrace();
+        }
         return UserDetailsResponse.builder()
-                .userId(user.getId())  // Utilisez la méthode getId() ou le champ correspondant de votre classe AppUser
+                .userId(user.getId())
                 .email(user.getEmail())
                 .matricule(user.getMatricule())
                 .nom(user.getNom())
                 .prenoms(user.getPrenoms())
-                .mdpasse(user.getMdpasse())
+                .mdpasse(user.getMdpasse()) // Garder le mot de passe chiffré
                 .profileImageUrl(user.getProfileImageUrl())
                 .sexe(user.getSexe())
                 .telephone(user.getTelephone())
@@ -299,12 +317,13 @@ public class AuthServiceImp implements AuthService {
                 .etablissement(user.getEtablissement())
                 .code(user.getCode())
                 .banque(user.getBanque())
-                .codeBanque(user.getCodeBanque())
-                .codeAgence(user.getCodeAgence())
-                .numeroCompte(user.getNumeroCompte())
-                .cleRib(user.getCleRib())
+                .codeBanque(codeBanqueDecrypte) // Utiliser le champ déchiffré
+                .codeAgence(codeAgenceDecrypte) // Utiliser le champ déchiffré
+                .numeroCompte(numeroCompteDecrypte) // Utiliser le champ déchiffré
+                .cleRib(cleRibDecrypte) // Utiliser le champ déchiffré
                 .build();
     }
+
 
     @Override
     public AuthenticationResponse login(LoginRequest request) {
@@ -407,13 +426,12 @@ public class AuthServiceImp implements AuthService {
             log.info("Mot de passe de  "+user.get().getEmail()+" modifier avec succes. <fetchUserWithToken>");
         } catch (NoSuchElementException e) {
             log.warn("Aucun utilisateur trouve avec ce token. <fetchUserAndEnable>.");
-            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur avec trouve.", HttpStatus.NOT_ACCEPTABLE);
+            throw new BusinessResourceException("Not ValidToken", "Aucun utilisateur avec trouve.", HttpStatus.NOT_ACCEPTABLE);
         } catch (BusinessResourceException e) {
-            log.error("Activation utilisateur: Une erreur inattandue est rencontrée. <fetchUserWithToken>");
-            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur ne correspond à ce token.", HttpStatus.NOT_FOUND);
+            log.error("Réinisialisation: Une erreur inattandue est rencontrée. <fetchUserWithToken>");
+            throw new BusinessResourceException("Not ValidToken", "Aucun utilisateur ne correspond à ce token.", HttpStatus.NOT_FOUND);
         }
     }
-
     @Override
     public void resetPassword(String token, String newPassword) throws BusinessResourceException {
         try {
@@ -427,10 +445,10 @@ public class AuthServiceImp implements AuthService {
             this.fetchUserWithToken(verificationToken.get(),newPassword);
         } catch (NoSuchElementException e) {
             log.warn("Aucun utilisateur trouve avec le token: " + token + ". <resetPassword>.");
-            throw new BusinessResourceException("NotValidToken", "Aucun utilisateur avec le token trouve.", HttpStatus.NOT_FOUND);
+            throw new BusinessResourceException("Not ValidToken", "Aucun utilisateur avec le token trouve.", HttpStatus.NOT_FOUND);
         } catch (BusinessResourceException e) {
             log.error("Verification token: Une erreur inatteandue est rencontrée.");
-            throw new BusinessResourceException("NotFoundToken", "Aucun utilisateur ne correspond à ce token: "+token);
+            throw new BusinessResourceException("Not FoundToken", "Aucun utilisateur ne correspond à ce token: "+token);
         }
 
     }

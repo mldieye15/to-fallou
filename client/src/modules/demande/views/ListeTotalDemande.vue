@@ -14,7 +14,7 @@
         </v-row>
         <ul class="list-unstyled d-flex mb-0 mx-auto pa-0" align="center">
           <li v-for="session in dataListeSession" :key="session.id" class="mb-0" style="list-style-type: none;">
-            <v-chip @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="tonal" color="blue">
+            <v-chip @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="flat" color="blue">
               {{ session.libelleLong }}
             </v-chip>
           </li>

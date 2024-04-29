@@ -81,7 +81,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<UserResponse> user() throws BusinessResourceException {
-            log.info("Liste des supervisseurs. <all>");
+            log.info("Liste des utilisateurs. <all>");
             List<AppUser> users = dao.userRole();
             List<UserResponse> response;
             response = users.stream()
@@ -110,8 +110,11 @@ public class UserServiceImp implements UserService {
                             () -> new BusinessResourceException("not-found", "User avec " + id + " non trouvé(e).", HttpStatus.NOT_FOUND)
                     );
             log.info("User avec id: " + id + " trouvé(e). <oneById>");
+            int anciennety=dao.anciennete(user);
+            UserResponse userResponse=mapper.toEntiteResponse(user);
+            userResponse.setAnciennete(anciennety);
             Optional<UserResponse> response;
-            response = Optional.ofNullable(mapper.toEntiteResponse(user));
+            response = Optional.of(userResponse);
             return response;
         } catch (NumberFormatException e) {
             log.warn("Paramétre id " + id + " non autorisé. <oneById>.");

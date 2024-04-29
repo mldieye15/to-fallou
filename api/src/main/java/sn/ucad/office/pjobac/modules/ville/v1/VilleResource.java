@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleRequest;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.modules.ville.VilleService;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -40,6 +40,13 @@ public class VilleResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<VilleResponse>> all(){
         List<VilleResponse> response = service.all();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/allWithJury")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<VilleResponse>> allWithJury(){
+        List<VilleResponse> response = service.allWithJury();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping("/availableVillesForUserAndAcademy/{academieId}")

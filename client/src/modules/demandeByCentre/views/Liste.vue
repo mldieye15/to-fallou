@@ -74,7 +74,7 @@ const { addNotification } = notificationStore;
 
 const centreStore = useCentreStore();
 const { dataListeCentre, headerTable, loading,columns } = storeToRefs(centreStore);
-const { all, destroy } = centreStore;
+const { all, destroy,allWithJury } = centreStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -82,7 +82,7 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  all();
+  allWithJury();
 });
 
 const redirectToDemandes = (id) => {

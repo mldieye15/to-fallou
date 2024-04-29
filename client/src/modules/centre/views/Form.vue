@@ -67,6 +67,7 @@
         clearable 
         :error-messages="errors.ville?[errors.ville]:[]"
         @focus="clearErrors"
+        autocomplete="off"
       >
       <template v-slot:append>
             <v-icon v-if="errors.ville" color="red">
@@ -91,6 +92,7 @@
               :error="inputForm.error" 
               :error-messages="errors.typeCentre?[errors.typeCentre]:[]"
               @focus="clearErrors"
+              autocomplete="off"
         >
          <template v-slot:append>
             <v-icon v-if="errors.typeCentre" color="red">

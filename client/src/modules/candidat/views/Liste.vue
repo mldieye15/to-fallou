@@ -24,8 +24,9 @@
         buttons-pagination
         :search-value="searchValue"
         rows-per-page="10"
-      >affectableLabel<template #item-affectable="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+      >
+      <template #item-affectable="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog(item)"
                  :color="item.affectable === 'OUI' ? 'green' : 'red'" text variant="tonal">
               {{ item.affectable}}
           </v-chip>
@@ -39,7 +40,7 @@
         </template>
         <template #item-actions="item">
           <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
-            <v-btn  variant="flat" color="orange" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
+            <v-btn  variant="flat" color="yellow" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
               Evaluation
             </v-btn>
             <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
@@ -57,6 +58,16 @@
     </v-container>
     
   </div>
+  <v-dialog v-model="confirmDialog" max-width="500">
+    <v-card>
+      <v-card-title>{{ confirmDialogTitle }}</v-card-title>
+      <v-card-text>{{ confirmDialogMessage }}</v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="confirmAction">Oui</v-btn>
+        <v-btn color="error" text @click="cancelAction">Non</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -74,7 +85,7 @@ const { addNotification } = notificationStore;
 
 const candidatStore = useCandidatStore();
 const { dataListeCandidat, headerTable, loading } = storeToRefs(candidatStore);
-const { all, destroy,allBySession } = candidatStore;
+const { all, destroy,allBySession,affectable } = candidatStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -94,7 +105,38 @@ onMounted(()=>{
   allBySession();
 });
 let role= localStorage.getItem('role');
+const confirmDialog = ref(false);
+const confirmDialogTitle = ref('');
+const confirmDialogMessage = ref('');
+const currentItem = ref(null);
+
+const showConfirmDialog = (item) => {
+  console.log("Valeur de item.affectable :", item.affectable);
+  confirmDialogTitle.value = item.affectable === 'OUI' ? "Confirmer la désactivation de l'affectabilté" :"Confirmer l'activation de l'affectabilté";
+  confirmDialogMessage.value = item.affectable === 'OUI' ? "Voulez-vous désactiver  l'affectabilté ?" :"Voulez-vous activer l'affectabilté ?";
+  currentItem.value = item.id;
+  confirmDialog.value = true;
+};
+
+const confirmAction = () => {
+  if (currentItem.value) {
+    affectable(currentItem.value);
+    all();
+  }
+  closeConfirmDialog();
+};
+const cancelAction = () => {
+  closeConfirmDialog();
+};
+const closeConfirmDialog = () => {
+  confirmDialog.value = false;
+  confirmDialogTitle.value = '';
+  confirmDialogMessage.value = '';
+  currentItem.value = null;
+  };
 </script>
+
+
 <style scoped>
 .v-text-field {
   background-color: white;

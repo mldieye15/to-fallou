@@ -11,7 +11,7 @@
     <v-form @submit.prevent="handleSave" ref="candidatForm">
       <v-text-field 
         id="noteSupervisseur"
-        prepend-inner-icon="mdi-account"
+        prepend-inner-icon="mdi-star-outline"
         name="noteSupervisseur"
         density="compact"
         :label="$t('apps.forms.candidat.appreciation')"

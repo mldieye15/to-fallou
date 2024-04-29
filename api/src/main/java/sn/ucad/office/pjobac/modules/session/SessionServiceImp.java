@@ -191,27 +191,29 @@ public class SessionServiceImp implements SessionService {
     public void changerEtatSession(Long sessionId) {
         Session session = dao.findById(sessionId).orElse(null);
         if (session != null) {
-            session.setSessionOuvert(!session.isSessionOuvert());
+            session.setOuvert(!session.isOuvert());
             dao.save(session);
-            log.info("État de la session avec l'ID " + sessionId + " changer avec succès.");
-            if (!session.isSessionOuvert()) {
-                session.setCandidatureOuvert(false);
-                session.setModification(false);
-                dao.save(session);
-                log.info("Candidature de la session avec l'ID " + sessionId + " fermée avec succès.");
+            log.info("État de la session avec l'ID " + sessionId + " changé avec succès.");
+
+            // Mettre à jour les autres sessions si la session est ouverte
+            if (session.isOuvert()) {
+                List<Session> otherSessions = dao.findAllByIdNot(sessionId);
+                for (Session otherSession : otherSessions) {
+                    otherSession.setOuvert(false);
+                    dao.save(otherSession);
+                    log.info("État de la session avec l'ID " + otherSession.getId() + " changé avec succès.");
+                }
             }
         } else {
             log.warn("Session avec l'ID " + sessionId + " non trouvée.");
         }
-
     }
-
     @Override
     public void changerEtatCandidature(Long sessionId) {
         Session session = dao.findById(sessionId).orElse(null);
         if (session != null) {
-            if (session.isSessionOuvert()){
-                session.setCandidatureOuvert(!session.isCandidatureOuvert());
+            if (session.isOuvert()){
+                session.setCandidature(!session.isCandidature());
                 dao.save(session);
                 log.info("État de la candidature de la session avec l'ID " + sessionId + " changer avec succès.");
             }

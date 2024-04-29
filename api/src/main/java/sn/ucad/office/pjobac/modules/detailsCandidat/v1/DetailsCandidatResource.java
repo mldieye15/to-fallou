@@ -107,7 +107,7 @@ public class DetailsCandidatResource {
             return ResponseEntity.status(e.getStatus()).body(null);
         }
     }
-    @PutMapping("/affectable/{candidatId}")
+    @PutMapping("{candidatId}/affectable")
     public ResponseEntity<Void> nonAffectable(@PathVariable Long candidatId) {
         service.nonAffectable(candidatId);
         return ResponseEntity.ok().build();

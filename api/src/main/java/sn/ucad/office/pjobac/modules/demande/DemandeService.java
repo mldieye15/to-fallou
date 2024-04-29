@@ -19,7 +19,7 @@ public interface DemandeService {
     public List<DemandeDetailsCandidatResponse> demandeByVille(String villeId ) throws BusinessResourceException;
 
     List<DemandeDetailsCandidatResponse> allObsolete() throws BusinessResourceException;
-
+    public Map<Long, List<DemandeResponse>> allGroupedByUserAndSession(String sessionId) throws BusinessResourceException;
     public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;

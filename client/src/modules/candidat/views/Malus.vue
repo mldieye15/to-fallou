@@ -11,7 +11,7 @@
     <v-form @submit.prevent="handleSave" ref="candidatForm">
       <v-text-field 
         id="malus"
-        prepend-inner-icon="mdi-account"
+        prepend-inner-icon="mdi-minus-circle-outline"
         name="malus"
         density="compact"
         :label="$t('apps.forms.candidat.malus')"

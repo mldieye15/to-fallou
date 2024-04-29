@@ -1,4 +1,4 @@
-package sn.ucad.office.pjobac.modules.ville.dto;
+package sn.ucad.office.pjobac.modules.typeSession.dto;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;

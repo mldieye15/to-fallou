@@ -45,6 +45,60 @@ cote front end mpn run build et ensuite on copie le dossier dist dans le serveur
 scp -r dist mariama@172.16.1.7:/home/mariama/deployJava
 une fois faite on copie le le fichier service.sh dans le serveur et on le rend executable avec chmod o+x service.sh 
 ./service.sh start pour demarer  ./service.sh stop pour arreter
+cote front
+bash
+npm run build
+Cette commande générera un dossier dist dans votre répertoire de projet, contenant les fichiers statiques prêts à être servis.
+
+2. Configuration de Nginx
+Assurez-vous que Nginx est installé sur votre serveur. Créez un fichier de configuration Nginx pour votre application. 
+Par exemple, créez un fichier nano /etc/nginx/sites-available/pjbac avec le contenu suivant :
+
+server {
+    listen 80;
+    server_name 172.16.1.7;  
+
+    location / {
+        root /home/mariama/deployJava/dist;
+        index index.html;
+        try_files $uri $uri/ /index.html;
+    }
+
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+        root /usr/share/nginx/html;
+    }
+}
+3. Création d'un lien symbolique
+Créez un lien symbolique vers le fichier de configuration dans le répertoire sites-enabled :
+sudo ln -s /etc/nginx/sites-available/pjbac /etc/nginx/sites-enabled
+ Utilisez la commande suivante pour définir les permissions correctes :
+
+Nginx fonctionne dans le répertoire, donc si vous ne pouvez pas cdaccéder à ce répertoire depuis l'utilisateur nginx, il échouera (tout comme la statcommande dans votre journal). Assurez-vous que la www-userboîte cdjusqu'au /username/test/static. Vous pouvez confirmer que l' statopération échouera ou réussira en exécutant
+
+sudo -u www-data stat /username/test/static
+Dans votre cas, le /username répertoire est probablement le problème ici. www-data N'a généralement pas d'autorisations sur cd les répertoires personnels des autres utilisateurs.
+
+La meilleure solution dans ce cas serait d'ajouter www-dataau username groupe :
+
+gpasswd -a www-data mariama
+et assurez-vous que ce usernamegroupe peut accéder à tous les répertoires le long du chemin :
+
+ chmod g+x /home/mariama && chmod g+x /home/mariama/deployJava && chmod g+x /home/mariama/deployJava/dist
+ sudo chown -R www-data:www-data /home/mariama/deployJava/dist
+ tail -n 20 /var/log/nginx/error.log
+
+Pour que vos modifications fonctionnent, redémarrez nginx
+
+sudo service nginx reload
+4. Redémarrage de Nginx
+Redémarrez Nginx pour appliquer les modifications de configuration :
+
+bash
+systemctl restart nginx
+
+
+
 INSERT INTO `users` (
   `id`, 
   `account_non_expired`, 
@@ -102,3 +156,50 @@ INSERT INTO `users` (
   NULL, 
   NULL
 );
+INSERT INTO `users_roles` (`app_user_id`, `roles_id`) VALUES
+(1, 3);
+
+
+pg_dump -U mon_utilisateur -d ma_base -f export.sql
+
+DELIMITER //
+
+CREATE EVENT update_expired_accepted_demands
+ON SCHEDULE EVERY 10 MINUTE
+DO
+BEGIN
+    DECLARE dateVerification DATETIME;
+    SET dateVerification = NOW();
+    
+    UPDATE demands d
+    JOIN etat_demande_table et ON d.etat_demande_id = et.etat_demande_id
+    SET d.etat_demande_id = (SELECT etat_demande_id FROM etat_demande_table WHERE libelle = 'EN ATTENTE'), 
+        d.centre = NULL
+    WHERE d.date_rejet_demande > dateVerification
+    AND et.libelle = 'ACCEPTÉE';
+    
+    -- Sélectionnez les informations nécessaires pour envoyer un e-mail de notification
+    -- Utilisez les résultats pour envoyer l'e-mail
+END//
+
+DELIMITER ;
+
+INSERT INTO users_roles (app_user_id, roles_id)
+SELECT id, 1
+FROM users;
+
+INSERT INTO users_roles (app_user_id, roles_id)
+SELECT id, 2
+FROM users
+WHERE id IN (2111,40);
+INSERT INTO users_roles (app_user_id, roles_id)
+SELECT id, 3
+FROM users
+WHERE id IN (2110,219);
+
+INSERT INTO users_roles (app_user_id, roles_id)
+SELECT id, 1
+FROM users
+WHERE id NOT IN ( 2125, 2115, 2126, 2119, 2123, 2116, 2113, 2117, 2121,2133, 2118, 2124, 2132,2122, 2114, 2120, 2129, 2130, 2127, 2128,70);
+
+select * from admin_users where "role" =2

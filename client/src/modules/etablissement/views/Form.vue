@@ -59,6 +59,7 @@
         single-line
         item-title="libelleLong"
         item-value="id"
+        autocomplete="off"
         :error-messages="errors.typeEtablissement ? [errors.typeEtablissement] : []"
         @focus="clearErrors"
       >
@@ -79,6 +80,7 @@
         variant="outlined"
         prepend-inner-icon="mdi-city"
         clearable
+        autocomplete="off"
         :error-messages="errors.ville ? [errors.ville] : []"
         @focus="clearErrors"
       >

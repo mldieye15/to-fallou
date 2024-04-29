@@ -195,14 +195,21 @@ const { dataListeEtab } = storeToRefs(etablissementStore);
   exactlycodeBanque: value => value && value.length === 5 && /^[a-zA-Z0-9]+$/.test(value) || 'Le code banque doit comporter exactement 5 caractères',
   exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
   exactlycleRib: value => value && value.length === 2 && /^\d+$/.test(value) || 'Le clé rip doit comporter exactement 2 chiffres',
-  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres',
+  exactlynumeroTelephone: value => {
+    return (
+      value &&
+      value.length === 9 &&
+      /^(77|76|75|78|70)\d+$/.test(value) && // Vérifie le préfixe
+      /^\d+$/.test(value) // Vérifie que tous les caractères sont des chiffres
+    ) || 'Le numéro de téléphone invalide';
+  },
   
 });
 const schema = yup.object().shape({
   prenoms: yup.string().required('Le prénom est requis'),
   nom: yup.string().required('Le nom est requis'),
   email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
-  telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
+  telephone: yup.string().matches(/^(77|76|75|70|78)\d{7}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
   matricule: yup.string().required('Le matricule est requis'),
   sexe: yup.string().required('Le sexe est requis'),
 });

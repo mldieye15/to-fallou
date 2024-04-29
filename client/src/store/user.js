@@ -105,6 +105,7 @@ export const useUserStore = defineStore('user', {
           localStorage.setItem('refreshToken', response.data.refreshToken);
           localStorage.setItem('email', response.data.email);
           localStorage.setItem('role', response.data.role);
+          localStorage.setItem('fullname', response.data.fullname);
     
           // Mettre à jour les données utilisateur dans le store
           this.user = {
@@ -182,6 +183,7 @@ export const useUserStore = defineStore('user', {
             localStorage.setItem('token', response.data.authenticationToken);
             localStorage.setItem('refreshToken', response.data.refreshToken);
             localStorage.setItem('email', response.data.email);
+            localStorage.setItem('fullname', response.data.fullname);
             this.user = {
               email: response.data.email,
               fullname: response.data.fullname,

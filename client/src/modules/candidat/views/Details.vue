@@ -1,11 +1,9 @@
 <template>
-  
-  <v-container>
-    <h2 class="text-center">
+  <h2 class="text-center">
     Fiche Candidat
    </h2>
     <div v-if="role !=='ROLE_SUPERVISSEUR'" class="text-right">
-      <v-btn @click.prevent="redirectToBonus(route.id)" class="mb-2 " variant="flat" size="small" color="green">
+      <v-btn @click.prevent="redirectToBonus(route.id)" class="mb-2" variant="flat" size="small" color="green">
         <v-icon>mdi-plus-circle-outline</v-icon> <!-- Icône de bonus -->
         Bonus
       </v-btn>
@@ -14,309 +12,183 @@
         Malus
       </v-btn>
     </div>
-          
-    <v-row justify="center">
-      <v-col cols="12" sm="6" md="6">
-        <v-card>
-          <v-card-text>
-            <v-list>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+  <div>
+    <v-expansion-panels
+    >
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations Personnelles</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Prénom(s):</v-list-item-title>
+                      Prénom(s):
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.prenoms}}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.prenoms}}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-            <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom:</v-list-item-title>
+                      Nom:
                     </v-col >
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.nom }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.nom }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
+                      Adresse email:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.email }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.email }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Matricule:</v-list-item-title>
+                      Sexe:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.matricule }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.sexe }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Code:</v-list-item-title>
+                      Téléphone:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.code }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.telephone }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <!-- <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations Professionnelles</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom d'utilisateur:</v-list-item-title>
+                      Matricule:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.username }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.matricule }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card> -->
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col >
+                      Code:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.code }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Sexe:</v-list-item-title>
+                      Fonction:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.sexe }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.fonction }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 8vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Téléphone:</v-list-item-title>
+                      Etablissement de provenance:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.telephone }}</v-list-item-subtitle>
+                    <v-col class=" ">
+                      {{ inputForm.etablissement }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Evaluation</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Fonction:</v-list-item-title>
+                      Année:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.fonction }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.annee}}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Etablissement de provenance:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right ">
-                      <v-list-item-subtitle>{{ inputForm.etablissement }}</v-list-item-subtitle>
+                      Bonus:
+                    </v-col >
+                    <v-col class="">
+                      {{ inputForm.bonus }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-            </v-list>
-          </v-card-text>
-        </v-card>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Malus:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.malus }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Ancienneté:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.noteAnciennete}}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Note de l'établissement de provenance:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.noteEtablissementProvenance }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                       Note du supervisseur:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.noteSupervisseur}}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Note de la fonction (grade):
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.noteFonction }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Affectable:
+                    </v-col>
+                    <v-col :style="{ color: inputForm.affectable === 'OUI' ? 'green' : 'red' }" class="">
+                      {{ inputForm.affectable }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                       Score:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.note }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2">
+                    <v-col>
+                       Appreciation:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.appreciation }}
+                    </v-col>
+                  </v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </div>
         <div class="d-flex">
            <v-btn class="mt-4 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
         </div>
-      </v-col>
-      <v-col>
-        <v-card>
-          <v-card-text>
-            <v-list>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Année:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.annee}}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-            <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Bonus:</v-list-item-title>
-                    </v-col >
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.bonus }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Malus:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.malus }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Ancienneté:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.noteAnciennete }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Note de l'établissement de provenance:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.noteEtablissementProvenance }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold"> Note du supervisseur:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.noteSupervisseur}}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Note de la fonction (grade):</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.noteFonction }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">Affectable:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle :style="{ color: inputForm.affectable === 'OUI' ? 'green' : 'red' }">{{ inputForm.affectable }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold"> Score:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.note }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row >
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold"> Appreciation:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.appreciation }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-            </v-list>
-          </v-card-text>
-        </v-card> 
-      </v-col>
-    </v-row>
-  </v-container>
 </template>
 <script setup>
 import { reactive, getCurrentInstance, onMounted, watchEffect} from "vue";
@@ -399,9 +271,9 @@ const redirectToMalus = (id) => {
 };
 </script>
 <style scoped>
-.custom-card {
+/* .custom-card {
   border: 1px solid #0ad7ea;
   margin-bottom: 5px;
   height: 40px;
-}
+} */
 </style>

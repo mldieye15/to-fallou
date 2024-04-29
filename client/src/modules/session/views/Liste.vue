@@ -31,18 +31,18 @@
         :search-value="searchValue"
         rows-per-page="5"
       >
-      <template #item-sessionOuvert="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleSessionState(item)" :color="item.sessionOuvert === 'ouverte' ? 'green' : 'red'" text variant="flat" size="small">
-              {{ item.sessionOuvert}}
+      <template #item-ouvert="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog('toggleSessionState', item)" :color="item.ouvert === 'ouverte' ? 'green' : 'red'" text variant="flat" size="small">
+              {{ item.ouvert}}
           </v-chip>
       </template>
-      <template #item-candidatureOuvert="item">
-        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleCandidatureState(item)" :color="item.candidatureOuvert === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
-        {{ item.candidatureOuvert }}
+      <template #item-candidature="item">
+        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog('toggleCandidatureState', item)" :color="item.candidature === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
+        {{ item.candidature }}
       </v-chip>
       </template>
       <template #item-modification="item">
-        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="toggleModificationState(item)" :color="item.modification === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
+        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog('toggleModificationState', item)" :color="item.modification === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
         {{ item.modification }}
       </v-chip>
       </template>
@@ -76,8 +76,17 @@
     </v-container>
     
   </div>
+  <v-dialog v-model="confirmDialog" max-width="500">
+    <v-card>
+      <v-card-title>{{ confirmDialogTitle }}</v-card-title>
+      <v-card-text>{{ confirmDialogMessage }}</v-card-text>
+      <v-card-actions>
+        <v-btn color="green" @click="confirmAction">Oui</v-btn>
+        <v-btn color="error" text @click="cancelAction">Non</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
-
 <script setup>
 import { storeToRefs } from "pinia";
 import { useSessionStore } from "../store";
@@ -86,7 +95,6 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useToast } from 'vue-toastification';
 import { useRouter } from "vue-router";
-
 const router = useRouter();
 const redirectToAdd= () => {
   router.push({ name: 'session-add'});
@@ -114,13 +122,13 @@ onMounted(()=>{
   all();
 });
 const toggleSessionState = (item) => {
-  // Inverser l'état sessionOuvert
+  // Inverser l'état ouvert
   sessionStore.toggleSessionState(item.id);
   all();
 };
 const toggleCandidatureState = (item) => {
-  // Inverser l'état candidatureOuvert
-  if (item.sessionOuvert=== 'ouverte'){
+  // Inverser l'état candidature
+  if (item.ouvert=== 'ouverte'){
     sessionStore.toggleCandidatureState(item.id);
     all();
   }else{
@@ -133,8 +141,8 @@ const toggleCandidatureState = (item) => {
   
 };
 const toggleModificationState = (item) => {
-  // Inverser l'état candidatureOuvert
-  if (item.sessionOuvert=== 'ouverte'){
+  // Inverser l'état candidature
+  if (item.ouvert=== 'ouverte'){
     sessionStore.toggleModificationState(item.id);
     all();
   }else{
@@ -158,6 +166,52 @@ const del = (id) => {
       all();
   });
 }
+const confirmDialog = ref(false);
+const confirmDialogTitle = ref('');
+const confirmDialogMessage = ref('');
+const confirmActionCallback = ref(null);
+
+const showConfirmDialog = (action, item) => {
+  switch(action) {
+    case 'toggleSessionState':
+      confirmDialogTitle.value = item.ouvert === 'ouverte' ? "Confirmer la fermeture de session" : "Confirmer l'ouverture de session";
+      confirmDialogMessage.value = item.ouvert === 'ouverte' ? "Voulez-vous vraiment fermer cette session ?" : "Voulez-vous vraiment ouvrir cette session ?";
+      confirmActionCallback.value = () => toggleSessionState(item);
+      break;
+    case 'toggleCandidatureState':
+      confirmDialogTitle.value = item.candidature === 'ouverte' ? "Confirmer la fermeture de candidature" : "Confirmer l'ouverture de candidature";
+      confirmDialogMessage.value = item.candidature === 'ouverte' ? "Voulez-vous vraiment fermer la candidature ?" : "Voulez-vous vraiment ouvrir la candidature ?";
+      confirmActionCallback.value = () => toggleCandidatureState(item);
+      break;
+    case 'toggleModificationState':
+    confirmDialogTitle.value = item.modification === 'ouverte' ? "Confirmer la fermeture les modifications" : "Confirmer l'ouverture des modifications";
+      confirmDialogMessage.value = item.modification === 'ouverte' ? "Voulez-vous vraiment fermer les modifications ?" : "Voulez-vous vraiment ouvrir les modifications ?";
+      confirmActionCallback.value = () => toggleModificationState(item);
+      break;
+    default:
+      break;
+  }
+  confirmDialog.value = true;
+};
+
+const confirmAction = () => {
+  if (confirmActionCallback.value) {
+    confirmActionCallback.value();
+    all();
+  }
+  closeConfirmDialog();
+};
+
+const cancelAction = () => {
+  closeConfirmDialog();
+};
+
+const closeConfirmDialog = () => {
+  confirmDialog.value = false;
+  confirmDialogTitle.value = '';
+  confirmDialogMessage.value = '';
+  confirmActionCallback.value = null;
+};
 </script>
 <style scoped>
 .v-text-field {

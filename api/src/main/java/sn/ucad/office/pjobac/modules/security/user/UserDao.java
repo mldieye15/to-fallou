@@ -27,4 +27,6 @@ public interface UserDao extends JpaRepository<AppUser, Long> {
     List<AppUser> planificateurRole();
     @Query("SELECT u FROM AppUser u JOIN u.roles r WHERE r.nom = 'ROLE_SUPERVISSEUR'")
     List<AppUser> supervisseurRole();
+    @Query("SELECT  COUNT(d) FROM Demande d WHERE d.etatDemande.libelleLong='validée' AND d.user=:user")
+    int anciennete(@Param("user") AppUser user);
 }

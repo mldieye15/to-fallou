@@ -39,10 +39,8 @@
         <v-card>
           <v-list-item-content class="justify-center">
             <div class="mx-auto">
-              <h3 class="ml-10 mt-3" v-if="user != null">{{ user.fullname }} </h3>
-              <p class="text-caption" v-if="user != null">
-                {{ user.username }}
-              </p>
+              <h3 class="ml-10 mt-3" >{{ name }} </h3>
+              
               <v-divider class="my-3"></v-divider>
               <v-btn @click.prevent="redirectToAdd()" class="ma-1" variant="text" >
                 <v-avatar color="blue mr-1" size="30" light >
@@ -81,7 +79,7 @@
 </template>
 
 <script setup>
-import imageUrl from '@/assets/imgs/logo_ucad.png';
+import imageUrl from '@/assets/imgs/logo_blanc.jpg';
 import profileUrl from '@/assets/imgs/profile3.png'
 import Localisation from '@/components/core/Localisation.vue';
 import SidebarItem from '@/components/core/SidebarItem.vue';
@@ -102,6 +100,7 @@ const { logout } = userStore;
 const redirectToAdd= () => {
   router.push({ name: 'profile'});
 };
+const name = localStorage.getItem('fullname');
 const router = useRouter();
 
 import { useI18n } from "vue-i18n";
@@ -279,11 +278,14 @@ const sideBarItems = reactive({ items: [
 ]});
 
 onMounted(()=>{
+  name
   listeModules();
   if(role=="ROLE_SUPERVISSEUR"){
     fonctionItems.items=sideBarItems.items;
   }else
   fonctionItems.items = defaultSideBarItems.items;
+
+  console.log('nom',name)
 });
 
 const loadFonction = async (module) => {

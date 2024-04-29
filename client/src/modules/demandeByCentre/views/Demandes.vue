@@ -83,7 +83,7 @@ import { watchEffect,watch } from "vue";
 import { useRouter,useRoute } from "vue-router";
 
 const redirectToListe = () => {
-    router.push({ name: 'demande-liste'});
+    router.push({ name: 'demandeByCentre-liste'});
   };
 const router = useRouter();
 const route = useRoute();

@@ -39,6 +39,7 @@
         single-line
         item-title="libelleLong"
         item-value="id"
+        autocomplete="off"
       ></v-select>
 
       <v-select
@@ -53,6 +54,7 @@
         readonly
         item-title="libelleLong"
         item-value="id"
+        autocomplete="off"
       >
     </v-select>
     <v-select
@@ -66,6 +68,7 @@
         persistent-hint
         item-title="libelleLong"
         item-value="id"
+        autocomplete="off"
       >
     </v-select>
 

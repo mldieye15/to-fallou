@@ -144,6 +144,27 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                 .collect(Collectors.toList());
         return response;
     }
+
+    @Override
+    public Map<Long, List<DemandeResponse>> allGroupedByUserAndSession(String sessionId) throws BusinessResourceException {
+        Long myId = Long.valueOf(sessionId.trim());
+        Session session = sessionDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "Aucun Session avec " + sessionId + " trouvé.", HttpStatus.NOT_FOUND)
+                );
+        // Récupérer toutes les demandes par ville
+                log.info("DemandeServiceImp::allGroupedByUser");
+               List<Demande> all = dao.demandeBySession(session);
+                Map<Long, List<DemandeResponse>> response;
+                 response = all.stream()
+                .filter(demande -> demande.getUser() != null) // Filtrer les demandes où l'utilisateur n'est pas null
+                .collect(Collectors.groupingBy(
+                        demande -> demande.getUser().getId(),
+                        Collectors.mapping(mapper::toEntiteResponse, Collectors.toList())
+                ));
+        return response;
+            }
+
     @Override
     public List<DemandeDetailsCandidatResponse> demandeByCentre(String centreId) throws BusinessResourceException {
         log.info("DemandeServiceImp::demandeByCentre");
@@ -188,26 +209,42 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                         }, Collectors.toList())));
         return response;
     }
-    @Override
-    public List<DemandeResponse> allForUser() throws BusinessResourceException {
-        try {
-            AppUser currentUser = authService.getCurrentUser();
-            List<Demande> demandes = dao.findByUser(currentUser);
-            if (demandes.isEmpty()) {
-                log.warn("Aucune demande trouvée pour l'utilisateur avec l'ID : {}", currentUser.getId());
-                throw new BusinessResourceException("not-found", "Aucune demande trouvée pour l'utilisateur.", HttpStatus.NOT_FOUND);
-            }
-            List<DemandeResponse> response;
-            response = demandes.stream()
-                    .map(mapper::toEntiteResponse)
-                    .collect(Collectors.toList());
-            return response;
-        } catch (Exception ex) {
-            log.error("Erreur lors de la récupération des demandes pour l'utilisateur : {}", ex.getMessage());
-            throw new BusinessResourceException("technical-error", "Erreur technique lors de la récupération des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
+//    @Override
+//    public List<DemandeResponse> allForUser() throws BusinessResourceException {
+//        try {
+//            AppUser currentUser = authService.getCurrentUser();
+//            List<Demande> demandes = dao.findByUser(currentUser);
+//            if (demandes.isEmpty()) {
+//                log.warn("Aucune demande trouvée pour l'utilisateur avec l'ID : {}", currentUser.getId());
+//                throw new BusinessResourceException("not-found", "Aucune demande trouvée pour l'utilisateur.", HttpStatus.NOT_FOUND);
+//            }
+//            List<DemandeResponse> response;
+//            response = demandes.stream()
+//                    .map(mapper::toEntiteResponse)
+//                    .collect(Collectors.toList());
+//            return response;
+//        } catch (Exception ex) {
+//            log.error("Erreur lors de la récupération des demandes pour l'utilisateur : {}", ex.getMessage());
+//            throw new BusinessResourceException("technical-error", "Erreur technique lors de la récupération des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+@Override
+public List<DemandeResponse> allForUser() throws BusinessResourceException {
+    try {
+        AppUser currentUser = authService.getCurrentUser();
+        List<Demande> demandes = dao.findByUser(currentUser);
+        List<DemandeResponse> response = demandes.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        if (response.isEmpty()) {
+            log.warn("Aucune demande trouvée pour l'utilisateur avec l'ID : {}", currentUser.getId());
         }
+        return response;
+    } catch (Exception ex) {
+        log.error("Erreur lors de la récupération des demandes pour l'utilisateur : {}", ex.getMessage());
+        throw new BusinessResourceException("technical-error", "Erreur technique lors de la récupération des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+}
     @Override
     public List<DemandeResponse> recaptDemandes() throws BusinessResourceException {
         List<Demande> demandes = dao.allDemandeValider();
@@ -493,9 +530,10 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
                     .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun Demande avec l'ID " + demandeId + " trouvé.", HttpStatus.NOT_FOUND));
             Optional<EtatDemande> optionalEtat = service.findByLibelleLong("validée");
             EtatDemande etatValide= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+            LocalDateTime dateValidation = LocalDateTime.now(ZoneOffset.UTC);
 
             demandeOptional.setEtatDemande(etatValide);
-
+            demandeOptional.setDateConfirmationDemande(dateValidation);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(demandeOptional));
             rejeterDemande(demandeOptional.getUser().getId());
             int totalJuryAffecte=villeDao.totalJuryAffecteByVille(demandeOptional.getVille());

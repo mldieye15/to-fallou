@@ -1,231 +1,154 @@
 <template>
   <v-container>
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="9">
-        <v-card>
-          <v-card-title class="headline text-center">
-            Détail utilisateur
-          </v-card-title>
-          <v-card-text>
-            <v-list>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+    <h2 class="text-center mb-5">
+    Détail utilisateur
+   </h2>
+  <div>
+    <v-expansion-panels
+    >
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations Personnelles</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                  <v-row class="ma-2 py-0" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Prenom:</v-list-item-title>
+                      Prénom(s):
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.prenoms}}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.prenoms}}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-            </v-card>
-            <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2 py-0" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Nom:</v-list-item-title>
+                      Nom:
                     </v-col >
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.nom }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.nom }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Adresse email:</v-list-item-title>
+                      Adresse email:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.email }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.email }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Matricule:</v-list-item-title>
+                      Sexe:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.matricule }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.sexe }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Sexe:</v-list-item-title>
+                      Téléphone:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.sexe }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.telephone }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations Professionnelles</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Code:</v-list-item-title>
+                      Matricule:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.code }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.matricule }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col >
+                      Code:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.code }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Telephone:</v-list-item-title>
+                      Fonction:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.telephone }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.fonction }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 8vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Ancienneté:</v-list-item-title>
+                      Etablissement de provenance:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.anciennete }}</v-list-item-subtitle>
+                    <v-col class=" ">
+                      {{ inputForm.etablissement }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <!-- <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Fonction:</v-list-item-title>
+                      Ancienneté:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.fonction }}</v-list-item-subtitle>
+                    <v-col class=" ">
+                      {{ inputForm.anciennete }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card> -->
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations bancaires</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                 <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Etablissement de Provenance:</v-list-item-title>
+                      Banque:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.etablissement }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.banque }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col >
+                      CodeBanque:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.codeBanque }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">Banque:</v-list-item-title>
+                      CodeAgence:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.banque }}</v-list-item-subtitle>
+                    <v-col class="">
+                      {{ inputForm.codeAgence }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">CodeBanque:</v-list-item-title>
+                      NumeroCompte:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.codeBanque }}</v-list-item-subtitle>
+                    <v-col class=" ">
+                      {{ inputForm.numeroCompte }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
+                  <v-row class="ma-2" style="height: 5vh">
                     <v-col>
-                      <v-list-item-title class="font-weight-bold">CodeAgence:</v-list-item-title>
+                      CleRib:
                     </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.codeAgence }}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">NumeroCompte:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.numeroCompte}}</v-list-item-subtitle>
+                    <v-col class=" ">
+                      {{ inputForm.cleRib }}
                     </v-col>
                   </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-              <v-card class="custom-card">
-              <v-list-item>
-                <v-list-item-content>
-                  <v-row>
-                    <v-col>
-                      <v-list-item-title class="font-weight-bold">CleRip:</v-list-item-title>
-                    </v-col>
-                    <v-col class="text-right">
-                      <v-list-item-subtitle>{{ inputForm.cleRib}}</v-list-item-subtitle>
-                    </v-col>
-                  </v-row>
-                </v-list-item-content>
-              </v-list-item>
-              </v-card>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </div>
   </v-container>
+  
       <div class="d-flex justify-end">
-        <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToUsers"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
+        <v-btn class="mt-3 mb-8 mr-2" color="blue" @click.prevent="redirectToUsers"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
       </div>
 </template>
 
@@ -298,7 +221,7 @@ onMounted(()=>{
     inputForm.code = dataDetails.value.code,
     inputForm.telephone = dataDetails.value.telephone,
     inputForm.anciennete = dataDetails.value.anciennete,
-    // inputForm.fonction=dataDetails.value.fonction.libelleLong,
+    inputForm.fonction=dataDetails.value.etablissement.typeEtablissement.fonction.libelleLong,
     inputForm.etablissement=dataDetails.value.etablissement.libelleLong,
     inputForm.banque=dataDetails.value.banque,
     inputForm.codeBanque=dataDetails.value.codeBanque,

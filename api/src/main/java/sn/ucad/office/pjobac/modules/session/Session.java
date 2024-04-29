@@ -54,9 +54,9 @@ public class Session {
     @ManyToOne
     private TypeSession typeSession;
 
-    private  boolean sessionOuvert=false;
+    private  boolean ouvert=false;
     private  boolean modification;
-    private  boolean candidatureOuvert=false;
+    private  boolean candidature=false;
     @Column(nullable = true)
     private Long utiCree;
 

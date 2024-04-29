@@ -16,9 +16,11 @@ import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleAudit;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
+import sn.ucad.office.pjobac.modules.typeEtablissement.TypeEtablissement;
+import sn.ucad.office.pjobac.modules.typeEtablissement.dto.TypeEtablissementResponse;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleAudit;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleRequest;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.Comparator;
@@ -37,9 +39,19 @@ public class VilleServiceImp implements VilleService {
     private final UserDao userDao;
     private  final DemandeDao demandeDao;
 
+    @Override
     public List<VilleResponse> all() throws BusinessResourceException {
         log.info("VilleServiceImp::all");
         List<Ville> all = dao.findAll();
+        List<VilleResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+    public List<VilleResponse> allWithJury() throws BusinessResourceException {
+        log.info("VilleServiceImp::allWithJury");
+        List<Ville> all = dao.allWithJury();
         List<VilleResponse> response;
         response = all.stream()
                 .map(ville -> {
@@ -50,15 +62,15 @@ public class VilleServiceImp implements VilleService {
                     // Calculer le rapport
                     double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
                     rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
-
                     VilleResponse villeResponse = mapper.toEntiteResponse(ville);
                     villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
                     villeResponse.setRapportJuryDemande(rapport);
                     villeResponse.setQuota(quota);// Ajout du rapport dans l'objet VilleResponse
                     return villeResponse;
                 })
-                .sorted(Comparator.comparingInt(VilleResponse::getQuota) // Trie par quota décroissant
-                        .thenComparingDouble(VilleResponse::getRapportJuryDemande).reversed()) // Puis par rapport du jury à la demande décroissant
+                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie d'abord par rapport du jury à la demande décroissant
+                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0))
+                        // Puis par rapport du jury à la demande décroissant
                 .collect(Collectors.toList());
 
         return response;

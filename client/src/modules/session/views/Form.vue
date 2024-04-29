@@ -33,7 +33,7 @@
         variant="outlined"
         :items="dataListeTypeSession"
         persistent-hint
-        
+        autocomplete="off"
         single-line
         item-title="libelleLong"
         item-value="id"
@@ -50,7 +50,7 @@
         variant="outlined"
         :items="dataAnneeEnours"
         persistent-hint
-        
+        autocomplete="off"
         single-line
         item-title="libelleLong"
         item-value="id"

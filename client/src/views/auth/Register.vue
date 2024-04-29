@@ -50,7 +50,7 @@ const handleSave = (payload) => {
     //     text:  i18n.t('added'),
     //     color: 'blue'
     //   });
-    router.push( { name: 'login',});
+    router.push( { name: 'page',});
     toast.success(i18n.t('registre'));
   });
 }

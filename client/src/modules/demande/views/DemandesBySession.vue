@@ -18,7 +18,7 @@
     </v-row>
     <ul class="list-unstyled d-flex mb-4 mx-auto pa-0" align="center">
           <li v-for="session in dataListeSession" :key="session.id" class="mb-0" style="list-style-type: none;">
-            <v-btn @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="tonal" color="green">
+            <v-btn @click.prevent="redirectToSessions(session.id)" class="ml-1" variant="flat" color="green" size="small">
               {{ session.libelleLong }}
             </v-btn>
           </li>
@@ -160,9 +160,11 @@ watch(() => currentPage.value, () => {
 const getPageClass = (pageNumber) => {
 return pageNumber === currentPage.value ? 'active-page' : '';
 }; 
-
+const selectedSessionId = ref(null)
 const redirectToSessions = (id) => {
   router.push({ name: 'demandeBySession-demandes', params: { id } });
+  demandeBySession(id);
+  selectedSessionId.value = id;
 };
 </script>
 <style >

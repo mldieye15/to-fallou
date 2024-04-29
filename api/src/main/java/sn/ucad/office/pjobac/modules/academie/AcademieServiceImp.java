@@ -16,8 +16,6 @@ import sn.ucad.office.pjobac.modules.demande.Demande;
 import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
-import sn.ucad.office.pjobac.modules.ville.Ville;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.Comparator;

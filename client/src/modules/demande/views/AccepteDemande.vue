@@ -61,6 +61,7 @@
         :error-messages="errors.centre ? [errors.centre] : []"
         @focus="clearErrors"
         clearable 
+        autocomplete="off"
       >
          <template v-if="errors.centre"  v-slot:append>
             <v-icon color="red">

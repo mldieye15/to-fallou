@@ -7,9 +7,9 @@ import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.config.AppConstants;
 
-import sn.ucad.office.pjobac.modules.ville.dto.VilleAudit;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleRequest;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleAudit;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleRequest;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
 
 import java.text.ParseException;

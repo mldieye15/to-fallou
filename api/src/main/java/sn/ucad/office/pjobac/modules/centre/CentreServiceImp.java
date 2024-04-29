@@ -10,15 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
-import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreAudit;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
+import sn.ucad.office.pjobac.modules.codification.Codification;
+import sn.ucad.office.pjobac.modules.codification.dto.CodificationResponse;
 import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.jury.JuryService;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.Comparator;
@@ -39,8 +39,18 @@ public class CentreServiceImp implements CentreService {
     private  final DemandeDao demandeDao;
     @Override
     public List<CentreResponse> all() throws BusinessResourceException {
-        log.info("CentreServiceImp::all");
-        List<Centre> all = dao.findAll();
+            log.info("CentreServiceImp::all");
+            List<Centre> all = dao.findAll();
+            List<CentreResponse> response;
+            response = all.stream()
+                    .map(mapper::toEntiteResponse)
+                    .collect(Collectors.toList());
+            return response;
+        }
+    @Override
+    public List<CentreResponse> allWithJury() throws BusinessResourceException {
+        log.info("CentreServiceImp::allWithJury");
+        List<Centre> all = dao.allWithJury();
         List<CentreResponse> response;
         response = all.stream()
                 .map(centre -> {
@@ -55,12 +65,12 @@ public class CentreServiceImp implements CentreService {
                     centreResponse.setNombreAffected(totalAffected);
                     return  centreResponse;
                 })
-                .sorted(Comparator.comparing((CentreResponse::isPlanification)))
+                .sorted(Comparator.comparingInt(CentreResponse::getNombreAffected).reversed()
+                        .thenComparing(CentreResponse::isPlanification))
                 .collect(Collectors.toList());
 
         return response;
     }
-
     @Override
     public List<CentreResponse> allAvecQuota(String villeId) throws BusinessResourceException {
         Long myId= Long.valueOf(villeId.trim());

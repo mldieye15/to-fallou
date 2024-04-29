@@ -61,6 +61,7 @@
         :error-messages="errors.jury ? [errors.jury] : []"
         @focus="clearErrors"
         clearable 
+        autocomplete="off"
       >
          <template v-if="errors.jury"  v-slot:append>
             <v-icon color="red">

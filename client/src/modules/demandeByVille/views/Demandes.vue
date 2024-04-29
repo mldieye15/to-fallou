@@ -122,7 +122,7 @@ import { useRouter,useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const redirectToListe = () => {
-    router.push({ name: 'demande-liste'});
+    router.push({ name: 'demandeByVille-liste'});
   };
 const centreStore=useCentreStore();
 const { dataListeByVille} = storeToRefs(centreStore);

@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/centres';
 const all = modulesURL+'/all';
+const  allWithJury = modulesURL+'/allWithJury';
 const add = modulesURL+'/';
 const centreByville = modulesURL+'/by-ville';
 const libelleAvailability = modulesURL +'/libelle-availability';
@@ -62,6 +63,42 @@ export const useCentreStore = defineStore('centre', {
     async all() {
       try {
         await axios.get(`${all}`) 
+        .then((response) => {
+          if(response.status === 200){
+
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
+              let typeCentreLabel = element.typeCentre ? element.typeCentre.libelleLong:null;
+              let labelPlanification=element.planification ? 'OUI' : 'NON';
+              return{
+              id:element.id, 
+              libelleLong: element.libelleLong,
+              libelleCourt: element.libelleCourt,
+              nombreJury: element.nombreJury,
+              totalDemandes:element.nombreAffected,
+              planification:labelPlanification,
+              ville: villeLabel,
+              typeCentre: typeCentreLabel,
+              academie: academieLabel,
+              }
+              
+
+            })
+
+            this.dataListeCentre = res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allWithJury() {
+      try {
+        await axios.get(`${allWithJury}`) 
         .then((response) => {
           if(response.status === 200){
 

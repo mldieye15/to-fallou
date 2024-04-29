@@ -105,7 +105,6 @@
         prepend-inner-icon="mdi-lock"
         name="mdpasse"
         density="compact"
-        :rules="[rules.min]"
         :label="$t('apps.forms.user.mdpasse')"
         color="balck"
         v-model="inputForm.mdpasse"
@@ -135,6 +134,7 @@
         variant="outlined"
         class="input-with-asterisk"
         maxlength="9"
+        placeholder="ex:707001212"
       ></v-text-field>
       <div v-if="formSubmitted && !inputForm.telephone" class="required-message mb-0">
           Champ obligatoire
@@ -180,6 +180,7 @@
         variant="outlined"
         :items="['Homme', 'Femme']"
         class="input-with-asterisk"
+        autocomplete="off"
         
       >
     </v-select>
@@ -215,6 +216,7 @@
         prepend-inner-icon="mdi-domain"
         clearable
         class="input-with-asterisk"
+        autocomplete="off"
       ></v-autocomplete>
       <div v-if="formSubmitted && !inputForm.etablissement" class="required-message mb-0">
           Champ obligatoire
@@ -386,15 +388,22 @@ const rules = reactive({
   exactlycodeBanque: value => value && value.length === 5 && /^[a-zA-Z0-9]+$/.test(value) || 'Le code banque doit comporter exactement 5 caractères',
   exactlycodeAgence: value => value && value.length === 5 && /^\d+$/.test(value) || 'Le code agence doit comporter exactement 5 chiffres',
   exactlycleRib: value => value && value.length === 2 && /^\d+$/.test(value) || 'Le clé rip doit comporter exactement 2 chiffres',
-  exactlynumeroTelephone: value => value && value.length === 9 && /^\d+$/.test(value) || 'Le numéro de téléphone doit comporter exactement 9 chiffres', 
+  exactlynumeroTelephone: value => {
+    return (
+      value &&
+      value.length === 9 &&
+      /^(77|76|75|78|70)\d+$/.test(value) && // Vérifie le préfixe
+      /^\d+$/.test(value) // Vérifie que tous les caractères sont des chiffres
+    ) || 'Le numéro de téléphone invalide';
+  },
 });
 const schema = yup.object().shape({
   prenoms: yup.string().required('Le prénom est requis'),
   nom: yup.string().required('Le nom est requis'),
   code: yup.string().required('Le code est requis'),
   email: yup.string().email('Adresse email invalide').required('L\'adresse email est requise'),
-  mdpasse: yup.string().required('Le mot de passe est requis').min(5, 'Au moins 5 caractères requis'),
-  telephone: yup.string().matches(/^\d{9}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
+  mdpasse: yup.string().required('Le mot de passe est requis'),
+  telephone: yup.string().matches(/^(77|76|75|70|78)\d{7}$/, 'Numéro de téléphone invalide').required('Le numéro de téléphone est requis'),
   matricule: yup.string().required('Le matricule est requis'),
   sexe: yup.string().required('Le sexe est requis'),
   etablissement: yup.string().required('L\'établissement est requis'),

@@ -33,9 +33,9 @@ export const useCandidatStore = defineStore('candidat', {
       { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
       { text: 'Code', value: 'code', align: 'start', sortable: true },
       // { text: 'Email', value: 'email', align: 'start', sortable: true },
-      { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
+      // { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Telephone', value: 'telephone', align: 'start', sortable: true },
-      { text: 'Fonction', value: 'fonction', align: 'start', sortable: true },
+      // { text: 'Fonction', value: 'fonction', align: 'start', sortable: true },
       { text: 'Etablissement de Provenance', value: 'etablissement', align: 'start', sortable: true },
       { text: 'Affectable', value: 'affectable', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
@@ -270,6 +270,20 @@ export const useCandidatStore = defineStore('candidat', {
     },
     formatDate(date) {
       return format(new Date(date), 'dd-MM-yyyy', { locale: fr }); // Exemple de format, ajustez selon vos besoins
+    },
+    async affectable(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/affectable`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
     },
   },
   

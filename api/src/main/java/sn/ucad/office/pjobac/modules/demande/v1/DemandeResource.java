@@ -74,6 +74,13 @@ public class DemandeResource {
         Map<Long, List<DemandeDetailsCandidatResponse>> response = service.allGroupedByUser();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allGroupedByUserAndSession/{sessionId}")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Map<Long, List<DemandeResponse>>> allGroupedByUserAndSession(@PathVariable("sessionId") String sessionId) {
+        Map<Long, List<DemandeResponse>> response = service.allGroupedByUserAndSession(sessionId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
     @GetMapping("/all")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

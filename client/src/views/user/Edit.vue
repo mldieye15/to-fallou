@@ -62,6 +62,7 @@
         v-model="inputForm.ville"
        :items="dataListeByAcademieAndUser"
         item-title="libelleLong"
+        item-value="id"
         :label="$t('apps.forms.ville.nom')"
         dense
         outlined
@@ -231,9 +232,9 @@ const demandeId = ref(route.params.id);
     one(route.params.id ).then( () => {
       inputForm.session=dataDetails.value.session?dataDetails.value.session.id:null,
       inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
-      inputForm.academie=dataDetails.value.academie?dataDetails.value.academie.libelleLong:null,
-      inputForm.id=dataDetails.value.academie?dataDetails.value.academie.id:null,
-      inputForm.ville=dataDetails.value.ville?dataDetails.value.ville.libelleLong:null
+      // inputForm.academie=dataDetails.value.academie?dataDetails.value.academie.libelleLong:null,
+      // inputForm.id=dataDetails.value.academie?dataDetails.value.academie.id:null,
+      // inputForm.ville=dataDetails.value.ville?dataDetails.value.ville.libelleLong:null
       inputForm.etatDemande=dataDetails.value.etatDemande?dataDetails.value.etatDemande.libelleLong:null,
       villeStore.all();
       academieStore.availableAcademiesForUser(demandeId.value);

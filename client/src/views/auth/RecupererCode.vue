@@ -61,7 +61,7 @@
         >
          Obtenir le Code
         </v-btn>
-        <v-btn @click="sendCode"
+        <!-- <v-btn @click="sendCode"
           block
           class="mb-3"
           color="blue"
@@ -69,16 +69,20 @@
           variant="tonal"
         >
          Envoyer le code dans votre email
-        </v-btn>
+        </v-btn> -->
   
         <v-card-text class="text-center">
         </v-card-text>
       </v-card>
     </div>
+    <div class="text-center">
+   <v-btn class="mb-8 mr-2" color="blue" @click.prevent="redirectTo()"><v-icon dark left> mdi-arrow-left </v-icon>Précédant</v-btn>
+   </div>
   </template>
   <script setup>
   import { useCodeStore } from '@/store/codification';
   import { ref } from 'vue';
+  import { useRouter, useRoute } from 'vue-router';
   const email = ref('');
   const codeStore = useCodeStore();
   
@@ -89,5 +93,9 @@
   const sendCode = () => {
     codeStore.sendCode(email.value);
   };
+  const router = useRouter();
+  const redirectTo = () => {
+  router.push({ name: 'login'});
+};
   </script>
   

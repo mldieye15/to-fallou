@@ -118,6 +118,14 @@ const routes = [
         meta: {
           middleware: [ Middleware.guest]
         }
+      },
+      {
+        path: 'alerte',
+        name: 'page',
+        component: () => import(/* webpackChunkName: "activeCompte" */ '@/views/auth/Page.vue'),
+        meta: {
+          middleware: [ Middleware.guest]
+        }
       }
     ],
   },

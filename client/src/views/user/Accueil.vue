@@ -1,6 +1,6 @@
 <template>
     <v-container fluid >
-<div v-if="inputForm.cleRib===null">
+<div v-if="inputForm.banque===null">
   <h1 class="text-center">Attention votre RIB n'est pas disponible ! Ajouter votre RIB pour continuer votre candidature.</h1>
   <br>
   <hr>
@@ -15,7 +15,7 @@
      <div v-if="dataListeForUser.length> 0">
   <div  class="mt-1 ">
     <div  v-for="session in dataListeSession" :key="session.id" class="bg-cyan text-center text-white w-70 ">
-      <div v-if="session.candidatureOuvert==='ouverte'">
+      <div v-if="session.candidature==='ouverte'">
         <h3 class="subheading font-weight-bold text-white">
         <VueTyper 
         pre-type-delay='1000'
@@ -42,35 +42,32 @@
 </div>
   <v-container fluid> 
     <div class="text-center mb-10">
-      <span>  Demande utilisateur</span>
+      <h2>  Demande utilisateur</h2>
      
     </div> 
   <v-row justify="center">
   <v-col v-for="demande in dataListeForUser" :key="demande.id" cols="12" sm="6" md="3" class="demande-bloc ml-10">
-    <v-card class="ma-1">
-      <p> Académie: {{ demande.academie }}</p>
-            <p> Ville: {{ demande.ville }}</p>
-            <p>Statut:
+    <v-card class="custom-shadow">
+      <p> Académie : {{ demande.academie }}</p>
+            <p> Ville : {{ demande.ville }}</p>
+            <p>Statut :
               <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[demande.etatDemande]" variant="tonal">
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
             </p>
             <div class="actions-wrapper"  v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'" >
-                <div class="demandes"> Veuillez cliquer sur le bouton 'modifier' pour modifier votre demande</div>
-             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3">
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3 text-center">
               modifier
              </v-btn>   
           </div>
-          <div class="actions-wrapper" v-else-if="demande.candidatureOuvert==='OUI' && demande.etatDemande==='en attente'" >
-                <div class="demandes"> Veuillez cliquer sur le bouton 'modifier' pour modifier votre demande</div>
-             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3">
+          <div class="actions-wrapper" v-else-if="demande.candidature==='OUI' && demande.etatDemande==='en attente'" >
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3 text-center">
               modifier
              </v-btn>   
           </div>
-            <div v-if="demande.etatDemande==='acceptée'" class="mt-4">
+            <div v-if="demande.etatDemande==='acceptée'" class="mt-3 mb-3 text-center">
             <v-dialog v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-                 <div class="demandes"> Veuillez cliquer sur le bouton 'valider' pour valider votre demande</div>
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
                    valider
                   </v-btn>
@@ -101,7 +98,7 @@
           <span class="session-row">
            <v-chip color='green'><h2>{{ session.libelleLong }}:</h2></v-chip>
            <v-chip color='blue'>
-            <div v-if="session.candidatureOuvert==='ouverte'">
+            <div v-if="session.candidature==='ouverte'">
             <router-link :to="{ name: 'demande', params: { id: session.id } }" class="candidater-link">
               Postuler ici
             </router-link>
@@ -221,7 +218,7 @@ const redirectToProfile= () => {
   router.push({ name: 'profileUser'});
 };
 </script>
-<style>
+<style scoped>
 .session-row {
   display: block;
   margin-bottom: 10px;
@@ -242,8 +239,8 @@ const redirectToProfile= () => {
     max-width: 300px;
   } */
   .demande-bloc p {
-    border: 1px solid #ccc;
-    padding: 8px; /* Ajustez le remplissage selon vos préférences */
+    /* border: 1px solid #ccc; */
+    padding: 15px; /* Ajustez le remplissage selon vos préférences */
   }
   .demandes{
     color: red; 
@@ -256,6 +253,9 @@ const redirectToProfile= () => {
 }
 .vue-typer .custom.char{
   color: white; 
+}
+.custom-shadow {
+  box-shadow: rgba(46, 130, 240, 0.4) 5px 5px, rgba(46, 101, 240, 0.3) 10px 10px, rgba(46, 124, 240, 0.2) 15px 15px, rgba(46, 137, 240, 0.1) 20px 20px, rgba(46, 88, 240, 0.05) 25px 25px;
 }
 
 

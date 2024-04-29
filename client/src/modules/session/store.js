@@ -34,13 +34,13 @@ export const useSessionStore = defineStore('session', {
       { text: 'Libelle Long', value: 'libelleLong', align: 'start', sortable: true },
       { text: 'Date Debut', value: 'dateDebut', align: 'start', sortable: true },
       { text: 'Date Fin', value: 'dateFin', align: 'start', sortable: true },
-      { text: 'Etat Session', value: 'sessionOuvert', align: 'start', sortable: true },
+      { text: 'Etat Session', value: 'ouvert', align: 'start', sortable: true },
       { text: 'Nombre Demande Autorise', value: 'nombreDemandeAutorise', align: 'start', sortable: true },
       { text: 'Delais Validation', value: 'delaisValidation', align: 'start', sortable: true },
       { text: 'Modification', value: 'modification', align: 'start', sortable: true },
       { text: 'Date Ouverture Depot Candidature', value: 'dateOuvertureDepotCandidature', align: 'start', sortable: true },
       { text: 'Date Cloture Depot Candidature', value: 'dateClotureDepotCandidature', align: 'start', sortable: true },
-      { text: 'Candidature', value: 'candidatureOuvert', align: 'start', sortable: true },
+      { text: 'Candidature', value: 'candidature', align: 'start', sortable: true },
       { text: 'Annee', value: 'annee', align: 'start', sortable: true },
       { text: 'TypeSession', value: 'typeSession', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
@@ -61,15 +61,15 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
-              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
-              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
+              let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
-                sessionOuvert:sessionOuvertLabel,
-                candidatureOuvert:candidatureOuvertLabel,
+                ouvert:ouvertLabel,
+                candidature:candidatureLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
@@ -101,15 +101,15 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
-              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
-              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
+              let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
-                sessionOuvert:sessionOuvertLabel,
-                candidatureOuvert:candidatureOuvertLabel,
+                ouvert:ouvertLabel,
+                candidature:candidatureLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
@@ -141,15 +141,15 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
-              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
-              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
+              let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
-                sessionOuvert:sessionOuvertLabel,
-                candidatureOuvert:candidatureOuvertLabel,
+                ouvert:ouvertLabel,
+                candidature:candidatureLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
@@ -180,15 +180,15 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
-              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
-              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
+              let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
-                sessionOuvert:sessionOuvertLabel,
-                candidatureOuvert:candidatureOuvertLabel,
+                ouvert:ouvertLabel,
+                candidature:candidatureLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
@@ -219,15 +219,15 @@ export const useSessionStore = defineStore('session', {
             let res = response.data.map( (element) => {
               let anneeLabel = element.annee ? element.annee.libelleLong : null;
               let typeSessionLabel = element.typeSession ? element.typeSession.libelleLong : null;
-              let sessionOuvertLabel = element.sessionOuvert ? 'ouverte' : 'fermée';
-              let candidatureOuvertLabel = element.candidatureOuvert ? 'ouverte' : 'fermée';
+              let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
+              let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
-                sessionOuvert:sessionOuvertLabel,
-                candidatureOuvert:candidatureOuvertLabel,
+                ouvert:ouvertLabel,
+                candidature:candidatureLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),

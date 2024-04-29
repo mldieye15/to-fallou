@@ -4,6 +4,7 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/villes';
 const  all = modulesURL+'/all';
+const  allWithJury = modulesURL+'/allWithJury';
 const add=modulesURL+'/';
 const villesByAcademie=modulesURL+'/by-academie'
 const availableVillesForUserAndAcademy= modulesURL+'/availableVillesForUserAndAcademy'
@@ -26,7 +27,7 @@ export const useVilleStore = defineStore('ville', {
     ],
     columns: [
       { label: 'LibelleLong', field: 'libelleLong'},
-      { label: 'Abreviation', field: 'libelleCourt' },
+      // { label: 'Abreviation', field: 'libelleCourt' },
       { label: 'Academie', field: 'academie'},
       { label: 'Nombre de Jurys', field: 'totalJury'},
       { label: 'Rapport', field: 'rapport'},
@@ -46,6 +47,38 @@ export const useVilleStore = defineStore('ville', {
     async all() {
       try {
         await axios.get(`${all}`)
+        .then((response) => {
+          if(response.status === 200){
+           let res = response.data.map((element)=>{
+            let academieLabel=element.academie?element.academie.libelleLong:null;
+            let academieIdLabel = element.academie?element.academie.id:null;
+            return{
+              id: element.id,
+            libelleLong: element.libelleLong,
+            libelleCourt: element.libelleCourt,
+            totalJury: element.totalJury,
+            totalDemandes: element.totalDemandes,
+            quota: element.quota,
+            rapport: element.rapportJuryDemande,
+            academie: academieLabel,
+            academieId:academieIdLabel,
+
+            };
+            
+           });
+           this.dataListeVille=res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allWithJury() {
+      try {
+        await axios.get(`${allWithJury}`)
         .then((response) => {
           if(response.status === 200){
            let res = response.data.map((element)=>{

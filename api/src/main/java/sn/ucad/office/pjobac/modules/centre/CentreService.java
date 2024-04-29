@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface CentreService {
     public List<CentreResponse> all() throws BusinessResourceException;
+    public List<CentreResponse> allWithJury() throws BusinessResourceException;
     public List<CentreResponse> allAvecQuota(String villeId) throws BusinessResourceException;
     public List<CentreResponse> centreParVilleSansJury(String villeId) throws BusinessResourceException;
 

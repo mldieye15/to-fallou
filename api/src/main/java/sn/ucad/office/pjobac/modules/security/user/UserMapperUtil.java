@@ -14,7 +14,11 @@ import sn.ucad.office.pjobac.modules.fonction.Fonction;
 import sn.ucad.office.pjobac.modules.fonction.FonctionDao;
 import sn.ucad.office.pjobac.utils.AppDateFormatter;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import java.text.ParseException;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -23,6 +27,8 @@ import java.util.Date;
 public class UserMapperUtil {
     private final FonctionDao fonctionDao;
     private final EtablissementDao etablissementDao;
+    private static final String ALGORITHM = "AES";
+    private static final String KEY = "HBAe81ObPhzJ7o3iStBJdw==";
 
     @Named("getFonctionById")
     Fonction getFonctionById(String fonctionId) throws NumberFormatException {
@@ -72,5 +78,32 @@ public class UserMapperUtil {
     @Named("formatStringToLong")
     public static Long formatStringToLong(String num) throws NumberFormatException {
         return  Long.valueOf(num.trim());
+    }
+     // Vecteur d'initialisation
+
+    // Fonction de chiffrement AES
+    @Named("encryptField")
+    public static String encrypt(String value) throws Exception {
+        if (value == null) {
+            return null; // Retourne null si la valeur est null
+        }
+        SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+        byte[] encryptedBytes = cipher.doFinal(value.getBytes());
+        return Base64.getEncoder().encodeToString(encryptedBytes);
+    }
+    @Named("decryptField")
+    public static String decrypt(String encryptedValue) throws Exception {
+        if (encryptedValue == null) {
+            return null; // Retourne null si la valeur chiffrée est null
+        }
+
+        SecretKeySpec keySpec = new SecretKeySpec(KEY.getBytes(), ALGORITHM);
+        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        cipher.init(Cipher.DECRYPT_MODE, keySpec);
+        byte[] decodedBytes = Base64.getDecoder().decode(encryptedValue);
+        byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+        return new String(decryptedBytes);
     }
 }

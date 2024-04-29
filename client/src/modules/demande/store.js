@@ -5,6 +5,7 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/demandes';
 const all = modulesURL+'/all';
 const allGroupedByUser = modulesURL+'/allGroupedByUser';
+const allGroupedByUserAndSession = modulesURL+'/allGroupedByUserAndSession';
 const demandesBySession = modulesURL+'/demandeBySession';
 const add = modulesURL+'/addAll';
 const accepter=modulesURL+'/accepter';
@@ -109,13 +110,13 @@ export const useDemandeStore = defineStore('demande', {
               let academieLabel =element.ville && element.ville.academie? element.ville.academie.libelleLong:null;
               let sessionLabel = element.session ? element.session.libelleLong:null;
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
-              let sessionLabelEncours =element.session.candidatureOuvert?'OUI' : 'NON';
+              let sessionLabelEncours =element.session.candidature?'OUI' : 'NON';
               let sessionLabelModification =element.session.modification?'OUI' : 'NON';
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
                 id:element.id, 
-                candidatureOuvert:sessionLabelEncours,
+                candidature:sessionLabelEncours,
                 modification:sessionLabelModification,
                 ville: villeLabel,
                 academie:academieLabel,
@@ -199,7 +200,7 @@ export const useDemandeStore = defineStore('demande', {
     },
     async demandeBySession(sessionId) {
       try {
-        const response = await axios.get(`${demandesBySession}/${sessionId}`);
+        const response = await axios.get(`${allGroupedByUserAndSession}/${sessionId}`);
         
         if (response.status === 200) {
           let res = response.data;
@@ -217,18 +218,18 @@ export const useDemandeStore = defineStore('demande', {
               let nomLabel = element.user ? element.user.prenoms : null;
               let idLabel = element.user ? element.user.id : null;
               let idLabelVille = element.ville ? element.ville.id : null;
-              let affectableLabel= element.affectable? 'OUI' : 'NON';
+              // let affectableLabel= element.affectable? 'OUI' : 'NON';
               let centreLabel = element.centre ? element.centre.libelleLong : null;
-              let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
-              let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
+              // let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
+              // let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
               
               return {
                 id: element.demandeId,
-                nom: element.nom,
-                note: element.note,
-                ordreArrivee:element.ordreArrivee,
-                rang: element.rang,
-                affectable: affectableLabel,
+                // nom: element.nom,
+                // note: element.note,
+                // ordreArrivee:element.ordreArrivee,
+                // rang: element.rang,
+                // affectable: affectableLabel,
                 ville: villeLabel,
                 academie: academieLabel,
                 session: sessionLabel,
@@ -237,8 +238,8 @@ export const useDemandeStore = defineStore('demande', {
                 centre: centreLabel,
                 userId: idLabel,
                 villeId:idLabelVille,
-                hasAcceptedDemande: hasAccepted,
-                quota: quotaAccept,
+                // hasAcceptedDemande: hasAccepted,
+                // quota: quotaAccept,
               };
             }));
       

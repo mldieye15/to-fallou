@@ -74,7 +74,7 @@ const { addNotification } = notificationStore;
 
 const villeStore = useVilleStore();
 const { dataListeVille, headerTable, loading,columns } = storeToRefs(villeStore);
-const { all, destroy } = villeStore;
+const { all, destroy,allWithJury } = villeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -82,7 +82,7 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  all();
+  allWithJury();
 });
 
 const redirectToDemandes = (id) => {

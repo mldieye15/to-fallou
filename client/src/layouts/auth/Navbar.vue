@@ -29,7 +29,7 @@
 </template>
   
 <script setup>
-import imageUrl from '@/assets/imgs/logo_ucad.png'
+import imageUrl from '@/assets/imgs/logo_blanc.jpg';
 import Localisation from '@/components/core/Localisation.vue';
 
 defineProps({

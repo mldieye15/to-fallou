@@ -5,7 +5,7 @@
     <v-container class="my-5">
         <v-col md="12" cols="auto">
           <v-btn  @click.prevent="redirectToPlanificateurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Planificateurs</v-btn>
-          <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Supervisseurs </v-btn>
+          <v-btn @click.prevent="redirectToSupervisseurs()" class="ma-0" variant="outlined" color="cyan-darken-1">Superviseurs </v-btn>
           <v-btn  @click.prevent="redirectToAdmins()" class="ma-0" variant="outlined" color="cyan-darken-1"> Administrateurs</v-btn>
           <v-btn @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="cyan-darken-1">Utilisateurs </v-btn>
         </v-col>

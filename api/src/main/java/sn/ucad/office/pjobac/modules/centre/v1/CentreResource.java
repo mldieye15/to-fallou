@@ -14,7 +14,6 @@ import sn.ucad.office.pjobac.exception.ResourceNotFoundException;
 import sn.ucad.office.pjobac.modules.centre.CentreService;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreRequest;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
-import sn.ucad.office.pjobac.modules.ville.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -45,6 +44,13 @@ public class CentreResource {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<CentreResponse>> all(){
         List<CentreResponse> response = service.all();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/allWithJury")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<CentreResponse>> allWithJury(){
+        List<CentreResponse> response = service.allWithJury();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/by-ville/{villeId}")

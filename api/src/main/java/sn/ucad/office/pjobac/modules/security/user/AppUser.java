@@ -65,22 +65,17 @@ public class AppUser {
 //    @NotNull
 //    private Date dateNaiss;
 
-    @NotNull
     private  String banque;
 
-    @NotNull
-    @Column(length = 5)
+//    @Column(length = 5)
     private  String codeBanque;
 
-    @Column(length = 5)
-    @NotNull
+//    @Column(length = 5)
     private  String codeAgence;
 
-    @Column(length = 12)
-    @NotNull
+//    @Column(length = 12)
     private  String numeroCompte;
-    @Column(length = 2)
-    @NotNull
+//    @Column(length = 2)
     private  String cleRib;
 
     @NotNull

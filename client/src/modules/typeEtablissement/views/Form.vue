@@ -68,7 +68,7 @@
         variant="outlined"
         :items="dataListe"
         persistent-hint
-        
+        autocomplete="off"
         single-line
         item-title="libelleLong"
         item-value="id"

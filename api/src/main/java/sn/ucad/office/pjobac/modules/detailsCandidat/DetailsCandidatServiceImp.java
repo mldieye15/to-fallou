@@ -97,6 +97,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             DetailsCandidat one = mapper.requestToEntity(req);
             AppUser currentUser = authService.getCurrentUser();
             Annee annee= anneeDao.findByEncoursTrue();
+            int anciennete= userDao.anciennete(currentUser);
             int noteFonction= currentUser.getEtablissement().getTypeEtablissement().getFonction().getNombrePoint();
             int noteEtablissementProvenance=currentUser.getEtablissement().getTypeEtablissement().getNombrePoint();
             String numeroCandidat = "N°" + currentUser.getNom() + currentUser.getId() +"AN"+annee.getLibelleLong();
@@ -105,6 +106,7 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
             one.setNoteFonction(noteFonction);
             one.setAnnee(annee);
             one.setNumeroCandidat(numeroCandidat);
+            one.setNoteAnciennete(anciennete);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(one));
             log.info("Ajout " + response.getCandidat().getPrenoms() + " effectué avec succés. <add>");
@@ -289,7 +291,6 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
         DetailsCandidat candidat = dao.findById(candidatId).orElse(null);
 
         if (candidat != null) {
-            if (candidat.isAffectable()) {
                 try {
                     candidat.setAffectable(!candidat.isAffectable());
                     dao.save(candidat);
@@ -297,9 +298,6 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
                 } catch (Exception e) {
                     log.error("Erreur lors de la sauvegarde de l'état d'affectabilité pour l'ID " + candidatId, e);
                 }
-            } else {
-                log.warn("L'état d'affectabilité pour l'ID " + candidatId + " est déjà false. Aucun changement effectué.");
-            }
         } else {
             log.warn("Candidat avec l'ID " + candidatId + " non trouvé.");
         }

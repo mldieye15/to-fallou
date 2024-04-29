@@ -31,7 +31,6 @@
         density="compact"
         :label="$t('auth.forms.authentification.mdp')"
         :append-inner-icon="showPwd ? 'mdi-eye' : 'mdi-eye-off'"
-        :rules="[rules.required, rules.min]"
         :type="showPwd ? 'text' : 'password'"
         @click:append-inner="showPwd = !showPwd"
         v-model="userForm.password"
@@ -104,7 +103,7 @@ const handleLogin = async () => {
         if (!error.value) {
           console.log(error.value);
           const role = localStorage.getItem('role');
-          const name = localStorage.getItem('email');
+          const name = localStorage.getItem('fullname');
           if (role === 'ROLE_USER') {
             router.push({ name: 'accueil' });
           } else {
