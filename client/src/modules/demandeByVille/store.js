@@ -8,6 +8,7 @@ const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const quotaAccepte=modulesURL+'/quotaAccepte';
+const nonAffectable=modulesURL+'/nonAffectable';
 
 export const useDemandeByVilleStore = defineStore('demandeByVille', {
   state: () => ({
@@ -184,6 +185,21 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
         this.loading = false;
       }
     }, 
+    async rejeter(id) {
+      try {
+        await axios.put(`${nonAffectable}/${id}`)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
   },
   
 })

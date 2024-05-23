@@ -21,8 +21,8 @@ public class AppConstants {
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     // liens
-    public static final String LIEN_ACTIV_COMPTE = "http://172.16.1.7:82/auth/verif-token";
-    public static final String LIEN_RESET_PASSWORD = "http://172.16.1.7:82/auth/reset-password";
+    public static final String LIEN_ACTIV_COMPTE = "http://pjbac.ucad.sn/auth/verif-token";
+    public static final String LIEN_RESET_PASSWORD = "http://pjbac.ucad.sn/auth/reset-password";
     //  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     //  *************************************************
     //  Page

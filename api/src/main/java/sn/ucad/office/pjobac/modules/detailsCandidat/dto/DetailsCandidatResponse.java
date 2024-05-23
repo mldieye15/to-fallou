@@ -6,6 +6,8 @@ import lombok.ToString;
 import sn.ucad.office.pjobac.modules.annee.Annee;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 
+import java.time.LocalDateTime;
+
 
 @Data
 @NoArgsConstructor
@@ -14,6 +16,7 @@ import sn.ucad.office.pjobac.modules.security.user.AppUser;
 public class DetailsCandidatResponse {
     private Long id;
     private AppUser candidat;
+    private AppUser auteur;
     private Annee annee;
     private int bonus;
     private int malus;
@@ -24,4 +27,5 @@ public class DetailsCandidatResponse {
     private int noteSupervisseur;
     private String appreciation;
     private boolean affectable;
+    protected LocalDateTime dateModification;
 }

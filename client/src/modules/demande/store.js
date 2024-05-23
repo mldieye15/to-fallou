@@ -10,9 +10,11 @@ const demandesBySession = modulesURL+'/demandeBySession';
 const add = modulesURL+'/addAll';
 const accepter=modulesURL+'/accepter';
 const valider=modulesURL+'/valider';
+const validerSecondary=modulesURL+'/validerSecondary';
 const allForUser=modulesURL+'/allForUser';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const quotaAccepte=modulesURL+'/quotaAccepte';
+const nonAffectable=modulesURL+'/nonAffectable';
 
 export const useDemandeStore = defineStore('demande', {
   state: () => ({
@@ -112,6 +114,7 @@ export const useDemandeStore = defineStore('demande', {
               let etatLabel = element.etatDemande ? element.etatDemande.libelleLong:null;
               let sessionLabelEncours =element.session.candidature?'OUI' : 'NON';
               let sessionLabelModification =element.session.modification?'OUI' : 'NON';
+              let sessionLabePhaseTwo =element.session.phaseTwo?'OUI' : 'NON';
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
@@ -124,6 +127,7 @@ export const useDemandeStore = defineStore('demande', {
                 etatDemande:etatLabel,
                 user:nomLabel,
                 centre:centreLabel,
+                phaseTwo:sessionLabePhaseTwo,
               }
             })
             this.dataListeForUser = res;
@@ -418,6 +422,21 @@ export const useDemandeStore = defineStore('demande', {
         this.loading = false
       }
     },
+    async validerDemandeSecondary(id) {
+      try {
+        await axios.put(`${validerSecondary}/${id}`)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     //  supprimer une demande
     async destroy(id) {
       try {
@@ -468,6 +487,21 @@ export const useDemandeStore = defineStore('demande', {
         this.loading = false;
       }
     }, 
+    async rejeter(id) {
+      try {
+        await axios.put(`${nonAffectable}/${id}`)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
   },
   
 })

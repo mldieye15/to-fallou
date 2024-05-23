@@ -87,6 +87,21 @@ public class CentreServiceImp implements CentreService {
     }
 
     @Override
+    public List<CentreResponse> allSecondaryByVille(String villeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(villeId.trim());
+        Ville ville;
+        ville=villeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " +villeId));
+        log.info("CentreServiceImp::all");
+        List<Centre> all = dao.findCentresSecondaryParVille(ville);
+        List<CentreResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
     public List<CentreResponse> centreParVilleSansJury(String villeId) throws BusinessResourceException {
         Long myId= Long.valueOf(villeId.trim());
         Ville ville;

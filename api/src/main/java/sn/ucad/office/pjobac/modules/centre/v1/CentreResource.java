@@ -39,6 +39,11 @@ public class CentreResource {
         List<CentreResponse> response = service.allAvecQuota(villeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping(value = "/centreSecondary/{villeId}")
+    public ResponseEntity<List<CentreResponse>> SecondaryByVille(@PathVariable String villeId) {
+        List<CentreResponse> response = service.allSecondaryByVille(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/all")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

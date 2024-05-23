@@ -27,7 +27,7 @@
     :rows="dataListe"
     :pagination-options="{
           enabled: true,
-          mode: 'pages',
+          mode: 'records',
           perPageDropdown: [5, 10, 15,20, 30, 40, 50]
           }"
          :search-options="{
@@ -75,20 +75,55 @@
               réaffecté
             </v-btn>
          </div>
+
+         <div class="actions-wrapper"
+         v-else-if="props.row.etatDemande === 'obsolète'&&
+          props.row.quota === 'OUI' && 
+          props.row.hasAcceptedDemande === 'NON'&&
+          props.row.affectable === 'OUI'">
+            <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
+              Affecté
+            </v-btn>
+         </div>
+          <div class="actions-wrapper"
+         v-else-if="props.row.etatDemande === 'en attente' &&
+          props.row.affectable === 'NON' ">
+            <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn variant="outlined" color="red" class="text" v-bind="props" size="small">
+              <!-- <v-icon small flat color="red dark">mdi-delete</v-icon> -->
+                  rejetée
+              </v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
+                  <v-card-text>
+                    
+                    <div class="text-h6">{{ $t('apps.forms.annulerMessage') }}</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="rejete(props.row.id)">{{ $t('apps.forms.oui') }}</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
+         </div>
         <div v-else>
-          <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-          <v-chip  variant="flat" color="red-darken-4" size="small">
-              NON AFFECTABLE
-            </v-chip>
-        </div>
-        <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
+        <div class="actions-wrapper" v-if="props.row.hasAcceptedDemande === 'OUI'">
           <v-chip  variant="flat" color="grey" size="small">
             DÉJÀ ACCEPTÉE
             </v-chip>
         </div>
-        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée' || props.row.etatDemande === 'rejetée'">
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée'">
           <v-chip  variant="flat" color="green-darken-4" size="small">
             DÉJÀ AFFECTÉ
+            </v-chip>
+        </div>
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'rejetée'">
+          <v-chip  variant="flat" color="red-darken-3" size="small">
+            DÉJÀ REJETÉ
             </v-chip>
         </div>
         <div class="actions-wrapper" v-else>
@@ -96,9 +131,7 @@
              QUOTA ATTEINT
             </v-chip>
         </div>
-
         </div>
-        
       </div>
         </template>
   </vue-good-table>
@@ -117,6 +150,9 @@ import { useVilleStore } from "@/modules/ville/store";
 import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter,useRoute } from "vue-router";
+import { useToast } from 'vue-toastification';
+
+const toast= useToast();
 
 
 const router = useRouter();
@@ -134,7 +170,7 @@ const { addNotification } = notificationStore;
 const villeStore=useVilleStore();
 const demandeByVilleStore = useDemandeByVilleStore();
 const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByVilleStore);
-const { demandeByVille } = demandeByVilleStore;
+const { demandeByVille,rejeter } = demandeByVilleStore;
 const {one}=villeStore;
 const { dataDetails } = storeToRefs(villeStore);
 const inputForm = reactive({
@@ -196,6 +232,19 @@ router.push({ name: 'demandeByCentre-liste' });
 const redirectToDemandes = (id) => {
   router.push({ name: 'accepte-DemandeByVille', params: { id } });
 };
+const rejete = (id) => {
+  rejeter(id).then( () => {
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('rejeter'));
+      dialog.value=false;
+      const villeId=route.params.id;
+      demandeByVille(villeId)
+  });
+  }
 </script>
 <style>
 .v-text-field {

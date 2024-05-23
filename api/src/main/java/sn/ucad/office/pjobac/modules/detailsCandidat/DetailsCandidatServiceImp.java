@@ -22,6 +22,8 @@ import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -152,6 +154,8 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     public DetailsCandidatResponse note(DetailsCandidatNoteRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
+            AppUser currentUser = authService.getCurrentUser();
+            LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
             DetailsCandidat detailsCandidatOptional = dao.findById(myId)
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
@@ -164,6 +168,8 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
 //            else {
 //                oneBrute.setAffectable(false);
 //            }
+            detailsCandidatOptional.setAuteur(currentUser);
+            detailsCandidatOptional.setDateModification(date);
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("appreciation " + response.getAppreciation() + " effectuée avec succés. <appreciation>");
             dao.updateNote(detailsCandidatOptional);
@@ -185,10 +191,14 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     public DetailsCandidatResponse malus(DetailsCandidatMalusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
+            AppUser currentUser = authService.getCurrentUser();
+            LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
             DetailsCandidat detailsCandidatOptional = dao.findById(myId)
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
+            detailsCandidatOptional.setAuteur(currentUser);
+            detailsCandidatOptional.setDateModification(date);
             DetailsCandidat oneBrute = mapper.requestMalusToEntiteUp(detailsCandidatOptional, req);
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
@@ -211,10 +221,14 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     public DetailsCandidatResponse bonus(DetailsCandidatBonusRequest req, String id) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(id.trim());
+            AppUser currentUser = authService.getCurrentUser();
+            LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
             DetailsCandidat detailsCandidatOptional = dao.findById(myId)
                     .orElseThrow(
                             () -> new BusinessResourceException("not-found", "Aucun Academie avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
+            detailsCandidatOptional.setAuteur(currentUser);
+            detailsCandidatOptional.setDateModification(date);
             DetailsCandidat oneBrute = mapper.requestBonusToEntiteUp(detailsCandidatOptional, req);
             DetailsCandidatResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
             log.info("Mise à jour " + response.getAppreciation() + " effectuée avec succés. <maj>");
@@ -289,9 +303,13 @@ public class DetailsCandidatServiceImp implements DetailsCandidatService {
     @Override
     public void nonAffectable(Long candidatId) {
         DetailsCandidat candidat = dao.findById(candidatId).orElse(null);
+        AppUser currentUser = authService.getCurrentUser();
+        LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
 
         if (candidat != null) {
                 try {
+                    candidat.setAuteur(currentUser);
+                    candidat.setDateModification(date);
                     candidat.setAffectable(!candidat.isAffectable());
                     dao.save(candidat);
                     log.info("Affectabilité avec l'ID " + candidatId + " changée avec succès.");

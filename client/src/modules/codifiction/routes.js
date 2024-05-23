@@ -12,7 +12,7 @@ const codificationRoutes = [{
             name: 'codification-liste',
             component: () => import( /* webpackChunkName: 'codification_liste' */ './views/Liste.vue'),
             meta: {
-              middleware: [Middleware.plannerAuth]
+              middleware: [Middleware.supervisorAndAdminAuth]
           }
       },
       {
@@ -20,7 +20,7 @@ const codificationRoutes = [{
         name: 'codification-details',
         component: () => import( /* webpackChunkName: 'codification_details' */ './views/Details.vue'),
         meta: {
-          middleware: [Middleware.plannerAuth]
+          middleware: [Middleware.supervisorAndAdminAuth]
       }
       },
       {
@@ -28,7 +28,7 @@ const codificationRoutes = [{
         name: 'codification-add',
         component: () => import( /* webpackChunkName: 'codification_add' */ './views/Add.vue'),
         meta: {
-          middleware: [Middleware.plannerAuth]
+          middleware: [Middleware.supervisorAndAdminAuth]
       }
       },
       {
@@ -36,7 +36,7 @@ const codificationRoutes = [{
         name: 'codification-edit',
         component: () => import( /* webpackChunkName: 'codification_edit */ './views/Edit.vue'),
         meta: {
-          middleware: [Middleware.plannerAuth]
+          middleware: [Middleware.supervisorAndAdminAuth]
       }
       }
     ]

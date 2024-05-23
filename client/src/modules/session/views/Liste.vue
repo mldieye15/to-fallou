@@ -46,6 +46,11 @@
         {{ item.modification }}
       </v-chip>
       </template>
+      <template #item-phaseTwo="item">
+        <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog('togglePhaseTwoState', item)" :color="item.phaseTwo === 'ouverte' ? 'green' : 'red'" text  variant="flat"  size="small">
+        {{ item.phaseTwo }}
+      </v-chip>
+      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'session-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -154,6 +159,20 @@ const toggleModificationState = (item) => {
   }
   
 };
+const togglePhaseTwoState = (item) => {
+  // Inverser l'état candidature
+  if (item.ouvert=== 'ouverte'){
+    sessionStore.togglePhaseTwoState(item.id);
+    all();
+  }else{
+    addNotification({
+      show: true,
+      text: "Impossible d'ouvrir les candidatures, la session est fermée.",
+      color: 'red'
+    });
+  }
+  
+};
 const del = (id) => {
   destroy(id).then( () => {
     // addNotification({
@@ -187,6 +206,11 @@ const showConfirmDialog = (action, item) => {
     confirmDialogTitle.value = item.modification === 'ouverte' ? "Confirmer la fermeture les modifications" : "Confirmer l'ouverture des modifications";
       confirmDialogMessage.value = item.modification === 'ouverte' ? "Voulez-vous vraiment fermer les modifications ?" : "Voulez-vous vraiment ouvrir les modifications ?";
       confirmActionCallback.value = () => toggleModificationState(item);
+      break;
+      case 'togglePhaseTwoState':
+      confirmDialogTitle.value = item.phaseTwo === 'ouverte' ? "Confirmer la fermeture de la phase 2" : "Confirmer l'ouverture de la phase 2";
+      confirmDialogMessage.value = item.phaseTwo === 'ouverte' ? "Voulez-vous vraiment fermer la phase 2 ?" : "Voulez-vous vraiment ouvrir la phase 2 ?";
+      confirmActionCallback.value = () => togglePhaseTwoState(item);
       break;
     default:
       break;

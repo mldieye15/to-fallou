@@ -182,6 +182,43 @@
                       {{ inputForm.appreciation }}
                     </v-col>
                   </v-row>
+        </v-expansion-panel-text>  
+      </v-expansion-panel>
+      <v-expansion-panel>
+        <v-expansion-panel-title><h4>Informations Audit</h4></v-expansion-panel-title>
+        <v-expansion-panel-text>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Prénom(s):
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.prenomAuth}}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Nom:
+                    </v-col >
+                    <v-col class="">
+                      {{ inputForm.nomAuth }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Adresse email:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.emailAuth }}
+                    </v-col>
+                  </v-row>
+                  <v-row class="ma-2" style="height: 5vh">
+                    <v-col>
+                      Date:
+                    </v-col>
+                    <v-col class="">
+                      {{ inputForm.dateUpdate }}
+                    </v-col>
+                  </v-row>
         </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
@@ -200,6 +237,7 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 import { useCandidatStore } from "../store";
+import { date } from "yup";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -237,6 +275,11 @@ const inputForm = reactive({
   affectable: "",
   fonction: null,
   etablissement: null,
+  prenomAuth: null,
+  nomAuth: null,
+  matriculeAuth: null,
+  emailAuth: null,
+  dateUpdate: "",
 });
 onMounted(()=>{
   one(route.params.id ).then( () => {
@@ -250,9 +293,14 @@ onMounted(()=>{
     inputForm.telephone = dataDetails.value.candidat.telephone,
     inputForm.fonction=dataDetails.value.candidat.etablissement.typeEtablissement.fonction.libelleLong,
     inputForm.etablissement=dataDetails.value.candidat.etablissement.libelleLong 
+    inputForm.prenomAuth = dataDetails.value.auteur?dataDetails.value.auteur.prenoms:null,
+    inputForm.nomAuth = dataDetails.value.auteur?dataDetails.value.auteur.nom:null,
+    inputForm.matriculeAuth = dataDetails.value.auteur?dataDetails.value.auteur.matricule:null,
+    inputForm.emailAuth = dataDetails.value.auteur?dataDetails.value.auteur.email:null,
     inputForm.annee = dataDetails.value.annee.libelleLong,
     inputForm.bonus = dataDetails.value.bonus,
     inputForm.malus = dataDetails.value.malus,
+    inputForm.dateUpdate = dataDetails.value.dateModification,
     inputForm.noteFonction = dataDetails.value.noteFonction,
     inputForm.noteEtablissementProvenance = dataDetails.value.noteEtablissementProvenance
     inputForm.noteAnciennete = dataDetails.value.noteAnciennete,

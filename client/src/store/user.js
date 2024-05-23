@@ -106,6 +106,7 @@ export const useUserStore = defineStore('user', {
           localStorage.setItem('email', response.data.email);
           localStorage.setItem('role', response.data.role);
           localStorage.setItem('fullname', response.data.fullname);
+          localStorage.setItem('dateExpiration', response.data.expiresAt);
     
           // Mettre à jour les données utilisateur dans le store
           this.user = {

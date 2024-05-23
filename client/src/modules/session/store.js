@@ -42,6 +42,7 @@ export const useSessionStore = defineStore('session', {
       { text: 'Date Cloture Depot Candidature', value: 'dateClotureDepotCandidature', align: 'start', sortable: true },
       { text: 'Candidature', value: 'candidature', align: 'start', sortable: true },
       { text: 'Annee', value: 'annee', align: 'start', sortable: true },
+      { text: 'Phase 2', value: 'phaseTwo', align: 'start', sortable: true },
       { text: 'TypeSession', value: 'typeSession', align: 'start', sortable: true },
       { text: 'Actions', value: 'actions', sortable: false }
     ]
@@ -64,12 +65,14 @@ export const useSessionStore = defineStore('session', {
               let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
               let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
+              let phaseTwoLabel = element.phaseTwo ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
                 libelleLong: element.libelleLong,
                 ouvert:ouvertLabel,
                 candidature:candidatureLabel,
+                phaseTwo:phaseTwoLabel,
                 modification:modificationLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
@@ -183,6 +186,7 @@ export const useSessionStore = defineStore('session', {
               let ouvertLabel = element.ouvert ? 'ouverte' : 'fermée';
               let candidatureLabel = element.candidature ? 'ouverte' : 'fermée';
               let modificationLabel = element.modification ? 'ouverte' : 'fermée';
+              let phaseTwoLabel = element.phaseTwo ? 'ouverte' : 'fermée';
 
               return{
                 id:element.id, 
@@ -190,6 +194,7 @@ export const useSessionStore = defineStore('session', {
                 ouvert:ouvertLabel,
                 candidature:candidatureLabel,
                 modification:modificationLabel,
+                phaseTwo:phaseTwoLabel,
                 dateDebut:this.formatDate(element.dateDebut) ,
                 dateFin: this.formatDate(element.dateFin),
                 nombreDemandeAutorise: element.nombreDemandeAutorise,
@@ -361,6 +366,20 @@ export const useSessionStore = defineStore('session', {
     async toggleModificationState(id){
       try {
         const response = await axios.put(`${modulesURL}/${id}/etatModification`);
+        if (response.status === 200) {
+          // Mettre à jour la liste après le basculement d'état
+          this.all();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async togglePhaseTwoState(id){
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/etatPhaseTwo`);
         if (response.status === 200) {
           // Mettre à jour la liste après le basculement d'état
           this.all();

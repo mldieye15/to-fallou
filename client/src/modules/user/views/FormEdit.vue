@@ -62,7 +62,6 @@
         variant="outlined"
         @blur="onEmailInput"
         class="input-with-asterisk"
-        readonly
       >
     </v-text-field>
     <div v-if="formSubmitted && !inputForm.email" class="required-message mb-0">

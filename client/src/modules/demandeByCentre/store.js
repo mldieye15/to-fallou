@@ -8,6 +8,7 @@ const demandesByCentre = modulesURL+'/demandeByCentre';
 const recap=modulesURL+'/recap';
 const affecter=modulesURL+'/affecter';
 const valider=modulesURL+'/valider';
+const validerSecondary=modulesURL+'/validerSecondary';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const quotaAccepte=modulesURL+'/quotaAccepte';
 

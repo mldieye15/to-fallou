@@ -43,6 +43,13 @@ public class AcademieResource {
         List<AcademieResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allForSecondary")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<AcademieResponse>> allForSecondary(){
+        List<AcademieResponse> response = service.allForSecondary();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/availableAcademiesForUser")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

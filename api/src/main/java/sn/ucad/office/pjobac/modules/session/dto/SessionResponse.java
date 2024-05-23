@@ -27,4 +27,5 @@ public class SessionResponse {
     private  boolean ouvert;
     private  boolean candidature;
     private  boolean modification;
+    private boolean phaseTwo;
 }

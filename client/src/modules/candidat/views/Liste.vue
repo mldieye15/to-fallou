@@ -48,9 +48,30 @@
             </v-btn>
           </div>
           <div v-else>
-            <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
+            <!-- <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
-            </v-btn>
+            </v-btn> -->
+            <router-link :to="{ name: 'candidat-details', params: { id: item.id } }"> <v-icon small flat color="blue dark">mdi-eye</v-icon> </router-link>
+            <v-dialog  transition="dialog-top-transition" width="50%" height="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn  variant="text"  class="text" v-bind="props">
+                  <v-icon small flat color="red dark">mdi-delete</v-icon>
+              </v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-toolbar color="primary" :title="$t('apps.forms.user.user')"></v-toolbar>
+                  <v-card-text>
+                    
+                    <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="del(item.id);isActive.value = false">{{ $t('apps.forms.oui') }}</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
           </div>
           
         </template>
@@ -77,6 +98,10 @@ import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+
+
+const toast= useToast();
 const router = useRouter();
 const i18n = useI18n();
 
@@ -134,6 +159,18 @@ const closeConfirmDialog = () => {
   confirmDialogMessage.value = '';
   currentItem.value = null;
   };
+  const del = (id) => {
+  destroy(id).then( () => {
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('deleted'));
+      dialog.value=false;
+      allBySession();
+  });
+}
 </script>
 
 

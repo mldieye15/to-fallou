@@ -243,6 +243,26 @@ public class SessionServiceImp implements SessionService {
         // Journaliser le changement d'état
         log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
     }
+
+    @Override
+    public void changerEtatPhaseTwo(Long sessionId) throws InterruptedException {
+        Session session = dao.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session avec l'ID " + sessionId + " non trouvée."));
+        boolean etatPrecedent = session.isPhaseTwo();
+        // Inverser l'état actuel de la session
+        boolean nouvelEtat = !etatPrecedent;
+        session.setPhaseTwo(nouvelEtat);
+        dao.save(session);
+        // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
+        if (!etatPrecedent && (obseleteDemande != null)) {
+            obseleteDemande.notificationPhaseTw();
+
+        }
+        // Journaliser le changement d'état
+        log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
+
+    }
+
     @Override
     public List<SessionResponse> findEnCoursSession()throws BusinessResourceException {
         List<Session> sessions = dao.findEnCoursSession();

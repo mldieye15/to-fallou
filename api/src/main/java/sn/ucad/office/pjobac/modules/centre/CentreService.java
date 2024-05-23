@@ -16,6 +16,7 @@ public interface CentreService {
     public List<CentreResponse> all() throws BusinessResourceException;
     public List<CentreResponse> allWithJury() throws BusinessResourceException;
     public List<CentreResponse> allAvecQuota(String villeId) throws BusinessResourceException;
+    public List<CentreResponse> allSecondaryByVille(String villeId) throws BusinessResourceException;
     public List<CentreResponse> centreParVilleSansJury(String villeId) throws BusinessResourceException;
 
     public SimplePage<CentreResponse> all(Pageable pageable) throws BusinessResourceException;

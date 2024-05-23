@@ -24,5 +24,11 @@ public interface AcademieDao extends JpaRepository<Academie, Long> {
     List <AcademieVille> academieWithVille();
     @Query("SELECT a FROM Academie a WHERE a.id NOT IN (SELECT d.academie.id FROM Demande d WHERE d.user = :user AND d <> :demande GROUP BY d.academie.id HAVING COUNT(d.academie.id) >= 2)")
     List<Academie> availableAcademiesForUser(@Param("user") AppUser user, @Param("demande")Demande demande);
+    @Query("SELECT DISTINCT a FROM Academie a " +
+            "WHERE " +
+            "   (SELECT COUNT(c) FROM Centre c WHERE c.ville.academie = a AND c.typeCentre.libelleLong = 'SECONDAIRE') > " +
+            "   (SELECT COUNT(d.centre) FROM Demande d WHERE d.centre.typeCentre.libelleLong = 'SECONDAIRE' AND d.session.ouvert = true AND d.centre.ville.academie = a)")
+    List<Academie> findAcademieWithCitySecondary();
+
 }
 

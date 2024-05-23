@@ -14,7 +14,7 @@
         :rows="dataListeCentre"
         :pagination-options="{
           enabled: true,
-          mode: 'pages',
+          mode: 'records',
           perPageDropdown: [10, 15,20, 30, 40, 50]
           }"
          :search-options="{

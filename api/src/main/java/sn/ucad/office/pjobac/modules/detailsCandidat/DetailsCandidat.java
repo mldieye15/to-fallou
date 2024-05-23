@@ -27,7 +27,8 @@ public class DetailsCandidat{
 
     @ManyToOne
     private AppUser candidat;
-
+    @ManyToOne
+    private AppUser auteur;
     @ManyToOne
     private Annee annee;
     @Column(columnDefinition = "INT DEFAULT 0")

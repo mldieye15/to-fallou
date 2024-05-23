@@ -26,10 +26,23 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     @Modifying
     @Query("UPDATE Demande d SET d.etatDemande = :obseleteEtat WHERE d.ville.id = :villeId AND d.etatDemande = :enAttenteEtat")
     void demandeObselete(@Param("villeId") Long villeId, @Param("obseleteEtat") EtatDemande obseleteEtat, @Param("enAttenteEtat") EtatDemande enAttenteEtat);
+
     @Transactional
     @Modifying
     @Query("UPDATE Demande d SET d.etatDemande = :rejeterEtat WHERE d.user.id = :userId AND d.etatDemande <> :valider")
     void rejeterDemande(@Param("userId") Long villeId, @Param("rejeterEtat") EtatDemande rejeterEtat, @Param("valider") EtatDemande validerEtat);
+    @Modifying
+    @Transactional
+    @Query("UPDATE Demande d SET d.etatDemande = :rejeterEtat, d.centre = null WHERE d.id = :demandeId")
+    void annulerDemande(@Param("rejeterEtat") EtatDemande rejeterEtat, @Param("demandeId") Long demandeId);
+    @Modifying
+    @Transactional
+    @Query("UPDATE Demande d SET d.etatDemande = :pendingEtat WHERE d.etatDemande=:obsoleteEtat AND d.ville.id = :villeId")
+    void pendingDemande(@Param("villeId") Long villeId, @Param("pendingEtat") EtatDemande pendingEtat,@Param("obsoleteEtat") EtatDemande obsoleteEtat);
+    @Modifying
+    @Transactional
+    @Query("UPDATE Demande d SET d.etatDemande = :rejeterEtat, d.centre = null WHERE d.id = :demandeId")
+    void nonAffectable(@Param("rejeterEtat") EtatDemande rejeterEtat, @Param("demandeId") Long demandeId);
     @Query("SELECT COUNT(d) > 0 FROM Demande d WHERE d.user = :user AND d.etatDemande.libelleLong = 'acceptée' " +
             "AND d.session.ouvert = true")
     boolean hasAcceptedDemande(@Param("user") AppUser user);
@@ -57,5 +70,8 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     int totalAffectedByCentre(@Param("centre")Centre centre);
     @Query("SELECT COUNT(d) FROM Demande d WHERE d.centre=:centre AND d.etatDemande.libelleLong='validée' AND d.jury IS NOT NULL AND d.session.ouvert = true")
     int totalAffectedJuryByCentre(@Param("centre") Centre centre);
+
+
+
 
 }

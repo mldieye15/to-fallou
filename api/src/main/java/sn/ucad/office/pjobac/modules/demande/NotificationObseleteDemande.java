@@ -10,6 +10,7 @@ import sn.ucad.office.pjobac.modules.security.mail.NotificationEmailHtml;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,25 @@ public class NotificationObseleteDemande {
             emailVariables.put("nom", demande.getUser().getNom());
             emailVariables.put("academie", demande.getVille().getAcademie().getLibelleLong());
             emailVariables.put("ville", demande.getVille().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
+        }
+    }
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void notificationPhaseTw() throws InterruptedException{
+        List<Demande> demandes = dao.allDemandeObselete();
+        for (Demande demande : demandes) {
+            LocalDate startDate = LocalDate.now();
+            LocalDate endDate = startDate.plusDays(1);
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Demande à modifier pour les centres secondaires");
+            notificationEmail.setRecipient(demande.getUser().getEmail());
+            notificationEmail.setTemplateName("notificationPhaseTwo.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demande.getUser().getPrenoms());
+            emailVariables.put("nom", demande.getUser().getNom());
+            emailVariables.put("dateDeb", startDate);
+            emailVariables.put("dateFin", endDate);
             notificationEmail.setEmailVariables(emailVariables);
             mailService.sendHtmlEmail(notificationEmail);
         }

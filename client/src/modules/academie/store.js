@@ -6,6 +6,7 @@ const  modulesURL = '/v1/academies';
 const add= modulesURL+'/';
 const  all = modulesURL+'/all';
 const availableAcademiesForUser= modulesURL+'/availableAcademiesForUser'
+const allForSecondary= modulesURL+'/allForSecondary'
 const libelleAvailability = modulesURL +'/libelle-availability';
 const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
 const codeAvailability = modulesURL +'/code-availability';
@@ -46,6 +47,22 @@ export const useAcademieStore = defineStore('academie', {
     async all() {
       try {
         await axios.get(`${all}`)
+        .then((response) => {
+          if(response.status === 200){
+            console.log(response.data);
+            this.dataListe = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allForSecondary() {
+      try {
+        await axios.get(`${allForSecondary}`)
         .then((response) => {
           if(response.status === 200){
             console.log(response.data);

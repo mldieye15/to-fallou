@@ -11,6 +11,7 @@
     "registre": "Inscription reussie! Un lien vous a été envoyé dans votre email pour activer votre compte",
     "deleted": "Supression effectué!",
     "note": "Note ajoutée avec succés!",
+    "rejeter":"Demande rejetée avec succés! ",
     "apple": "pas de pommes | une pomme | {count} pommes",
     "public": {
         "nav": {
@@ -75,7 +76,9 @@
             "typeSession":"Type de sessions",
             "codification":"Codifications",
             "user":"Users",
-            "candidat":"Candidats"
+            "candidat":"Candidats",
+            "cas":"Cas spéciaux",
+            "villeSecondaire":"Centre d'examen secondaire"
         },
         "forms":{
             "nouveau": "Nouveau",
@@ -86,6 +89,8 @@
             "delteTitle": "Supression",
             "delteMessage": "Voulez-vous vraiment supprimer l'enregistrement?",
             "validerMessage": "Voulez-vous vraiment valider cette demande?",
+            "annulerMessage": "Voulez-vous vraiment annuler cette demande?",
+            "rejeterMessage": "Voulez-vous vraiment rejeter cette demande?",
             "addTitle": "Ajout",
             "modifTitle": "Modification",
             "oui": "Oui",
@@ -188,10 +193,10 @@
             },
             "candidat":{
                 "candidat":"Candidat",
-                "note":"note du supervisseur",
+                "note":"note du superviseur",
                 "bonus":"Bonus",
                 "malus":"Malus",
-                "appreciation":"Appreciation du supervisseur"
+                "appreciation":"Appreciation du superviseur"
             }
         },
         "footer":{}

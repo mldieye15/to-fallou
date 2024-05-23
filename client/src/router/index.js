@@ -22,6 +22,8 @@ import supRoutes from '@/modules/adminstrateurs/superviseur/routes';
 import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
 import demandeByCentreRoutes from '@/modules/demandeByCentre/routes';
 import middlewares from '@/middlewares';
+import casRoutes from '@/modules/casSpeciaux/routes';
+import demandeSecondaryVilleRoutes from '@/modules/demandeSeciondaryVille/routes';
 const routes = [
   {
     path: '/',
@@ -182,8 +184,19 @@ const routes = [
             import ( /* webpackChunkName: "dashboard" */ '@/views/user/Edit.vue'),
         meta: {
             middleware: [Middleware.userAuth]
-        }
+        },
+        
     },
+    {
+      path: 'candidature/:id',
+      name: 'candidaturephase2',
+      component: () =>
+          import ( /* webpackChunkName: "dashboard" */ '@/views/user/EditPhase2.vue'),
+      meta: {
+          middleware: [Middleware.userAuth]
+      },
+      
+  },
         {
           path: 'profile',
           name: 'profileUser',
@@ -215,6 +228,8 @@ const routes = [
   ...demandeByCentreRoutes,
   ...planifRoutes,
   ...supRoutes,
+  ...casRoutes,
+  ...demandeSecondaryVilleRoutes
 ]
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
@@ -250,7 +265,6 @@ router.beforeEach((to, from, next) => {
           router,
           to
       }
-
       const nextMiddleware = nextCheck(ctx, middleware, 1);
 
       return middleware[0]({

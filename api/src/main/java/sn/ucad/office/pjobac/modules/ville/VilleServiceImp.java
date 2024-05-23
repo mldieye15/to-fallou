@@ -16,8 +16,6 @@ import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
-import sn.ucad.office.pjobac.modules.typeEtablissement.TypeEtablissement;
-import sn.ucad.office.pjobac.modules.typeEtablissement.dto.TypeEtablissementResponse;
 import sn.ucad.office.pjobac.modules.typeSession.dto.VilleAudit;
 import sn.ucad.office.pjobac.modules.typeSession.dto.VilleRequest;
 import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
@@ -75,6 +73,33 @@ public class VilleServiceImp implements VilleService {
 
         return response;
     }
+
+    @Override
+    public List<VilleResponse> allSecondaryVille() throws BusinessResourceException {
+        log.info("VilleServiceImp::allWithJury");
+        List<Ville> all = dao.villeSecondary();
+        List<VilleResponse> response;
+        response = all.stream()
+                .map(ville -> {
+                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille// Obtenez le nombre de jurys de l'objet Ville
+                    int totalAffected=dao.totalDemandeAccepteOrValideByVilleSecondary(ville);
+                    int quota= 1 - totalAffected;
+                    // Calculer le rapport
+                    double rapport = totalDemandes != 0 ? (double) 1 / totalDemandes : 0;
+                    rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
+                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
+                    villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
+                    villeResponse.setRapportJuryDemande(rapport);
+                    villeResponse.setQuota(quota);// Ajout du rapport dans l'objet VilleResponse
+                    return villeResponse;
+                })
+                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie d'abord par rapport du jury à la demande décroissant
+                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0))
+                // Puis par rapport du jury à la demande décroissant
+                .collect(Collectors.toList());
+
+        return response;
+    }
     @Override
     public List<VilleResponse> getVilleByAcademie(String idAcademie) throws BusinessResourceException {
         Long myId= Long.valueOf(idAcademie.trim());
@@ -82,6 +107,20 @@ public class VilleServiceImp implements VilleService {
         academie=academieDao.findById(myId)
                 .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + idAcademie));
         List<Ville> villes=dao.findByAcademie(academie);
+        List<VilleResponse> response;
+        response= villes.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<VilleResponse> villeSecondaryByAcademie(String idAcademie) throws BusinessResourceException {
+        Long myId= Long.valueOf(idAcademie.trim());
+        Academie academie;
+        academie=academieDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + idAcademie));
+        List<Ville> villes=dao.findVillesSecondaryCentresForAcademie(academie);
         List<VilleResponse> response;
         response= villes.stream()
                 .map(mapper::toEntiteResponse)
@@ -156,6 +195,32 @@ public class VilleServiceImp implements VilleService {
         } catch (NumberFormatException e) {
             log.warn("Paramètre id " + id + " non autorisé. <oneById>.");
             throw new BusinessResourceException("not-valid-param", "Paramètre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
+    @Override
+    public Optional<VilleResponse> oneSecondaryById(String idOne) throws NumberFormatException, BusinessResourceException {
+        try {
+            Ville one = dao.detailsVilleSecondary(idOne)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Ville avec " + idOne + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Agen avec id: " + idOne + " trouvé. <oneById>");
+            // Récupérer le total des demandes pour cette ville spécifique
+            int total = demandeDao.totalDemandeByVille(one);
+            int affected=dao.totalDemandeAccepteOrValideByVilleSecondary(one);
+            int quotaSecondary= 1 - affected;
+            // Calculer le rapport
+            // Créer le VilleResponse en incluant le total des demandes et le rapport
+            VilleResponse villeResponse = mapper.toEntiteResponse(one);
+            villeResponse.setTotalDemandes(total);
+            villeResponse.setQuota(quotaSecondary);
+            Optional<VilleResponse> response;
+            response = Optional.of(villeResponse);
+            return response;
+            // Si le total des demandes est zéro, renvoyer une valeur par défaut pour le rapport
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + idOne + " non autorisé. <oneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + idOne + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
 

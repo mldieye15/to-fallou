@@ -55,8 +55,13 @@
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
             </p>
-            <div class="actions-wrapper"  v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'" >
+            <div class="actions-wrapper"  v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'&& demande.phaseTwo==='NON'" >
              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3 text-center">
+              modifier
+             </v-btn>   
+          </div>
+          <div class="actions-wrapper"  v-else-if="demande.modification==='OUI' && demande.etatDemande==='obsolète' && demande.phaseTwo==='OUI'" >
+             <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToCandidature(demande.id)" class="mt-3 mb-3 text-center">
               modifier
              </v-btn>   
           </div>
@@ -65,7 +70,7 @@
               modifier
              </v-btn>   
           </div>
-            <div v-if="demande.etatDemande==='acceptée'" class="mt-3 mb-3 text-center">
+            <div v-if="demande.etatDemande==='acceptée'&& demande.phaseTwo==='NON'" class="mt-3 mb-3 text-center">
             <v-dialog v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                   <v-btn variant="flat" color="green" size="small" v-bind="props">
@@ -81,6 +86,27 @@
                   <v-card-actions class="justify-end">
                     <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
                     <v-btn variant="outlined" color="black"  @click="valider(demande.id)">{{ $t('apps.forms.oui') }}</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
+          </div>
+          <div v-if="demande.etatDemande==='acceptée' && demande.phaseTwo==='OUI'" class="mt-3 mb-3 text-center">
+            <v-dialog v-model="dialog" transition="dialog-top-transition" width="50%" height="auto">
+              <template v-slot:activator="{ props }">
+                  <v-btn variant="flat" color="green" size="small" v-bind="props">
+                   valider
+                  </v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
+                  <v-card-text>
+                    <div class="text-h6">{{ $t('apps.forms.validerMessage') }}</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="validerSecondary(demande.id)">{{ $t('apps.forms.oui') }}</v-btn>
                   </v-card-actions>
                 </v-card>
               </template>
@@ -145,7 +171,7 @@ const {dataListeForUser,etatCouleurs,}= storeToRefs(demandeStore);
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 const { removeNotification } = notificationStore;
-const {validerDemande,allForUser } = demandeStore;
+const {validerDemande,allForUser,validerDemandeSecondary } = demandeStore;
 
 const userStore = useUserStore();
 //const { notifications, modules, fonctionnalites } = storeToRefs(userStore);
@@ -187,6 +213,17 @@ const valider = (id) => {
       allForUser();
   });
 }
+const validerSecondary = (id) => {
+  validerDemandeSecondary(id).then( () => {
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('valider'),
+    //     color: 'blue'
+    //   });
+      dialog.value=false;
+      allForUser();
+  });
+}
 onMounted(()=>{
   changeLoggedIn();
   sessionStore.enCoursSession();
@@ -213,6 +250,9 @@ onMounted(()=>{
 });
 const redirectToEditDemande = (id) => {
   router.push({ name: 'edit', params: { id } });
+};
+const redirectToCandidature = (id) => {
+  router.push({ name: 'candidaturephase2', params: { id } });
 };
 const redirectToProfile= () => {
   router.push({ name: 'profileUser'});

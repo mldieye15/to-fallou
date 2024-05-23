@@ -13,8 +13,8 @@ import sn.ucad.office.pjobac.config.AppConstants;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
-import sn.ucad.office.pjobac.modules.detailsCandidat.DetailsCandidatService;
 import sn.ucad.office.pjobac.modules.detailsCandidat.OrdreArriveService;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -35,6 +35,13 @@ public class DemandeResource {
             @SortDefault(sort = "liblleLong") @PageableDefault(size = AppConstants.DEFAULT_PAGE_SIZE) final Pageable pageable
     ){
         SimplePage<DemandeResponse>  response = service.all(pageable);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("/allValider")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeResponse>> allValider(){
+        List<DemandeResponse> response = service.allValider();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PutMapping("/obselete/{villeId}")
@@ -153,6 +160,26 @@ public class DemandeResource {
         DemandeResponse response = service.accepterDemande(accepter, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PutMapping(value = "/nonAffectable/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DemandeResponse> nonAffectable(@PathVariable(value="id") String id) {
+        try {
+            service.nonAffectableDemande(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BusinessResourceException ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping(value = "/annuler/{id}")
+    public ResponseEntity<DemandeResponse> rejeterDemande(@PathVariable(value="id") String id) {
+        try {
+            service.annulerDemande(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BusinessResourceException ex) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping(value = "/affecter/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<DemandeResponse> affecterJury(@PathVariable(value="id") String id,
@@ -164,6 +191,15 @@ public class DemandeResource {
     public ResponseEntity<DemandeResponse> validerDemande(@PathVariable("userId") String userId) {
         try {
             DemandeResponse response = service.validerDemande(userId);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (BusinessResourceException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PutMapping("/validerSecondary/{userId}")
+    public ResponseEntity<DemandeResponse> validerDemandeSecondary(@PathVariable("userId") String userId) {
+        try {
+            DemandeResponse response = service.validerDemandeSecondary(userId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (BusinessResourceException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -183,6 +219,11 @@ public class DemandeResource {
     @GetMapping("/quotaAccepte")
     public ResponseEntity<Boolean> quotaAccepteByVille(@RequestParam String villeId) {
         boolean result = service.quotaAccepteByVille(villeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @GetMapping("/quotaAccepteSecondary")
+    public ResponseEntity<Boolean> quotaAccepteByVilleSecondary(@RequestParam String villeId) {
+        boolean result = service.quotaAccepteByVilleSecondary(villeId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/totalJuryAffecte/{villeId}")

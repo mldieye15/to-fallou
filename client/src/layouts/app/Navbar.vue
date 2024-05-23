@@ -249,6 +249,22 @@ const defaultSideBarItems = reactive({ items: [
     "icon": "mdi-city",
     "route": "ville-liste"
   },
+  {
+    "id": 16,
+    "title": "Cas spéciaux",
+    "translate": "cas",
+    "code": "cas",
+    "icon": "mdi-alert-circle-outline",
+    "route": "cas-liste"
+  },
+  {
+    "id": 17,
+    "title": "Centre d'examen secondaire",
+    "translate": "villeSecondaire",
+    "code": "villeSecondaire",
+    "icon": "mdi-cast-education",
+    "route": "demandeSecondaryVille-liste"
+  },
   // {
   //     "id": 3,
   //     "title": "Ville",
@@ -274,6 +290,14 @@ const sideBarItems = reactive({ items: [
       "code": "candidat",
       "icon": "mdi-school",
       "route": "candidat-liste"
+  },
+  {
+    "id": 2,
+    "title": "Codifications",
+    "translate": "codification",
+    "code": "codification",
+    "icon": "mdi-school",
+    "route": "codification-liste"
   }
 ]});
 

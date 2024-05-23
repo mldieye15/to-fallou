@@ -49,6 +49,13 @@ public class VilleResource {
         List<VilleResponse> response = service.allWithJury();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allSecondaryVille")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<VilleResponse>> SecondaryVille(){
+        List<VilleResponse> response = service.allSecondaryVille();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/availableVillesForUserAndAcademy/{academieId}")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)
@@ -61,10 +68,20 @@ public class VilleResource {
         List<VilleResponse> response = service.getVilleByAcademie(idAcademie);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping(value = "/ville-Secondary/{idAcademie}")
+    public ResponseEntity<List<VilleResponse>> villesSecondaryByAcademie(@PathVariable String idAcademie) {
+        List<VilleResponse> response = service.villeSecondaryByAcademie(idAcademie);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Optional<VilleResponse>> one(@PathVariable(value = "id") String id) {
         Optional<VilleResponse> response = service.oneById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "/secondary/{idVille}")
+    public ResponseEntity<Optional<VilleResponse>> oneSecondary(@PathVariable(value = "idVille") String idVille) {
+        Optional<VilleResponse> response = service.oneSecondaryById(idVille);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PostMapping(value = "/")

@@ -1,5 +1,6 @@
 package sn.ucad.office.pjobac.modules.demande;
 
+import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +28,7 @@ import sn.ucad.office.pjobac.modules.security.user.AppUser;
 import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.session.Session;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
+import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -89,6 +91,18 @@ public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessReso
 
     return response;
 }
+
+    @Override
+    public List<DemandeResponse> allValider() throws BusinessResourceException {
+        log.info("DemandeServiceImp::allValider");
+        List<Demande> all = dao.allDemandeValider();
+        List<DemandeResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
     @Override
     public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException {
         log.info("DemandeServiceImp::allGroupedByUser");
@@ -314,14 +328,15 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("technical-error", "Erreur technique de création d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Transactional(readOnly = false)
     @Override
     public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException {
         try {
             String currentUserId = authService.getCurrentUser().getId().toString();
             if (candidatService.userHasAlreadyApplied(currentUserId)) {
                 throw new BusinessResourceException("already-applied", "L'utilisateur a déjà candidaté.", HttpStatus.BAD_REQUEST);
-            }else {
+            } else {
+                // Mapper les demandes
                 List<Demande> demandes = req.stream()
                         .map(request -> {
                             Demande demande = mapper.requestToEntity(request);
@@ -334,16 +349,18 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
                         })
                         .collect(Collectors.toList());
 
+                // Sauvegarder les demandes
                 List<DemandeResponse> responses = dao.saveAll(demandes).stream()
                         .map(mapper::toEntiteResponse)
                         .collect(Collectors.toList());
-                DetailsCandidatRequest detailsRequest = new DetailsCandidatRequest();
-                candidatService.add(detailsRequest);
-                log.info("Ajout des demandes effectué avec succès. <addAll>");
+                // Ajouter les détails du candidat seulement après le succès de la sauvegarde des demandes
+                if (!responses.isEmpty()) {
+                    DetailsCandidatRequest detailsRequest = new DetailsCandidatRequest();
+                    candidatService.add(detailsRequest);
+                    log.info("Ajout des demandes effectué avec succès. <addAll>");
+                }
                 return responses;
-
             }
-
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
             log.error("Erreur technique de création Demande: donnée en doublon ou contrainte non respectée" + e.toString());
             throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
@@ -500,6 +517,70 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
     }
 
     @Override
+    public void annulerDemande(String demandeId) throws BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("rejetée");
+            EtatDemande etatRejeter = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune état avec le libellé REJETÉE trouvée.", HttpStatus.NOT_FOUND));
+            Optional<EtatDemande> optionalEnAttente = service.findByLibelleLong("en attente");
+            EtatDemande enAttente = optionalEnAttente.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune état avec le libellé REJETÉE trouvée.", HttpStatus.NOT_FOUND));
+            Optional<EtatDemande> optionalObsolete = service.findByLibelleLong("obsolète");
+            EtatDemande obsolete = optionalObsolete.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune état avec le libellé REJETÉE trouvée.", HttpStatus.NOT_FOUND));
+            dao.annulerDemande(etatRejeter, myId);
+            dao.pendingDemande(demandeOptional.getVille().getId(),enAttente,obsolete);
+            log.info("Demande avec l'ID " + demandeId + " rejetée avec succès.");
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + demandeId + " non autorisé. <nonAffectableDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (BusinessResourceException ex) {
+            // Si une exception de type BusinessResourceException est levée, la re-levée sans la capturer
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Une erreur inattendue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique lors du rejet de la demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @Override
+    public void nonAffectableDemande(String demandeId) throws BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("rejetée");
+            EtatDemande etatRejeter = optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune état avec le libellé REJETÉE trouvée.", HttpStatus.NOT_FOUND));
+            dao.nonAffectable(etatRejeter, myId);
+            rejeterDemande(demandeOptional.getUser().getId());
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Non affectable");
+            notificationEmail.setRecipient(demandeOptional.getUser().getEmail());
+            notificationEmail.setTemplateName("notificationRejeter.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demandeOptional.getUser().getPrenoms());
+            emailVariables.put("nom", demandeOptional.getUser().getNom());
+            emailVariables.put("annee", demandeOptional.getSession().getAnnee().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
+            log.info("Demande avec l'ID " + demandeId + " rejetée avec succès.");
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + demandeId + " non autorisé. <nonAffectableDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (BusinessResourceException ex) {
+            // Si une exception de type BusinessResourceException est levée, la re-levée sans la capturer
+            throw ex;
+        } catch (Exception ex) {
+            log.error("Une erreur inattendue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique lors du rejet de la demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @Override
     public DemandeResponse affecterJury(DemandeAffecterJury req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(demandeId.trim());
@@ -568,6 +649,55 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("technical-error", "Erreur technique de validation d'une Demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public DemandeResponse validerDemandeSecondary(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            log.info("planification secondaire");
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun Demande avec l'ID " + demandeId + " trouvé.", HttpStatus.NOT_FOUND));
+            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("validée");
+            EtatDemande etatValide= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+            LocalDateTime dateValidation = LocalDateTime.now(ZoneOffset.UTC);
+
+            demandeOptional.setEtatDemande(etatValide);
+            demandeOptional.setDateConfirmationDemande(dateValidation);
+            DemandeResponse response = mapper.toEntiteResponse(dao.save(demandeOptional));
+            rejeterDemande(demandeOptional.getUser().getId());
+            int totalJuryAffecte=villeDao.totalJuryAffecteByVilleSecondary(demandeOptional.getVille());
+            final int totalJury=1;
+            int quota = totalJury - totalJuryAffecte ;
+            log.info("Calcule du quota secondary: {}", quota);
+            if (quota == 0) {
+                demandeObseleteByVille(demandeOptional.getVille().getId());
+                notificationObselete.notification(demandeOptional.getVille().getId().toString());
+            }
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            notificationEmail.setSubject("Mail de validation");
+            notificationEmail.setRecipient(demandeOptional.getUser().getEmail());
+            notificationEmail.setTemplateName("notificationValider.html"); // Ajoutez le nom du modèle Thymeleaf
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demandeOptional.getUser().getPrenoms());
+            emailVariables.put("nom", demandeOptional.getUser().getNom());
+            emailVariables.put("session", demandeOptional.getSession().getLibelleLong());
+            emailVariables.put("academie", demandeOptional.getVille().getAcademie().getLibelleLong());
+            emailVariables.put("ville", demandeOptional.getVille().getLibelleLong());
+            emailVariables.put("centre", demandeOptional.getCentre().getLibelleLong());
+            notificationEmail.setEmailVariables(emailVariables);
+            mailService.sendHtmlEmail(notificationEmail);
+            log.info("Demande " + response.getId() + " validée avec succès. <validerDemande>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + demandeId + " non autorisé. <validerDemande>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (Exception ex) {
+            log.error("Une erreur inattendue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de validation d'une Demande avec l'ID " + demandeId, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Override
     public boolean quotaAccepteByVille(String villeId) {
         try {
@@ -587,6 +717,28 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public boolean quotaAccepteByVilleSecondary(String villeId) {
+        try {
+            log.info("quota ville administratif");
+            Long myId = Long.valueOf(villeId.trim());
+            Ville ville = villeDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Ville avec id: " + villeId + " trouvé. <quota ville>");
+            int accepte= villeDao.totalDemandeAccepteOrValideByVilleSecondary(ville);
+            final int totalJury = 1;
+            log.info("totalJury: " + totalJury + " trouvé. <quota ville>");
+            log.info("TotalAccepte: " + accepte + " trouvé. <quota ville>");
+            return accepte < totalJury;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " +villeId+ " non autorisé. <quota ville>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
     }
 
 //    @Override

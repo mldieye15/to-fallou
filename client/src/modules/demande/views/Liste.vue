@@ -1,23 +1,33 @@
 <template>
   <p class="text-h6">{{ $t('apps.forms.demande.demande') }}</p>
       <v-container class="my-1" grid-list-xl>
-        <v-row class="mb-0 mx-auto pa-0"  align="center">
+        <v-card class="custom-shadow mb-3">
+          <v-row class="mb-0 mx-auto pa-0"  align="center">
         <v-col cols="12" sm="4" md="3" >
           <v-text-field
-            label="Underlined"
-            placeholder="Placeholder"
-            variant="underlined"
-            append-inner-icon="mdi-magnify"
-            v-model="searchValue"
-          ></v-text-field>
+          v-model="searchValue"
+          :loading="loading"
+          append-inner-icon="mdi-magnify"
+          placeholder="Entrez votre recherche"
+
+          density="compact"
+          variant="solo"
+          hide-details
+          single-line
+          @input="onSearchInputChange"
+        ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
         <v-col class="text-right" md="9" cols="auto">
-          <v-btn  @click.prevent="redirectToVilles()" class="ma-0" variant="outlined" color="cyan-darken-1">Demandes par ville</v-btn>
-          <v-btn @click.prevent="redirectToCentres()" class="ma-0" variant="outlined" color="cyan-darken-1">Demandes par centre </v-btn>
-          <v-btn  @click.prevent="redirectToAllDemandes()" class="ma-0" variant="outlined" color="cyan-darken-1"> Demandes archivées</v-btn>
+          <v-tabs bg-color="blue">
+            <v-tab @click="redirectToVilles">Demandes par ville</v-tab>
+            <v-tab @click="redirectToCentres">Demandes par centre</v-tab>
+            <v-tab @click="redirectToAllDemandes">Demandes archivées</v-tab>
+          </v-tabs>
         </v-col>
         </v-row>
+        </v-card>
+        
         <div v-if="loading">Chargement en cours...</div>
         <div v-for="userEntry in paginatedData" :key="userEntry.userId">
       <div class="mb-2 mt-2">
@@ -76,20 +86,45 @@
               réaffecté
             </v-btn>
          </div>
-        <div v-else>
-          <div class="actions-wrapper" v-if="props.row.affectable === 'NON'">
-          <v-chip  variant="flat" color="red-darken-4" size="small">
-              NON AFFECTABLE
-            </v-chip>
-        </div>
-        <div class="actions-wrapper" v-else-if="props.row.hasAcceptedDemande === 'OUI'">
+         <div class="actions-wrapper"
+         v-else-if="props.row.etatDemande === 'en attente' &&
+          props.row.affectable === 'NON' ">
+          <v-dialog transition="dialog-top-transition" width="50%" height="auto">
+              <template v-slot:activator="{ props }">
+                <v-btn variant="outlined" color="red" class="text" v-bind="props" size="small">
+              <!-- <v-icon small flat color="red dark">mdi-delete</v-icon> -->
+                  rejetée
+              </v-btn>
+              </template>
+              <template v-slot:default="{ isActive }">
+                <v-card>
+                  <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
+                  <v-card-text>
+                    
+                    <div class="text-h6">{{ $t('apps.forms.annulerMessage') }}</div>
+                  </v-card-text>
+                  <v-card-actions class="justify-end">
+                    <v-btn variant="text" color="primary" @click="isActive.value = false">{{ $t('apps.forms.annuler') }}</v-btn>
+                    <v-btn variant="outlined" color="black"  @click="rejete(props.row.id)">{{ $t('apps.forms.oui') }}</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </template>
+            </v-dialog>
+         </div>
+        <div v-else> 
+        <div class="actions-wrapper" v-if="props.row.hasAcceptedDemande === 'OUI'">
           <v-chip  variant="flat" color="grey" size="small">
             DÉJÀ ACCEPTÉE
             </v-chip>
         </div>
-        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée' || props.row.etatDemande === 'rejetée'">
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'validée'">
           <v-chip  variant="flat" color="green-darken-4" size="small">
             DÉJÀ AFFECTÉ
+            </v-chip>
+        </div>
+        <div class="actions-wrapper" v-else-if="props.row.etatDemande === 'rejetée'">
+          <v-chip  variant="flat" color="red-darken-3" size="small">
+            DÉJÀ REJETÉ
             </v-chip>
         </div>
         <div class="actions-wrapper" v-else>
@@ -148,6 +183,9 @@ import { useCentreStore } from "@/modules/centre/store";
 import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from 'vue-toastification';
+
+const toast= useToast();
 
 const sessionStore= useSessionStore();
 const router = useRouter();
@@ -162,7 +200,7 @@ const { addNotification } = notificationStore;
 
 const demandeStore = useDemandeStore();
 const { dataListeGroupedByUser,columns, headerTable, loading,etatCouleurs,dataListe } = storeToRefs(demandeStore);
-const { all, destroy,validerDemande,allGroupedByUser } = demandeStore;
+const { all, destroy,validerDemande,allGroupedByUser,rejeter } = demandeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -184,8 +222,24 @@ const selectedItemsPerPage = ref(5);
 const paginatedData = computed(() => {
   const start = (currentPage.value - 1) * selectedItemsPerPage.value;
   const end = start + selectedItemsPerPage.value;
-  const dataList = dataListeGroupedByUser.value || [];
-  return dataList.slice(start, end);
+  let filteredData = dataListeGroupedByUser.value || [];
+  // Appliquer le filtre si une valeur de recherche est présente
+  if (searchValue.value.trim() !== "") {
+    const searchRegex = new RegExp(searchValue.value.trim(), "i"); // Expression régulière pour rechercher sans tenir compte de la casse
+    filteredData = filteredData.filter(entry => {
+      // Recherche dans toutes les propriétés de l'objet entry
+      for (const prop in entry) {
+        if (Object.prototype.hasOwnProperty.call(entry, prop)) {
+          // Vérifie si la propriété est une chaîne et si elle contient la valeur de recherche
+          if (typeof entry[prop] === "string" && searchRegex.test(entry[prop])) {
+            return true; // Correspondance trouvée, inclure cet objet dans les résultats filtrés
+          }
+        }
+      }
+      return false; // Aucune correspondance trouvée pour cet objet
+    });
+  }
+  return filteredData.slice(start, end);
 });
 const totalPages = computed(() => Math.ceil(
   (dataListeGroupedByUser.value || []).length / selectedItemsPerPage.value));
@@ -213,7 +267,21 @@ const redirectToAllDemandes = () => {
   router.push({ name: 'demandeBySession-demandes',params: { id: defaultSessionId}});
   console.log(dataListeSession.value[0].id);
 };
-
+const rejete = (id) => {
+  rejeter(id).then( () => {
+    // addNotification({
+    //     show: true,
+    //     text:  i18n.t('deleted'),
+    //     color: 'blue'
+    //   });
+    toast.success(i18n.t('rejeter'));
+      dialog.value=false;
+      allGroupedByUser();
+  });
+  }
+const onSearchInputChange = () => {
+  filterData();
+};
 </script>
 <style>
 .v-text-field {
@@ -234,5 +302,8 @@ const redirectToAllDemandes = () => {
   padding: 4px;
   width: auto;
   }
+  .custom-shadow {
+  box-shadow: rgba(46, 130, 240, 0.4) 5px 5px, rgba(46, 101, 240, 0.3) 10px 10px, rgba(46, 124, 240, 0.2) 15px 15px, rgba(46, 137, 240, 0.1) 20px 20px, rgba(46, 88, 240, 0.05) 25px 25px;
+}
 </style>
 

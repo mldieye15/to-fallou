@@ -57,6 +57,7 @@ public class Session {
     private  boolean ouvert=false;
     private  boolean modification;
     private  boolean candidature=false;
+    private boolean phaseTwo=false;
     @Column(nullable = true)
     private Long utiCree;
 

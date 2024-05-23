@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public interface DemandeService {
-//    public List<DemandeResponse> all() throws BusinessResourceException;
+    public List<DemandeResponse> allValider() throws BusinessResourceException;
 //    List<DemandeDetailsCandidatResponse> allWithAffectable() throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> allGroupedByUser() throws BusinessResourceException;
     public Map<Long, List<DemandeDetailsCandidatResponse>> all() throws BusinessResourceException;
@@ -35,8 +35,11 @@ public interface DemandeService {
 
     public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public void nonAffectableDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public void annulerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse affecterJury(DemandeAffecterJury req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse validerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public DemandeResponse validerDemandeSecondary(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
 
     public String del(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<DemandeAudit> auditOneById(String id) throws NumberFormatException, BusinessResourceException;
@@ -45,6 +48,7 @@ public interface DemandeService {
     public void rejeterDemande(Long villeId)throws NumberFormatException, BusinessResourceException;
     boolean hasAcceptedDemande(String userId);
     boolean quotaAccepteByVille(String villeId);
+    boolean quotaAccepteByVilleSecondary(String villeId);
 
 //    public void updateOrderByVille() throws BusinessResourceException;
 }

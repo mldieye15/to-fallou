@@ -88,7 +88,7 @@ public class AppUser {
 //    private String username;
 
     @NotNull
-    @Size(min=6, max=255, message="mot de passe doit etre comprise entre 6 et 255 cracteres")
+    @Size(max=255, message="mot de passe doit etre comprise entre 6 et 255 cracteres")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String mdpasse;
 

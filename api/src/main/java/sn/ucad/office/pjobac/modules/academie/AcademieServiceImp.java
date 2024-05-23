@@ -51,6 +51,18 @@ public class AcademieServiceImp implements AcademieService {
     }
 
     @Override
+    public List<AcademieResponse> allForSecondary() throws BusinessResourceException {
+        log.info("AcademieServiceImp::allForsecondary");
+        List<Academie> all = dao.findAcademieWithCitySecondary();
+        List<AcademieResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .sorted(Comparator.comparing(AcademieResponse::getLibelleLong))
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
     public List<AcademieResponse> availableAcademiesForUser( String demandeId) throws BusinessResourceException {
         Long myId= Long.valueOf(demandeId.trim());
         Demande demande;

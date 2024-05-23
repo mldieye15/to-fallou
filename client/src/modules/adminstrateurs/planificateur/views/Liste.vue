@@ -15,7 +15,7 @@
         :rows="dataListeUtilisateur"
         :pagination-options="{
           enabled: true,
-          mode: 'pages',
+          mode: 'records',
           perPageDropdown: [5, 10, 15,20, 30, 40, 50]
           }"
          :search-options="{

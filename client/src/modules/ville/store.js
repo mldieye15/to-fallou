@@ -4,9 +4,12 @@ import axios from '@/plugins/axios.js'
 
 const  modulesURL = '/v1/villes';
 const  all = modulesURL+'/all';
+const  allSecondaryVille = modulesURL+'/allSecondaryVille';
 const  allWithJury = modulesURL+'/allWithJury';
 const add=modulesURL+'/';
 const villesByAcademie=modulesURL+'/by-academie'
+const villeSecondary=modulesURL+'/ville-Secondary'
+const secondary=modulesURL+'/secondary'
 const availableVillesForUserAndAcademy= modulesURL+'/availableVillesForUserAndAcademy'
 const libelleAvailability = modulesURL +'/libelle-availability';
 const libelleAvailabilityUp = modulesURL +'/libelle-availabilityUp';
@@ -108,6 +111,38 @@ export const useVilleStore = defineStore('ville', {
         this.loading = false
       }
     },
+    async allSecondaryVille() {
+      try {
+        await axios.get(`${allSecondaryVille}`)
+        .then((response) => {
+          if(response.status === 200){
+           let res = response.data.map((element)=>{
+            let academieLabel=element.academie?element.academie.libelleLong:null;
+            let academieIdLabel = element.academie?element.academie.id:null;
+            return{
+              id: element.id,
+            libelleLong: element.libelleLong,
+            libelleCourt: element.libelleCourt,
+            totalJury: element.totalJury,
+            totalDemandes: element.totalDemandes,
+            quota: element.quota,
+            rapport: element.rapportJuryDemande,
+            academie: academieLabel,
+            academieId:academieIdLabel,
+
+            };
+            
+           });
+           this.dataListeVille=res;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     //  recupérer la liste des villes par academie et le mettre dans la tabel dataListeByAcademie
     async villesByAcademie(academie) {
       try {
@@ -164,10 +199,50 @@ export const useVilleStore = defineStore('ville', {
         this.loading = false;
       }
     },
+    async availableVillesForAcademy(academieId) {
+      console.log("Valeur de academie reçue:", academieId);
+      try {
+        // Vérifiez que academieId est un nombre valide
+        const response = await axios.get(`${villeSecondary}/${academieId}`);
+          if (response.status === 200) {
+            let res = response.data.map((element) => {
+              let academieLabel = element.academie ? element.academie.libelleLong : null;
+              return {
+                id: element.id,
+                libelleLong: element.libelleLong,
+                libelleCourt: element.libelleCourt,
+                academie: academieLabel
+              };
+            });
+            this.dataListeByAcademieAndUser = res;
+            console.log("Villes récupérées pour l'académie", academieId, ":", this.dataListeByAcademieAndUser);
+          }
+      } catch (error) {
+        console.log(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
     //  recupérer les informations d'une ville par son ide et le mettre dans la tabel dataDetails
     async one(ville) {
       try {
         await axios.get(`${modulesURL}/${ville}`) 
+        .then((response) => {
+          if(response.status === 200){
+            this.dataDetails = response.data;
+          } 
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async oneVille(idVille) {
+      try {
+        await axios.get(`${secondary}/${idVille}`) 
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
