@@ -40,17 +40,17 @@
           <v-list-item-content class="justify-center">
             <div class="mx-auto">
               <h3 class="ml-10 mt-3" >{{ name }} </h3>
-              
+
               <v-divider class="my-3"></v-divider>
               <v-btn @click.prevent="redirectToAdd()" class="ma-1" variant="text" >
                 <v-avatar color="blue mr-1" size="30" light >
                   <v-icon>mdi-account-edit</v-icon>
-              </v-avatar> 
+              </v-avatar>
                 {{ $t('public.nav.top.profile') }}
                </v-btn>
               <!-- <router-link :to="{name:'profileUser'}" class="text"></router-link> -->
               <v-divider class="my-3"></v-divider>
-              
+
               <v-btn class="ma-1 " variant="text"  @click="handleLogout">
                 <v-avatar color="red mr-1" size="30" light >
               <v-icon  >mdi-logout</v-icon>
@@ -224,7 +224,7 @@ const defaultSideBarItems = reactive({ items: [
     "icon": "mdi-account-school-outline",
     "route": "typeEtablissement-liste"
   },
-  
+
   {
     "id": 13,
     "title": "TypeSessions",
@@ -259,6 +259,14 @@ const defaultSideBarItems = reactive({ items: [
   },
   {
     "id": 17,
+    "title": "Candidats Authorisés",
+    "translate": "candidatAuth",
+    "code": "candidatsAuthorisés",
+    "icon": "mdi-cast-education",
+    "route": "candidatAuthorisers-liste"
+  },
+  {
+    "id": 18,
     "title": "Centre d'examen secondaire",
     "translate": "villeSecondaire",
     "code": "villeSecondaire",

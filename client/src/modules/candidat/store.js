@@ -50,7 +50,7 @@ export const useCandidatStore = defineStore('candidat', {
     //  recupérer la liste des utilisqteurs et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(`${all}`) 
+        await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
@@ -65,7 +65,7 @@ export const useCandidatStore = defineStore('candidat', {
               let prenomsLabel = element.candidat? element.candidat.prenoms:null;
               let affectableLabel = element.affectable? 'OUI':'NON';
               return{
-              id:element.id, 
+              id:element.id,
               affectable: affectableLabel,
               nom: nomLabel,
               prenoms: prenomsLabel,
@@ -76,12 +76,12 @@ export const useCandidatStore = defineStore('candidat', {
               fonction: fonctionLabel,
               etablissement: etablissementLabel,
               }
-              
+
             })
 
             this.dataListeCandidat = res;
             console.log(this.dataListeCandidat);
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -92,7 +92,7 @@ export const useCandidatStore = defineStore('candidat', {
     },
     async allBySession() {
       try {
-        await axios.get(`${allBySession}`) 
+        await axios.get(`${allBySession}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
@@ -108,7 +108,7 @@ export const useCandidatStore = defineStore('candidat', {
               let prenomsLabel = element.candidat? element.candidat.prenoms:null;
               let affectableLabel = element.affectable? 'OUI':'NON';
               return{
-              id:element.id, 
+              id:element.id,
               affectable: affectableLabel,
               nom: nomLabel,
               prenoms: prenomsLabel,
@@ -121,12 +121,12 @@ export const useCandidatStore = defineStore('candidat', {
               fonction: fonctionLabel,
               etablissement: etablissementLabel,
               }
-              
+
             })
 
             this.dataListeCandidat = res;
             console.log(this.dataListeCandidat);
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -138,11 +138,11 @@ export const useCandidatStore = defineStore('candidat', {
     //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
     async one(session) {
       try {
-        await axios.get(`${modulesURL}/${session}`) 
+        await axios.get(`${modulesURL}/${session}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -154,7 +154,7 @@ export const useCandidatStore = defineStore('candidat', {
     //  ajouter une session
     async add(payload) {
       try {
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -222,7 +222,7 @@ export const useCandidatStore = defineStore('candidat', {
     //  supprimer une session
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -286,5 +286,5 @@ export const useCandidatStore = defineStore('candidat', {
       }
     },
   },
-  
+
 })

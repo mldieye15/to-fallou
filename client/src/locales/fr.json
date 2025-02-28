@@ -78,7 +78,8 @@
             "user":"Users",
             "candidat":"Candidats",
             "cas":"Cas spéciaux",
-            "villeSecondaire":"Centre d'examen secondaire"
+            "villeSecondaire":"Centre d'examen secondaire",
+            "candidatAuth":"Candidats autorisés"
         },
         "forms":{
             "nouveau": "Nouveau",
