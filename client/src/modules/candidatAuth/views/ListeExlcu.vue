@@ -18,12 +18,12 @@
           <v-btn
             v-if="disable"
             color="red"
-            @click="disableNonAutoriserUsers"
+            @click="showDesactiveDialog"
             :loading="loading"
           >
-            Désactiver les utilisateurs non autorisés
+            Désactiver les candidats non autorisés
           </v-btn>
-           <p v-else>Aucun utilisateur non autorisé activé.</p>
+           <p v-else>Aucun candidat non autorisé activé.</p>
         </v-col>
       </v-row>
       <EasyDataTable
@@ -79,6 +79,31 @@
     </v-card>
   </v-dialog>
   </div>
+  <VDialog
+    v-model="desactiveDialog"
+    max-width="500px"
+  >
+    <VCard title="Etes vous sure de bien vouloir désactiver ces comptes?">
+      <VCardText>
+        <div class="d-flex justify-center gap-4">
+          <VBtn
+            color="error"
+            variant="outlined"
+            @click="closeDesactive"
+          >
+            Cancel
+          </VBtn>
+          <VBtn
+            color="success"
+            variant="elevated"
+            @click="desactiveConfirm"
+          >
+            OK
+          </VBtn>
+        </div>
+      </VCardText>
+    </VCard>
+  </VDialog>
 </template>
 
 <script setup>
@@ -147,6 +172,28 @@ const closeConfirmDialog = () => {
   confirmDialogMessage.value = '';
   currentItem.value = null;
   };
+const desactiveDialog = ref(false)
+
+const showDesactiveDialog = () => {
+  desactiveDialog.value = true; // Ouvre la boîte de dialogue
+};
+const desactiveConfirm = async () => {
+  try {
+    await disableNonAutoriserUsers(); // Appel à la méthode de suppression
+    desactiveDialog.value = false; // Ferme la boîte de dialogue
+    toast.success("compte désactivés avec succès !", {
+      position: toast.POSITION.TOP_CENTER,
+    });
+    allNotAutoriser();
+  } catch (error) {
+    toast.error("Erreur lors de la suppression : " + error.message, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  }
+};
+const closeDesactive = () => {
+  desactiveDialog.value = false
+};
 </script>
 <style scoped>
 .v-text-field {

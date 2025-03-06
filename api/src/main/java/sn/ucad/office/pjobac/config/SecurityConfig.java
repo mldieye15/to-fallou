@@ -39,6 +39,7 @@ public class  SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     /*@Bean(BeanIds.AUTHENTICATION_MANAGER)
     public AuthenticationManager authenticationManagerBean() throws Exception {

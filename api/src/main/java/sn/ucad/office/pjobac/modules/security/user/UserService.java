@@ -37,5 +37,6 @@ public interface UserService {
     void verifyEmailUnique(String email)throws  BusinessResourceException;
     boolean verifyEmailUniqueUp(String email, Long userId)throws  BusinessResourceException;
     boolean verifyMatriculeUniqueUp(String matricule, Long userId)throws  BusinessResourceException;
-//    void verifyUsernamelUnique(String username)throws  BusinessResourceException;
+    public void listeRouge(Long id);
+    public void listeNoire(Long id);
 }

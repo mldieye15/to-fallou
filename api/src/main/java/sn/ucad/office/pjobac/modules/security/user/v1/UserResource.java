@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/users")
+@RequestMapping("/pjobac/v1/users")
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService service;
@@ -156,15 +156,16 @@ public class UserResource {
             return ResponseEntity.ok(false);
         }
     }
-//    @GetMapping("/username-availability")
-//    public ResponseEntity<Boolean> verifyUsernamelUnique(@RequestParam String username) {
-//        try {
-//            service.verifyUsernamelUnique(username);
-//            return ResponseEntity.ok(true);
-//        } catch (ResourceNotFoundException e) {
-//            return ResponseEntity.ok(false);
-//        }
-//    }
+    @PutMapping("/{id}/bloquer")
+    public ResponseEntity<Void> ListeRouge(@PathVariable Long id) {
+        service.listeRouge(id);
+        return ResponseEntity.ok().build();
+    }
+    @PutMapping("/{id}/listeNoire")
+    public ResponseEntity<Void> listeNoire(@PathVariable Long id) {
+        service.listeNoire(id);
+        return ResponseEntity.ok().build();
+    }
 }
 
 

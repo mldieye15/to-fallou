@@ -15,7 +15,7 @@ import sn.ucad.office.pjobac.modules.security.token.dto.UserDetailsResponse;
 import sn.ucad.office.pjobac.modules.security.user.dto.*;
 
 @RestController
-@RequestMapping("/pjobac/api/auth/v1")
+@RequestMapping("/pjobac/auth/v1")
 @RequiredArgsConstructor
 public class AuthResource {
 

@@ -38,6 +38,9 @@ public class UserResponse {
     private  String cleRib;
     private boolean isEnabled;
     private boolean isLocked;
+    private boolean accountNonExpired ; // par défaut oui
+    private boolean credentialsNonExpired ; // par défaut oui
+    private boolean accountNonLocked ;
     private String identifiant;
     private Date lastLoginDate;
     private Date joinDate;

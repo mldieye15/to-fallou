@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/codifications")
+@RequestMapping("/pjobac/v1/codifications")
 @RequiredArgsConstructor
 public class CodificationResource {
     private final CodificationService service;

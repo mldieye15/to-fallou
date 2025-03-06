@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/villes")
+@RequestMapping("/pjobac/v1/villes")
 @RequiredArgsConstructor
 public class VilleResource {
     private final VilleService service;

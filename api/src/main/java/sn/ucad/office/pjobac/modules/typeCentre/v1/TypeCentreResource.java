@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/typeCentres")
+@RequestMapping("/pjobac/v1/typeCentres")
 @RequiredArgsConstructor
 public class TypeCentreResource {
     private final TypeCentreService service;

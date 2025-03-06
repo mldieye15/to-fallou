@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/typeEtablissements")
+@RequestMapping("/pjobac/v1/typeEtablissements")
 @RequiredArgsConstructor
 public class TypeEtablissementResource {
     private final TypeEtablissementService service;

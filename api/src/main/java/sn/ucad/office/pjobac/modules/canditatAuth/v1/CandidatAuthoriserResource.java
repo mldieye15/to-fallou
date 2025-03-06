@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/candidatAuthorisers")
+@RequestMapping("/pjobac/v1/candidatAuthorisers")
 @RequiredArgsConstructor
 public class CandidatAuthoriserResource {
     private final CandidatAuthoriserService service;

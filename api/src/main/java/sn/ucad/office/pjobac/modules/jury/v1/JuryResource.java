@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/jurys")
+@RequestMapping("/pjobac/v1/jurys")
 @RequiredArgsConstructor
 public class JuryResource {
     private final JuryService service;

@@ -46,6 +46,8 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Téléphone', value: 'telephone', align: 'start', sortable: true },
+      { text: 'Liste rouge', value: 'etat', sortable: false },
+      { text: 'Liste noire', value: 'listeNoire', sortable: false },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
@@ -70,14 +72,15 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     //  recupérer la liste des utilisqteurs et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(`${all}`) 
+        await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
               let fonctionLabel = element.fonction? element.fonction.libelleLong:null;
               let etablissementLabel = element.etablissement? element.etablissement.libelleLong:null;
+              let etatLabel = element.locked? 'activé':'désactivé';
               return{
-              id:element.id, 
+              id:element.id,
               prenoms: element.prenoms,
               nom: element.nom,
               matricule: element.matricule,
@@ -91,12 +94,13 @@ export const useUtilisateurStore = defineStore('utilisateur', {
               anciennete: element.anciennete,
               fonction: fonctionLabel,
               etablissement: etablissementLabel,
+              etat:etatLabel
               }
-              
+
             })
 
             this.dataListeUtilisateur = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -107,12 +111,12 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     },
     async admin() {
       try {
-        await axios.get(`${admins}`) 
+        await axios.get(`${admins}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
               return{
-                id:element.id, 
+                id:element.id,
                 prenoms: element.prenoms,
                 nom: element.nom,
                 matricule: element.matricule,
@@ -124,11 +128,11 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 telephone: element.telephone,
                 anciennete: element.anciennete,
               }
-              
+
             })
 
             this.dataListeUtilisateur = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -139,12 +143,12 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     },
     async planificateur() {
       try {
-        await axios.get(`${planificateurs}`) 
+        await axios.get(`${planificateurs}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
               return{
-                id:element.id, 
+                id:element.id,
                 prenoms: element.prenoms,
                 nom: element.nom,
                 matricule: element.matricule,
@@ -156,11 +160,11 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 telephone: element.telephone,
                 anciennete: element.anciennete,
               }
-              
+
             })
 
             this.dataListeUtilisateur = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -171,12 +175,12 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     },
     async supervisseur() {
       try {
-        await axios.get(`${supervisseurs}`) 
+        await axios.get(`${supervisseurs}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
               return{
-                id:element.id, 
+                id:element.id,
                 prenoms: element.prenoms,
                 nom: element.nom,
                 matricule: element.matricule,
@@ -188,11 +192,11 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 telephone: element.telephone,
                 anciennete: element.anciennete,
               }
-              
+
             })
 
             this.dataListeUtilisateur = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -203,12 +207,14 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     },
     async user() {
       try {
-        await axios.get(`${users}`) 
+        await axios.get(`${users}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
+              let etatLabel = element.accountNonLocked? 'NON':'OUI';
+              let listeNoire = element.accountNonExpired? 'NON':'OUI';
               return{
-                id:element.id, 
+                id:element.id,
                 prenoms: element.prenoms,
                 nom: element.nom,
                 matricule: element.matricule,
@@ -219,12 +225,14 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 sexe: element.sexe,
                 telephone: element.telephone,
                 anciennete: element.anciennete,
+                etat:etatLabel,
+                listeNoire
               }
-              
+
             })
 
             this.dataListeUtilisateur = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -236,7 +244,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     //  recupérer les informations d'une session par son ide et le mettre dans la tabel dataDetails
     async inscription(payload) {
       try {
-        await axios.post(`${inscription}`, payload) 
+        await axios.post(`${inscription}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -252,11 +260,11 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     },
     async one(session) {
       try {
-        await axios.get(`${modulesURL}/${session}`) 
+        await axios.get(`${modulesURL}/${session}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -303,7 +311,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     //  supprimer une session
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -361,6 +369,32 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     formatDate(date) {
       return format(new Date(date), 'dd-MM-yyyy', { locale: fr }); // Exemple de format, ajustez selon vos besoins
     },
+    async bloquer(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/bloquer`);
+        if (response.status === 200) {
+          this.user();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async listeNoire(id) {
+      try {
+        const response = await axios.put(`${modulesURL}/${id}/listeNoire`);
+        if (response.status === 200) {
+          this.user();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
   },
-  
+
 })
