@@ -31,6 +31,7 @@ import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
+import sn.ucad.office.pjobac.utils.EncryptionUtils;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.time.LocalDateTime;
@@ -264,10 +265,34 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
         List<Demande> demandes = dao.allDemandeValider();
         List<DemandeResponse> response;
         response = demandes.stream()
-                .map(mapper::toEntiteResponse)
+                .map(this::toDemandeResponseWithDecryption)
                 .collect(Collectors.toList());
         return response;
     }
+
+    private DemandeResponse toDemandeResponseWithDecryption(Demande demande) {
+        DemandeResponse response = mapper.toEntiteResponse(demande);
+        AppUser user = demande.getUser();
+
+        try {
+            String codeBanqueDecrypte = EncryptionUtils.decrypt(user.getCodeBanque());
+            String codeAgenceDecrypte = EncryptionUtils.decrypt(user.getCodeAgence());
+            String numeroCompteDecrypte = EncryptionUtils.decrypt(user.getNumeroCompte());
+            String cleRibDecrypte = EncryptionUtils.decrypt(user.getCleRib());
+
+            response.getUser().setCodeBanque(codeBanqueDecrypte);
+            response.getUser().setCodeAgence(codeAgenceDecrypte);
+            response.getUser().setNumeroCompte(numeroCompteDecrypte);
+            response.getUser().setCleRib(cleRibDecrypte);
+        } catch (Exception e) {
+            // Gérer les exceptions de déchiffrement ici
+            e.printStackTrace();
+            // Vous pouvez définir des valeurs par défaut ou laisser les champs non définis
+        }
+
+        return response;
+    }
+
     @Override
     public List<DemandeResponse> demandeObseleteByVille(String villeId) throws BusinessResourceException {
         Long myId= Long.valueOf(villeId.trim());

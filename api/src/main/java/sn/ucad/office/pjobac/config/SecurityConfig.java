@@ -1,6 +1,5 @@
 package sn.ucad.office.pjobac.config;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

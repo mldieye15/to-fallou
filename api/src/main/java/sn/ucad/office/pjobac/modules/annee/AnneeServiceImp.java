@@ -51,7 +51,7 @@ public class AnneeServiceImp implements AnneeService {
     }
     @Override
     public SimplePage<AnneeResponse> all(Pageable pageable) throws BusinessResourceException {
-        log.info("TypeSessionServiceImp::all, pagination");
+        log.info("AnneeServiceImp::all, pagination");
         final Page<Annee> page = dao.findAll(pageable);
         return new SimplePage<>(page.getContent()
                 .stream()
@@ -60,7 +60,6 @@ public class AnneeServiceImp implements AnneeService {
                 page.getTotalElements(), pageable
         );
     }
-
     @Override
     public Optional<AnneeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException {
         try {

@@ -54,13 +54,13 @@
               <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" :color="etatCouleurs[demande.etatDemande]" variant="tonal">
                 <span>{{ demande.etatDemande }}</span>
               </v-chip>
-            </p>
-            <div class="actions-wrapper"  v-if="demande.modification==='OUI' && demande.etatDemande==='obsolète'&& demande.phaseTwo==='NON'" >
+            </p><div class="actions-wrapper" v-if="demande.modification==='OUI' && (demande.etatDemande==='obsolète' || demande.etatDemande==='en attente') && demande.phaseTwo==='NON'">
+            
              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToEditDemande(demande.id)" class="mt-3 mb-3 text-center">
               modifier
              </v-btn>   
           </div>
-          <div class="actions-wrapper"  v-else-if="demande.modification==='OUI' && demande.etatDemande==='obsolète' && demande.phaseTwo==='OUI'" >
+          <div class="actions-wrapper"  v-else-if="demande.phaseTwo==='OUI'" >
              <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToCandidature(demande.id)" class="mt-3 mb-3 text-center">
               modifier
              </v-btn>   

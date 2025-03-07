@@ -4,7 +4,7 @@
     
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
-        <v-col cols="12" sm="6" md="4" >
+        <v-col cols="12" sm="6" md="6" >
           <v-text-field
             label="Underlined"
             placeholder="Placeholder"
@@ -13,9 +13,24 @@
             v-model="searchValue"
           ></v-text-field>
         </v-col>
-        <v-col class="text-right" md="8" cols="auto">
+        <v-col class="text-right" md="4" cols="auto">
           <v-btn @click.prevent="redirectToArchives()" class="ma-0" variant="outlined" color="cyan-darken-1">candidats Archivés </v-btn>
         </v-col>
+        <v-col cols="auto">
+            <v-btn class="text-right" color="green">
+                <download-excel
+                class="btn"
+                :data="dataListeCandidat"
+                :fields="json_fields"
+                worksheet="My Worksheet"
+                type="xlsx"
+                name="recap.xlsx"
+                >
+              Exporté 
+              <i class="mdi mdi-cloud-download"></i>  
+            </download-excel> 
+            </v-btn>
+          </v-col>
       </v-row>
       <EasyDataTable
         :headers="headerTable"
@@ -171,6 +186,20 @@ const closeConfirmDialog = () => {
       allBySession();
   });
 }
+let json_fields = {
+  "Code": "code" || "", // Si code est null, utilisez une chaîne vide
+  "Nom": "nom" || "",
+  "Prenoms": "prenoms" || "",
+  "Matricule": "matricule" || "",
+  "Note du Superviseur": "noteSupervisseur" || "",
+  "Score": "note" || "",
+  "Affectable": "affectable" || "",
+  "Appreciation": "appreciation" || "", 
+  "Email": "email" || "",
+  "Sexe": "sexe" || "",
+  "Telephone": "telephone" || "",
+  "Etablissement de provenance": "etablissement" || "",
+};
 </script>
 
 

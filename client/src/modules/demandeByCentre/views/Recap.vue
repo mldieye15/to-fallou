@@ -22,7 +22,7 @@
                 :fields="json_fields"
                 worksheet="My Worksheet"
                 type="xlsx"
-                name="recap.xlsx"
+                name="recapPresident.xlsx"
                 >
               Exporté 
               <i class="mdi mdi-cloud-download"></i>  
@@ -61,12 +61,19 @@
   const { dataListe, headerTable, loading } = storeToRefs(centreStore);
   const { recap, destroy } = centreStore;
   let json_fields = {
-  "Jury": "jury",
   "Centre": "centre",
-  "Ville": "ville",
   "Prenom": "prenoms",
   "Nom": "nom",
-  "Code": "code"
+  "Etablissement de provenance": "etablissement",
+  "Telephone": "telephone",
+  "Matricule": "matricule",
+  "Code": "code",
+  "Ville": "ville",
+  "Nom de la banque": "banque",
+  "Code banque": "codeBanque",
+  "Code agence": "codeAgence",
+  "Numero compte": "numeroCompte",
+  "cle Rib": "cleRib"
  };
   const headers = reactive({ items: [] });
   const searchValue = ref("");
