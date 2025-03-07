@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/typeSessions")
+@RequestMapping("/pjobac/v1/typeSessions")
 @RequiredArgsConstructor
 public class TypeSessionResource {
     private final TypeSessionService service;

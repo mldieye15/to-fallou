@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/demandes")
+@RequestMapping("/pjobac/v1/demandes")
 @RequiredArgsConstructor
 public class DemandeResource {
     private final DemandeService service;

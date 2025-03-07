@@ -36,6 +36,12 @@
         v-model="userForm.password"
         variant="underlined"
       ></v-text-field>
+      <div
+      v-if="errorMessage"
+      class="mb-3 responsive-text"
+      v-html="errorMessage"
+      style="white-space: pre-line; max-width: 100%;">
+    </div>
 
       <v-btn variant="tonal" block class="mt-2 mb-8" size="large" color="primary" @click="handleLogin">{{ $t('auth.forms.authentification.btnconn') }}</v-btn>
     </v-form>
@@ -69,7 +75,7 @@ import { useToast } from 'vue-toastification';
 
 
 const toast= useToast();
-
+const errorMessage = ref("");
 //
 const instance = getCurrentInstance();
 const router = useRouter();
@@ -97,23 +103,62 @@ const rules = reactive({
 });
 //  traitement de la connexion
 const handleLogin = async () => {
-      try {
-        await userStore.login(userForm);
-        // Vérifier si une erreur est définie dans le store Pinia
-        if (!error.value) {
-          console.log(error.value);
-          const role = localStorage.getItem('role');
-          const name = localStorage.getItem('fullname');
-          if (role === 'ROLE_USER') {
-            router.push({ name: 'accueil' });
-          } else {
-            router.push({ name: 'dashboard' });
-          }
-          toast.success(i18n.t('welcome') + ' ' + name);
-        }
-      } catch (error) {
-        console.error('Erreur lors de la connexion:', error);
-        toast.error("Email ou mot de passe incorrect. Veuillez réessayer.");
+  errorMessage.value = ""; // Réinitialisation du message d'erreur
+  try {
+    await userStore.login(userForm);
+
+    if (!userStore.error) {
+      const role = localStorage.getItem('role');
+      const name = localStorage.getItem('fullname');
+      if (role === 'ROLE_USER') {
+        router.push({ name: 'accueil' });
+      } else {
+        router.push({ name: 'dashboard' });
       }
-    };
+      toast.success(i18n.t('welcome') + ' ' + name);
+    }
+  } catch (error) {
+    console.error('Erreur lors de la connexion:', error);
+
+    if (error.response) {
+      console.log("Réponse du backend:", error.response);
+      if (error.response.data?.errorMessage === "User is disabled") {
+        errorMessage.value =errorMessage.value = `Vous n'etes pas inscrit (e) dans votre établissement pour la session du Baccalauréat ${new Date().getFullYear()} dans le cadre de la formation des présidents de jury.`;
+        // toast.error("Votre compte est désactivé. Contactez l'administrateur.");
+      }else if (error.response.data?.errorMessage === "User account is locked") {
+        errorMessage.value =errorMessage.value = ` <p>A partir des conclusions issues de l'évaluation de la session du Baccalauréat ${new Date().getFullYear() -1}, vous n'êtes pas autorisé(e) à candidater en tant que président de jury pour cette année.<br> Veuillez vous rapprocher du coordonateur des supervisseurs.</p>`;
+        ;
+        // toast.error("Votre compte est désactivé. Contactez l'administrateur.");
+      }else if (error.response.data?.errorMessage === "User account has expired") {
+        errorMessage.value =errorMessage.value = ` <p>A partir des conclusions issues de l'évaluation de la session du Baccalauréat ${new Date().getFullYear() -1}, vous n'êtes plus autorisé(e) à candidater en tant que président de jury du Baccalauréat.<br> Voudriez-vous bien vous rapprocher du coordonateur des supervisseurs.</p>`;
+        ;
+        // toast.error("Votre compte est désactivé. Contactez l'administrateur.");
+      }
+      else if (error.response.data?.errorMessage === "Bad credentials") {
+        errorMessage.value = "Email ou mot de passe incorrect. Veuillez réessayer.";
+        // toast.error("Votre compte est désactivé. Contactez l'administrateur.");
+      }
+       else if (error.response.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Une erreur est survenue. Veuillez réessayer.");
+      }
+    } else {
+      toast.error("Erreur de connexion au serveur.");
+    }
+  }
+};
 </script>
+<style>
+.responsive-text {
+  font-size: 0.9rem;
+  color: brown; /* Taille normale */
+}
+
+@media (max-width: 600px) {
+  .responsive-text {
+    font-size: 0.7rem;
+    color:brown; /* Réduction sur petits écrans */
+  }
+}
+</style>

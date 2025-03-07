@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/fonctions")
+@RequestMapping("/pjobac/v1/fonctions")
 @RequiredArgsConstructor
 public class FonctionResource {
     private final FonctionService service;

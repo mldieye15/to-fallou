@@ -83,7 +83,7 @@ export const useUserStore = defineStore('user', {
     //   } catch (error) {
     //     console.log(error);
     //     this.error = error
-    //     throw error; 
+    //     throw error;
     //   } finally {
     //     this.loading = false
     //   }
@@ -94,10 +94,10 @@ export const useUserStore = defineStore('user', {
       try {
         // Réinitialiser l'erreur à chaque tentative de connexion
         this.error = null;
-        
+
         // Effectuer la connexion avec axios ou toute autre méthode
         const response = await axios.post(loginURL, payload);
-    
+
         // Vérifier si la connexion est réussie
         if (response.status === 200 && response.data.authenticationToken) {
           // Enregistrer les données utilisateur dans le local storage
@@ -107,7 +107,7 @@ export const useUserStore = defineStore('user', {
           localStorage.setItem('role', response.data.role);
           localStorage.setItem('fullname', response.data.fullname);
           localStorage.setItem('dateExpiration', response.data.expiresAt);
-    
+
           // Mettre à jour les données utilisateur dans le store
           this.user = {
             email: response.data.email,
@@ -116,13 +116,13 @@ export const useUserStore = defineStore('user', {
             initiale: response.data.initiale,
             role: response.data.role,
           };
-    
+
           // Mettre à jour le statut de connexion
           this.changeLoggedIn(true);
-    
+
           // Définir le token d'authentification pour les futures requêtes Axios
           axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.authenticationToken}`;
-    
+
           // Retourner la réponse (si nécessaire)
           return response;
         } else {
@@ -140,7 +140,7 @@ export const useUserStore = defineStore('user', {
         this.loading = false;
       }
     },
-    
+
     async logout(){
       //this.user = null;
       this.loading = true;
@@ -259,7 +259,7 @@ export const useUserStore = defineStore('user', {
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);

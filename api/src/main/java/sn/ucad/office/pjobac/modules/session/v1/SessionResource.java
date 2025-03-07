@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/sessions")
+@RequestMapping("/pjobac/v1/sessions")
 @RequiredArgsConstructor
 public class SessionResource {
     private final SessionService service;

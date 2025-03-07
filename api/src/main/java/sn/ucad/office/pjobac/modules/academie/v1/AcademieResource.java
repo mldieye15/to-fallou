@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/academies")
+@RequestMapping("/pjobac/v1/academies")
 @RequiredArgsConstructor
 public class AcademieResource {
     private final AcademieService service;

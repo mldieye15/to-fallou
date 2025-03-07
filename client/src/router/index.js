@@ -21,6 +21,7 @@ import planifRoutes from '@/modules/adminstrateurs/planificateur/routes';
 import supRoutes from '@/modules/adminstrateurs/superviseur/routes';
 import demandeByVilleRoutes from '@/modules/demandeByVille/routes';
 import demandeByCentreRoutes from '@/modules/demandeByCentre/routes';
+import candidatAuthoriserRoutes from '@/modules/candidatAuth/routes';
 import middlewares from '@/middlewares';
 import casRoutes from '@/modules/casSpeciaux/routes';
 import demandeSecondaryVilleRoutes from '@/modules/demandeSeciondaryVille/routes';
@@ -75,7 +76,7 @@ const routes = [
       {
         path:'code',
         name:'code',
-        component: ()=> 
+        component: ()=>
             import('@/views/auth/RecupererCode.vue'),
         meta: {
           middleware: [Middleware.guest]
@@ -185,7 +186,7 @@ const routes = [
         meta: {
             middleware: [Middleware.userAuth]
         },
-        
+
     },
     {
       path: 'candidature/:id',
@@ -195,7 +196,7 @@ const routes = [
       meta: {
           middleware: [Middleware.userAuth]
       },
-      
+
   },
         {
           path: 'profile',
@@ -208,7 +209,7 @@ const routes = [
         },
     ]
 },
-  ...academieRoutes,                                            
+  ...academieRoutes,
   ...villeRoutes,
   ...juryRoutes,
   ...anneeRoutes,
@@ -229,7 +230,8 @@ const routes = [
   ...planifRoutes,
   ...supRoutes,
   ...casRoutes,
-  ...demandeSecondaryVilleRoutes
+  ...demandeSecondaryVilleRoutes,
+  ...candidatAuthoriserRoutes
 ]
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

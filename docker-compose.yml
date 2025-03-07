@@ -1,0 +1,90 @@
+version: '3.9'
+
+services:
+
+
+  spring-app:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: container-spring-app
+    ports:
+      - "8202:8202" # Expose le port externe 8201 à l'extérieur du conteneur
+    environment:
+      SPRING_APPLICATION_JSON: '{ 
+        "spring.datasource.url" : "jdbc:mariadb://host.docker.internal:3306/office", 
+        "spring.datasource.username" : "root", 
+        "spring.datasource.password" : "", 
+        "spring.datasource.driver-class-name" : "org.mariadb.jdbc.Driver", 
+        "spring.jpa.hibernate.ddl-auto" : "update", 
+        "spring.jpa.show-sql" : "true", 
+        "spring.jpa.properties.hibernate.format_sql" : "true"
+       }'
+    networks:
+      - app_network
+
+  client-app:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: container-client-app
+    ports:
+      - "3000:80" # Expose le port 3000 pour accéder à l'application Vue.js
+    depends_on:
+      - spring-app
+    networks:
+      - app_network
+
+  cadvisor:
+    image: google/cadvisor:latest
+    container_name: cadvisor
+    ports:
+      - "8082:8080" # Port pour accéder à l'interface cAdvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - app_network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090" # Port pour accéder à l'interface Prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml # Fichier de configuration de Prometheus
+    networks:
+      - app_network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000" # Port pour accéder à l'interface Grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin # Changer les identifiants par défaut pour Grafana
+    networks:
+      - app_network
+
+  portainer:
+    image: portainer/portainer-ce
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000" # Port d'accès à l'interface web de Portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Accès au socket Docker pour la gestion des conteneurs
+      - portainer_data:/data # Volume pour stocker les données de Portainer
+    networks:
+      - app_network
+
+volumes:
+  portainer_data:
+    driver: local
+
+networks:
+  app_network:
+    driver: bridge

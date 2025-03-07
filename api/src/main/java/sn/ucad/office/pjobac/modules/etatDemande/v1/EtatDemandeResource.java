@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/etatDemandes")
+@RequestMapping("/pjobac/v1/etatDemandes")
 @RequiredArgsConstructor
 public class EtatDemandeResource {
     private final EtatDemandeService service;

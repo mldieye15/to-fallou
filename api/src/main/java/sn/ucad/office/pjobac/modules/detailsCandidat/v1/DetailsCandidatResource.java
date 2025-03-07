@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/detailsCandidats")
+@RequestMapping("/pjobac/v1/detailsCandidats")
 @RequiredArgsConstructor
 public class DetailsCandidatResource {
     private final DetailsCandidatService service;

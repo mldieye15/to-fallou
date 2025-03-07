@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/centres")
+@RequestMapping("/pjobac/v1/centres")
 @RequiredArgsConstructor
 public class CentreResource {
     private final CentreService service;

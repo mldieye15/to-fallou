@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/pjobac/api/v1/annees")
+@RequestMapping("/pjobac/v1/annees")
 @RequiredArgsConstructor
 public class AnneeResource {
     private final AnneeService service;

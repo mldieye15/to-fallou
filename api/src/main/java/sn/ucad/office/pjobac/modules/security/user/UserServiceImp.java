@@ -20,6 +20,8 @@ import sn.ucad.office.pjobac.modules.security.user.dto.*;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import javax.management.relation.RoleNotFoundException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -454,11 +456,49 @@ public class UserServiceImp implements UserService {
 
         return false;
     }
-//    @Override
-//    public void verifyUsernamelUnique(String username) throws BusinessResourceException {
-//        if(dao.findByUsername(username).isPresent()){
-//            throw new ResourceAlreadyExists("Le username  existe déjà.");
-//        }
-//
-//    }
+
+    @Override
+    public void listeNoire(Long id) {
+        AppUser user = dao.findById(id).orElse(null);
+//        AppUser currentUser = authService.getCurrentUser();
+        LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
+
+        if (user != null) {
+            try {
+//                user.setAuteur(currentUser);
+                user.setDateModification(date);
+                user.setAccountNonExpired(!user.isAccountNonExpired());
+                dao.save(user);
+                log.info("Liste noire l'ID " + id + " changée avec succès.");
+            } catch (Exception e) {
+                log.error("Erreur lors de la sauvegarde de l'autorisation pour l'ID " + id, e);
+            }
+        } else {
+            log.warn("Locked avec l'ID " + id + " non trouvé.");
+        }
+
+    }
+
+    @Override
+    public void listeRouge(Long id) {
+        AppUser user = dao.findById(id).orElse(null);
+//        AppUser currentUser = authService.getCurrentUser();
+        LocalDateTime date= LocalDateTime.now(ZoneOffset.UTC);
+
+        if (user != null) {
+            try {
+//                user.setAuteur(currentUser);
+                user.setDateModification(date);
+                user.setAccountNonLocked(!user.isAccountNonLocked());
+                dao.save(user);
+                log.info("Locked l'ID " + id + " changée avec succès.");
+            } catch (Exception e) {
+                log.error("Erreur lors de la sauvegarde de l'autorisation pour l'ID " + id, e);
+            }
+        } else {
+            log.warn("Locked avec l'ID " + id + " non trouvé.");
+        }
+
+    }
+
 }

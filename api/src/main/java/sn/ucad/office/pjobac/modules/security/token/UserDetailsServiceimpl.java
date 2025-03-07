@@ -30,8 +30,10 @@ public class UserDetailsServiceimpl implements UserDetailsService {
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user);
         return new User(user.getEmail(),
                 user.getMdpasse(),
-                user.isEnabled(), true, true,
-                true, authorities); // /*getAuthorities(user)*/
+                user.isEnabled(),
+                user.isAccountNonExpired(),
+                true,
+                user.isAccountNonLocked(), authorities); // /*getAuthorities(user)*/
 
     }
 
