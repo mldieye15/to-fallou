@@ -137,6 +137,8 @@ public class JuryServiceImp implements JuryService {
 
             Jury oneBrute = mapper.requestToEntiteUp(juryOptional, req);
             JuryResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+            updateCentreTotalJury(oneBrute.getCentre().getId());
+            updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
             log.info("Mise à jour " + response.getNumero() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {

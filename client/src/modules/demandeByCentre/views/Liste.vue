@@ -25,7 +25,8 @@
         <template #table-row="props">
           <div v-if="props.column.field === 'totalDemandes'">
             <div v-if="props.row.planification==='OUI'">
-              <v-icon class="mr-1" color="teal-darken-4" style="font-size: 25px;">mdi-checkbox-marked-circle-outline</v-icon> Terminée
+              <v-icon class="mr-1" color="teal-darken-4" style="font-size: 25px;">mdi-checkbox-marked-circle-outline</v-icon>
+              <router-link :to="{ name: 'demandeByCentre-demandes', params: { id: props.row.id } }"> <v-icon class="ml-3" small flat color="green dark">mdi-eye</v-icon> </router-link>
             </div>
             <div v-else>
               <v-btn  variant="flat" color="light-blue-darken-4" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">

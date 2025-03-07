@@ -28,11 +28,12 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
       // Ajoutez d'autres états et couleurs selon vos besoins
 },
       headerTable: [
-        { text: 'Jury', value: 'jury', align: 'start', sortable: true },
+        { text: 'Numero Compte', value: 'numeroCompte', align: 'start', sortable: true },
         { text: "Centre d'écrit", value: 'centre', align: 'start', sortable: true },
         { text: 'Ville', value: 'ville', align: 'start', sortable: true },
         { text: 'Prenom', value: 'prenoms', align: 'start', sortable: true },
         { text: 'Nom', value: 'nom', align: 'start', sortable: true },
+        { text: 'Etablissement', value: 'etablissement', align: 'start', sortable: true },
         { text: 'Code', value: 'code', align: 'start', sortable: true },
       ],
     columns: [
@@ -123,6 +124,14 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
               let villeLabel = element.ville? element.ville.libelleLong:null;
               let juryLabel = element.jury? element.jury.numero:null;
               let prenomLabel =element.user? element.user.prenoms:null;
+              let banqueLabel =element.user? element.user.banque:null;
+              let codeBanqueLabel =element.user? element.user.codeBanque:null;
+              let codeAgenceLabel =element.user? element.user.codeAgence:null;
+              let matriculeLabel = element.user ? element.user.matricule : null;
+              let telephoneLabel = element.user ? element.user.telephone : null;
+              let numeroCompteLabel =element.user? element.user.numeroCompte:null;
+              let cleRibLabel =element.user? element.user.cleRib:null;
+              let etablissementLabel =element.user.etablissement? element.user.etablissement.libelleLong:null;
               let nomLabel =element.user? element.user.nom:null;
               let codeLabel =element.user? element.user.code:null;
               let centreLabel = element.centre ? element.centre.libelleLong:null;
@@ -134,6 +143,14 @@ export const useDemandeByCentreStore = defineStore('demandeByCentre', {
               code:codeLabel,
               centre:centreLabel,
               ville: villeLabel,
+              etablissement: etablissementLabel,
+              banque:banqueLabel,
+              codeBanque:codeBanqueLabel,
+              codeAgence:codeAgenceLabel,
+              numeroCompte:numeroCompteLabel,
+              cleRib:cleRibLabel,
+              telephone:telephoneLabel,
+              matricule:matriculeLabel
               }
             })
 

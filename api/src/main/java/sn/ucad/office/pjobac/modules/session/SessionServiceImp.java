@@ -236,10 +236,10 @@ public class SessionServiceImp implements SessionService {
         session.setModification(nouvelEtat);
         dao.save(session);
         // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
-        if (!etatPrecedent && (obseleteDemande != null)) {
-                obseleteDemande.notificationUpdate();
-
-        }
+//        if (!etatPrecedent && (obseleteDemande != null)) {
+//                obseleteDemande.notificationUpdate();
+//
+//        }
         // Journaliser le changement d'état
         log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
     }
@@ -254,15 +254,14 @@ public class SessionServiceImp implements SessionService {
         session.setPhaseTwo(nouvelEtat);
         dao.save(session);
         // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
-        if (!etatPrecedent && (obseleteDemande != null)) {
-            obseleteDemande.notificationPhaseTw();
-
-        }
+//        if (!etatPrecedent && (obseleteDemande != null)) {
+//            obseleteDemande.notificationPhaseTw();
+//
+//        }
         // Journaliser le changement d'état
         log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
 
     }
-
     @Override
     public List<SessionResponse> findEnCoursSession()throws BusinessResourceException {
         List<Session> sessions = dao.findEnCoursSession();
@@ -272,7 +271,6 @@ public class SessionServiceImp implements SessionService {
                 .collect(Collectors.toList());
         return responses;
     }
-
     @Override
     public List<SessionResponse> findSessionsOuvertes() throws BusinessResourceException {
         List<Session> sessions = dao.findSessionsOuvertes();

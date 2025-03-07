@@ -27,8 +27,9 @@ mysql -u nom_utilisateur -p
 deploiemnt de java on installer openjavajdk et la base de donne (mysql)
 on genere le jar avec mvn install 
 on copie le jar et le pod dans un dossier creer dans le serveur avec les commandes suivants
-   1. C:\Users\Mouhamadou Fadilou\Desktop\pers0\pjbac\deploy>scp application.yml mariama@172.16.1.7:/home/mariama/deployJava
-   2. C:\Users\Mouhamadou Fadilou\Desktop\pers0\pjbac\deploy>scp office-0.0.1-SNAPSHOT.jar mariama@172.16.1.7:/home/mariama/deployJava
+   1. C:\Users\Mouhamadou Fadilou\Desktop\pers0\pjbac\deploy>scp application.yml mariama@196.1.95.113:/home/mariama/deployJava
+   2. C:\Users\Mouhamadou Fadilou\Desktop\pers0\pjbac\deploy>scp office-0.0.1-SNAPSHOT.jar mariama@196.1.95.113:/home/mariama/deployJava
+   scp  mariama@196.1.95.113:/etc/nginx/ssl/ cle.p12 "C:\Users\Mouhamadou Fadilou\Desktop"
     scp pour copier de la machine local au serveur
 
     on modifie avec nano le fichier application.yml et on met les identifiant de l'utilisateur de la base de donnees deja creer dans dans notre base de doonees'
@@ -42,7 +43,7 @@ on copie le jar et le pod dans un dossier creer dans le serveur avec les command
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 cote front end mpn run build et ensuite on copie le dossier dist dans le serveur avec cette comande:
-scp -r dist mariama@172.16.1.7:/home/mariama/deployJava
+scp -r dist mariama@196.1.95.113:/home/mariama/deployJava
 une fois faite on copie le le fichier service.sh dans le serveur et on le rend executable avec chmod o+x service.sh 
 ./service.sh start pour demarer  ./service.sh stop pour arreter
 cote front
@@ -96,6 +97,9 @@ Redémarrez Nginx pour appliquer les modifications de configuration :
 
 bash
 systemctl restart nginx
+
+Client ID:6KshAn1STvhkeYSrwpcacoBHvVSG1pfb
+Client secret:QmqiBuGi7mZdRWwa
 
 
 
@@ -198,8 +202,39 @@ FROM users
 WHERE id IN (2110,219);
 
 INSERT INTO users_roles (app_user_id, roles_id)
-SELECT id, 1
+SELECT id, 4
 FROM users
-WHERE id NOT IN ( 2125, 2115, 2126, 2119, 2123, 2116, 2113, 2117, 2121,2133, 2118, 2124, 2132,2122, 2114, 2120, 2129, 2130, 2127, 2128,70);
+WHERE id IN ( 2125, 2115, 2126, 2119, 2123, 2116, 2113, 2117, 2121,2133, 2118, 2124, 2132,2122, 2114, 2120, 2129, 2130, 2127, 2128,70);
 
 select * from admin_users where "role" =2
+
+
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
+import java.util.List;
+
+public interface DemandeRepository extends MongoRepository<Demande, String> {
+
+    @Query("{'user': ?0, 'date': ?1, 'lieu': ?2, 'ville': ?3}")
+    List<Demande> findByUserAndDateAndLieuAndVille(String user, String date, String lieu, String ville);
+}
+
+rewaly85@yahoo.fr
+MARI5@MA
+
+SELECT DISTINCT *
+FROM users u
+JOIN demande d ON u.id = d.user_id
+WHERE u.code ='s9731';
+
+SELECT SUM(total_jury) AS total_jury_sum
+FROM ville;
+
+SELECT DISTINCT u.*
+FROM users u
+JOIN demande d ON u.id = d.user_id
+WHERE session_id =6 AND (d.etat_demande_id=1 OR d.etat_demande_id=4)
+
+ Etablissement scolaire : INSTITUT TE CCART
+ Adresse de l’Etablissement : 3030, rue Hochelaga, Montréal (Québec) Canada H1W 1G2
+

@@ -101,8 +101,11 @@ export const useCandidatStore = defineStore('candidat', {
               let nomLabel = element.candidat? element.candidat.nom:null;
               let matriculeLabel = element.candidat? element.candidat.matricule:null;
               let codeLabel = element.candidat? element.candidat.code:null;
+              // let noteLabel = element.candidat? element.candidat.note:null;
+              // let noteSuperviseurLabel = element.candidat? element.candidat.noteSupervisseur:null;
+              // let appreciationLabel = element.candidat? element.candidat.appreciation:null;
               // let dateNaissLabel = element.candidat? element.candidat.dateNaiss:null;
-              // let emailLabel = element.candidat? element.candidat.email:null;
+              let emailLabel = element.candidat? element.candidat.email:null;
               let sexeLabel = element.candidat? element.candidat.sexe:null;
               let telephoneLabel = element.candidat? element.candidat.telephone:null;
               let prenomsLabel = element.candidat? element.candidat.prenoms:null;
@@ -114,8 +117,11 @@ export const useCandidatStore = defineStore('candidat', {
               prenoms: prenomsLabel,
               code: codeLabel,
               matricule: matriculeLabel,
+              note: element.note,
+              noteSupervisseur:element.noteSupervisseur,
+              appreciation: element.appreciation,
               // dateNaiss: this.formatDate(dateNaissLabel),
-              // email: emailLabel,
+              email: emailLabel,
               sexe: sexeLabel,
               telephone: telephoneLabel,
               fonction: fonctionLabel,
