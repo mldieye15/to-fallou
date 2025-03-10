@@ -384,6 +384,8 @@ public class UserServiceImp implements UserService {
             }
 
             user.setEnabled(action);
+            user.setAccountNonExpired(action);
+            user.setAccountNonLocked(action);
             AppUser result = dao.saveAndFlush(user);
             log.info("Utilisateur active/desactive: " + user.getEmail() + " avec succes. <maj>.");
             return result;

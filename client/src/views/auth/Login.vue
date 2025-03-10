@@ -123,7 +123,8 @@ const handleLogin = async () => {
     if (error.response) {
       console.log("Réponse du backend:", error.response);
       if (error.response.data?.errorMessage === "User is disabled") {
-        errorMessage.value =errorMessage.value = `Vous n'etes pas inscrit (e) dans votre établissement pour la session du Baccalauréat ${new Date().getFullYear()} dans le cadre de la formation des présidents de jury.`;
+        errorMessage.value =errorMessage.value = `Vos données personnelles ne sont pas à jour. <br>Veuillez contacter la division planification.
+      `;
         // toast.error("Votre compte est désactivé. Contactez l'administrateur.");
       }else if (error.response.data?.errorMessage === "User account is locked") {
         errorMessage.value =errorMessage.value = ` <p>A partir des conclusions issues de l'évaluation de la session du Baccalauréat ${new Date().getFullYear() -1}, vous n'êtes pas autorisé(e) à candidater en tant que président de jury pour cette année.<br> Veuillez vous rapprocher du coordonateur des supervisseurs.</p>`;
