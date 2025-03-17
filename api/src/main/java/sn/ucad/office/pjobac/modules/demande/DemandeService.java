@@ -34,7 +34,9 @@ public interface DemandeService {
     public List<DemandeResponse> addAll(List<DemandeRequest> req) throws BusinessResourceException;
 
     public DemandeResponse maj(DemandeRequest req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
-    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+//    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
+    public void accepterDemande(List<Long> demandeIds) throws BusinessResourceException;
+    public DemandeResponse proposition(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public void nonAffectableDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public void annulerDemande(String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;
     public DemandeResponse affecterJury(DemandeAffecterJury req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException;

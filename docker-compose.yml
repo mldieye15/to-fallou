@@ -9,12 +9,12 @@ services:
       dockerfile: Dockerfile
     container_name: container-spring-app
     ports:
-      - "8202:8202" # Expose le port externe 8201 à l'extérieur du conteneur
+      - "8201:8201" # Expose le port externe 8201 à l'extérieur du conteneur
     environment:
       SPRING_APPLICATION_JSON: '{ 
-        "spring.datasource.url" : "jdbc:mariadb://host.docker.internal:3306/office", 
-        "spring.datasource.username" : "root", 
-        "spring.datasource.password" : "", 
+        "spring.datasource.url" : "jdbc:mariadb://host.docker.internal:3306/pjbac_test", 
+        "spring.datasource.username" : "pjbac_user3", 
+        "spring.datasource.password" : "Pjb@c#pwd3", 
         "spring.datasource.driver-class-name" : "org.mariadb.jdbc.Driver", 
         "spring.jpa.hibernate.ddl-auto" : "update", 
         "spring.jpa.show-sql" : "true", 
@@ -22,6 +22,8 @@ services:
        }'
     networks:
       - app_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   client-app:
     build:

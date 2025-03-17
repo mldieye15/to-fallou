@@ -157,7 +157,7 @@ public class DemandeResource {
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<DemandeResponse> accepterDemande(@PathVariable(value="id") String id,
                                                @RequestBody @Valid DemandeAccepter accepter) {
-        DemandeResponse response = service.accepterDemande(accepter, id);
+        DemandeResponse response = service.proposition(accepter, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @PutMapping(value = "/nonAffectable/{id}")
@@ -254,6 +254,23 @@ public class DemandeResource {
             return ResponseEntity.ok("Mise à jour réussie des rang par ville.");
         } catch (BusinessResourceException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erreur lors de la mise à jour de l'ordre d'arrivée.");
+        }
+    }
+    @PutMapping("/accepterAll")
+    public ResponseEntity<?> accepterAll(@RequestBody List<Long> ids) {
+        try {
+            if (ids == null || ids.isEmpty()) {
+                return new ResponseEntity<>("Aucun ID de demande fourni.", HttpStatus.BAD_REQUEST);
+            }
+            service.accepterDemande(ids);
+            return new ResponseEntity<>(
+                    String.format("%d demandes ont été acceptées avec succès.", ids.size()),
+                    HttpStatus.OK
+            );
+        } catch (BusinessResourceException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatus());
+        } catch (Exception ex) {
+            return new ResponseEntity<>("Erreur technique lors de l'acceptation des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

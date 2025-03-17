@@ -423,6 +423,57 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public void accepterDemande(List<Long> demandeIds) throws BusinessResourceException {
+        try {
+            if (demandeIds == null || demandeIds.isEmpty()) {
+                throw new BusinessResourceException("not-valid-param",
+                        "Aucun ID de demande fourni.", HttpStatus.BAD_REQUEST);
+            }
+
+            // Récupérer les demandes existantes en une seule requête
+            List<Demande> demandes = dao.findAllById(demandeIds);
+
+            if (demandes.isEmpty()) {
+                throw new BusinessResourceException("not-found",
+                        "Aucune demande trouvée pour les IDs fournis.", HttpStatus.NOT_FOUND);
+            }
+
+            // Récupérer l'état "acceptée"
+            EtatDemande etatAccepter = service.findByLibelleLong("acceptée")
+                    .orElseThrow(() -> new BusinessResourceException("not-found",
+                            "Aucun état avec le libellé 'acceptée' trouvé.", HttpStatus.NOT_FOUND));
+
+            // Mise à jour des demandes
+            for (Demande demande : demandes) {
+                demande.setEtatDemande(etatAccepter);
+
+                // Définir la date de rejet
+                LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC)
+                        .plusHours(demande.getSession().getDelaisValidation());
+                demande.setDateRejetDemande(dateRejet);
+            }
+
+            // Sauvegarde en masse en une seule transaction
+            dao.saveAll(demandes);
+
+            // Envoi des emails après la sauvegarde des données
+            for (Demande demande : demandes) {
+//                sendEmailToDemande(demande);
+            }
+            log.info(demandes.size() + " demandes acceptées avec succès.");
+
+        } catch (BusinessResourceException e) {
+            log.warn("Erreur lors de l'acceptation des demandes : " + e.getMessage());
+            throw e;
+        } catch (Exception ex) {
+            log.error("Erreur technique lors de l'acceptation des demandes.", ex);
+            throw new BusinessResourceException("technical-error",
+                    "Erreur technique lors de l'acceptation des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Override
     @Transactional(readOnly = false)
     public String del(String id) throws NumberFormatException, BusinessResourceException {
@@ -495,9 +546,83 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
                         () -> new BusinessResourceException("not-found", "User avec " + userId+ " non trouvé(e).", HttpStatus.NOT_FOUND)
                 );return dao.hasAcceptedDemande(entiteOptional);
     }
+//    @Override
+//    @Transactional(readOnly = false)
+//    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+//        try {
+//            Long myId = Long.valueOf(demandeId.trim());
+//            Demande demandeOptional = dao.findById(myId)
+//                    .orElseThrow(
+//                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+//                    );
+//            Demande oneBrute = mapper.accepterToEntiteUp(demandeOptional, req);
+//            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("acceptée");
+//            EtatDemande etatAccepter= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+//            oneBrute.setEtatDemande(etatAccepter);
+//            int delaisValidation;
+//            delaisValidation = oneBrute.getSession().getDelaisValidation();
+//            LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC).plusHours(delaisValidation);
+//            oneBrute.setDateRejetDemande(dateRejet);
+//            DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+//            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
+//            ZonedDateTime zonedDateTime = oneBrute.getDateRejetDemande().atZone(ZoneOffset.UTC);
+//            String formattedDateTime = zonedDateTime.format(formatter) + " UTC";
+//            notificationEmail.setSubject("Demande à valider");
+//            notificationEmail.setRecipient(oneBrute.getUser().getEmail());
+//            notificationEmail.setTemplateName("notificationAccepter.html"); // Ajoutez le nom du modèle Thymeleaf
+//            Map<String, Object> emailVariables = new HashMap<>();
+//            emailVariables.put("prenoms", oneBrute.getUser().getPrenoms());
+//            emailVariables.put("nom", oneBrute.getUser().getNom());
+//            emailVariables.put("dateRejetDemande", formattedDateTime);
+//            emailVariables.put("academie", oneBrute.getVille().getAcademie().getLibelleLong());
+//            emailVariables.put("ville", oneBrute.getVille().getLibelleLong());
+//            emailVariables.put("centre", oneBrute.getCentre().getLibelleLong());
+//            notificationEmail.setEmailVariables(emailVariables);
+//            mailService.sendHtmlEmail(notificationEmail);
+//            log.info("Demande" + response.getId() + " accepetée avec succés. <accepterDemande>");
+//            return response;
+//        } catch (NumberFormatException e) {
+//            log.warn("Paramétre id " + demandeId+ " non autorisé. <accepterDemande>.");
+//            throw new BusinessResourceException("not-valid-param", "Paramétre " + demandeId+ " non autorisé.", HttpStatus.BAD_REQUEST);
+//        } catch (Exception ex) {
+//            log.error("Une erreur inattandue est rencontrée." + ex.toString());
+//            throw new BusinessResourceException("technical-error", "Erreur technique d'acceptation d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//
+//    }
+    private void sendEmailToDemande(Demande demande) throws BusinessResourceException {
+        try {
+            // Création du contenu de l'email
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
+            ZonedDateTime zonedDateTime = demande.getDateRejetDemande().atZone(ZoneOffset.UTC);
+            String formattedDateTime = zonedDateTime.format(formatter) + " UTC";
+
+            notificationEmail.setSubject("Demande à valider");
+            notificationEmail.setRecipient(demande.getUser().getEmail());
+            notificationEmail.setTemplateName("notificationAccepter.html");
+
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", demande.getUser().getPrenoms());
+            emailVariables.put("nom", demande.getUser().getNom());
+            emailVariables.put("dateRejetDemande", formattedDateTime);
+            emailVariables.put("academie", demande.getVille().getAcademie().getLibelleLong());
+            emailVariables.put("ville", demande.getVille().getLibelleLong());
+            emailVariables.put("centre", demande.getCentre().getLibelleLong());
+
+            notificationEmail.setEmailVariables(emailVariables);
+
+            // Envoi de l'email
+            mailService.sendHtmlEmail(notificationEmail);
+        } catch (Exception e) {
+            throw new BusinessResourceException("email-error",
+                    "Erreur lors de l'envoi de l'email pour la demande : " + demande.getId(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @Override
-    @Transactional(readOnly = false)
-    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+    public DemandeResponse proposition(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
         try {
             Long myId = Long.valueOf(demandeId.trim());
             Demande demandeOptional = dao.findById(myId)
@@ -505,30 +630,31 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
                             () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             Demande oneBrute = mapper.accepterToEntiteUp(demandeOptional, req);
-            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("acceptée");
-            EtatDemande etatAccepter= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
-            oneBrute.setEtatDemande(etatAccepter);
-            int delaisValidation;
-            delaisValidation = oneBrute.getSession().getDelaisValidation();
-            LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC).plusHours(delaisValidation);
-            oneBrute.setDateRejetDemande(dateRejet);
+//            Optional<EtatDemande> optionalEtat = service.findByLibelleLong("acceptée");
+//            EtatDemande etatAccepter= optionalEtat.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune etat avec le libellé EN ATTENTE trouvée.", HttpStatus.NOT_FOUND));
+//            oneBrute.setEtatDemande(etatAccepter);
+//            int delaisValidation;
+//            delaisValidation = oneBrute.getSession().getDelaisValidation();
+//            LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC).plusHours(delaisValidation);
+//            oneBrute.setDateRejetDemande(dateRejet);
+            oneBrute.setProposition(req.getVille() != null);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
-            ZonedDateTime zonedDateTime = oneBrute.getDateRejetDemande().atZone(ZoneOffset.UTC);
-            String formattedDateTime = zonedDateTime.format(formatter) + " UTC";
-            notificationEmail.setSubject("Demande à valider");
-            notificationEmail.setRecipient(oneBrute.getUser().getEmail());
-            notificationEmail.setTemplateName("notificationAccepter.html"); // Ajoutez le nom du modèle Thymeleaf
-            Map<String, Object> emailVariables = new HashMap<>();
-            emailVariables.put("prenoms", oneBrute.getUser().getPrenoms());
-            emailVariables.put("nom", oneBrute.getUser().getNom());
-            emailVariables.put("dateRejetDemande", formattedDateTime);
-            emailVariables.put("academie", oneBrute.getVille().getAcademie().getLibelleLong());
-            emailVariables.put("ville", oneBrute.getVille().getLibelleLong());
-            emailVariables.put("centre", oneBrute.getCentre().getLibelleLong());
-            notificationEmail.setEmailVariables(emailVariables);
-            mailService.sendHtmlEmail(notificationEmail);
+//            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
+//            ZonedDateTime zonedDateTime = oneBrute.getDateRejetDemande().atZone(ZoneOffset.UTC);
+//            String formattedDateTime = zonedDateTime.format(formatter) + " UTC";
+//            notificationEmail.setSubject("Demande à valider");
+//            notificationEmail.setRecipient(oneBrute.getUser().getEmail());
+//            notificationEmail.setTemplateName("notificationAccepter.html"); // Ajoutez le nom du modèle Thymeleaf
+//            Map<String, Object> emailVariables = new HashMap<>();
+//            emailVariables.put("prenoms", oneBrute.getUser().getPrenoms());
+//            emailVariables.put("nom", oneBrute.getUser().getNom());
+//            emailVariables.put("dateRejetDemande", formattedDateTime);
+//            emailVariables.put("academie", oneBrute.getVille().getAcademie().getLibelleLong());
+//            emailVariables.put("ville", oneBrute.getVille().getLibelleLong());
+//            emailVariables.put("centre", oneBrute.getCentre().getLibelleLong());
+//            notificationEmail.setEmailVariables(emailVariables);
+//            mailService.sendHtmlEmail(notificationEmail);
             log.info("Demande" + response.getId() + " accepetée avec succés. <accepterDemande>");
             return response;
         } catch (NumberFormatException e) {
@@ -538,7 +664,6 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             log.error("Une erreur inattandue est rencontrée." + ex.toString());
             throw new BusinessResourceException("technical-error", "Erreur technique d'acceptation d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
     }
 
     @Override
