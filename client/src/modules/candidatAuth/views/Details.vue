@@ -53,11 +53,11 @@ import { reactive, getCurrentInstance, onMounted} from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from "vue-i18n";
-import { useAcademieStore } from "../store";
+import { useCandidatAuthoriserStore } from "../store";
 
 const i18n = useI18n();
 
-const academieStore= useAcademieStore()
+const academieStore= useCandidatAuthoriserStore()
 const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -74,7 +74,7 @@ const inputForm = reactive({
 onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.libelleCourt = dataDetails.value.libelleCourt   
+    inputForm.libelleCourt = dataDetails.value.libelleCourt
   });
 });
 

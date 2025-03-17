@@ -52,17 +52,17 @@
 
 <script setup>
 import { reactive, getCurrentInstance,ref,watchEffect } from "vue";
-import { useAcademieStore } from "../store";
+import { useCandidatAuthoriserStore } from "../store";
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const instance = getCurrentInstance();
-const academieStore = useAcademieStore();
+const academieStore = useCandidatAuthoriserStore();
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
   libelleLong: yup.string().required('Le libelleLong est requis'),
-  
- 
+
+
 });
 const libelleError = ref(false);
 const libelleErrorMessage = ref("");
@@ -148,7 +148,7 @@ const onLibelleInput = () => {
       checkLibelleExistenceUp();
     } else {
       checkLibelleExistence();
-    } 
+    }
 };
 const { inputForm, actionSubmit,isEdit  } = defineProps({
   inputForm: Object,
@@ -166,7 +166,7 @@ const handleSave = async () => {
     if (!isSubmitDisabled.value) {
       await schema.validate(inputForm, { abortEarly: false });
       console.log('Formulaire valide. Soumission en cours...');
-      actionSubmit(inputForm); 
+      actionSubmit(inputForm);
       // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');

@@ -40,6 +40,13 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
+    columnDefs: [
+      { headerName: "Affectable", field: "affectable", sortable: true, filter: true },
+      { headerName: "État Demande", field: "etatDemande", sortable: true, filter: true },
+      { headerName: "Ordre d'arrivée", field: "ordreArrivee", sortable: true, filter: true },
+      { headerName: "Rang", field: "rang", sortable: true, filter: true },
+      { headerName: "Actions", field: "actions", cellRenderer: 'buttonRenderer' }
+    ]
   }),
 
   getters: {
@@ -49,14 +56,14 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
   },
 
   actions: {
-    //  recupérer la liste des demandes et le mettre dans la tabel dataListe 
+    //  recupérer la liste des demandes et le mettre dans la tabel dataListe
     async demandeByVille(villeId) {
       try {
         const response = await axios.get(`${demandesByVille}/${villeId}`);
         if (response.status === 200) {
           let res = response.data;
           let formattedData = [];
-    
+
           formattedData = await Promise.all(res.map(async (element) => {
             let villeLabel = element.ville ? element.ville.libelleLong : null;
             let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
@@ -71,7 +78,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
             let centreLabel = element.centre ? element.centre.libelleLong : null;
             let hasAccepted = await this.hasAcceptedDemande(idLabel) ? 'OUI' : 'NON';
             let quotaAccept = await this.quotaAccepteVille(idLabelVille) ? 'OUI' : 'NON';
-    
+
             return {
               id: element.demandeId,
               nom: element.nom,
@@ -93,7 +100,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               quota: quotaAccept,
             };
           }));
-    
+
           this.dataListe = formattedData;
           console.log("Données filtrées par ville", formattedData);
         }
@@ -103,14 +110,14 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       } finally {
         this.loading = false;
       }
-    }, 
+    },
     async one(demande) {
       try {
-        await axios.get(`${modulesURL}/${demande}`) 
+        await axios.get(`${modulesURL}/${demande}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -184,7 +191,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       } finally {
         this.loading = false;
       }
-    }, 
+    },
     async rejeter(id) {
       try {
         await axios.put(`${nonAffectable}/${id}`)
@@ -201,5 +208,5 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       }
     },
   },
-  
+
 })

@@ -16,7 +16,7 @@ import { useToast } from 'vue-toastification';
 const toast= useToast();
 
 import FormVue from "./Form.vue";
-import { useAcademieStore } from "../store";
+import { useCandidatAuthoriserStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -25,7 +25,7 @@ const { addNotification } = notificationStore;
 const instance = getCurrentInstance();
 const router = useRouter();
 
-const academieStore = useAcademieStore();
+const academieStore = useCandidatAuthoriserStore();
 const { add } = academieStore;
 
 const inputForm= reactive({

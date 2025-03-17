@@ -13,9 +13,9 @@ import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 
 
-//  
+//
 import FormVue from "./Form.vue";
-import { useAcademieStore } from "../store";
+import { useCandidatAuthoriserStore } from "../store";
 import { useToast } from 'vue-toastification';
 
 
@@ -29,7 +29,7 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const academietore = useAcademieStore();
+const academietore = useCandidatAuthoriserStore();
 const { dataDetails, loading } = storeToRefs(academietore);
 const { one, modify } = academietore;
 
