@@ -40,15 +40,27 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
-    columnDefs: [
-      { headerName: "Affectable", field: "affectable", sortable: true, filter: true },
-      { headerName: "État Demande", field: "etatDemande", sortable: true, filter: true },
-      { headerName: "Ordre d'arrivée", field: "ordreArrivee", sortable: true, filter: true },
-      { headerName: "Rang", field: "rang", sortable: true, filter: true },
-      { headerName: "Actions", field: "actions", cellRenderer: 'buttonRenderer' }
+    columnDefs:[
+      { headerName: "Prénoms", field: "prenoms", sortable: true, filter: true },
+      { headerName: "Nom", field: "nom", sortable: true, filter: true },
+      { headerName: "Code", field: "code", sortable: true, filter: true },
+      { headerName: "Centre d'écrit", field: "centre", sortable: true, filter: true },
+      { headerName: "Score", field: "note", sortable: true, filter: true },
+      { headerName: "Statut", field: "etatDemande", sortable: true, filter: true },
+      { headerName: "Classement", field: "ordreArrivee", sortable: true, filter: true },
+      {
+        headerName: "Actions",
+        field: "actions",
+        cellRenderer: (params) => {
+          const btn = document.createElement('button');
+          btn.innerText = 'Voir';
+          btn.classList.add('btn-action');
+          btn.addEventListener('click', () => handleView(params.data));
+          return btn;
+        },
+      },
     ]
   }),
-
   getters: {
     getDataListe: (state) => state.dataListe,
     getEtatCouleurs: (state) => state.etatCouleurs,
@@ -75,10 +87,38 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
             let idLabel = element.user ? element.user.id : null;
             let idLabelVille = element.ville ? element.ville.id : null;
             let affectableLabel = element.affectable ? 'OUI' : 'NON';
+            let propositionLabel = element.proposition ? 'OUI' : 'NON';
             let centreLabel = element.centre ? element.centre.libelleLong : null;
             let hasAccepted = await this.hasAcceptedDemande(idLabel) ? 'OUI' : 'NON';
             let quotaAccept = await this.quotaAccepteVille(idLabelVille) ? 'OUI' : 'NON';
+            let situation = '';
 
+            if (etatLabel === 'en attente' &&
+                quotaAccept === 'OUI' &&
+                hasAccepted === 'NON' &&
+                affectableLabel === 'OUI') {
+              situation = 'affectable';
+            } else if (etatLabel === 'déclinée' &&
+                quotaAccept === 'OUI' &&
+                hasAccepted === 'NON' &&
+                affectableLabel === 'OUI') {
+              situation = 'réaffectable';
+            } else if (etatLabel === 'obsolète' &&
+                quotaAccept === 'OUI' &&
+                hasAccepted === 'NON' &&
+                affectableLabel === 'OUI') {
+              situation = 'affectable';
+            } else if (etatLabel === 'en attente' && affectableLabel === 'NON') {
+              situation = 'à rejeter';
+            } else if (hasAccepted === 'OUI') {
+              situation = 'déjà accepté';
+            } else if (etatLabel === 'validée') {
+              situation = 'déjà validé';
+            } else if (etatLabel === 'rejetée') {
+              situation = 'déjà rejeté';
+            } else {
+              situation = 'quota atteint';
+            }
             return {
               id: element.demandeId,
               nom: element.nom,
@@ -98,6 +138,8 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               villeId: idLabelVille,
               hasAcceptedDemande: hasAccepted,
               quota: quotaAccept,
+              proposition:propositionLabel,
+              situation: situation
             };
           }));
 

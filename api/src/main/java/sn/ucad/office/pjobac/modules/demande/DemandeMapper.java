@@ -22,6 +22,7 @@ public interface DemandeMapper {
     @Mapping(source = "demande.jury", target = "jury")
     @Mapping(source = "demande.dateDemande", target = "dateDemande")
     @Mapping(source = "demande.dateRejetDemande", target = "dateRejetDemande")
+    @Mapping(source = "demande.proposition", target = "proposition")
     @Mapping(source = "demande.dateConfirmationDemande", target = "dateConfirmationDemande")
 //    @Mapping(source = "demande.ordreArrivee", target = "ordreArrivee")
     @Mapping(source = "detailsCandidat.id", target = "detailsCandidatId")

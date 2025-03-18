@@ -5,7 +5,7 @@
     <p class="mt-1">Nombre de jurys <v-chip class="ml-2" color="cyan" variant="flat" size="x-small">{{ inputForm.totalJury }} </v-chip></p>
     <p class="mt-1">Nombre de demandes <v-chip class="ml-2" color="orange-darken-4" variant="flat" size="x-small">{{ inputForm.totalDemandes }} </v-chip></p>
     <p class="mt-1">Rapport  <v-chip class="ml-2" color="yellow-accent-4" variant="flat" size="x-small">{{ inputForm.rapport }} </v-chip></p>
-    <p class="mt-1">Quota  
+    <p class="mt-1">Quota
         <template v-if="inputForm.quota === 0">
             <v-chip class="ml-2" color="red-darken-4" variant="flat" size="x-small">ATTEINT</v-chip>
         </template>
@@ -22,7 +22,7 @@
       <v-chip @click.prevent="redirectToUsers()" class="ma-0" variant="outlined" color="blue">Utilisateurs </v-chip> -->
     </v-col>
     </v-row>
-  <vue-good-table
+  <!-- <vue-good-table
     :columns="columns"
     :rows="dataListe"
     :pagination-options="{
@@ -32,11 +32,11 @@
           }"
          :search-options="{
             enabled: true
-          }" 
-    > 
+          }"
+    >
     <template #table-row="props">
           <span v-if="props.column.field == 'affectable'">
-            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"
                  :color="props.row.affectable=== 'OUI' ? 'green' : 'red'" text variant="tonal">
               {{ props.row.affectable}}
           </v-chip>
@@ -59,7 +59,7 @@
           <div v-if="props.column.field === 'actions'">
             <div class="actions-wrapper"
          v-if="props.row.etatDemande === 'en attente' &&
-          props.row.quota === 'OUI' && 
+          props.row.quota === 'OUI' &&
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
@@ -68,7 +68,7 @@
          </div>
          <div class="actions-wrapper"
          v-else-if="props.row.etatDemande === 'déclinée' &&
-          props.row.quota === 'OUI' && 
+          props.row.quota === 'OUI' &&
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
@@ -78,7 +78,7 @@
 
          <div class="actions-wrapper"
          v-else-if="props.row.etatDemande === 'obsolète'&&
-          props.row.quota === 'OUI' && 
+          props.row.quota === 'OUI' &&
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
@@ -91,7 +91,6 @@
             <v-dialog transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
                 <v-btn variant="outlined" color="red" class="text" v-bind="props" size="small">
-              <!-- <v-icon small flat color="red dark">mdi-delete</v-icon> -->
                   rejetée
               </v-btn>
               </template>
@@ -99,7 +98,7 @@
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
                   <v-card-text>
-                    
+
                     <div class="text-h6">{{ $t('apps.forms.annulerMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
@@ -134,7 +133,14 @@
         </div>
       </div>
         </template>
-  </vue-good-table>
+  </vue-good-table> -->
+  <ag-grid-vue
+        :rowData="dataListe"
+        :columnDefs="columnDefs"
+        :gridOptions="gridOptions"
+        style="height: 500px"
+    >
+    </ag-grid-vue>
   </v-container>
   <div class="d-flex justify-end">
   <v-btn class="mt-16 mb-8 mr-2" color="blue" @click.prevent="redirectToListe()"><v-icon dark left> mdi-arrow-left </v-icon>{{ $t('apps.forms.retour') }}</v-btn>
@@ -151,6 +157,42 @@ import { useI18n } from "vue-i18n";
 import { watchEffect,watch } from "vue";
 import { useRouter,useRoute } from "vue-router";
 import { useToast } from 'vue-toastification';
+import {
+  AllCommunityModule,
+  ModuleRegistry,
+  themeQuartz,
+} from "ag-grid-community";
+import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
+
+// Register all Community features
+ModuleRegistry.registerModules([AllCommunityModule]);
+const columnDefs = ref([
+  { headerName: 'Prenoms', field: 'prenoms', sortable: true, filter: true,editable: true },
+  { headerName: 'Nom', field: 'nom', sortable: true, filter: true },
+  { headerName: 'Code', field: 'code', sortable: true, filter: true },
+  { headerName: "Centre d'écrit", field: 'centre', sortable: true, filter: true ,
+  editable: (params) => {
+      return params.data.proposition == 'NON' &&
+             params.data.note === 144
+    }
+   },
+  { headerName: 'Score', field: 'note', sortable: true, filter: true },
+  { headerName: 'Statut', field: 'etatDemande', sortable: true, filter: true },
+  { headerName: 'Classement', field: 'ordreArrivee', sortable: true, filter: true },
+  { headerName: 'Proposition', field: 'proposition', sortable: true, filter: true },
+  { headerName: 'Situation', field: 'situation', sortable: true, filter: true },
+  { headerName: 'Actions', field: 'actions', cellRenderer: 'actionsRenderer' },
+]);
+const frameworkComponents = {
+  actionsRenderer: (params) => {
+    const row = params.data;
+    // Logique pour rendre le contenu dynamique dans la cellule (boutons, chips, etc.)
+    if (row.etatDemande === 'en attente') {
+      return `<v-btn color="teal" @click="redirectToDemandes(${row.id})">Affecté</v-btn>`;
+    }
+    // Ajoutez d'autres conditions et actions ici
+  }
+};
 
 const toast= useToast();
 
@@ -214,14 +256,14 @@ console.log(dataListe) // ajustez le nombre d'éléments par page selon vos beso
 // const totalPages = computed(() => Math.ceil(
 // (dataListeGroupedByUser.value || []).length / selectedItemsPerPage.value));
 // watch(() => selectedItemsPerPage.value, () => {
-// currentPage.value = 1; 
+// currentPage.value = 1;
 // allGroupedByUser();
 // });
 // watch(() => currentPage.value, () => {
 // });
 // const getPageClass = (pageNumber) => {
 // return pageNumber === currentPage.value ? 'active-page' : '';
-// }; 
+// };
 
 const redirectToVilles = () => {
 router.push({ name: 'demandeByVille-liste' });
