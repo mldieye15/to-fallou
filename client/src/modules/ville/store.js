@@ -17,7 +17,7 @@ const codeAvailability = modulesURL +'/code-availability';
 export const useVilleStore = defineStore('ville', {
   state: () => ({
     dataListeVille: [],
-    dataListeByAcademie:[], 
+    dataListeByAcademie:[],
     dataListeByAcademieAndUser:[], //  List des données à afficher pour la table
     dataDetails: {},  //  Détails d'un élment,
     loading: true,  //  utilisé pour le chargement
@@ -67,10 +67,10 @@ export const useVilleStore = defineStore('ville', {
             academieId:academieIdLabel,
 
             };
-            
+
            });
            this.dataListeVille=res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -99,10 +99,10 @@ export const useVilleStore = defineStore('ville', {
             academieId:academieIdLabel,
 
             };
-            
+
            });
            this.dataListeVille=res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -131,10 +131,10 @@ export const useVilleStore = defineStore('ville', {
             academieId:academieIdLabel,
 
             };
-            
+
            });
            this.dataListeVille=res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -227,11 +227,26 @@ export const useVilleStore = defineStore('ville', {
     //  recupérer les informations d'une ville par son ide et le mettre dans la tabel dataDetails
     async one(ville) {
       try {
-        await axios.get(`${modulesURL}/${ville}`) 
+        await axios.get(`${modulesURL}/${ville}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async oneProposition(ville) {
+      try {
+        await axios.get(`${modulesURL}/proposition/${ville}`)
+        .then((response) => {
+          if(response.status === 200){
+            this.dataDetails = response.data;
+          }
         })
       } catch (error) {
         console.log(error);
@@ -242,11 +257,11 @@ export const useVilleStore = defineStore('ville', {
     },
     async oneVille(idVille) {
       try {
-        await axios.get(`${secondary}/${idVille}`) 
+        await axios.get(`${secondary}/${idVille}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -258,7 +273,7 @@ export const useVilleStore = defineStore('ville', {
     //  ajouter une academéie
     async add(payload) {
       try {
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -277,7 +292,7 @@ export const useVilleStore = defineStore('ville', {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload) 
+        await axios.put(`${modulesURL}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -293,7 +308,7 @@ export const useVilleStore = defineStore('ville', {
     //  modifier une academéie
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -339,5 +354,5 @@ export const useVilleStore = defineStore('ville', {
       }
     },
   },
-  
+
 })

@@ -93,21 +93,29 @@ public class DemandeMapperUtil {
 //            throw new BusinessResourceException("not-valid-param", "Paramétre " + userId + " non autorisé.", HttpStatus.BAD_REQUEST);
 //        }
 //    }
-    @Named("getCentreById")
-    Centre getCentrerById(String centreId) throws NumberFormatException {
-        try {
-            Long myId = Long.valueOf(centreId.trim());
-            Centre response;
-            response = centreDao.findById(myId)
-                    .orElseThrow(
-                            () -> new BusinessResourceException("not-found", "Aucune user avec " + centreId + " trouvée.", HttpStatus.NOT_FOUND)
-                    );
-            return response;
-        } catch (NumberFormatException e) {
-            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getUserById>.", centreId );
-            throw new BusinessResourceException("not-valid-param", "Paramétre " + centreId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        @Named("getCentreById")
+        public Centre getCentreById(String centreId) throws BusinessResourceException {
+            // Vérifier si centreId est null ou vide et retourner null dans ce cas
+            if (centreId == null || centreId.trim().isEmpty()) {
+                return null;  // Retourner null si centreId est nul ou vide
+            }
+
+            try {
+                // Convertir centreId en Long
+                Long myId = Long.valueOf(centreId.trim());
+
+                // Rechercher le centre dans la base de données
+                Centre response = centreDao.findById(myId)
+                        .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun centre avec l'ID " + centreId + " trouvé.", HttpStatus.NOT_FOUND));
+
+                return response;
+            } catch (NumberFormatException e) {
+                // Gérer le cas où centreId n'est pas un nombre valide
+                log.warn("Paramètre id {} non autorisé. <UserMapperUtil::getCentreById>.", centreId);
+                throw new BusinessResourceException("not-valid-param", "Paramètre " + centreId + " non autorisé.", HttpStatus.BAD_REQUEST);
+            }
         }
-    }
+
     @Named("formatStringToDate")
     public static Date formatStringToDate(String date) throws ParseException {
         final AppDateFormatter dateFormatter = new AppDateFormatter();

@@ -546,7 +546,17 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
                         () -> new BusinessResourceException("not-found", "User avec " + userId+ " non trouvé(e).", HttpStatus.NOT_FOUND)
                 );return dao.hasAcceptedDemande(entiteOptional);
     }
-//    @Override
+
+    @Override
+    public boolean hasPropositionDemande(String userId) {
+        Long myId = Long.valueOf(userId.trim());
+        AppUser entiteOptional = userDao.findById(myId)
+                .orElseThrow(
+                        () -> new BusinessResourceException("not-found", "User avec " + userId+ " non trouvé(e).", HttpStatus.NOT_FOUND)
+                );return dao.hasPropositionDemande(entiteOptional);
+    }
+
+    //    @Override
 //    @Transactional(readOnly = false)
 //    public DemandeResponse accepterDemande(DemandeAccepter req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
 //        try {
@@ -637,7 +647,7 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
 //            delaisValidation = oneBrute.getSession().getDelaisValidation();
 //            LocalDateTime dateRejet = LocalDateTime.now(ZoneOffset.UTC).plusHours(delaisValidation);
 //            oneBrute.setDateRejetDemande(dateRejet);
-            oneBrute.setProposition(req.getVille() != null);
+            oneBrute.setProposition(req.getCentre() != null);
             DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
 //            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
 //            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE d MMMM yyyy HH:mm:ss", Locale.FRANCE);
@@ -867,6 +877,26 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @Override
+    public boolean quotaPropositionByVille(String villeId) {
+        try {
+            Long myId = Long.valueOf(villeId.trim());
+            Ville ville = villeDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune Ville avec " + villeId+ " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Ville avec id: " + villeId + " trouvé. <auditOneById>");
+            int accepte= villeDao.totalDemandePropositionByVille(ville);
+            int totalJury= ville.getTotalJury();
+            log.info("totalJury: " + totalJury + " trouvé. <auditOneById>");
+            log.info("TotalAccepte: " + accepte + " trouvé. <auditOneById>");
+            return accepte < totalJury;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " +villeId+ " non autorisé. <auditOneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + villeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override

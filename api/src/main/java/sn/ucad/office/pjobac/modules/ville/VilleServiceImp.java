@@ -73,6 +73,39 @@ public class VilleServiceImp implements VilleService {
 
         return response;
     }
+//    public List<VilleResponse> allWithJury() throws BusinessResourceException {
+//        log.info("VilleServiceImp::allWithJury");
+//
+//        // Récupérer toutes les villes
+//        List<Ville> all = dao.allWithJury();
+//
+//        List<VilleResponse> response = all.stream()
+//                .map(ville -> {
+//                    // Calcul du nombre de demandes et du quota
+//                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Total des demandes par ville
+//                    int nombreJurys = ville.getTotalJury(); // Nombre de jurys pour la ville
+//                    int totalAffected = dao.totalDemandeAccepteOrValideByVille(ville); // Demandes acceptées ou validées
+//                    int quota = nombreJurys - totalAffected; // Calcul du quota
+//
+//                    // Calcul du rapport
+//                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+//                    rapport = Math.round(rapport * 100.0) / 100.0; // Arrondi du rapport
+//
+//                    // Création de la réponse
+//                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
+//                    villeResponse.setTotalDemandes(totalDemandes); // Total des demandes
+//                    villeResponse.setRapportJuryDemande(rapport); // Rapport jury/demande
+//                    villeResponse.setQuota(quota); // Ajout du quota dans la réponse
+//
+//                    return villeResponse;
+//                })
+//                .filter(villeResponse -> villeResponse.getQuota() > 0) // Filtrer pour ne garder que les villes avec quota > 0
+//                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie par rapport jury/demande décroissant
+//                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0)) // Ensuite, trie par quota
+//                .collect(Collectors.toList());
+//
+//        return response;
+//    }
 
     @Override
     public List<VilleResponse> allSecondaryVille() throws BusinessResourceException {
@@ -197,6 +230,40 @@ public class VilleServiceImp implements VilleService {
             throw new BusinessResourceException("not-valid-param", "Paramètre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public Optional<VilleResponse> onePropositionById(String id) throws NumberFormatException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(id.trim());
+            Ville one = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Ville avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            log.info("Agen avec id: " + id + " trouvé. <oneById>");
+            // Récupérer le total des demandes pour cette ville spécifique
+            int totalDemandes = demandeDao.totalDemandeByVille(one);
+
+            int nombreJurys = one.getTotalJury();
+            int totalAffected=dao.totalDemandePropositionByVille(one);
+            int quota= nombreJurys - totalAffected;
+            // Calculer le rapport
+            double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+            rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demande
+            // Créer le VilleResponse en incluant le total des demandes et le rapport
+            VilleResponse villeResponse = mapper.toEntiteResponse(one);
+            villeResponse.setTotalDemandes(totalDemandes);
+            villeResponse.setRapportJuryDemande(rapport);
+            villeResponse.setQuota(quota);
+            Optional<VilleResponse> response;
+            response = Optional.of(villeResponse);
+            return response;
+            // Si le total des demandes est zéro, renvoyer une valeur par défaut pour le rapport
+        } catch (NumberFormatException e) {
+            log.warn("Paramètre id " + id + " non autorisé. <oneById>.");
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + id + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @Override
     public Optional<VilleResponse> oneSecondaryById(String idOne) throws NumberFormatException, BusinessResourceException {
         try {

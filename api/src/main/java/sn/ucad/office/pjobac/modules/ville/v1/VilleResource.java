@@ -79,6 +79,11 @@ public class VilleResource {
         Optional<VilleResponse> response = service.oneById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping(value = "/proposition/{id}")
+    public ResponseEntity<Optional<VilleResponse>> onePropistion(@PathVariable(value = "id") String id) {
+        Optional<VilleResponse> response = service.onePropositionById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/secondary/{idVille}")
     public ResponseEntity<Optional<VilleResponse>> oneSecondary(@PathVariable(value = "idVille") String idVille) {
         Optional<VilleResponse> response = service.oneSecondaryById(idVille);

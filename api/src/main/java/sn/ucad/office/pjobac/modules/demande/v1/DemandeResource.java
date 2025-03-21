@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import sn.ucad.office.pjobac.config.AppConstants;
 
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
+import sn.ucad.office.pjobac.modules.centre.CentreService;
+import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.demande.DemandeService;
 import sn.ucad.office.pjobac.modules.demande.dto.*;
 import sn.ucad.office.pjobac.modules.detailsCandidat.OrdreArriveService;
 import sn.ucad.office.pjobac.modules.typeSession.dto.VilleResponse;
+import sn.ucad.office.pjobac.modules.ville.VilleService;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
@@ -26,6 +29,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DemandeResource {
     private final DemandeService service;
+    private final VilleService villeService;
+    private CentreService centreService;
     private final OrdreArriveService ordreArrive;
 
     @GetMapping("")
@@ -211,6 +216,11 @@ public class DemandeResource {
         service.del(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @GetMapping("/hasPropositionDemande")
+    public ResponseEntity<Boolean> hasPropositionDemande(@RequestParam String userId) {
+        boolean result = service.hasPropositionDemande(userId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
     @GetMapping("/hasAcceptedDemande")
     public ResponseEntity<Boolean> hasAcceptedDemande(@RequestParam String userId) {
         boolean result = service.hasAcceptedDemande(userId);
@@ -219,6 +229,11 @@ public class DemandeResource {
     @GetMapping("/quotaAccepte")
     public ResponseEntity<Boolean> quotaAccepteByVille(@RequestParam String villeId) {
         boolean result = service.quotaAccepteByVille(villeId);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    @GetMapping("/quotaProposition")
+    public ResponseEntity<Boolean> quotaPropositionByVille(@RequestParam String villeId) {
+        boolean result = service.quotaPropositionByVille(villeId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @GetMapping("/quotaAccepteSecondary")
@@ -272,6 +287,17 @@ public class DemandeResource {
         } catch (Exception ex) {
             return new ResponseEntity<>("Erreur technique lors de l'acceptation des demandes.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+    }
+    @GetMapping(value = "/proposition/{id}")
+    public ResponseEntity<Optional<VilleResponse>> onePropistion(@PathVariable(value = "id") String id) {
+        Optional<VilleResponse> response = villeService.onePropositionById(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "/centreForProposition/{villeId}")
+    public ResponseEntity<List<CentreResponse>> centresAvecQForProposition(@PathVariable String villeId) {
+        List<CentreResponse> response = centreService.centreParVilleSansJuryForProposition(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

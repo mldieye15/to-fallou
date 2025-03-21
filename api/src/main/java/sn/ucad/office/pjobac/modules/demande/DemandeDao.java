@@ -46,6 +46,9 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     @Query("SELECT COUNT(d) > 0 FROM Demande d WHERE d.user = :user AND d.etatDemande.libelleLong = 'acceptée' " +
             "AND d.session.ouvert = true")
     boolean hasAcceptedDemande(@Param("user") AppUser user);
+    @Query("SELECT COUNT(d) > 0 FROM Demande d WHERE d.user = :user AND d.proposition = true " +
+            "AND d.session.ouvert = true")
+    boolean hasPropositionDemande(@Param("user") AppUser user);
     @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='en attente' AND d.session.ouvert = true")
     List<Demande> demandePending();
     @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='acceptée' AND d.session.ouvert = true")

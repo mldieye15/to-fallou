@@ -21,6 +21,7 @@ public interface VilleService {
     List<VilleResponse> availableVillesForUserAndAcademy(Long academieId);
     public SimplePage<VilleResponse> all(Pageable pageable) throws BusinessResourceException;
     public Optional<VilleResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;
+    public Optional<VilleResponse> onePropositionById(String id) throws NumberFormatException, BusinessResourceException;
     public Optional<VilleResponse> oneSecondaryById(String idOne) throws NumberFormatException, BusinessResourceException;
 //
     public VilleResponse add(VilleRequest req) throws BusinessResourceException;

@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 public class DemandeAccepter {
-    private String academie;
-    private String ville;
-    private String session;
+//    private String academie;
+//    private String ville;
+//    private String session;
     private String centre;
     private LocalDateTime dateDemande=LocalDateTime.now();
 }

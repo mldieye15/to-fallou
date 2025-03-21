@@ -87,6 +87,21 @@ public class CentreServiceImp implements CentreService {
     }
 
     @Override
+    public List<CentreResponse> allAvecQuotaProposition(String villeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(villeId.trim());
+        Ville ville;
+        ville=villeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Ville non trouvée pour l'ID : " +villeId));
+        log.info("CentreServiceImp::all");
+        List<Centre> all = dao.findCentresQuotaNonAtteintParVilleProposition(ville);
+        List<CentreResponse> response;
+        response = all.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
     public List<CentreResponse> allSecondaryByVille(String villeId) throws BusinessResourceException {
         Long myId= Long.valueOf(villeId.trim());
         Ville ville;
@@ -108,6 +123,22 @@ public class CentreServiceImp implements CentreService {
         ville=villeDao.findById(myId)
                 .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + villeId));
         List<Centre> centres=dao.findCentresQuotaNonAtteintParVille(ville);
+        List<CentreResponse> response;
+        response= centres.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        System.out.println("Ville ID: " + ville.getId());
+        System.out.println("Nombre de centres sans quota atteint : " + centres.size());
+        return response;
+    }
+
+    @Override
+    public List<CentreResponse> centreParVilleSansJuryForProposition(String villeId) throws BusinessResourceException {
+        Long myId= Long.valueOf(villeId.trim());
+        Ville ville;
+        ville=villeDao.findById(myId)
+                .orElseThrow(()->new RuntimeException("Académie non trouvée pour l'ID : " + villeId));
+        List<Centre> centres=dao.findCentresQuotaNonAtteintParVilleProposition(ville);
         List<CentreResponse> response;
         response= centres.stream()
                 .map(mapper::toEntiteResponse)

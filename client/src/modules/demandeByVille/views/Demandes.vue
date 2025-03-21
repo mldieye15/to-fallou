@@ -138,6 +138,7 @@
         :rowData="dataListe"
         :columnDefs="columnDefs"
         :gridOptions="gridOptions"
+        :frameworkComponents="frameworkComponents"
         style="height: 500px"
     >
     </ag-grid-vue>
@@ -165,16 +166,87 @@ import {
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
 
 // Register all Community features
+const centreStore=useCentreStore();
+const { dataListeByVille} = storeToRefs(centreStore);
+const { all,centresByVille,centresByVilleForProposition} = centreStore;
+
+const i18n = useI18n();
+
+const notificationStore = useNotificationStore();
+const { addNotification } = notificationStore;
+const villeStore=useVilleStore();
+const demandeByVilleStore = useDemandeByVilleStore();
+const {columns,loading,etatCouleurs,dataListe,dataDetails } = storeToRefs(demandeByVilleStore);
+const { demandeByVilleProposition,rejeter,accepterDemande,oneProposition } = demandeByVilleStore;
+// const {one,oneProposition}=villeStore;
+// const { dataDetails } = storeToRefs(villeStore);
 ModuleRegistry.registerModules([AllCommunityModule]);
 const columnDefs = ref([
   { headerName: 'Prenoms', field: 'prenoms', sortable: true, filter: true,editable: true },
-  { headerName: 'Nom', field: 'nom', sortable: true, filter: true },
+  { headerName: 'Nom', field: 'nom', sortable: true, filter: "agSetColumnFilter",
+        filterParams: {
+          excelMode: "windows",
+        }
+  },
   { headerName: 'Code', field: 'code', sortable: true, filter: true },
   { headerName: "Centre d'écrit", field: 'centre', sortable: true, filter: true ,
   editable: (params) => {
-      return params.data.proposition == 'NON' &&
-             params.data.note === 144
-    }
+     return ["affectable", "reaffectable", "déjà proposer"].includes(params.data.situation) &&
+         params.data.etatDemande === "en attente";
+     },
+    cellEditor: "agSelectCellEditor",
+        cellEditorParams: {
+          values: computed(() => ["", ...dataListeByVille.value.map(item => item?.libelleLong || "")]),
+              },
+              valueSetter: async (params) => {
+                const selectedLibelle = params.newValue; // Valeur sélectionnée
+
+                // Si l'utilisateur choisit une valeur vide
+                if (selectedLibelle === "") {
+                  const id = params.node.data.id;
+                  const villeId = params.node.data.villeId;
+
+                  console.warn("Aucune sélection, suppression du centre.");
+
+                  try {
+                    await accepterDemande(id, null, villeId); // Envoyer `null` comme `centreId`
+                    updateData();
+
+                    params.data.centre = ""; // Mettre à jour la valeur dans le tableau
+                    return true;
+                  } catch (error) {
+                    console.error("Erreur lors de l'appel à accepterDemande:", error);
+                    return false;
+                  }
+                }
+
+                // Trouver l'élément correspondant
+                const selectedItem = dataListeByVille.value.find(item => item.libelleLong === selectedLibelle);
+
+                if (!selectedItem) {
+                  return false; // Ne rien changer si l'élément n'est pas trouvé
+                }
+
+                // Récupérer l'ID du centre et l'ID de la ligne
+                const centreId = selectedItem.id;
+                const id = params.node.data.id;
+                const villeId = params.node.data.villeId;
+
+                console.error("centreId:", centreId, "villeId:", villeId);
+                console.error("id:", id);
+
+                // Appeler la méthode accepterDemande
+                try {
+                  await accepterDemande(id, centreId, villeId);
+                  updateData();
+
+                  params.data.centre = selectedLibelle; // Mettre à jour la valeur de la cellule
+                  return true;
+                } catch (error) {
+                  console.error("Erreur lors de l'appel à accepterDemande:", error);
+                  return false;
+                }
+              }
    },
   { headerName: 'Score', field: 'note', sortable: true, filter: true },
   { headerName: 'Statut', field: 'etatDemande', sortable: true, filter: true },
@@ -202,19 +274,6 @@ const route = useRoute();
 const redirectToListe = () => {
     router.push({ name: 'demandeByVille-liste'});
   };
-const centreStore=useCentreStore();
-const { dataListeByVille} = storeToRefs(centreStore);
-
-const i18n = useI18n();
-
-const notificationStore = useNotificationStore();
-const { addNotification } = notificationStore;
-const villeStore=useVilleStore();
-const demandeByVilleStore = useDemandeByVilleStore();
-const {columns,loading,etatCouleurs,dataListe } = storeToRefs(demandeByVilleStore);
-const { demandeByVille,rejeter } = demandeByVilleStore;
-const {one}=villeStore;
-const { dataDetails } = storeToRefs(villeStore);
 const inputForm = reactive({
   libelleLong:'',
   libelleCourt: '',
@@ -224,20 +283,25 @@ const inputForm = reactive({
   rapport:null,
   quota:null,
 });
+const updateData = async () => {
+  const villeId = route.params.id;
+  await demandeByVilleProposition(villeId);
+  await centresByVilleForProposition(villeId);
+  await oneProposition(villeId);
+
+  // Mise à jour des champs du formulaire
+  inputForm.libelleLong = dataDetails.value.libelleLong;
+  inputForm.libelleCourt = dataDetails.value.libelleCourt;
+  inputForm.academie = dataDetails.value.academie.libelleLong;
+  inputForm.totalJury = dataDetails.value.totalJury;
+  inputForm.totalDemandes = dataDetails.value.totalDemandes;
+  inputForm.rapport = dataDetails.value.rapportJuryDemande;
+  inputForm.quota = dataDetails.value.quota;
+};
 
 const dialog = ref(false);
 onMounted(()=>{
-const villeId=route.params.id;
-demandeByVille(villeId)
-one(villeId ).then( () => {
-    inputForm.libelleLong = dataDetails.value.libelleLong,
-    inputForm.libelleCourt = dataDetails.value.libelleCourt,
-    inputForm.academie=dataDetails.value.academie.libelleLong,
-    inputForm.totalJury=dataDetails.value.totalJury,
-    inputForm.totalDemandes=dataDetails.value.totalDemandes,
-    inputForm.rapport=dataDetails.value.rapportJuryDemande,
-    inputForm.quota=dataDetails.value.quota
-  });
+  updateData();
 console.log(dataListe) // ajustez le nombre d'éléments par page selon vos besoins
 });
 // const currentPage = ref(1);

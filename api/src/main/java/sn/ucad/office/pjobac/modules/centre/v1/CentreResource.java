@@ -39,6 +39,11 @@ public class CentreResource {
         List<CentreResponse> response = service.allAvecQuota(villeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping(value = "/proposition/{villeId}")
+    public ResponseEntity<List<CentreResponse>> allAvecQuotaProposition(@PathVariable String villeId) {
+        List<CentreResponse> response = service.allAvecQuotaProposition(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping(value = "/centreSecondary/{villeId}")
     public ResponseEntity<List<CentreResponse>> SecondaryByVille(@PathVariable String villeId) {
         List<CentreResponse> response = service.allSecondaryByVille(villeId);
@@ -59,8 +64,13 @@ public class CentreResource {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
     @GetMapping(value = "/by-ville/{villeId}")
-    public ResponseEntity<List<CentreResponse>> centresSansJuryByVille(@PathVariable String villeId) {
+    public ResponseEntity<List<CentreResponse>> centresAvecQByVille(@PathVariable String villeId) {
         List<CentreResponse> response = service.centreParVilleSansJury(villeId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping(value = "/centreForProposition/{villeId}")
+    public ResponseEntity<List<CentreResponse>> centresAvecQForProposition(@PathVariable String villeId) {
+        List<CentreResponse> response = service.centreParVilleSansJuryForProposition(villeId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

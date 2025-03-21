@@ -49,7 +49,9 @@ public interface DemandeService {
     public void demandeObseleteByVille(Long villeId)throws NumberFormatException, BusinessResourceException;
     public void rejeterDemande(Long villeId)throws NumberFormatException, BusinessResourceException;
     boolean hasAcceptedDemande(String userId);
+    boolean hasPropositionDemande(String userId);
     boolean quotaAccepteByVille(String villeId);
+    boolean quotaPropositionByVille(String villeId);
     boolean quotaAccepteByVilleSecondary(String villeId);
 
 //    public void updateOrderByVille() throws BusinessResourceException;
