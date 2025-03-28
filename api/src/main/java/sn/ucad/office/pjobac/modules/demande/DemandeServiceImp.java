@@ -270,6 +270,26 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
         return response;
     }
 
+    @Override
+    public List<DemandeResponse> allDemandeProposer() throws BusinessResourceException {
+        List<Demande> demandes = dao.allDemandeProposer();
+        List<DemandeResponse> response;
+        response = demandes.stream()
+                .map(this::toDemandeResponseWithDecryption)
+                .collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public List<DemandeResponse> allDemandeAccepter() throws BusinessResourceException {
+        List<Demande> demandes = dao.demandeAccepter();
+        List<DemandeResponse> response;
+        response = demandes.stream()
+                .map(this::toDemandeResponseWithDecryption)
+                .collect(Collectors.toList());
+        return response;
+    }
+
     private DemandeResponse toDemandeResponseWithDecryption(Demande demande) {
         DemandeResponse response = mapper.toEntiteResponse(demande);
         AppUser user = demande.getUser();

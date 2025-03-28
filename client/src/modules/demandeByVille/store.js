@@ -5,7 +5,10 @@ import axios from '@/plugins/axios.js'
 const  modulesURL = '/v1/demandes';
 // const centreForProposition = modulesURL+'';
 const demandesByVille = modulesURL+'/demandeByVille';
+const allDemandeProposer = modulesURL+'/allDemandeProposer';
+const allDemandeAccepter = modulesURL+'/allDemandeAccepter';
 const accepter=modulesURL+'/accepter';
+const accepterAll=modulesURL+'/accepterAll';
 const valider=modulesURL+'/valider';
 const hasAcceptedDemande=modulesURL+'/hasAcceptedDemande';
 const hasPropositionDemande=modulesURL+'/hasPropositionDemande';
@@ -19,6 +22,8 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
     dataDetails: {},  //  Détails d'un élment,
     dataListeByVille: [],
     loading: true,
+    successMessage: '',
+    error: '',
     hasAcceptedDemande: false,  //  utilisé pour le chargement
     etatCouleurs: {
       'acceptée': 'orange',
@@ -44,26 +49,15 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
       { label: 'Actions', field: 'actions' }
       // Ajoutez d'autres colonnes selon vos besoins
     ],
-    columnDefs:[
-      { headerName: "Prénoms", field: "prenoms", sortable: true, filter: true },
-      { headerName: "Nom", field: "nom", sortable: true, filter: true },
-      { headerName: "Code", field: "code", sortable: true, filter: true },
-      { headerName: "Centre d'écrit", field: "centre", sortable: true, filter: true },
-      { headerName: "Score", field: "note", sortable: true, filter: true },
-      { headerName: "Statut", field: "etatDemande", sortable: true, filter: true },
-      { headerName: "Classement", field: "ordreArrivee", sortable: true, filter: true },
-      {
-        headerName: "Actions",
-        field: "actions",
-        cellRenderer: (params) => {
-          const btn = document.createElement('button');
-          btn.innerText = 'Voir';
-          btn.classList.add('btn-action');
-          btn.addEventListener('click', () => handleView(params.data));
-          return btn;
-        },
-      },
-    ]
+    headerTable: [
+        { title: 'Prenom', key: 'prenoms', align: 'start', sortable: true },
+        { title: 'Nom', key: 'nom', align: 'start', sortable: true },
+        { title: 'Etablissement', key: 'etablissement', align: 'start', sortable: true },
+        { title: 'Code', key: 'code', align: 'start', sortable: true },
+        { title: "Centre d'écrit", key: 'centre', align: 'start', sortable: true },
+        { title: 'Ville', key: 'ville', align: 'start', sortable: true },
+
+      ],
   }),
   getters: {
     getDataListe: (state) => state.dataListe,
@@ -73,6 +67,84 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
   },
 
   actions: {
+    async allDemandeProposer() {
+      try {
+        await axios.get(`${allDemandeProposer}`)
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let juryLabel = element.jury? element.jury.numero:null;
+              let prenomLabel =element.user? element.user.prenoms:null;
+              let matriculeLabel = element.user ? element.user.matricule : null;
+              let telephoneLabel = element.user ? element.user.telephone : null;
+              let etablissementLabel =element.user.etablissement? element.user.etablissement.libelleLong:null;
+              let nomLabel =element.user? element.user.nom:null;
+              let codeLabel =element.user? element.user.code:null;
+              let centreLabel = element.centre ? element.centre.libelleLong:null;
+              return{
+              id:element.id,
+              jury: juryLabel,
+              prenoms: prenomLabel,
+              nom: nomLabel,
+              code:codeLabel,
+              centre:centreLabel,
+              ville: villeLabel,
+              etablissement: etablissementLabel,
+              telephone:telephoneLabel,
+              matricule:matriculeLabel
+              }
+            })
+
+            this.dataListe = res;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allDemandeAccepter() {
+      try {
+        await axios.get(`${allDemandeAccepter}`)
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let villeLabel = element.ville? element.ville.libelleLong:null;
+              let juryLabel = element.jury? element.jury.numero:null;
+              let prenomLabel =element.user? element.user.prenoms:null;
+              let matriculeLabel = element.user ? element.user.matricule : null;
+              let telephoneLabel = element.user ? element.user.telephone : null;
+              let etablissementLabel =element.user.etablissement? element.user.etablissement.libelleLong:null;
+              let nomLabel =element.user? element.user.nom:null;
+              let codeLabel =element.user? element.user.code:null;
+              let centreLabel = element.centre ? element.centre.libelleLong:null;
+              return{
+              id:element.id,
+              jury: juryLabel,
+              prenoms: prenomLabel,
+              nom: nomLabel,
+              code:codeLabel,
+              centre:centreLabel,
+              ville: villeLabel,
+              etablissement: etablissementLabel,
+              telephone:telephoneLabel,
+              matricule:matriculeLabel
+              }
+            })
+
+            this.dataListe = res;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
     //  recupérer la liste des demandes et le mettre dans la tabel dataListe
     async demandeByVille(villeId) {
       try {
@@ -386,6 +458,25 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
         this.error = error
       } finally {
         this.loading = false
+      }
+    },
+    async accepterAll(ids) {
+      this.loading = true;
+      this.error = '';
+      this.successMessage = '';
+
+      try {
+        const response = await axios.put(`${accepterAll}`, ids);
+        if (response.status === 200) {
+          this.successMessage = response.data;
+          this.allDemandeProposer();
+          // Optionnel : Mettre à jour les données ou effectuer d'autres actions
+        }
+      } catch (error) {
+        this.error = error.response?.data || 'Une erreur est survenue';
+        console.error('Erreur lors du déplacement des demandes:', error);
+      } finally {
+        this.loading = false;
       }
     },
     async centresByVilleForProposition(ville) {

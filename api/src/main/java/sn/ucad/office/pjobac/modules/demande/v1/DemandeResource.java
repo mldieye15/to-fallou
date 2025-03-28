@@ -107,6 +107,22 @@ public class DemandeResource {
         List<DemandeResponse> response = service.recaptDemandes();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allDemandeProposer")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeResponse>> allDemandeProposer() {
+        List<DemandeResponse> response = service.allDemandeProposer();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/allDemandeAccepter")
+// @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<DemandeResponse>> allDemandeAccepter () {
+        List<DemandeResponse> response = service.allDemandeAccepter();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping("/demandeByVille/{villeId}")
 // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

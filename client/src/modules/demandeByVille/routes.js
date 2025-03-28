@@ -8,12 +8,36 @@ const demandeByVilleRoutes = [{
     component: AppLayout,
     children: [
       {
-            path: '',
+            path: '/app/dashboard/demandesByVille/villeNonPlanifier',
             name: 'demandeByVille-liste',
             component: () => import( /* webpackChunkName: 'demande_liste' */ './views/Liste.vue'),
             meta: {
               middleware: [Middleware.plannerAuth]
           }
+      },
+      {
+        path: '/app/dashboard/demandesByVille/villeDejaPlanifier',
+        name: 'demandeByVille-liste-proposer',
+        component: () => import( /* webpackChunkName: 'demande_liste' */ './views/ListeDejaProposer.vue'),
+        meta: {
+          middleware: [Middleware.plannerAuth]
+      }
+          },
+          {
+            path: '/app/dashboard/demandesByVille/allDemandeAccepter',
+            name: 'allDemandeAccepter',
+            component: () => import( /* webpackChunkName: 'demande_liste' */ './views/AllDemandeAccepter.vue'),
+            meta: {
+              middleware: [Middleware.plannerAuth]
+          }
+        },
+        {
+          path: '/app/dashboard/demandesByVille/allDemandeProposer',
+          name: 'allDemandeProposer',
+          component: () => import( /* webpackChunkName: 'demande_liste' */ './views/AllDemandeProposer.vue'),
+          meta: {
+            middleware: [Middleware.plannerAuth]
+        }
       },
       {
         path: '/app/dashboard/demandesByVille/:id',

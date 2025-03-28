@@ -20,23 +20,26 @@
         <v-spacer></v-spacer>
         <v-col class="text-right" md="9" cols="auto">
           <v-tabs bg-color="blue">
-            <v-tab @click="redirectToVilles">Demandes par ville</v-tab>
+            <v-tab @click="redirectToVilles">Villes à Planifier</v-tab>
+            <v-tab @click="redirectToVillesDejaProposer">Villes dèjà Planifiées</v-tab>
+            <v-tab @click="redirectToAllDemandeProposer">Demandes dèjà proposées</v-tab>
+            <v-tab @click="redirectToAllDemandeAccepter">Demandes dèjà acceptées</v-tab>
             <v-tab @click="redirectToCentres">Demandes par centre</v-tab>
             <v-tab @click="redirectToAllDemandes">Demandes archivées</v-tab>
           </v-tabs>
         </v-col>
         </v-row>
         </v-card>
-        
+
         <div v-if="loading">Chargement en cours...</div>
         <div v-for="userEntry in paginatedData" :key="userEntry.userId">
       <div class="mb-2 mt-2">
         <v-row>
           <v-col cols="6" class="pr-0">
-            <h2>{{ userEntry.user }}:{{ userEntry.code }}</h2> 
+            <h2>{{ userEntry.user }}:{{ userEntry.code }}</h2>
           </v-col>
           <v-col cols="6" class="pl-0">
-          
+
           </v-col>
         </v-row>
 </div>
@@ -44,10 +47,10 @@
         :columns="columns"
         :rows="userEntry.demandes"
         :resizable="true"
-        > 
+        >
         <template #table-row="props">
           <span v-if="props.column.field == 'affectable'">
-            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+            <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"
                  :color="props.row.affectable=== 'OUI' ? 'green' : 'red'" text variant="tonal">
               {{ props.row.affectable}}
           </v-chip>
@@ -70,7 +73,7 @@
         <div v-if="props.column.field === 'actions'">
         <div class="actions-wrapper"
          v-if="props.row.etatDemande === 'en attente' &&
-          props.row.quota === 'OUI' && 
+          props.row.quota === 'OUI' &&
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="teal" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
@@ -79,7 +82,7 @@
          </div>
          <div class="actions-wrapper"
          v-else-if="props.row.etatDemande === 'déclinée' &&
-          props.row.quota === 'OUI' && 
+          props.row.quota === 'OUI' &&
           props.row.hasAcceptedDemande === 'NON'&&
           props.row.affectable === 'OUI'">
             <v-btn  variant="flat" color="pink" size="small" @click.prevent="redirectToDemandes(props.row.id)" class="">
@@ -100,7 +103,7 @@
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.demande.demande')"></v-toolbar>
                   <v-card-text>
-                    
+
                     <div class="text-h6">{{ $t('apps.forms.annulerMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
@@ -111,7 +114,7 @@
               </template>
             </v-dialog>
          </div>
-        <div v-else> 
+        <div v-else>
         <div class="actions-wrapper" v-if="props.row.hasAcceptedDemande === 'OUI'">
           <v-chip  variant="flat" color="grey" size="small">
             DÉJÀ ACCEPTÉE
@@ -132,7 +135,7 @@
              QUOTA ATTEINT
             </v-chip>
         </div>
-        </div>  
+        </div>
       </div>
         </template>
       </vue-good-table>
@@ -144,7 +147,7 @@
           <div class="mt-4">
             <p >Utilisateur par page:</p>
           </div>
-            
+
             <v-select
               v-model="selectedItemsPerPage"
               :items="itemsPerPageOptions"
@@ -244,17 +247,26 @@ const paginatedData = computed(() => {
 const totalPages = computed(() => Math.ceil(
   (dataListeGroupedByUser.value || []).length / selectedItemsPerPage.value));
   watch(() => selectedItemsPerPage.value, () => {
-  currentPage.value = 1; 
+  currentPage.value = 1;
   allGroupedByUser();
 });
 watch(() => currentPage.value, () => {
 });
 const getPageClass = (pageNumber) => {
   return pageNumber === currentPage.value ? 'active-page' : '';
-}; 
+};
 
 const redirectToVilles = () => {
   router.push({ name: 'demandeByVille-liste' });
+};
+const redirectToAllDemandeProposer = () => {
+  router.push({ name: 'allDemandeProposer' });
+};
+const redirectToAllDemandeAccepter = () => {
+  router.push({ name: 'allDemandeAccepter' });
+};
+const redirectToVillesDejaProposer = () => {
+  router.push({ name: 'demandeByVille-liste-proposer' });
 };
 const redirectToCentres = () => {
   router.push({ name: 'demandeByCentre-liste' });

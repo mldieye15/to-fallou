@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface VilleService {
     public List<VilleResponse> all() throws BusinessResourceException;
     public List<VilleResponse> allWithJury() throws BusinessResourceException;
+    public List<VilleResponse> allWithJuryDejaProposer() throws BusinessResourceException;
     public List<VilleResponse> allSecondaryVille() throws BusinessResourceException;
     public List<VilleResponse>getVilleByAcademie(String idAcademie) throws BusinessResourceException;
     public List<VilleResponse>villeSecondaryByAcademie(String idAcademie) throws BusinessResourceException;

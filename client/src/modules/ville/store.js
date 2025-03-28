@@ -6,6 +6,7 @@ const  modulesURL = '/v1/villes';
 const  all = modulesURL+'/all';
 const  allSecondaryVille = modulesURL+'/allSecondaryVille';
 const  allWithJury = modulesURL+'/allWithJury';
+const  allWithJuryDejaProposer = modulesURL+'/allWithJuryDejaProposer';
 const add=modulesURL+'/';
 const villesByAcademie=modulesURL+'/by-academie'
 const villeSecondary=modulesURL+'/ville-Secondary'
@@ -82,6 +83,38 @@ export const useVilleStore = defineStore('ville', {
     async allWithJury() {
       try {
         await axios.get(`${allWithJury}`)
+        .then((response) => {
+          if(response.status === 200){
+           let res = response.data.map((element)=>{
+            let academieLabel=element.academie?element.academie.libelleLong:null;
+            let academieIdLabel = element.academie?element.academie.id:null;
+            return{
+              id: element.id,
+            libelleLong: element.libelleLong,
+            libelleCourt: element.libelleCourt,
+            totalJury: element.totalJury,
+            totalDemandes: element.totalDemandes,
+            quota: element.quota,
+            rapport: element.rapportJuryDemande,
+            academie: academieLabel,
+            academieId:academieIdLabel,
+
+            };
+
+           });
+           this.dataListeVille=res;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allWithJuryDejaProposer() {
+      try {
+        await axios.get(`${allWithJuryDejaProposer}`)
         .then((response) => {
           if(response.status === 200){
            let res = response.data.map((element)=>{

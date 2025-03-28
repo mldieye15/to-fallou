@@ -47,65 +47,100 @@ public class VilleServiceImp implements VilleService {
                 .collect(Collectors.toList());
         return response;
     }
-    public List<VilleResponse> allWithJury() throws BusinessResourceException {
-        log.info("VilleServiceImp::allWithJury");
-        List<Ville> all = dao.allWithJury();
-        List<VilleResponse> response;
-        response = all.stream()
-                .map(ville -> {
-                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille
-                    int nombreJurys = ville.getTotalJury();// Obtenez le nombre de jurys de l'objet Ville
-                    int totalAffected=dao.totalDemandeAccepteOrValideByVille(ville);
-                    int quota= nombreJurys - totalAffected;
-                    // Calculer le rapport
-                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
-                    rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
-                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
-                    villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
-                    villeResponse.setRapportJuryDemande(rapport);
-                    villeResponse.setQuota(quota);// Ajout du rapport dans l'objet VilleResponse
-                    return villeResponse;
-                })
-                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie d'abord par rapport du jury à la demande décroissant
-                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0))
-                        // Puis par rapport du jury à la demande décroissant
-                .collect(Collectors.toList());
-
-        return response;
-    }
 //    public List<VilleResponse> allWithJury() throws BusinessResourceException {
 //        log.info("VilleServiceImp::allWithJury");
-//
-//        // Récupérer toutes les villes
 //        List<Ville> all = dao.allWithJury();
-//
-//        List<VilleResponse> response = all.stream()
+//        List<VilleResponse> response;
+//        response = all.stream()
 //                .map(ville -> {
-//                    // Calcul du nombre de demandes et du quota
-//                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Total des demandes par ville
-//                    int nombreJurys = ville.getTotalJury(); // Nombre de jurys pour la ville
-//                    int totalAffected = dao.totalDemandeAccepteOrValideByVille(ville); // Demandes acceptées ou validées
-//                    int quota = nombreJurys - totalAffected; // Calcul du quota
-//
-//                    // Calcul du rapport
+//                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Ajout de la méthode totalDemandeByVille
+//                    int nombreJurys = ville.getTotalJury();// Obtenez le nombre de jurys de l'objet Ville
+//                    int totalAffected=dao.totalDemandeAccepteOrValideByVille(ville);
+//                    int quota= nombreJurys - totalAffected;
+//                    // Calculer le rapport
 //                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
-//                    rapport = Math.round(rapport * 100.0) / 100.0; // Arrondi du rapport
-//
-//                    // Création de la réponse
+//                    rapport = Math.round(rapport * 100.0) / 100.0;// Si le total des demandes est différent de zéro, calculer le rapport, sinon, donner la valeur 0
 //                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
-//                    villeResponse.setTotalDemandes(totalDemandes); // Total des demandes
-//                    villeResponse.setRapportJuryDemande(rapport); // Rapport jury/demande
-//                    villeResponse.setQuota(quota); // Ajout du quota dans la réponse
-//
+//                    villeResponse.setTotalDemandes(totalDemandes); // Ajout du total des demandes dans l'objet VilleResponse
+//                    villeResponse.setRapportJuryDemande(rapport);
+//                    villeResponse.setQuota(quota);// Ajout du rapport dans l'objet VilleResponse
 //                    return villeResponse;
 //                })
-//                .filter(villeResponse -> villeResponse.getQuota() > 0) // Filtrer pour ne garder que les villes avec quota > 0
-//                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie par rapport jury/demande décroissant
-//                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0)) // Ensuite, trie par quota
+//                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie d'abord par rapport du jury à la demande décroissant
+//                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0))
+//                        // Puis par rapport du jury à la demande décroissant
 //                .collect(Collectors.toList());
 //
 //        return response;
 //    }
+    public List<VilleResponse> allWithJury() throws BusinessResourceException {
+        log.info("VilleServiceImp::allWithJury");
+
+        // Récupérer toutes les villes
+        List<Ville> all = dao.allWithJury();
+
+        List<VilleResponse> response = all.stream()
+                .map(ville -> {
+                    // Calcul du nombre de demandes et du quota
+                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Total des demandes par ville
+                    int nombreJurys = ville.getTotalJury(); // Nombre de jurys pour la ville
+                    int totalAffected = dao.totalDemandePropositionByVille(ville); // Demandes acceptées ou validées
+                    int quota = nombreJurys - totalAffected; // Calcul du quota
+
+                    // Calcul du rapport
+                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+                    rapport = Math.round(rapport * 100.0) / 100.0; // Arrondi du rapport
+
+                    // Création de la réponse
+                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
+                    villeResponse.setTotalDemandes(totalDemandes); // Total des demandes
+                    villeResponse.setRapportJuryDemande(rapport); // Rapport jury/demande
+                    villeResponse.setQuota(quota); // Ajout du quota dans la réponse
+
+                    return villeResponse;
+                })
+                .filter(villeResponse -> villeResponse.getQuota() > 0) // Filtrer pour ne garder que les villes avec quota > 0
+                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie par rapport jury/demande décroissant
+                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0)) // Ensuite, trie par quota
+                .collect(Collectors.toList());
+
+        return response;
+    }
+
+    @Override
+    public List<VilleResponse> allWithJuryDejaProposer() throws BusinessResourceException {
+        log.info("VilleServiceImp::allWithJuryDejaProposer");
+
+        // Récupérer toutes les villes
+        List<Ville> all = dao.allWithJury();
+
+        List<VilleResponse> response = all.stream()
+                .map(ville -> {
+                    // Calcul du nombre de demandes et du quota
+                    int totalDemandes = demandeDao.totalDemandeByVille(ville); // Total des demandes par ville
+                    int nombreJurys = ville.getTotalJury(); // Nombre de jurys pour la ville
+                    int totalAffected = dao.totalDemandePropositionByVille(ville); // Demandes acceptées ou validées
+                    int quota = nombreJurys - totalAffected; // Calcul du quota
+
+                    // Calcul du rapport
+                    double rapport = totalDemandes != 0 ? (double) nombreJurys / totalDemandes : 0;
+                    rapport = Math.round(rapport * 100.0) / 100.0; // Arrondi du rapport
+
+                    // Création de la réponse
+                    VilleResponse villeResponse = mapper.toEntiteResponse(ville);
+                    villeResponse.setTotalDemandes(totalDemandes); // Total des demandes
+                    villeResponse.setRapportJuryDemande(rapport); // Rapport jury/demande
+                    villeResponse.setQuota(quota); // Ajout du quota dans la réponse
+
+                    return villeResponse;
+                })
+                .filter(villeResponse -> villeResponse.getQuota() <= 0) // Filtrer pour ne garder que les villes avec quota > 0
+                .sorted(Comparator.comparingDouble(VilleResponse::getRapportJuryDemande).reversed() // Trie par rapport jury/demande décroissant
+                        .thenComparingInt(ville -> ville.getQuota() > 0 ? -ville.getQuota() : 0)) // Ensuite, trie par quota
+                .collect(Collectors.toList());
+
+        return response;
+    }
 
     @Override
     public List<VilleResponse> allSecondaryVille() throws BusinessResourceException {

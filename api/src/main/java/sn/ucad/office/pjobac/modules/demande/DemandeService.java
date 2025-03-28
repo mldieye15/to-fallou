@@ -24,8 +24,9 @@ public interface DemandeService {
     public Map<Long, List<DemandeDetailsCandidatResponse>> demandeBySession(String sessionId) throws BusinessResourceException;
     List<DemandeResponse> allForUser() throws BusinessResourceException;
     List<DemandeResponse> recaptDemandes() throws BusinessResourceException;
+    List<DemandeResponse> allDemandeProposer() throws BusinessResourceException;
+    List<DemandeResponse> allDemandeAccepter() throws BusinessResourceException;
     List<DemandeResponse> demandeObseleteByVille(String villeId) throws BusinessResourceException;
-
     public SimplePage<DemandeResponse> all(Pageable pageable) throws BusinessResourceException;
 
     public Optional<DemandeResponse> oneById(String id) throws NumberFormatException, BusinessResourceException;

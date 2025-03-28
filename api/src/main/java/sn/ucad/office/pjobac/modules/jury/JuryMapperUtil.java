@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
+import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.session.Session;
@@ -77,11 +78,13 @@ public class JuryMapperUtil {
     }
     @Named("formatNom")
     public String formatNom(JuryRequest request) {
-        if (request.getSession() != null && request.getNumero() != null&& request.getCentre()!=null)  {
-            String session=request.getSession();
+        if (request.getNumero() != null&& request.getCentre()!=null)  {
+            Optional<Session> session = sessionDao.enCoursSession();
+            Session oneBrute = session.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune session trouvée.", HttpStatus.NOT_FOUND));
+            String sessionLibelle=oneBrute.getLibelleLong();
             String centre=request.getCentre();
             String numero=request.getNumero();
-            String annee = getSessionById(session).getAnnee().getLibelleLong();
+            String annee = getSessionById(sessionLibelle).getAnnee().getLibelleLong();
             String libelleCourt=getCentreById(centre).getLibelleCourt();
             return "JURY"+numero+libelleCourt+annee;
         }

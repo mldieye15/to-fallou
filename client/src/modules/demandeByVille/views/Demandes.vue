@@ -139,6 +139,7 @@
         :columnDefs="columnDefs"
         :gridOptions="gridOptions"
         :frameworkComponents="frameworkComponents"
+        :rowSelection="rowSelection"
         style="height: 500px"
     >
     </ag-grid-vue>
@@ -162,6 +163,7 @@ import {
   AllCommunityModule,
   ModuleRegistry,
   themeQuartz,
+  RowSelectionModule,
 } from "ag-grid-community";
 import { AgGridVue } from "ag-grid-vue3"; // Vue Data Grid Component
 
@@ -181,13 +183,15 @@ const { demandeByVilleProposition,rejeter,accepterDemande,oneProposition } = dem
 // const {one,oneProposition}=villeStore;
 // const { dataDetails } = storeToRefs(villeStore);
 ModuleRegistry.registerModules([AllCommunityModule]);
+const selectedRows = ref([]);
+
+const onRowSelected = (event) => {
+  selectedRows.value = event.api.getSelectedRows();
+  console.log("Lignes sélectionnées :", selectedRows.value);
+};
 const columnDefs = ref([
   { headerName: 'Prenoms', field: 'prenoms', sortable: true, filter: true,editable: true },
-  { headerName: 'Nom', field: 'nom', sortable: true, filter: "agSetColumnFilter",
-        filterParams: {
-          excelMode: "windows",
-        }
-  },
+  { headerName: 'Nom', field: 'nom', sortable: true, filter: true},
   { headerName: 'Code', field: 'code', sortable: true, filter: true },
   { headerName: "Centre d'écrit", field: 'centre', sortable: true, filter: true ,
   editable: (params) => {

@@ -46,7 +46,7 @@ public class MailService {
 
     }
     @Async
-    public void sendHtmlEmail(NotificationEmailHtml notificationEmail) throws MailException, InterruptedException {
+    public void sendHtmlEmail(NotificationEmailHtml notificationEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setFrom("pjbac@ucad.edu.sn");
@@ -58,12 +58,34 @@ public class MailService {
             String htmlContent = templateEngine.process(notificationEmail.getTemplateName(), context);
             messageHelper.setText(htmlContent, true);
         };
+
         try {
             mailSender.send(messagePreparator);
             log.info("Email de notification envoyé avec succès.");
         } catch (MailException ex) {
+            // Log the error without throwing an exception to prevent blocking the main process
             log.error("Erreur lors de l'envoi de l'email de notification : " + ex.getMessage());
-            throw new BusinessResourceException("SendMessError", "Erreur d'envoi du message.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+//    @Async
+//    public void sendHtmlEmail(NotificationEmailHtml notificationEmail) throws MailException, InterruptedException {
+//        MimeMessagePreparator messagePreparator = mimeMessage -> {
+//            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+//            messageHelper.setFrom("pjbac@ucad.edu.sn");
+//            messageHelper.setTo(notificationEmail.getRecipient());
+//            messageHelper.setSubject(notificationEmail.getSubject());
+//
+//            Context context = new Context();
+//            context.setVariables(notificationEmail.getEmailVariables());
+//            String htmlContent = templateEngine.process(notificationEmail.getTemplateName(), context);
+//            messageHelper.setText(htmlContent, true);
+//        };
+//        try {
+//            mailSender.send(messagePreparator);
+//            log.info("Email de notification envoyé avec succès.");
+//        } catch (MailException ex) {
+//            log.error("Erreur lors de l'envoi de l'email de notification : " + ex.getMessage());
+//            throw new BusinessResourceException("SendMessError", "Erreur d'envoi du message.", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }

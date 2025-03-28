@@ -49,6 +49,13 @@ public class VilleResource {
         List<VilleResponse> response = service.allWithJury();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allWithJuryDejaProposer")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<VilleResponse>> allWithJuryDejaProposer(){
+        List<VilleResponse> response = service.allWithJuryDejaProposer();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/allSecondaryVille")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

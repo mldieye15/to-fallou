@@ -16,6 +16,9 @@ public interface SessionDao extends JpaRepository<Session, Long> {
     @Query("SELECT s FROM Session s WHERE s.annee.encours = true AND s.ouvert = true")
     List<Session> findEnCoursSession();
 
+    @Query("SELECT s FROM Session s WHERE s.annee.encours = true AND s.ouvert = true")
+    Optional<Session> enCoursSession();
+
     @Query("SELECT s FROM Session s WHERE s.ouvert = true")
     List<Session> findSessionsOuvertes();
 

@@ -59,6 +59,8 @@ public interface DemandeDao extends JpaRepository<Demande, Long> {
     List<Demande> allDemandeObselete();
     @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='validée' AND d.session.ouvert = true" )
     List<Demande> allDemandeValider();
+    @Query("SELECT d FROM Demande d WHERE d.etatDemande.libelleLong='en attente' AND d.session.ouvert = true AND d.proposition = true")
+    List<Demande> allDemandeProposer();
     @Query("SELECT d FROM Demande d WHERE d.ville = :ville AND d.session.ouvert = true" )
     List<Demande> demandeByVille(@Param("ville")Ville ville);
     @Query("SELECT d FROM Demande d WHERE d.centre = :centre AND d.session.ouvert = true")

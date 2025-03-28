@@ -24,11 +24,11 @@ public class Jury {
     @Setter(AccessLevel.PROTECTED)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotNull
     private String numero;
     @NotNull
     private String nom;
+    private boolean technique;
     @ManyToOne(fetch = FetchType.EAGER)
     private Centre centre;
     @ManyToOne(fetch = FetchType.EAGER)

@@ -75,7 +75,7 @@ const { addNotification } = notificationStore;
 
 const villeStore = useVilleStore();
 const { dataListeVille, headerTable, loading,columns } = storeToRefs(villeStore);
-const { all, destroy,allWithJury } = villeStore;
+const { all, destroy,allWithJuryDejaProposer } = villeStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -83,7 +83,7 @@ const searchValue = ref("");
 const dialog = ref(false);
 
 onMounted(()=>{
-  allWithJury();
+  allWithJuryDejaProposer();
 });
 
 const redirectToDemandes = (id) => {

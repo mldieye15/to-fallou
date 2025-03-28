@@ -16,5 +16,6 @@ public class JuryResponse {
     private String nom;
     private String numero;
     private Centre centre;
+    private boolean technique;
     private Session session;
 }
