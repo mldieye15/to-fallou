@@ -55,6 +55,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
         { title: 'Etablissement', key: 'etablissement', align: 'start', sortable: true },
         { title: 'Code', key: 'code', align: 'start', sortable: true },
         { title: "Centre d'écrit", key: 'centre', align: 'start', sortable: true },
+        { title: "Etat de la demande", key: 'etatDemande', align: 'start', sortable: true },
         { title: 'Ville', key: 'ville', align: 'start', sortable: true },
 
       ],
@@ -82,6 +83,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               let nomLabel =element.user? element.user.nom:null;
               let codeLabel =element.user? element.user.code:null;
               let centreLabel = element.centre ? element.centre.libelleLong:null;
+              let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
               return{
               id:element.id,
               jury: juryLabel,
@@ -91,6 +93,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               centre:centreLabel,
               ville: villeLabel,
               etablissement: etablissementLabel,
+              etatDemande: etatLabel,
               telephone:telephoneLabel,
               matricule:matriculeLabel
               }
@@ -117,6 +120,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               let prenomLabel =element.user? element.user.prenoms:null;
               let matriculeLabel = element.user ? element.user.matricule : null;
               let telephoneLabel = element.user ? element.user.telephone : null;
+              let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
               let etablissementLabel =element.user.etablissement? element.user.etablissement.libelleLong:null;
               let nomLabel =element.user? element.user.nom:null;
               let codeLabel =element.user? element.user.code:null;
@@ -130,6 +134,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               centre:centreLabel,
               ville: villeLabel,
               etablissement: etablissementLabel,
+              etatDemande: etatLabel,
               telephone:telephoneLabel,
               matricule:matriculeLabel
               }
@@ -156,6 +161,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
           formattedData = await Promise.all(res.map(async (element) => {
             let villeLabel = element.ville ? element.ville.libelleLong : null;
             let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
+            let etablissementLabel = element.user && element.user.etablissement ? element.user.etablissement.libelleLong:null;
             let sessionLabel = element.session ? element.session.libelleLong : null;
             let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
             let nomLabel = element.user ? element.user.nom : null;
@@ -216,7 +222,8 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               hasAcceptedDemande: hasAccepted,
               quota: quotaAccept,
               proposition:propositionLabel,
-              situation: situation
+              situation: situation,
+              etablissement: etablissementLabel,
             };
           }));
 
@@ -242,6 +249,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
             let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
             let sessionLabel = element.session ? element.session.libelleLong : null;
             let etatLabel = element.etatDemande ? element.etatDemande.libelleLong : null;
+            let etablissementLabel = element.user && element.user.etablissement ? element.user.etablissement.libelleLong:null;
             let nomLabel = element.user ? element.user.nom : null;
             let PrenomsLabel = element.user ? element.user.prenoms : null;
             let codeLabel = element.user ? element.user.code : null;
@@ -303,6 +311,7 @@ export const useDemandeByVilleStore = defineStore('demandeByVille', {
               hasAcceptedDemande: hasAccepted,
               quota: quotaAccept,
               proposition:propositionLabel,
+              etablissement: etablissementLabel,
               situation: situation
             };
           }));

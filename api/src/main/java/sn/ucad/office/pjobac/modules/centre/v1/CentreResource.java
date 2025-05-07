@@ -127,5 +127,16 @@ public class CentreResource {
             return ResponseEntity.ok(false);
         }
     }
+    @PutMapping("/update-jury-count")
+    public ResponseEntity<String> updateNombreJury() {
+        try {
+            service.updateAllCentresNombreJury();
+            return ResponseEntity.ok("Nombre de jurys mis à jour avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la mise à jour du nombre de jurys : " + e.getMessage());
+        }
+    }
+
 }
 

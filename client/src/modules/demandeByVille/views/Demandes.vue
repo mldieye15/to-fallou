@@ -193,6 +193,7 @@ const columnDefs = ref([
   { headerName: 'Prenoms', field: 'prenoms', sortable: true, filter: true,editable: true },
   { headerName: 'Nom', field: 'nom', sortable: true, filter: true},
   { headerName: 'Code', field: 'code', sortable: true, filter: true },
+  { headerName: 'Etablissement', field: 'etablissement', sortable: true, filter: true },
   { headerName: "Centre d'écrit", field: 'centre', sortable: true, filter: true ,
   editable: (params) => {
      return ["affectable", "reaffectable", "déjà proposer"].includes(params.data.situation) &&

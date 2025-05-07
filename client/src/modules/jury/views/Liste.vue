@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.jury.jury') }}</p>
-    
+
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
         <v-col cols="12" sm="6" md="4" >
@@ -33,6 +33,11 @@
         buttons-pagination
         :search-value="searchValue"
       >
+      <template #item-technique="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"  :color="item.technique === 'OUI' ? 'green' : 'red'" text variant="flat" size="small">
+              {{ item.technique}}
+          </v-chip>
+      </template>
         <template #item-actions="item">
           <div class="actions-wrapper">
             <router-link :to="{ name: 'jury-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
@@ -47,7 +52,7 @@
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.jury.jury')"></v-toolbar>
                   <v-card-text>
-                    
+
                     <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
@@ -61,7 +66,7 @@
         </template>
       </EasyDataTable>
     </v-container>
-    
+
   </div>
 </template>
 <script setup>
@@ -104,7 +109,7 @@ const del = (id) => {
     //   });
 toast.success(i18n.t('deleted'));
       dialog.value=false;
-      all();
+      allBySession();
   });
 }
 const redirectToArchives = () => {

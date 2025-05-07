@@ -11,12 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
+import sn.ucad.office.pjobac.modules.annee.Annee;
+import sn.ucad.office.pjobac.modules.annee.AnneeDao;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
+import sn.ucad.office.pjobac.modules.session.Session;
+import sn.ucad.office.pjobac.modules.session.SessionDao;
 import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
@@ -33,7 +37,9 @@ public class JuryServiceImp implements JuryService {
     private final JuryMapper mapper;
     private final JuryDao dao;
     private final CentreDao centreDao;
+    private final SessionDao sessionDao;
     private final VilleDao villeDao;
+    private final AnneeDao anneeDao;
 
 
     @Override
@@ -109,11 +115,25 @@ public class JuryServiceImp implements JuryService {
     public JuryResponse add(JuryRequest req) throws BusinessResourceException {
         try {
             log.info("Debug 001-add:  " + req.toString());
+            Optional<Session> session = sessionDao.enCoursSession();
+            Session sessionJury = session.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune session trouvée.", HttpStatus.NOT_FOUND));
+            Annee anneeEncours= anneeDao.findByEncoursTrue();
+//            String sessionLibelle=oneBrute.getLibelleLong();
             Jury one = mapper.requestToEntity(req);
+            String centre=one.getCentre().getLibelleCourt();
+            String numero=req.getNumero();
+            String annee = anneeEncours.getLibelleLong();
+            String nom="JURY-"+numero+"-"+centre+"-"+annee;
+
+            one.setSession(sessionJury);
+            one.setNom(nom);
             log.info("Debug 001-req_to_entity:  " + one.toString());
             JuryResponse response = mapper.toEntiteResponse(dao.save(one));
-            updateCentreTotalJury(one.getCentre().getId());
-            updateVilleTotalJury(one.getCentre().getVille().getId());
+            if (!one.isTechnique()){
+                updateCentreTotalJury(one.getCentre().getId());
+                updateVilleTotalJury(one.getCentre().getVille().getId());
+            }
+
             log.info("Ajout " + response.getNumero() + " effectué avec succés. <add>");
             return response;
         } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
@@ -137,8 +157,10 @@ public class JuryServiceImp implements JuryService {
 
             Jury oneBrute = mapper.requestToEntiteUp(juryOptional, req);
             JuryResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
-            updateCentreTotalJury(oneBrute.getCentre().getId());
-            updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
+            if (!oneBrute.isTechnique()){
+                updateCentreTotalJury(oneBrute.getCentre().getId());
+                updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
+            }
             log.info("Mise à jour " + response.getNumero() + " effectuée avec succés. <maj>");
             return response;
         } catch (NumberFormatException e) {
@@ -163,8 +185,10 @@ public class JuryServiceImp implements JuryService {
                             () -> new BusinessResourceException("not-found", "Aucun Jury avec " + id + " trouvé.", HttpStatus.NOT_FOUND)
                     );
             dao.deleteById(myId);
-            updateCentreTotalJury(oneBrute.getCentre().getId());
-            updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
+            if (!oneBrute.isTechnique()){
+                updateCentreTotalJury(oneBrute.getCentre().getId());
+                updateVilleTotalJury(oneBrute.getCentre().getVille().getId());
+            }
             log.info("Jury avec id & numero: " + id + " & " + oneBrute.getNumero() + " supprimé avec succés. <del>");
             String response;
             response = "Imputation: " + oneBrute.getNumero() + " supprimé avec succés. <del>";

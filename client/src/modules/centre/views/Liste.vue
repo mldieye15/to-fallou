@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.centre.centre') }}</p>
-    
+
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
         <v-col cols="12" sm="6" md="4" >
@@ -14,6 +14,21 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
+        <v-col cols="auto">
+          <v-btn class="text-right" color="green">
+              <download-excel
+              class="btn"
+              :data="dataListeCentre"
+              :fields="json_fields"
+              worksheet="My Worksheet"
+              type="xlsx"
+              name="Centre d'ecrit.xlsx"
+              >
+            Exporté
+            <i class="mdi mdi-cloud-download"></i>
+          </download-excel>
+          </v-btn>
+        </v-col>
         <v-col cols="auto">
           <!-- <v-btn variant="outlined" color="black" >
             <router-link :to="{ name: 'centre-add' }" class="">
@@ -32,7 +47,7 @@
         :search-value="searchValue"
       >
       <template #item-nombreJury="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"
                  color="blue" text variant="standard">
               {{ item.nombreJury}}
           </v-chip>
@@ -51,7 +66,7 @@
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.centre.centre')"></v-toolbar>
                   <v-card-text>
-                    
+
                     <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
@@ -64,8 +79,8 @@
           </div>
         </template>
       </EasyDataTable>
-    </v-container> 
-  </div>    
+    </v-container>
+  </div>
 </template>
 
 <script setup>
@@ -82,12 +97,18 @@ const router = useRouter();
 const redirectToAdd= () => {
   router.push({ name: 'centre-add'});
 };
-
+let json_fields = {
+"Centre d'ecrit": "libelleLong",
+" Nombre de Jury":"totalJury",
+"Centre d'examen": "ville",
+"Type de Centre": "typeCentre",
+"Academie": "academie",
+};
 
 const toast= useToast();
 //     recupération liste des villes
-const villeStore = useVilleStore(); 
-                        
+const villeStore = useVilleStore();
+
 
 const i18n = useI18n();
 
@@ -97,7 +118,7 @@ const { addNotification } = notificationStore;
 const centreStore = useCentreStore();
 const { dataListeCentre, headerTable, loading } = storeToRefs(centreStore);
  const { all, destroy } = centreStore;
- 
+
 const listeVille = reactive({ items: [] });
 const headers = reactive({ items: [] });
 const searchValue = ref("");
@@ -113,7 +134,7 @@ dialog.value = false;
 console.log('Valeur de dialog après avoir fermé le modal :', dialog.value);
 
 onMounted(()=>{
-  all(); 
+  all();
 });
 
 const del = (id) => {

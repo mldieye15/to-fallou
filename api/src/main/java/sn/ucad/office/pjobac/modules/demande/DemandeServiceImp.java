@@ -480,7 +480,7 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
 
             // Envoi des emails après la sauvegarde des données
             for (Demande demande : demandes) {
-//                sendEmailToDemande(demande);
+                sendEmailToDemande(demande);
             }
             log.info(demandes.size() + " demandes acceptées avec succès.");
 

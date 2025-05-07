@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { fr } from "date-fns/locale";
 
 const  modulesURL = '/v1/users';
+const  modulesURL1 = '/v1/candidatAuthorisers';
 const adminURL = '/auth/v1';
 const inscription =adminURL +'/inscription';
 const all= modulesURL+'/all';
@@ -46,8 +47,9 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
       { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
       { text: 'Téléphone', value: 'telephone', align: 'start', sortable: true },
-      { text: 'Liste rouge', value: 'etat', sortable: false },
+      { text: 'Liste rouge', value: 'listeRouge', sortable: false },
       { text: 'Liste noire', value: 'listeNoire', sortable: false },
+      { text: 'Etat du compte', value: 'etat', sortable: false },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     columns: [
@@ -211,7 +213,8 @@ export const useUtilisateurStore = defineStore('utilisateur', {
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
-              let etatLabel = element.accountNonLocked? 'NON':'OUI';
+              let etatLabel = element.enabled? 'activé':'désactivé';
+              let listeRouge = element.accountNonLocked? 'NON':'OUI';
               let listeNoire = element.accountNonExpired? 'NON':'OUI';
               return{
                 id:element.id,
@@ -226,6 +229,7 @@ export const useUtilisateurStore = defineStore('utilisateur', {
                 telephone: element.telephone,
                 anciennete: element.anciennete,
                 etat:etatLabel,
+                listeRouge,
                 listeNoire
               }
 
@@ -385,6 +389,19 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     async listeNoire(id) {
       try {
         const response = await axios.put(`${modulesURL}/${id}/listeNoire`);
+        if (response.status === 200) {
+          this.user();
+        }
+      } catch (error) {
+        console.error(error);
+        this.error = error;
+      } finally {
+        this.loading = false;
+      }
+    },
+    async autorisation(id) {
+      try {
+        const response = await axios.put(`${modulesURL1}/${id}/autorisation`);
         if (response.status === 200) {
           this.user();
         }

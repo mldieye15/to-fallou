@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 
-//  
+//
 import FormVue from "./Form.vue";
 import { useJuryStore } from "../store";
 import { useToast } from 'vue-toastification';
@@ -33,8 +33,8 @@ const { add } = juryStore;
 const inputForm= reactive({
   libellelong: "",
   centre: null,
+  technique :false,
   numero:'',
-  session: null,
 });
 
 const handleSave = (payload) => {

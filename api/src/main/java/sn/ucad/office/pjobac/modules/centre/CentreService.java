@@ -20,6 +20,7 @@ public interface CentreService {
     public List<CentreResponse> allSecondaryByVille(String villeId) throws BusinessResourceException;
     public List<CentreResponse> centreParVilleSansJury(String villeId) throws BusinessResourceException;
     public List<CentreResponse> centreParVilleSansJuryForProposition(String villeId) throws BusinessResourceException;
+    public void updateAllCentresNombreJury();
 
     public SimplePage<CentreResponse> all(Pageable pageable) throws BusinessResourceException;
 
@@ -35,4 +36,6 @@ public interface CentreService {
     void verifyCentreUnique(String libelleLong)throws  BusinessResourceException;
     void verifyUniqueLibelleCourt(String libelleCourt)throws  BusinessResourceException;
     boolean verifyLibelleLongUniqueUp(String libelleLong, Long id)throws  BusinessResourceException;
+    int getTotalJuryTousCentres();
+
 }

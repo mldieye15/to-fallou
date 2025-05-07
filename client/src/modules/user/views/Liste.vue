@@ -37,16 +37,22 @@
             {{ item.etablissement }}
           </div>
         </template>
-        <template #item-etat="item">
+        <template #item-listeRouge="item">
           <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog(item)"
-                 :color="item.etat === 'NON' ? 'green' : 'red'" text variant="tonal">
-              {{ item.etat}}
+                 :color="item.listeRouge === 'NON' ? 'green' : 'red'" text variant="tonal">
+              {{ item.listeRouge}}
           </v-chip>
       </template>
       <template #item-listeNoire="item">
           <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirm(item)"
                  :color="item.listeNoire === 'NON' ? 'green' : 'red'" text variant="tonal">
               {{ item.listeNoire}}
+          </v-chip>
+      </template>
+      <template #item-etat="item">
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmEnabled(item)"
+                 :color="item.etat === 'activé' ? 'green' : 'red'" text variant="tonal">
+              {{ item.etat}}
           </v-chip>
       </template>
         <template #item-actions="item">
@@ -99,11 +105,22 @@
     </v-card>
   </v-dialog>
   </div>
+  <v-dialog v-model="confirmEnabled" max-width="500">
+    <v-card>
+      <v-card-title>{{ confirmEnabledTitle }}</v-card-title>
+      <v-card-text>{{ confirmEnabledMessage }}</v-card-text>
+      <v-card-actions>
+        <v-btn color="primary" @click="confirmActionEnabled">Oui</v-btn>
+        <v-btn color="error" text @click="cancelEnabled">Non</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
 import { useUtilisateurStore } from "../store";
+import { useCandidatAuthoriserStore } from "@/modules/candidatAuth/store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
@@ -120,7 +137,10 @@ const { addNotification } = notificationStore;
 
 const userStore = useUtilisateurStore();
 const { dataListeUtilisateur, headerTable, loading } = storeToRefs(userStore);
-const { all, destroy,user,bloquer,listeNoire } = userStore;
+const { all, destroy,user,bloquer,listeNoire,autorisation } = userStore;
+
+// const candidatAuthoriserStore = useCandidatAuthoriserStore();
+// const { allNotAutoriser,autorisation,hasEnabledNonAutoriserUsers,disableNonAutoriserUsers } = candidatAuthoriserStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
@@ -166,9 +186,9 @@ const confirmDialogMessage = ref('');
 const currentItem = ref(null);
 
 const showConfirmDialog = (item) => {
-  console.log("Valeur de item.affectable :", item.etat);
-  confirmDialogTitle.value = item.etat === 'NON' ? "Confirmer l'ajout à la liste rouge" :"Confirmer la supression à la liste rouge";
-  confirmDialogMessage.value = item.etat === 'NON' ? "Voulez-vous ajouter ce compte sur liste rouge ?" :"Voulez-vous suprimer ce compte de la liste rouge?";
+  console.log("Valeur de item.affectable :", item.listeRouge);
+  confirmDialogTitle.value = item.listeRouge === 'NON' ? "Confirmer l'ajout à la liste rouge" :"Confirmer la supression à la liste rouge";
+  confirmDialogMessage.value = item.listeRouge === 'NON' ? "Voulez-vous ajouter ce compte sur liste rouge ?" :"Voulez-vous suprimer ce compte de la liste rouge?";
   currentItem.value = item.id;
   confirmDialog.value = true;
 };
@@ -190,6 +210,36 @@ const closeConfirmDialog = () => {
   confirmDialogMessage.value = '';
   currentItem.value = null;
   };
+const confirmEnabled = ref(false);
+const confirmEnabledTitle = ref('');
+const confirmEnabledMessage = ref('');
+const currentEnabled = ref(null);
+
+const showConfirmEnabled = (item) => {
+  console.log("Valeur de item.affectable :", item.etat);
+  confirmEnabledTitle.value = item.etat === 'activé' ? "Confirmer la désactivation du compte" :"Confirmer l'activation du compte";
+  confirmEnabledMessage.value  = item.etat === 'activé' ? "Voulez-vous désactiver  le compte ?" :"Voulez-vous activer le compte?";
+  currentEnabled.value = item.id;
+  confirmEnabled.value = true;
+};
+const confirmActionEnabled = () => {
+  if (currentEnabled.value) {
+    autorisation(currentEnabled.value);
+    user();
+    confirmEnabled.value = false;
+  }
+  closeConfirmEnabled()
+};
+const cancelEnabled = () => {
+  closeConfirmEnabled();
+};
+const closeConfirmEnabled = () => {
+  confirmEnabled.value = false;
+  confirmEnabledTitle.value = '';
+  confirmEnabledMessage.value = '';
+  currentEnabled.value = null;
+  };
+
 const del = (id) => {
   destroy(id).then( () => {
     // addNotification({

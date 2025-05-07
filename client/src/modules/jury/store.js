@@ -29,6 +29,7 @@ export const useJuryStore = defineStore('jury', {
     headerTable: [
       { text: 'Nom', value: 'nom', align: 'start', sortable: true },
       { text: 'Numero', value: 'numero', align: 'start', sortable: true },
+      { text: 'Technique', value: 'technique', align: 'start', sortable: true },
       { text: 'Session', value: 'session', align: 'start', sortable: true },
       { text: 'Centre', value: 'centre', align: 'start', sortable: true },
       { text: 'Ville', value: 'ville', align: 'start', sortable: true },
@@ -45,29 +46,30 @@ export const useJuryStore = defineStore('jury', {
     //  recupérer la liste des jurys et le mettre dans la tabel dataListe
     async all() {
       try {
-        await axios.get(`${all}`) 
+        await axios.get(`${all}`)
         .then((response) => {
           if(response.status === 200){
 
             let res = response.data.map( (element) => {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
               let sessionLabel = element.session ? element.session.libelleLong : null;
-              let villeLabel =element.centre&& element.centre.ville ? element.centre.ville.libelleLong :null;
+              let techniqueLabel =element.technique? 'OUI' :'NON';
               let academieLabel =element.centre&& element.centre.ville.academie ? element.centre.ville.academie.libelleLong : null;
               return {
-                id:element.id, 
+                id:element.id,
                 numero: element.numero,
                 nom:element.nom,
                 centre: centreLabel,
                 ville: villeLabel,
                 academie: academieLabel,
+                technique:techniqueLabel,
                 session: sessionLabel
               };
-             
+
             });
 
             this.dataListeJury = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -78,7 +80,7 @@ export const useJuryStore = defineStore('jury', {
     },
     async allBySession() {
       try {
-        await axios.get(`${allBySession}`) 
+        await axios.get(`${allBySession}`)
         .then((response) => {
           if(response.status === 200){
 
@@ -86,21 +88,23 @@ export const useJuryStore = defineStore('jury', {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
               let sessionLabel = element.session ? element.session.libelleLong : null;
               let villeLabel =element.centre&& element.centre.ville ? element.centre.ville.libelleLong :null;
+              let techniqueLabel =element.technique? 'OUI' :'NON';
               let academieLabel =element.centre&& element.centre.ville.academie ? element.centre.ville.academie.libelleLong : null;
               return {
-                id:element.id, 
+                id:element.id,
                 numero: element.numero,
                 nom:element.nom,
                 centre: centreLabel,
                 ville: villeLabel,
                 academie: academieLabel,
+                technique:techniqueLabel,
                 session: sessionLabel
               };
-             
+
             });
 
             this.dataListeJury = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -141,11 +145,11 @@ export const useJuryStore = defineStore('jury', {
     //  recupérer les informations d'un jury par son ide et le mettre dans la tabel dataDetails
     async one(jury) {
       try {
-        await axios.get(`${modulesURL}/${jury}`) 
+        await axios.get(`${modulesURL}/${jury}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -157,7 +161,7 @@ export const useJuryStore = defineStore('jury', {
     //  ajouter un jury
     async add(payload) {
       try {
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -176,7 +180,7 @@ export const useJuryStore = defineStore('jury', {
       try {
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload) 
+        await axios.put(`${modulesURL}/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -192,12 +196,13 @@ export const useJuryStore = defineStore('jury', {
     //  supprimer un jury
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         console.log("ID à supprimer :", id)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
           }
+          this.allBySession()
         })
       } catch (error) {
         console.log(error);
@@ -260,5 +265,5 @@ export const useJuryStore = defineStore('jury', {
       }
     },
   },
-  
+
 })

@@ -45,11 +45,11 @@
             <router-link :to="{ name: 'candidatAuthoriser-details', params: { id: item.id } }"> <v-icon small flat color="green dark">mdi-eye</v-icon> </router-link>
             <router-link :to="{ name: 'candidatAuthoriser-edit', params: { id: item.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
             <v-dialog  transition="dialog-top-transition" width="50%" height="auto">
-              <template v-slot:activator="{ props }">
+              <!-- <template v-slot:activator="{ props }">
                 <v-btn variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>
               </v-btn>
-              </template>
+              </template> -->
               <template v-slot:default="{ isActive }">
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.candidatAuthoriser.candidatAuthoriser')"></v-toolbar>

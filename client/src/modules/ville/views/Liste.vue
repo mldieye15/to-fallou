@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="text-h6">{{ $t('apps.forms.ville.ville') }}</p>
-    
+
     <v-container class="my-5" grid-list-xl>
       <v-row class="mb-0 mx-auto pa-1"  align="center">
         <v-col cols="12" sm="6" md="4" >
@@ -14,6 +14,21 @@
           ></v-text-field>
         </v-col>
         <v-spacer></v-spacer>
+        <v-col cols="auto">
+          <v-btn class="text-right" color="green">
+              <download-excel
+              class="btn"
+              :data="dataListeVille"
+              :fields="json_fields"
+              worksheet="My Worksheet"
+              type="xlsx"
+              name="Centre d'examen.xlsx"
+              >
+            Exporté
+            <i class="mdi mdi-cloud-download"></i>
+          </download-excel>
+          </v-btn>
+        </v-col>
         <v-col cols="auto">
           <!-- <v-btn variant="outlined" color="black" >
             <router-link :to="{ name: 'ville-add' }" class="">
@@ -31,7 +46,7 @@
         :search-value="searchValue"
       >
       <template #item-totalJury="item">
-          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" 
+          <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"
                  color="blue" text variant="standard">
               {{ item.totalJury}}
           </v-chip>
@@ -50,7 +65,7 @@
                 <v-card>
                   <v-toolbar color="primary" :title="$t('apps.forms.academie.academie')"></v-toolbar>
                   <v-card-text>
-                    
+
                     <div class="text-h6">{{ $t('apps.forms.delteMessage') }}</div>
                   </v-card-text>
                   <v-card-actions class="justify-end">
@@ -64,7 +79,7 @@
         </template>
       </EasyDataTable>
     </v-container>
-    
+
   </div>
 </template>
 
@@ -103,6 +118,11 @@ const dialog = ref(false);
 onMounted(()=>{
   all();
 });
+let json_fields = {
+"Centre d'examen": "libelleLong",
+"Nombre de Jury":"totalJury",
+"Academie": "academie",
+};
 
 const del = (id) => {
   destroy(id).then( () => {

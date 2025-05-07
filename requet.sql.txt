@@ -1,0 +1,31 @@
+UPDATE centre c
+SET nombre_jury = (
+    SELECT COUNT(j.id)
+    FROM jury j
+    JOIN session s ON j.session_id = s.id
+    WHERE j.centre_id = c.id
+      AND j.technique = false
+      AND s.ouvert = true
+);
+
+
+UPDATE ville v
+JOIN (
+    SELECT c.ville_id, SUM(c.nombre_jury) AS total
+    FROM centre c
+    GROUP BY c.ville_id
+) sub ON sub.ville_id = v.id
+SET v.total_jury = sub.total;
+
+
+
+ Pour tous les centres :
+sql
+Copier
+Modifier
+SELECT SUM(nombre_jury) AS total_global_jury FROM centre;
+🔹 Pour toutes les villes :
+sql
+Copier
+Modifier
+SELECT SUM(total_jury) AS total_global_jury FROM ville;

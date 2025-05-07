@@ -6,6 +6,8 @@ import org.mapstruct.Named;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
+import sn.ucad.office.pjobac.modules.annee.Annee;
+import sn.ucad.office.pjobac.modules.annee.AnneeDao;
 import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.etatDemande.EtatDemande;
@@ -23,6 +25,7 @@ public class JuryMapperUtil {
     private final CentreDao centreDao;
     private final SessionDao sessionDao;
     private final JuryDao juryDao;
+    private final AnneeDao anneeDao;
 
     @Named("getCentreById")
     Centre getCentreById(String centreId) throws NumberFormatException {
@@ -79,12 +82,13 @@ public class JuryMapperUtil {
     @Named("formatNom")
     public String formatNom(JuryRequest request) {
         if (request.getNumero() != null&& request.getCentre()!=null)  {
-            Optional<Session> session = sessionDao.enCoursSession();
-            Session oneBrute = session.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune session trouvée.", HttpStatus.NOT_FOUND));
-            String sessionLibelle=oneBrute.getLibelleLong();
+//            Optional<Session> session = sessionDao.enCoursSession();
+//            Session oneBrute = session.orElseThrow(() -> new BusinessResourceException("not-found", "Aucune session trouvée.", HttpStatus.NOT_FOUND));
+            Annee anneeEncours= anneeDao.findByEncoursTrue();
+//            String sessionLibelle=oneBrute.getLibelleLong();
             String centre=request.getCentre();
             String numero=request.getNumero();
-            String annee = getSessionById(sessionLibelle).getAnnee().getLibelleLong();
+            String annee = anneeEncours.getLibelleLong();
             String libelleCourt=getCentreById(centre).getLibelleCourt();
             return "JURY"+numero+libelleCourt+annee;
         }

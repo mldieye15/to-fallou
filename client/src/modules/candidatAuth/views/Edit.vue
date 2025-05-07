@@ -1,7 +1,6 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.academie.academie') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="true" />
+    <FormEdit :inputForm="inputForm" :actionSubmit="handleSave" />
   </div>
 </template>
 
@@ -12,10 +11,10 @@ import { useRouter, useRoute } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 
-
 //
 import FormVue from "./Form.vue";
-import { useCandidatAuthoriserStore } from "../store";
+import { useUtilisateurStore }from "@/modules/user/store";
+import FormEdit from "./FormEdit.vue";
 import { useToast } from 'vue-toastification';
 
 
@@ -29,14 +28,30 @@ const instance = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 
-const academietore = useCandidatAuthoriserStore();
-const { dataDetails, loading } = storeToRefs(academietore);
-const { one, modify } = academietore;
+const userStore = useUtilisateurStore();
+const { dataDetails, loading } = storeToRefs(userStore);
+const { one, modify } = userStore;
 
 const inputForm = reactive({
-  id:"",
-  libelleLong: '',
-  libelleCourt: '',
+  id:"id",
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  // dateNaiss:null,
+  email: "",
+  username: "",
+  // mdpasse: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
+  fonction: null,
+  etablissement: null,
 });
 
 const handleSave = (payload) => {
@@ -47,15 +62,34 @@ const handleSave = (payload) => {
     //     color: 'blue'
     //   });
     toast.success(i18n.t('updated'));
-    router.push( { name: 'academie-liste'});
+    router.push( { name: 'candidatNonAuthorisers-liste'});
   });
 }
 
 onMounted(()=>{
   one(route.params.id ).then( () => {
-    inputForm.id = dataDetails.value.id
-    inputForm.libelleLong = dataDetails.value.libelleLong
-    inputForm.libelleCourt = dataDetails.value.libelleCourt
+    inputForm.id = dataDetails.value.id,
+    inputForm.prenoms = dataDetails.value.prenoms,
+    inputForm.nom = dataDetails.value.nom,
+    inputForm.matricule = dataDetails.value.matricule,
+    // inputForm.dateNaiss = dataDetails.value.dateNaiss,
+    inputForm.email = dataDetails.value.email,
+    inputForm.username = dataDetails.value.username,
+    inputForm.mdpasse = dataDetails.value.mdpasse
+    inputForm.sexe = dataDetails.value.sexe,
+    inputForm.code = dataDetails.value.code,
+    inputForm.telephone = dataDetails.value.telephone,
+    // inputForm.anciennete = dataDetails.value.anciennete
+    inputForm.fonction=dataDetails.value.fonction?dataDetails.value.fonction.id:null,
+    inputForm.etablissement=dataDetails.value.etablissement?dataDetails.value.etablissement.id:null,
+    inputForm.banque=dataDetails.value.banque,
+    inputForm.codeBanque=dataDetails.value.codeBanque,
+    inputForm.codeAgence=dataDetails.value.codeAgence,
+    inputForm.numeroCompte=dataDetails.value.numeroCompte,
+    inputForm.cleRib=dataDetails.value.cleRib
+
+
+
   });
 });
 

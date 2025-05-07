@@ -39,14 +39,17 @@ public class CentreServiceImp implements CentreService {
     private  final DemandeDao demandeDao;
     @Override
     public List<CentreResponse> all() throws BusinessResourceException {
-            log.info("CentreServiceImp::all");
-            List<Centre> all = dao.findAll();
-            List<CentreResponse> response;
-            response = all.stream()
-                    .map(mapper::toEntiteResponse)
-                    .collect(Collectors.toList());
-            return response;
-        }
+        log.info("CentreServiceImp::all");
+
+        List<Centre> all = dao.findAll();
+
+        List<CentreResponse> response = all.stream()
+                .sorted(Comparator.comparingInt(Centre::getNombreJury).reversed()) // Tri décroissant
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+
+        return response;
+    }
     @Override
     public List<CentreResponse> allWithJury() throws BusinessResourceException {
         log.info("CentreServiceImp::allWithJury");
@@ -146,6 +149,12 @@ public class CentreServiceImp implements CentreService {
         System.out.println("Ville ID: " + ville.getId());
         System.out.println("Nombre de centres sans quota atteint : " + centres.size());
         return response;
+    }
+
+    @Override
+    public void updateAllCentresNombreJury() {
+        log.info("Centre::mise a jour nombre de jury");
+        dao.updateNombreJuryForAllCentres();
     }
 //    @Override
 //    public List<CentreResponse> all() throws BusinessResourceException {
@@ -306,6 +315,11 @@ public class CentreServiceImp implements CentreService {
             throw new ResourceAlreadyExists("Le libelle existe déjà pour un autre centre.");
         }
         return false;
+    }
+
+    @Override
+    public int getTotalJuryTousCentres() {
+        return dao.getTotalJuryTousCentres();
     }
 
 

@@ -9,29 +9,6 @@
     <h2 class="mx-auto text-subtitle-6 text-medium-emphasis text-center">{{ $t('apps.forms.jury.jury') }}</h2>
     <v-divider class="my-3" color="white"></v-divider>
     <v-form @submit.prevent="handleSave" ref="juryForm">
-      <v-select
-        prepend-inner-icon="mdi-calendar"
-        name="session"
-        density="compact"
-        :label="$t('apps.forms.session.nom')"
-        color="balck"
-        v-model="inputForm.session"
-        variant="outlined"
-        :items="dataListeSession"
-        persistent-hint
-        
-        single-line
-        item-title="libelleLong"
-        item-value="id"
-        :error-messages="errors.session ? [errors.session] : []"
-        @focus="clearErrors"
-      >
-         <template v-if="errors.session"  v-slot:append>
-            <v-icon color="red">
-               mdi-alert-circle-outline
-            </v-icon>
-          </template>
-      </v-select>
       <v-text-field
         id="numero"
         prepend-inner-icon="mdi-numeric"
@@ -73,20 +50,10 @@
             </v-icon>
           </template>
       </v-autocomplete>
-      
-      <v-text-field
-        id="nom"
-        prepend-inner-icon="mdi-alpha-a-circle"
-        name="nom"
-        density="compact"
-        :label="$t('apps.forms.jury.nom')"
-        color="balck"
-        v-model="nomJury"
-        variant="outlined"
-        readonly
-      >
-      </v-text-field>
-      <div v-if="nomError" class="error-message">{{ nomErrorMessage }}</div>
+      <VRadioGroup v-model="inputForm.technique" inline>
+                      <VRadio label="OUI" :value="true" />
+                      <VRadio label="NON" :value="false" />
+    </VRadioGroup>
       <div class="d-flex justify-end">
         <v-btn class="mt-8 mb-8 mr-2" color="red" @click.prevent="redirectToListe()">{{ $t('apps.forms.annuler') }}</v-btn>
         <v-btn class="mt-8 mb-8" color="blue" @click="handleSave">{{ $t('apps.forms.valider') }}</v-btn>
@@ -107,7 +74,6 @@ import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  session: yup.string().required('Veuillez selectionner une session'),
   numero: yup
   .number('le numéro doit etre un chiffre')
   .required('Le numero est requis')
@@ -182,7 +148,6 @@ const checkNumeroExistenceUp = async () => {
   }
 };
 const clearErrors = () => {
-  errors.session = null;
   errors.numero = null;
   errors.centre= null;
 };
@@ -195,39 +160,38 @@ const redirectToListe = () => {
 //   const nomLabel = sessionStore.getAnneBySessionId(session);
 //   return `Jury N° ${numero} de ${nomLabel}`.trim();
 // });
-const getNomJury = () => {
-  const numero = inputForm.numero;
-  const session = inputForm.session;
-  const centre=inputForm.centre;
-  const labelCentre=centreStore.getCentreById(centre);
-  const nomLabel = sessionStore.getAnneBySessionId(session);
-  return `JURY${numero}${labelCentre}${nomLabel}`.trim();
-};
-const nomJury = ref(getNomJury());
-watchEffect(() => {
-  isSubmitDisabled.value = numeroError.value; 
-  nomJury.value = getNomJury();
-});
+// const getNomJury = () => {
+//   const numero = inputForm.numero;
+//   const session = inputForm.session;
+//   const centre=inputForm.centre;
+//   const labelCentre=centreStore.getCentreById(centre);
+//   const nomLabel = sessionStore.getAnneBySessionId(session);
+//   return `JURY${numero}${labelCentre}${nomLabel}`.trim();
+// };
+// const nomJury = ref(getNomJury());
+// watchEffect(() => {
+//   isSubmitDisabled.value = numeroError.value;
+//   nomJury.value = getNomJury();
+// });
 const errors = reactive({
-  session:null,
   numero:null,
   centre: null,
   error: false,
 });
 
-const onNumeroInput = () => { 
+const onNumeroInput = () => {
   if (isEdit) {
     checkNumeroExistenceUp();
     } else {
       checkNumeroExistence();
-    } 
+    }
 };
 const handleSave = async () => {
   try {
     if (!isSubmitDisabled.value) {
       await schema.validate(inputForm, { abortEarly: false });
       console.log('Formulaire valide. Soumission en cours...');
-      actionSubmit(inputForm); 
+      actionSubmit(inputForm);
       // Vous pouvez ajouter ici votre logique pour la sauvegarde du formulaire
     } else {
       console.log('Le formulaire contient des erreurs. Veuillez corriger et réessayer.');
@@ -236,13 +200,11 @@ const handleSave = async () => {
   // Si la validation échoue, afficher les messages d'erreur
   if (error instanceof yup.ValidationError) {
     error.inner.forEach(err => {
-      if (err.path === 'session') {
-        errors.session = err.message;
-      } else if (err.path === 'numero') {
+       if (err.path === 'numero') {
         errors.numero = err.message;
       } else if (err.path === 'centre') {
         errors.centre = err.message;
-      } 
+      }
     });
   } else {
     // Gérer d'autres erreurs ici, si nécessaire

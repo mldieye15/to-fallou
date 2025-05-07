@@ -11,7 +11,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
 
-//  
+//
 import FormVue from "./Form.vue";
 import { useJuryStore } from "../store";
 import { useToast } from 'vue-toastification';
@@ -34,8 +34,8 @@ const { one, modify } = juryStore;
 const inputForm = reactive({
   id: "",
   centre: null,
+  technique :"",
   numero:'',
-  session: null,
 });
 const handleSave = (payload) => {
   modify(route.params.id, payload).then( () => {
@@ -53,7 +53,7 @@ onMounted(()=>{
   one(route.params.id ).then( () => {
     inputForm.id= dataDetails.value.id,
     inputForm.centre= dataDetails.value.centre?dataDetails.value.centre.id:null,
-    inputForm.session= dataDetails.value.session?dataDetails.value.session.id:null,
+    inputForm.technique= dataDetails.value.technique,
     inputForm.numero= dataDetails.value.numero
   });
 });

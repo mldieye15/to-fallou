@@ -12,6 +12,7 @@ import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 import sn.ucad.office.pjobac.modules.academie.Academie;
 import sn.ucad.office.pjobac.modules.academie.AcademieDao;
+import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.demande.DemandeDao;
 import sn.ucad.office.pjobac.modules.security.token.AuthService;
 import sn.ucad.office.pjobac.modules.security.user.AppUser;
@@ -41,8 +42,8 @@ public class VilleServiceImp implements VilleService {
     public List<VilleResponse> all() throws BusinessResourceException {
         log.info("VilleServiceImp::all");
         List<Ville> all = dao.findAll();
-        List<VilleResponse> response;
-        response = all.stream()
+        List<VilleResponse>  response = all.stream()
+                .sorted(Comparator.comparingInt(Ville::getTotalJury).reversed()) // Tri décroissant
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return response;

@@ -31,7 +31,7 @@ spring:
     host: smtp.office365.com
     port: 587
     username: pjbac@ucad.edu.sn
-    password: Kun36683
+    password: zmwghhqwftlyljrj
     default-encoding: UTF-8
     protocol: smtp
     properties:

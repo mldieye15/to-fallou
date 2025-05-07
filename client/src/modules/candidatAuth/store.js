@@ -48,7 +48,8 @@ export const useCandidatAuthoriserStore = defineStore('candidatAuthoriser', {
       { text: 'Code', value: 'code', align: 'start', sortable: true },
       { text: 'Etablissement', value: 'etablissement', align: 'start', sortable: true },
       { text: 'Téléphone', value: 'telephone', align: 'start', sortable: true },
-      { text: 'Etat du compte', value: 'etat', sortable: false }
+      { text: 'Etat du compte', value: 'etat', sortable: false },
+      { text: 'Actions', value: 'actions', sortable: false }
     ]
   }),
 

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <p class="text-h6">{{ $t('apps.forms.academie.academie') }}</p>
-    <FormVue :inputForm="inputForm" :actionSubmit="handleSave" :isEdit="false"/>
+    <FormVue :inputForm="inputForm" :actionSubmit="handleSave"/>
   </div>
 </template>
 
@@ -10,13 +9,14 @@ import { reactive, getCurrentInstance } from "vue";
 import { useRouter } from 'vue-router';
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
+
+//
+import FormVue from "./Form.vue";
+import { useUtilisateurStore }from "@/modules/user/store";
 import { useToast } from 'vue-toastification';
 
 
 const toast= useToast();
-
-import FormVue from "./Form.vue";
-import { useCandidatAuthoriserStore } from "../store";
 const i18n = useI18n();
 
 const notificationStore = useNotificationStore();
@@ -25,23 +25,40 @@ const { addNotification } = notificationStore;
 const instance = getCurrentInstance();
 const router = useRouter();
 
-const academieStore = useCandidatAuthoriserStore();
-const { add } = academieStore;
+const userStore = useUtilisateurStore();
+const { inscription } = userStore;
 
 const inputForm= reactive({
-  libelleLong:'',
-  libelleCourt: '',
+  prenoms: "",
+  nom: "",
+  matricule: "",
+  // dateNaiss:null,
+  email: "",
+  username: "",
+  mdpasse: "",
+  sexe: "",
+  code: "",
+  telephone: "",
+  anciennete: "",
+  fonction: null,
+  etablissement: null,
+  banque: "",
+  codeBanque: "",
+  codeAgence:"",
+  numeroCompte: "",
+  cleRib: "",
+
 });
 
 const handleSave = (payload) => {
-  add(payload).then( () => {
+  inscription(payload).then( () => {
     // addNotification({
     //     show: true,
     //     text:  i18n.t('added'),
     //     color: 'blue'
     //   });
     toast.success(i18n.t('added'));
-    router.push( { name: 'academie-liste'});
+    router.push( { name: 'user-liste'});
   });
 }
 

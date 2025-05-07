@@ -240,7 +240,8 @@ public class CandidatAuthoriserServiceImp implements CandidatAuthoriserService {
             return response;
 
         } catch (Exception e) {
-            throw new Exception("Erreur lors de l'importation du fichier CSV", e);
+            e.printStackTrace(); // Affiche l'erreur complète dans la console
+            throw new RuntimeException("Erreur lors de l'importation du fichier CSV : " + e.getMessage(), e);
         }
     }
 

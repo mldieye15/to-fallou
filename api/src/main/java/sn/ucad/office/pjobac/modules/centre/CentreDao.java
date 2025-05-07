@@ -20,7 +20,7 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     @Query("SELECT c FROM Centre c WHERE c.libelleLong= :libelleLong AND c.id != :centreId")
     Optional<Centre> findByLibelleLongAndIdNot(@Param("libelleLong") String libelleLong, @Param("centreId") Long centreId);
     Optional<Centre> findByLibelleCourt(String libelleCourt);
-    @Query("SELECT COUNT(j) FROM Jury j WHERE j.centre.id = :centreId AND j.session.ouvert = true")
+    @Query("SELECT COUNT(j) FROM Jury j WHERE j.centre.id = :centreId AND j.session.ouvert = true AND j.technique = false")
     int totalJuryByCentre(@Param("centreId") Long centreId);
     @Query("SELECT MAX(CAST(j.numero AS int)) FROM Jury j WHERE j.centre.id = :centreId")
     Integer findLastJuryNumber(@Param("centreId") Long centreId);
@@ -47,5 +47,21 @@ public interface CentreDao extends JpaRepository<Centre, Long> {
     List<Centre> findCentresSecondaryParVille(@Param("ville") Ville ville);
 
 
+    @Modifying
+    @Query(value = """
+    UPDATE centre c
+    SET nombre_jury = (
+        SELECT COUNT(j.id)
+        FROM jury j
+        WHERE j.centre_id = c.id
+          AND j.technique = false
+          AND j.session_id IN (
+              SELECT s.id FROM session s WHERE s.ouvert = true
+          )
+    )
+    """, nativeQuery = true)
+    void updateNombreJuryForAllCentres();
+    @Query("SELECT SUM(c.nombreJury) FROM Centre c")
+    int getTotalJuryTousCentres();
 }
 
