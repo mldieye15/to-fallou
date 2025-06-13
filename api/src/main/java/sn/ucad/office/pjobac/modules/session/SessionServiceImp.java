@@ -11,8 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
-import sn.ucad.office.pjobac.modules.demande.NotificationObseleteDemande;
-import sn.ucad.office.pjobac.modules.demande.dto.DemandeDetailsCandidatResponse;
+
+import sn.ucad.office.pjobac.modules.security.mail.MailService;
+import sn.ucad.office.pjobac.modules.security.mail.NotificationEmailHtml;
+import sn.ucad.office.pjobac.modules.security.user.AppUser;
+import sn.ucad.office.pjobac.modules.security.user.UserDao;
 import sn.ucad.office.pjobac.modules.session.dto.SessionAudit;
 import sn.ucad.office.pjobac.modules.session.dto.SessionRequest;
 import sn.ucad.office.pjobac.modules.session.dto.SessionResponse;
@@ -20,6 +23,9 @@ import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,7 +35,9 @@ import java.util.stream.Collectors;
 public class SessionServiceImp implements SessionService {
     private final SessionMapper mapper;
     private final SessionDao dao;
-    private final NotificationObseleteDemande obseleteDemande;
+    private final UserDao userDao;
+
+    private  final MailService mailService;
 
     @Override
     public List<SessionResponse> all() throws BusinessResourceException {
@@ -230,36 +238,60 @@ public class SessionServiceImp implements SessionService {
     public void changerEtatModification(Long sessionId) throws InterruptedException {
         Session session = dao.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session avec l'ID " + sessionId + " non trouvée."));
-        boolean etatPrecedent = session.isModification();
-        // Inverser l'état actuel de la session
-        boolean nouvelEtat = !etatPrecedent;
-        session.setModification(nouvelEtat);
-        dao.save(session);
-        // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
-//        if (!etatPrecedent && (obseleteDemande != null)) {
-//                obseleteDemande.notificationUpdate();
-//
-//        }
-        // Journaliser le changement d'état
-        log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
+
+        if (!session.isModification()) {
+            session.setModification(true);
+            dao.save(session);
+
+            List<AppUser> usersToNotify = userDao.findAppUsersWhoAppliedAndHaveNoValidatedDemandInCurrentSession();
+
+            for (AppUser user : usersToNotify) {
+                try {
+                    sendEmailToUser(user);
+                    Thread.sleep(1500); // Pause de 500 ms entre chaque email
+                } catch (Exception e) {
+                    log.warn("Échec de l'envoi d'email à l'utilisateur {} : {}", user.getId(), e.getMessage());
+                }
+            }
+
+            log.info("Modification activée pour la session {} et envois d'emails terminés.", sessionId);
+        } else {
+            session.setModification(false);
+            dao.save(session);
+
+            log.info("Modification désactivée pour la session {}.", sessionId);
+        }
     }
 
     @Override
     public void changerEtatPhaseTwo(Long sessionId) throws InterruptedException {
+
+
         Session session = dao.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session avec l'ID " + sessionId + " non trouvée."));
-        boolean etatPrecedent = session.isPhaseTwo();
-        // Inverser l'état actuel de la session
-        boolean nouvelEtat = !etatPrecedent;
-        session.setPhaseTwo(nouvelEtat);
-        dao.save(session);
-        // Envoyer la notification par e-mail uniquement si l'état précédent était false et le nouvel état est true
-//        if (!etatPrecedent && (obseleteDemande != null)) {
-//            obseleteDemande.notificationPhaseTw();
-//
-//        }
-        // Journaliser le changement d'état
-        log.info("État de la candidature de la session avec l'ID " + sessionId + " changé avec succès. Nouvel état : " + nouvelEtat);
+
+        if (!session.isPhaseTwo()) {
+            session.setPhaseTwo(true);
+            dao.save(session);
+
+            List<AppUser> usersToNotify = userDao.findAppUsersWhoAppliedAndHaveNoValidatedDemandInCurrentSession();
+
+            for (AppUser user : usersToNotify) {
+                try {
+                    sendEmailToUserPhsaseTwo(user);
+                    Thread.sleep(1500); // Pause de 500 ms entre chaque email
+                } catch (Exception e) {
+                    log.warn("Échec de l'envoi d'email à l'utilisateur {} : {}", user.getId(), e.getMessage());
+                }
+            }
+
+            log.info("PhaseTwo activée pour la session {} et envois d'emails terminés.", sessionId);
+        } else {
+            session.setPhaseTwo(false);
+            dao.save(session);
+
+            log.info("PhaseTwo désactivée pour la session {}.", sessionId);
+        }
 
     }
     @Override
@@ -289,5 +321,46 @@ public class SessionServiceImp implements SessionService {
                 .map(mapper::toEntiteResponse)
                 .collect(Collectors.toList());
         return responses;
+    }
+    private void sendEmailToUser(AppUser user) throws BusinessResourceException {
+        try {
+            // Création du contenu de l'email
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+
+            notificationEmail.setSubject("Modification demandes obsolètes");
+            notificationEmail.setRecipient(user.getEmail());
+            notificationEmail.setTemplateName("notificationModificationObsolet.html");
+
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", user.getPrenoms());
+            emailVariables.put("nom", user.getNom());
+            notificationEmail.setEmailVariables(emailVariables);
+            // Envoi de l'email
+            mailService.sendHtmlEmail(notificationEmail);
+        } catch (Exception e) {
+            throw new BusinessResourceException("email-error",
+                    "Erreur lors de l'envoi de l'email pour la user : " + user.getId(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private void sendEmailToUserPhsaseTwo(AppUser user) throws BusinessResourceException {
+        try {
+            // Création du contenu de l'email
+            NotificationEmailHtml notificationEmail = new NotificationEmailHtml();
+
+            notificationEmail.setSubject("Modification demandes obsolètes");
+            notificationEmail.setRecipient(user.getEmail());
+            notificationEmail.setTemplateName("notificationPhaseTwo.html");
+
+            Map<String, Object> emailVariables = new HashMap<>();
+            emailVariables.put("prenoms", user.getPrenoms());
+            emailVariables.put("nom", user.getNom());
+            notificationEmail.setEmailVariables(emailVariables);
+            // Envoi de l'email
+            mailService.sendHtmlEmail(notificationEmail);
+        } catch (Exception e) {
+            throw new BusinessResourceException("email-error",
+                    "Erreur lors de l'envoi de l'email pour la user : " + user.getId(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

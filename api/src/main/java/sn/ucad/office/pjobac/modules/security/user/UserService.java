@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
+    public List<UserResponse> allWhoAppliedAndHaveNoValidatedDemandInCurrentSession() throws BusinessResourceException;
     public List<UserResponse> all() throws BusinessResourceException;
     public List<AdminResponse> admin() throws BusinessResourceException;
     public List<AdminResponse> planificateur() throws BusinessResourceException;

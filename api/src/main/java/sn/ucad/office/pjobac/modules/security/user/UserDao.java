@@ -29,4 +29,20 @@ public interface UserDao extends JpaRepository<AppUser, Long> {
     List<AppUser> supervisseurRole();
     @Query("SELECT  COUNT(d) FROM Demande d WHERE d.etatDemande.libelleLong='validée' AND d.user=:user")
     int anciennete(@Param("user") AppUser user);
+    @Query("""
+          SELECT DISTINCT u
+          FROM AppUser u
+          WHERE u.id IN (
+            SELECT dc.candidat
+            FROM DetailsCandidat dc
+            WHERE dc.annee.encours = true
+          )
+          AND u.id NOT IN (
+            SELECT d.user.id
+            FROM Demande d
+            WHERE d.etatDemande.id = 3
+              AND d.session.ouvert  = true
+          )
+        """)
+    List<AppUser> findAppUsersWhoAppliedAndHaveNoValidatedDemandInCurrentSession();
 }

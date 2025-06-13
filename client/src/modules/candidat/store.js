@@ -118,6 +118,7 @@ export const useCandidatStore = defineStore('candidat', {
               code: codeLabel,
               matricule: matriculeLabel,
               note: element.note,
+              anciennete: element.noteAnciennete,
               noteSupervisseur:element.noteSupervisseur,
               appreciation: element.appreciation,
               // dateNaiss: this.formatDate(dateNaissLabel),

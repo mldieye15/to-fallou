@@ -37,6 +37,18 @@ public class UserServiceImp implements UserService {
     private final RoleService roleService;
     private final CodificationService codificationService;
     final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public List<UserResponse> allWhoAppliedAndHaveNoValidatedDemandInCurrentSession() throws BusinessResourceException {
+        log.info("Liste des users. <allWhoAppliedAndHaveNoValidatedDemandInCurrentSession>");
+        List<AppUser> users = dao.findAppUsersWhoAppliedAndHaveNoValidatedDemandInCurrentSession();
+        List<UserResponse> response;
+        response = users.stream()
+                .map(mapper::toEntiteResponse)
+                .collect(Collectors.toList());
+        return response;
+    }
+
     @Override
     public List<UserResponse> all() throws BusinessResourceException {
         log.info("Liste des users. <all>");

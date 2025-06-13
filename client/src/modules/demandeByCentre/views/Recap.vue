@@ -1,7 +1,7 @@
 <template>
     <div>
       <p class="text-h6">{{ $t('apps.forms.centre.centre') }}</p>
-      
+
       <v-container class="my-5" grid-list-xl>
         <v-row class="mb-0 mx-auto pa-1"  align="center">
           <v-col cols="12" sm="6" md="4" >
@@ -24,9 +24,9 @@
                 type="xlsx"
                 name="recapPresident.xlsx"
                 >
-              Exporté 
-              <i class="mdi mdi-cloud-download"></i>  
-            </download-excel> 
+              Exporté
+              <i class="mdi mdi-cloud-download"></i>
+            </download-excel>
             </v-btn>
           </v-col>
         </v-row>
@@ -39,10 +39,10 @@
           :search-value="searchValue"
         >
         </EasyDataTable>
-      </v-container> 
-    </div>    
+      </v-container>
+    </div>
   </template>
-  
+
   <script setup>
   import { storeToRefs } from "pinia";
   import { useDemandeByCentreStore } from "../store";
@@ -50,17 +50,19 @@
   import { useI18n } from "vue-i18n";
   import  { useVilleStore } from "../../ville/store"
   import { useToast } from 'vue-toastification';
-  
-  
+
+
   const toast= useToast();
-                           
+
   const i18n = useI18n();
-  
-  
+
+
   const centreStore = useDemandeByCentreStore(); //;
   const { dataListe, headerTable, loading } = storeToRefs(centreStore);
   const { recap, destroy } = centreStore;
   let json_fields = {
+
+  "Jury": "jury",
   "Centre": "centre",
   "Prenom": "prenoms",
   "Nom": "nom",
@@ -78,9 +80,9 @@
   const headers = reactive({ items: [] });
   const searchValue = ref("");
   const dialog = ref(false);
-  
+
   onMounted(()=>{
-    recap(); 
+    recap();
   });
   </script>
   <style scoped>
@@ -90,7 +92,7 @@
   .v-text-field:hover {
     background-color: white;
   }
-  
+
   .actions-wrapper {
     width: 120px;
   }

@@ -174,6 +174,13 @@ public class DemandeResource {
         DemandeResponse response = service.maj(request, id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @PutMapping(value = "/maj2/{id}")
+    // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
+    public ResponseEntity<DemandeResponse> maj2(@PathVariable(value="id") String id,
+                                               @RequestBody @Valid DemandeRequestUpdate request) {
+        DemandeResponse response = service.maj2(request, id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @PutMapping(value = "/accepter/{id}")
     // @PreAuthorize("hasRole('USER_MAJ') or hasRole('ADMIN')")
     public ResponseEntity<DemandeResponse> accepterDemande(@PathVariable(value="id") String id,

@@ -14,7 +14,7 @@
           ></v-text-field>
         </v-col>
         <v-col class="text-right" cols="auto">
-          <v-btn @click.prevent="redirectToNonAffecter()" class="ma-0"  color="blue">candidats Non Affectés </v-btn>
+          <v-btn @click.prevent="redirectToCandidat()" class="ma-0"  color="blue">candidats session en cours </v-btn>
         </v-col>
         <v-col class="text-right"  cols="auto">
           <v-btn @click.prevent="redirectToArchives()" class="ma-0" variant="outlined" color="cyan-darken-1">candidats Archivés </v-btn>
@@ -23,7 +23,7 @@
             <v-btn class="text-right" color="green">
                 <download-excel
                 class="btn"
-                :data="dataListeCandidat"
+                :data="dataListeUtilisateur"
                 :fields="json_fields"
                 worksheet="My Worksheet"
                 type="xlsx"
@@ -37,18 +37,18 @@
       </v-row>
       <EasyDataTable
         :headers="headerTable"
-        :items="dataListeCandidat"
+        :items="dataListeUtilisateur"
         :loading="loading"
         buttons-pagination
         :search-value="searchValue"
         rows-per-page="10"
       >
-      <template #item-affectable="item">
+      <!-- <template #item-affectable="item">
           <v-chip :style="{ 'font-size': '15px', 'height': '20px' }" @click="showConfirmDialog(item)"
                  :color="item.affectable === 'OUI' ? 'green' : 'red'" text variant="tonal">
               {{ item.affectable}}
           </v-chip>
-      </template>
+      </template> -->
       <!-- Template pour personnaliser le contenu de la colonne 'Etablissement de Provenance' -->
         <template #item-etablissement=" item">
           <!-- Utilisation  d'une classe spécifique pour appliquer des styles à cette colonne -->
@@ -58,9 +58,9 @@
         </template>
         <template #item-actions="item">
           <div v-if="role=='ROLE_SUPERVISSEUR'" class="actions-wrapper">
-            <v-btn  variant="flat" color="yellow" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
+            <!-- <v-btn  variant="flat" color="yellow" size="small" @click.prevent="redirectToAppreciation(item.id)" class="ma-1">
               Evaluation
-            </v-btn>
+            </v-btn> -->
             <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn>
@@ -69,12 +69,12 @@
             <!-- <v-btn  variant="flat" color="blue" size="small" @click.prevent="redirectToDetails(item.id)" class="ma-1">
               Details
             </v-btn> -->
-            <router-link :to="{ name: 'candidat-details', params: { id: item.id } }"> <v-icon small flat color="blue dark">mdi-eye</v-icon> </router-link>
+            <router-link :to="{ name: 'user-details', params: { id: item.id } }"> <v-icon small flat color="blue dark">mdi-eye</v-icon> </router-link>
             <v-dialog  transition="dialog-top-transition" width="50%" height="auto">
               <template v-slot:activator="{ props }">
-                <v-btn  variant="text"  class="text" v-bind="props">
+                <!-- <v-btn  variant="text"  class="text" v-bind="props">
                   <v-icon small flat color="red dark">mdi-delete</v-icon>
-              </v-btn>
+              </v-btn> -->
               </template>
               <template v-slot:default="{ isActive }">
                 <v-card>
@@ -111,7 +111,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { useCandidatStore } from "../store";
+import { useUtilisateurStore } from "@/modules/user/store";
 import { onMounted, reactive, ref } from "vue"
 import { useNotificationStore } from "@/store/notification";
 import { useI18n } from "vue-i18n";
@@ -126,30 +126,26 @@ const i18n = useI18n();
 const notificationStore = useNotificationStore();
 const { addNotification } = notificationStore;
 
-const candidatStore = useCandidatStore();
-const { dataListeCandidat, headerTable, loading } = storeToRefs(candidatStore);
-const { all, destroy,allBySession,affectable } = candidatStore;
+const userStore = useUtilisateurStore();
+const { dataListeUtilisateur, headerTable, loading } = storeToRefs(userStore);
+const { allNonAffecter, destroy,user,bloquer,listeNoire,autorisation } = userStore;
 
 const liste = reactive({ items: [] });
 const headers = reactive({ items: [] });
 const searchValue = ref("");
 const dialog = ref(false);
 const redirectToDetails = (id) => {
-  router.push({ name: 'candidat-details', params: { id } });
+  router.push({ name: 'user-details', params: { id } });
 };
 const redirectToAppreciation = (id) => {
   router.push({ name: 'candidat-appreciation', params: { id } });
 };
-const redirectToArchives = () => {
-  router.push({ name: 'candidat-liste-archive'});
-};
-
-const redirectToNonAffecter = () => {
-  router.push({ name: 'candidat-liste-nonAffecter'});
+const redirectToCandidat = () => {
+  router.push({ name: 'candidat-liste'});
 };
 
 onMounted(()=>{
-  allBySession();
+  allNonAffecter();
 });
 let role= localStorage.getItem('role');
 const confirmDialog = ref(false);
@@ -198,11 +194,6 @@ let json_fields = {
   "Nom": "nom" || "",
   "Prenoms": "prenoms" || "",
   "Matricule": "matricule" || "",
-  "Note du Superviseur": "noteSupervisseur" || "",
-  "Ancienneté": "anciennete" || "",
-  "Score": "note" || "",
-  "Affectable": "affectable" || "",
-  "Appreciation": "appreciation" || "",
   "Email": "email" || "",
   "Sexe": "sexe" || "",
   "Telephone": "telephone" || "",

@@ -443,7 +443,31 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
             throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @Override
+    @Transactional(readOnly = false)
+    public DemandeResponse maj2(DemandeRequestUpdate req, String demandeId) throws NumberFormatException, NoSuchElementException, BusinessResourceException {
+        try {
+            Long myId = Long.valueOf(demandeId.trim());
+            Demande demandeOptional = dao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucun Demande avec " + demandeId + " trouvé.", HttpStatus.NOT_FOUND)
+                    );
+            Demande oneBrute = mapper.updateToEntiteUp(demandeOptional, req);
+            DemandeResponse response = mapper.toEntiteResponse(dao.save(oneBrute));
+//            ordreArrive.updateOrderByVille();
+            log.info("Mise à jour " + response.getId() + " effectuée avec succés. <maj>");
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id " + demandeId+ " non autorisé. <maj>.");
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + demandeId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        } catch (ResourceAlreadyExists | DataIntegrityViolationException e) {
+            log.error("Erreur technique de maj Demande: donnée en doublon ou contrainte non respectée" + e.toString());
+            throw new BusinessResourceException("data-error", "Donnée en doublon ou contrainte non respectée ", HttpStatus.CONFLICT);
+        } catch (Exception ex) {
+            log.error("Maj imputation: Une erreur inattandue est rencontrée." + ex.toString());
+            throw new BusinessResourceException("technical-error", "Erreur technique de mise à jour d'un Demande: " + req.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @Override
     public void accepterDemande(List<Long> demandeIds) throws BusinessResourceException {
         try {
@@ -480,7 +504,12 @@ public List<DemandeResponse> allForUser() throws BusinessResourceException {
 
             // Envoi des emails après la sauvegarde des données
             for (Demande demande : demandes) {
-                sendEmailToDemande(demande);
+                try {
+                    sendEmailToDemande(demande);
+                    Thread.sleep(1500); // Pause de 500 ms entre chaque email
+                } catch (Exception e) {
+                    log.warn("Échec de l'envoi d'email à l'utilisateur {} : {}", demande.getUser().getEmail(), e.getMessage());
+                }
             }
             log.info(demandes.size() + " demandes acceptées avec succès.");
 

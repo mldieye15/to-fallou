@@ -76,7 +76,7 @@ export const useDemandeStore = defineStore('demande', {
     //         let centreLabel = element.centre ? element.centre.libelleLong : null;
     //         let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
     //         let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
-    
+
     //         return {
     //           id: element.id,
     //           ville: villeLabel,
@@ -91,7 +91,7 @@ export const useDemandeStore = defineStore('demande', {
     //           quota: quotaAccept,
     //         };
     //       }));
-    
+
     //       this.dataListe = res;
     //     }
     //   } catch (error) {
@@ -103,7 +103,7 @@ export const useDemandeStore = defineStore('demande', {
     // },
     async allForUser() {
       try {
-        await axios.get(`${allForUser}`) 
+        await axios.get(`${allForUser}`)
         .then((response) => {
           if(response.status === 200){
 
@@ -118,7 +118,7 @@ export const useDemandeStore = defineStore('demande', {
               let nomLabel = element.user ? element.user.prenoms : null;
               let centreLabel=element.centre?element.centre.libelleLong:null;
               return{
-                id:element.id, 
+                id:element.id,
                 candidature:sessionLabelEncours,
                 modification:sessionLabelModification,
                 ville: villeLabel,
@@ -131,7 +131,7 @@ export const useDemandeStore = defineStore('demande', {
               }
             })
             this.dataListeForUser = res;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -143,15 +143,15 @@ export const useDemandeStore = defineStore('demande', {
     async all() {
       try {
         const response = await axios.get(`${all}`);
-        
+
         if (response.status === 200) {
           let res = response.data;
           let formattedData = [];
-      
+
           const promises = Object.keys(res).map(async (userId) => {
             const user = res[userId][0].user;
-            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null; 
-            
+            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null;
+
             const demandes = await Promise.all(res[userId].map(async (element) => {
               let villeLabel = element.ville ? element.ville.libelleLong : null;
               let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
@@ -164,7 +164,7 @@ export const useDemandeStore = defineStore('demande', {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
               let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
               let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
-              
+
               return {
                 id: element.demandeId,
                 nom: element.nom,
@@ -184,7 +184,7 @@ export const useDemandeStore = defineStore('demande', {
                 quota: quotaAccept,
               };
             }));
-      
+
             formattedData.push({
               user: nomPrenomLabel,
               userId: userId,
@@ -205,15 +205,15 @@ export const useDemandeStore = defineStore('demande', {
     async demandeBySession(sessionId) {
       try {
         const response = await axios.get(`${allGroupedByUserAndSession}/${sessionId}`);
-        
+
         if (response.status === 200) {
           let res = response.data;
           let formattedData = [];
-      
+
           const promises = Object.keys(res).map(async (userId) => {
             const user = res[userId][0].user;
-            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null; 
-            
+            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}` : null;
+
             const demandes = await Promise.all(res[userId].map(async (element) => {
               let villeLabel = element.ville ? element.ville.libelleLong : null;
               let academieLabel = element.ville && element.ville.academie ? element.ville.academie.libelleLong : null;
@@ -226,7 +226,7 @@ export const useDemandeStore = defineStore('demande', {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
               // let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
               // let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
-              
+
               return {
                 id: element.demandeId,
                 // nom: element.nom,
@@ -246,7 +246,7 @@ export const useDemandeStore = defineStore('demande', {
                 // quota: quotaAccept,
               };
             }));
-      
+
             formattedData.push({
               user: nomPrenomLabel,
               userId: userId,
@@ -263,18 +263,18 @@ export const useDemandeStore = defineStore('demande', {
       } finally {
         this.loading = false;
       }
-    }, 
+    },
     async allGroupedByUser() {
       try {
         const response = await axios.get(`${allGroupedByUser}`);
-        
+
         if (response.status === 200) {
           let res = response.data;
           let formattedData = [];
-      
+
           const promises = Object.keys(res).map(async (userId) => {
             const user = res[userId][0].user;
-            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}`: null; 
+            const nomPrenomLabel = user ? `${user.prenoms} ${user.nom}`: null;
             const codeLabel = user ? `${user.code}` : null;
             const demandes = await Promise.all(res[userId].map(async (element) => {
               let villeLabel = element.ville ? element.ville.libelleLong : null;
@@ -289,7 +289,7 @@ export const useDemandeStore = defineStore('demande', {
               let centreLabel = element.centre ? element.centre.libelleLong : null;
               let hasAccepted = await this.hasAcceptedDemande(idLabel)? 'OUI' : 'NON';
               let quotaAccept = await this.quotaAccepteVille(idLabelVille)? 'OUI' : 'NON';
-              
+
               return {
                 id: element.demandeId,
                 nom: element.nom,
@@ -310,7 +310,7 @@ export const useDemandeStore = defineStore('demande', {
                 quota: quotaAccept,
               };
             }));
-      
+
             formattedData.push({
               user: nomPrenomLabel,
               code:codeLabel,
@@ -328,16 +328,16 @@ export const useDemandeStore = defineStore('demande', {
       } finally {
         this.loading = false;
       }
-    },  
-      
+    },
+
     async one(demande) {
       try {
         this.error = null;
-        await axios.get(`${modulesURL}/${demande}`) 
+        await axios.get(`${modulesURL}/${demande}`)
         .then((response) => {
           if(response.status === 200){
             this.dataDetails = response.data;
-          } 
+          }
         })
       } catch (error) {
         console.log(error);
@@ -351,7 +351,7 @@ export const useDemandeStore = defineStore('demande', {
     async add(payload) {
       try {
         this.error = null;
-        await axios.post(`${add}`, payload) 
+        await axios.post(`${add}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -372,7 +372,26 @@ export const useDemandeStore = defineStore('demande', {
         this.error = null;
         console.log("Id: ", id);
         console.log("Payload: ", payload);
-        await axios.put(`${modulesURL}/${id}`, payload) 
+        await axios.put(`${modulesURL}/${id}`, payload)
+        .then((response) => {
+          if(response.status === 200 ){
+            this.dataDetails = response.data;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+        throw error;
+      } finally {
+        this.loading = false
+      }
+    },
+    async modify2(id, payload) {
+      try {
+        this.error = null;
+        console.log("Id: ", id);
+        console.log("Payload: ", payload);
+        await axios.put(`${modulesURL}/maj2/${id}`, payload)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -440,7 +459,7 @@ export const useDemandeStore = defineStore('demande', {
     //  supprimer une demande
     async destroy(id) {
       try {
-        await axios.delete(`${modulesURL}/${id}`) 
+        await axios.delete(`${modulesURL}/${id}`)
         .then((response) => {
           if(response.status === 200 ){
             this.dataDetails = response.data;
@@ -486,7 +505,7 @@ export const useDemandeStore = defineStore('demande', {
       } finally {
         this.loading = false;
       }
-    }, 
+    },
     async rejeter(id) {
       try {
         await axios.put(`${nonAffectable}/${id}`)
@@ -503,5 +522,5 @@ export const useDemandeStore = defineStore('demande', {
       }
     },
   },
-  
+
 })

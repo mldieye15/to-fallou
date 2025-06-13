@@ -43,7 +43,9 @@ public class DemandeMapperUtil {
     private final AuthService authService;
     private final VilleDao villeDao;
     private final AcademieDao academieDao;
+    private final UserDao userDao ;
     private final SessionDao sessionDao;
+    private final EtatDemandeDao etatDemandeDao;
     private final JuryDao juryDao;
     private  final CentreDao centreDao;
 
@@ -78,21 +80,21 @@ public class DemandeMapperUtil {
             throw new BusinessResourceException("not-valid-param", "Paramétre " + academieId+ " non autorisé.", HttpStatus.BAD_REQUEST);
         }
     }
-//    @Named("getUserById")
-//    AppUser getUserById(String userId) throws NumberFormatException {
-//        try {
-//            Long myId = Long.valueOf(userId.trim());
-//            AppUser response;
-//            response = userDao.findById(myId)
-//                    .orElseThrow(
-//                            () -> new BusinessResourceException("not-found", "Aucune user avec " + userId + " trouvée.", HttpStatus.NOT_FOUND)
-//                    );
-//            return response;
-//        } catch (NumberFormatException e) {
-//            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getUserById>.", userId );
-//            throw new BusinessResourceException("not-valid-param", "Paramétre " + userId + " non autorisé.", HttpStatus.BAD_REQUEST);
-//        }
-//    }
+    @Named("getUserById")
+    AppUser getUserById(String userId) throws NumberFormatException {
+        try {
+            Long myId = Long.valueOf(userId.trim());
+            AppUser response;
+            response = userDao.findById(myId)
+                    .orElseThrow(
+                            () -> new BusinessResourceException("not-found", "Aucune user avec " + userId + " trouvée.", HttpStatus.NOT_FOUND)
+                    );
+            return response;
+        } catch (NumberFormatException e) {
+            log.warn("Paramétre id {} non autorisé. <UserMapperUtil::getUserById>.", userId );
+            throw new BusinessResourceException("not-valid-param", "Paramétre " + userId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
         @Named("getCentreById")
         public Centre getCentreById(String centreId) throws BusinessResourceException {
             // Vérifier si centreId est null ou vide et retourner null dans ce cas
@@ -115,6 +117,28 @@ public class DemandeMapperUtil {
                 throw new BusinessResourceException("not-valid-param", "Paramètre " + centreId + " non autorisé.", HttpStatus.BAD_REQUEST);
             }
         }
+    @Named("getEtatDemandeById")
+    public EtatDemande getEtatDemandeById(String centreId) throws BusinessResourceException {
+        // Vérifier si centreId est null ou vide et retourner null dans ce cas
+        if (centreId == null || centreId.trim().isEmpty()) {
+            return null;  // Retourner null si centreId est nul ou vide
+        }
+
+        try {
+            // Convertir centreId en Long
+            Long myId = Long.valueOf(centreId.trim());
+
+            // Rechercher le centre dans la base de données
+            EtatDemande response = etatDemandeDao.findById(myId)
+                    .orElseThrow(() -> new BusinessResourceException("not-found", "Aucun EtatDemandeById avec l'ID " + centreId + " trouvé.", HttpStatus.NOT_FOUND));
+
+            return response;
+        } catch (NumberFormatException e) {
+            // Gérer le cas où centreId n'est pas un nombre valide
+            log.warn("Paramètre id {} non autorisé. <UserMapperUtil::getEtatDemandeById>.", centreId);
+            throw new BusinessResourceException("not-valid-param", "Paramètre " + centreId + " non autorisé.", HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @Named("formatStringToDate")
     public static Date formatStringToDate(String date) throws ParseException {

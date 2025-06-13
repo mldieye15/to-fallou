@@ -63,6 +63,14 @@ public interface DemandeMapper {
     @Mapping(target = "jury", source = "affecterJuryRequest.jury",qualifiedByName = "getJuryById")
     Demande affecterJuryToEntiteUp(@MappingTarget Demande entity, DemandeAffecterJury affecterJuryRequest );
 
+    @Mapping(target = "ville",source = "demandeRequestUpdate.ville", qualifiedByName = "getVilleById")
+    @Mapping(target = "academie",source = "demandeRequestUpdate.academie" ,qualifiedByName = "getAcademieById")
+    @Mapping(target = "centre", source = "demandeRequestUpdate.centre",qualifiedByName = "getCentreById")
+    @Mapping(target = "jury", source = "demandeRequestUpdate.jury",qualifiedByName = "getJuryById")
+    @Mapping(target = "etatDemande", source = "demandeRequestUpdate.etatDemande",qualifiedByName = "getEtatDemandeById")
+    @Mapping(target = "user", source = "demandeRequestUpdate.user",qualifiedByName = "getUserById")
+    Demande updateToEntiteUp(@MappingTarget Demande entity, DemandeRequestUpdate demandeRequestUpdate );
+
 
     //  Source: https://www.baeldung.com/mapstruct-custom-mapper
 

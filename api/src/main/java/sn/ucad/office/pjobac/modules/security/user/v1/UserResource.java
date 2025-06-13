@@ -44,6 +44,13 @@ public class UserResource {
         List<UserResponse> response = service.all();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("/allNonAffecter")
+    // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<List<UserResponse>> allPasValider(){
+        List<UserResponse> response = service.allWhoAppliedAndHaveNoValidatedDemandInCurrentSession();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
     @GetMapping("/users")
     // @PreAuthorize("hasRole('USER_LISTE') or hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.OK)

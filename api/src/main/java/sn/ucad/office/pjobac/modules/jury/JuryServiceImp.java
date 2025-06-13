@@ -1,5 +1,7 @@
 package sn.ucad.office.pjobac.modules.jury;
 
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -8,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 import sn.ucad.office.pjobac.exception.ResourceAlreadyExists;
 
@@ -17,6 +20,7 @@ import sn.ucad.office.pjobac.modules.centre.Centre;
 import sn.ucad.office.pjobac.modules.centre.CentreDao;
 import sn.ucad.office.pjobac.modules.centre.dto.CentreResponse;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryAudit;
+import sn.ucad.office.pjobac.modules.jury.dto.JuryCsvDto;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryRequest;
 import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
 import sn.ucad.office.pjobac.modules.session.Session;
@@ -25,6 +29,11 @@ import sn.ucad.office.pjobac.modules.ville.Ville;
 import sn.ucad.office.pjobac.modules.ville.VilleDao;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -272,6 +281,50 @@ public class JuryServiceImp implements JuryService {
             throw new ResourceAlreadyExists("Le est  déjà utilisé pour un autre jury.");
         }
         return false;
+    }
+
+    @Override
+    public void importerJury(MultipartFile file) throws Exception {
+        Session session = sessionDao.enCoursSession()
+                .orElseThrow(() -> new BusinessResourceException("not-found", "Aucune session trouvée.", HttpStatus.NOT_FOUND));
+
+        Annee anneeEncours = anneeDao.findByEncoursTrue();
+        String annee = anneeEncours.getLibelleLong();
+        try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+
+            CsvToBean<JuryCsvDto> csvToBean = new CsvToBeanBuilder<JuryCsvDto>(reader)
+                    .withType(JuryCsvDto.class)
+                    .withIgnoreLeadingWhiteSpace(true)
+                    .build();
+
+            List<JuryCsvDto> records = csvToBean.parse();
+
+            for (JuryCsvDto dto : csvToBean) {
+
+                // Vérifie si le Jury avec ce numéro existe déjà dans la session en cours
+                if (dao.existsByNumeroAndSession(dto.getNumero(), session)) {
+                    // Ignore cette ligne et passe à la suivante
+                    continue;
+                }
+                Centre centre = centreDao.findByLibelleLong(dto.getCentreLibelleLong())
+                        .orElseThrow(() -> new BusinessResourceException(
+                                "centre-not-found", "Centre introuvable : " + dto.getCentreLibelleLong(), HttpStatus.NOT_FOUND));
+
+                String nom = "JURY-" + dto.getNumero() + "-" + dto.getCentreLibelleLong() + "-" + annee;
+
+                Jury jury = Jury.builder()
+                        .numero(dto.getNumero())
+                        .nom(nom)
+                        .technique(false)
+                        .centre(centre)
+                        .session(session)
+                        .build();
+
+                dao.save(jury);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de la lecture du fichier CSV", e);
+        }
     }
 
 

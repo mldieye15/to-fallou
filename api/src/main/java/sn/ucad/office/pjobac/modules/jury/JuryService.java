@@ -1,6 +1,7 @@
 package sn.ucad.office.pjobac.modules.jury;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 import sn.ucad.office.pjobac.exception.BusinessResourceException;
 
 
@@ -11,6 +12,7 @@ import sn.ucad.office.pjobac.modules.jury.dto.JuryResponse;
 import sn.ucad.office.pjobac.utils.SimplePage;
 
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -37,4 +39,6 @@ public interface JuryService {
     boolean verifyNomUniqueUp(String nom, Long id)throws  BusinessResourceException;
     void verifyNumeroUnique(String numero)throws  BusinessResourceException;
     boolean verifyNumeroUniqueUp(String numero, Long id)throws  BusinessResourceException;
+
+    public void importerJury(MultipartFile file) throws Exception;
 }

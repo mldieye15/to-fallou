@@ -48,6 +48,7 @@
         :rows="userEntry.demandes"
         :resizable="true"
         >
+
         <template #table-row="props">
           <span v-if="props.column.field == 'affectable'">
             <v-chip :style="{ 'font-size': '15px', 'height': '20px' }"
@@ -71,6 +72,7 @@
            </v-chip>
           </span>
         <div v-if="props.column.field === 'actions'">
+        <router-link :to="{ name: 'demande-edit', params: { id: props.row.id } }" class="ml-4"> <v-icon small flat color="blue dark">mdi-pencil</v-icon> </router-link>
         <div class="actions-wrapper"
          v-if="props.row.etatDemande === 'en attente' &&
           props.row.quota === 'OUI' &&

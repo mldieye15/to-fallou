@@ -24,6 +24,14 @@ const candidatRoutes = [{
       }
       },
       {
+        path: '/app/dashboard/candidats/nonAffecter',
+        name: 'candidat-liste-nonAffecter',
+        component: () => import( /* webpackChunkName: 'candidat_liste' */ './views/ListeNonAffecter.vue'),
+        meta: {
+          middleware: [Middleware.supervisorAndAdminAuth]
+      }
+      },
+      {
         path: '/app/dashboard/candidats/:id',
         name: 'candidat-details',
         component: () => import( /* webpackChunkName: 'candidat_details' */ './views/Details.vue'),

@@ -9,6 +9,7 @@ const  modulesURL1 = '/v1/candidatAuthorisers';
 const adminURL = '/auth/v1';
 const inscription =adminURL +'/inscription';
 const all= modulesURL+'/all';
+const allNonAffecter= modulesURL+'/allNonAffecter';
 const admins= modulesURL+'/admins';
 const users= modulesURL+'/users';
 const planificateurs= modulesURL+'/planificateurs';
@@ -52,6 +53,21 @@ export const useUtilisateurStore = defineStore('utilisateur', {
       { text: 'Etat du compte', value: 'etat', sortable: false },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
+    headerTable1: [
+      { text: 'Prénom(s)', value: 'prenoms', align: 'start', sortable: true },
+      { text: 'Nom', value: 'nom', align: 'start', sortable: true },
+      { text: 'Matricule', value: 'matricule', align: 'start', sortable: true },
+      { text: 'Code', value: 'code', align: 'start', sortable: true },
+      { text: 'Adresse email', value: 'email', align: 'start', sortable: true },
+      // { text: 'Username', value: 'username', align: 'start', sortable: true },
+      // { text: 'Password', value: 'mdpasse', align: 'start', sortable: true },
+      { text: 'Sexe', value: 'sexe', align: 'start', sortable: true },
+      { text: 'Téléphone', value: 'telephone', align: 'start', sortable: true },
+      { text: 'Liste rouge', value: 'listeRouge', sortable: false },
+      { text: 'Liste noire', value: 'listeNoire', sortable: false },
+      { text: 'Etat du compte', value: 'etat', sortable: false },
+      { text: 'Actions', value: 'actions', sortable: false }
+    ],
     columns: [
       { label: 'Prénom(s)', field: 'prenoms',width: "200px",resizable: true},
       { label: 'Nom', field: 'nom',width: "100px",resizable: true },
@@ -75,6 +91,45 @@ export const useUtilisateurStore = defineStore('utilisateur', {
     async all() {
       try {
         await axios.get(`${all}`)
+        .then((response) => {
+          if(response.status === 200){
+            let res = response.data.map( (element) => {
+              let fonctionLabel = element.fonction? element.fonction.libelleLong:null;
+              let etablissementLabel = element.etablissement? element.etablissement.libelleLong:null;
+              let etatLabel = element.locked? 'activé':'désactivé';
+              return{
+              id:element.id,
+              prenoms: element.prenoms,
+              nom: element.nom,
+              matricule: element.matricule,
+              // dateNaiss: this.formatDate(element.dateNaiss),
+              email: element.email,
+              // username: element.username,
+              code: element.code,
+              // mdpasse: element.mdpasse,
+              sexe: element.sexe,
+              telephone: element.telephone,
+              anciennete: element.anciennete,
+              fonction: fonctionLabel,
+              etablissement: etablissementLabel,
+              etat:etatLabel
+              }
+
+            })
+
+            this.dataListeUtilisateur = res;
+          }
+        })
+      } catch (error) {
+        console.log(error);
+        this.error = error
+      } finally {
+        this.loading = false
+      }
+    },
+    async allNonAffecter() {
+      try {
+        await axios.get(`${allNonAffecter}`)
         .then((response) => {
           if(response.status === 200){
             let res = response.data.map( (element) => {
